@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_manage"
+    app:startDestination="@id/translate_fragment">
+
+    <fragment
+        android:id="@+id/translate_fragment"
+        android:name="com.moe.moetranslator.TranslateFragment"
+        android:label="fragment_translate"
+        tools:layout="@layout/translate_fragment" >
+        <action
+            android:id="@+id/action_translateFragement_to_funWithMadoka"
+            app:destination="@id/fun_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fun_fragment"
+        android:name="com.moe.moetranslator.FunWithMadoka"
+        android:label="fun_with_madoka_fragment"
+        tools:layout="@layout/fun_with_madoka_fragment" >
+        <action
+            android:id="@+id/action_funWithMadoka_to_aboutMe"
+            app:destination="@id/me_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/me_fragment"
+        android:name="com.moe.moetranslator.AboutMe"
+        android:label="about_me_fragment"
+        tools:layout="@layout/about_me_fragment" />
+
+</navigation>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FunWithMadoka">
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="SpeakableTextPresentCheck">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/mycontainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <android.opengl.GLSurfaceView
+                    android:id="@+id/MadokaView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="0dp">
+                </android.opengl.GLSurfaceView>
+
+                <ImageButton
+                    android:id="@+id/button_chat"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="#00FFFFFF"
+                    android:padding="0dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/chat_icon"
+                    app:layout_constraintBottom_toBottomOf="@+id/MadokaView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.07"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.01999998" />
+
+                <ImageButton
+                    android:id="@+id/button_change"
+                    android:layout_width="45dp"
+                    android:layout_height="43dp"
+                    android:background="#00FFFFFF"
+                    android:padding="0dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/change_icon"
+                    app:layout_constraintBottom_toBottomOf="@+id/MadokaView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.92"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.01999998" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#fff"
+            android:orientation="vertical"
+            android:layout_width="230dp">
+            <ListView
+                android:id="@+id/listviewleft"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="#fff"
+            android:orientation="vertical"
+            android:layout_width="230dp">
+            <ListView
+                android:id="@+id/listviewright"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null" />
+        </LinearLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
+</FrameLayout>

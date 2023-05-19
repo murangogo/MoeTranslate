@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MT" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.MT" parent="Base.Theme.MT" />
+    <style name="maintheme" parent="Base.Theme.MT">
+        <item name="colorPrimaryDark">#F7F3EB</item>
+        <item name="android:navigationBarColor">#F2ECF6</item>
+    </style>
+    <style name="settheme" parent="Base.Theme.MT">
+        <item name="colorPrimaryDark">#F7F3EB</item>
+        <item name="android:navigationBarColor">#F7F3EB</item>
+    </style>
+    <style name="splashtheme" parent="Base.Theme.MT">
+        <item name="colorPrimaryDark">#FAC7B7</item>
+        <item name="android:navigationBarColor">#FAC7B7</item>
+    </style>
+    <style name="tutorialtheme" parent="Base.Theme.MT">
+        <item name="colorPrimaryDark">#F7F3EB</item>
+        <item name="android:navigationBarColor">#F7F3EB</item>
+    </style>
+</resources>
