@@ -11,10 +11,41 @@ import android.view.ViewGroup
 import com.moe.moetranslator.databinding.FragmentApiConfigBinding
 import com.moe.moetranslator.databinding.FragmentApiselectBinding
 import com.moe.moetranslator.databinding.FragmentDeveloperBinding
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
+import nl.dionsegijn.konfetti.core.models.Shape
+import java.util.concurrent.TimeUnit
 
 
 class Developer : Fragment() {
     private lateinit var binding: FragmentDeveloperBinding
+    private val party = Party(
+        angle = 300,
+        spread = 60,
+        speed = 60f,
+        maxSpeed = 70f,
+        damping = 0.9f,
+        colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+        shapes = listOf(Shape.Square, Shape.Circle),
+        timeToLive = 5000L,
+        fadeOutEnabled = true,
+        position = Position.Relative(0.0,0.5),
+        emitter = Emitter(duration = 5000, TimeUnit.MILLISECONDS).max(600)
+    )
+    private val party2 = Party(
+        angle = 240,
+        spread = 60,
+        speed = 60f,
+        maxSpeed = 70f,
+        damping = 0.9f,
+        colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+        shapes = listOf(Shape.Square, Shape.Circle),
+        timeToLive = 5000L,
+        fadeOutEnabled = true,
+        position = Position.Relative(1.0,0.5),
+        emitter = Emitter(duration = 5000, TimeUnit.MILLISECONDS).max(600)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +62,9 @@ class Developer : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var celebra = binding.konfettiViewd
+        celebra.start(party)
+        celebra.start(party2)
         binding.officialwebsite.setOnClickListener {
             val url = "https://www.moetranslate.top/"
             val intent = Intent(Intent.ACTION_VIEW)
