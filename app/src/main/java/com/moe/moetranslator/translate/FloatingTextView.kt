@@ -14,7 +14,7 @@ class FloatingTextView(private var context: Context) {
         textview.movementMethod = ScrollingMovementMethod.getInstance()
         val font = Typeface.createFromAsset(context.assets, "translatefonts.ttf")
         textview.typeface = font
-        textview.setTextColor(Color.rgb(214,195,178))
+        textview.setTextColor(Color.rgb(232,220,209))
         textview.text = "这里将会显示翻译结果，请注意不要把翻译结果和游戏原文重合，以免影响截图翻译。"
         return textview
     }
