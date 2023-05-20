@@ -25,11 +25,11 @@
         android:theme="@style/Theme.MT"
         tools:targetApi="31">
         <activity
-            android:name=".SettingPageActivity"
+            android:name=".me.SettingPageActivity"
             android:exported="false"
             android:theme="@style/settheme"/>
         <activity
-            android:name=".LaunchActivity"
+            android:name=".launch.LaunchActivity"
             android:exported="true"
             android:theme="@style/splashtheme">
             <intent-filter>
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FirstLaunchPage"
+            android:name=".launch.FirstLaunchPage"
             android:exported="false"
             android:theme="@style/tutorialtheme" />
         <activity
@@ -50,7 +50,7 @@
         </activity>
 
         <service
-            android:name=".LetOnAccessibilityService"
+            android:name=".translate.LetOnAccessibilityService"
             android:enabled="true"
             android:exported="true"
             android:label="@string/accessibility_service_label"
@@ -64,7 +64,7 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
         <service
-            android:name=".FloatingService"
+            android:name=".translate.FloatingService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaProjection" />

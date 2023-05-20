@@ -1,27 +1,22 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.me
 
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils.replace
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
+import com.moe.moetranslator.BuildConfig
+import com.moe.moetranslator.utils.ConstDatas
+import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.AboutMeFragmentBinding
-import com.moe.moetranslator.databinding.TranslateFragmentBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import okhttp3.OkHttpClient
@@ -140,17 +135,17 @@ class AboutMe : Fragment() {
 
         sizecalculator()
         binding.apiselectbtn.setOnClickListener{
-            var intent1 = Intent(context,SettingPageActivity::class.java)
+            var intent1 = Intent(context, SettingPageActivity::class.java)
             intent1.putExtra("page",1)
             startActivity(intent1)
         }
         binding.apisetbtn.setOnClickListener {
-            var intent2 = Intent(context,SettingPageActivity::class.java)
+            var intent2 = Intent(context, SettingPageActivity::class.java)
             intent2.putExtra("page",2)
             startActivity(intent2)
         }
         binding.errcodebtn.setOnClickListener {
-            var intent3 = Intent(context,SettingPageActivity::class.java)
+            var intent3 = Intent(context, SettingPageActivity::class.java)
             intent3.putExtra("page",3)
             startActivity(intent3)
         }
@@ -177,7 +172,7 @@ class AboutMe : Fragment() {
             dialogperapi.show()
         }
         binding.aboutbtn.setOnClickListener {
-            var intent6 = Intent(context,SettingPageActivity::class.java)
+            var intent6 = Intent(context, SettingPageActivity::class.java)
             intent6.putExtra("page",6)
             startActivity(intent6)
         }

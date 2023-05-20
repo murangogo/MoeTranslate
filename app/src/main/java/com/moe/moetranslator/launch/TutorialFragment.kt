@@ -1,8 +1,6 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.launch
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -12,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.viewpager2.widget.ViewPager2
+import com.moe.moetranslator.MainActivity
+import com.moe.moetranslator.R
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
 import nl.dionsegijn.konfetti.core.emitter.Emitter
@@ -140,7 +138,7 @@ class TutorialFragment(val position:Int) : Fragment() {
                     cele.start(party2)
                 }
                 next.setOnClickListener{
-                    var startintent = Intent(context,MainActivity::class.java)
+                    var startintent = Intent(context, MainActivity::class.java)
                     startActivity(startintent)
                     activity!!.finish()
                 }

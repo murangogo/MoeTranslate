@@ -1,4 +1,4 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.me
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -9,8 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.moe.moetranslator.utils.MySharedPreferenceData
+import com.moe.moetranslator.R
+import com.moe.moetranslator.translate.TranslateFragment
 import com.moe.moetranslator.databinding.FragmentApiConfigBinding
-import com.moe.moetranslator.databinding.FragmentApiselectBinding
 
 
 class ApiConfig : Fragment() {

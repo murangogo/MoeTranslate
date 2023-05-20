@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/translate_fragment"
-        android:name="com.moe.moetranslator.TranslateFragment"
+        android:name="com.moe.moetranslator.translate.TranslateFragment"
         android:label="fragment_translate"
         tools:layout="@layout/translate_fragment" >
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/fun_fragment"
-        android:name="com.moe.moetranslator.FunWithMadoka"
+        android:name="com.moe.moetranslator.madoka.FunWithMadoka"
         android:label="fun_with_madoka_fragment"
         tools:layout="@layout/fun_with_madoka_fragment" >
         <action
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/me_fragment"
-        android:name="com.moe.moetranslator.AboutMe"
+        android:name="com.moe.moetranslator.me.AboutMe"
         android:label="about_me_fragment"
         tools:layout="@layout/about_me_fragment" />
 

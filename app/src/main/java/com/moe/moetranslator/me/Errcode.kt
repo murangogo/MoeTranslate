@@ -1,13 +1,11 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.me
 
-import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.ImageView
+import com.moe.moetranslator.R
 
 
 class Errcode : Fragment() {

@@ -1,4 +1,4 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.translate
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -9,21 +9,17 @@ import android.content.IntentFilter
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.graphics.RectF
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.UiThread
-import com.moe.moetranslator.TranslateFragment.Companion.config
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import com.moe.moetranslator.utils.ConstDatas
+import com.moe.moetranslator.utils.MySharedPreferenceData
+import com.moe.moetranslator.R
+import com.moe.moetranslator.translate.TranslateFragment.Companion.config
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import translateapi.http.HttpStringCallback
 import translateapi.pic.PicTranslate
@@ -34,7 +30,7 @@ class FloatingService : Service() {
     private lateinit var mWindowManager: WindowManager  //窗口管理器
     private lateinit var FloatingBallView: View    //悬浮球视图
     private lateinit var FloatingBallParams: WindowManager.LayoutParams //悬浮球视图参数
-    private lateinit var dialogs:Dialogs    //对话框视图
+    private lateinit var dialogs: Dialogs    //对话框视图
     private lateinit var cropview: CropView //裁剪框视图
     private lateinit var CropViewParams: WindowManager.LayoutParams //裁剪框视图参数
     private lateinit var TextViewParams: WindowManager.LayoutParams //裁剪框视图参数
@@ -54,7 +50,7 @@ class FloatingService : Service() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == LetOnAccessibilityService.ACTION_SERVICE_STARTED) {
                 config.pic(ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
-                Log.d("Path",ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
+                Log.d("Path", ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
                 picTranslate.setConfig(config)
                 picTranslate.trans(object : HttpStringCallback() {
                     override fun onSuccess(response: String?) {
@@ -300,7 +296,7 @@ class FloatingService : Service() {
         override fun onDestroy() {
             super.onDestroy()
             unregisterReceiver(receiver)
-            val intent = Intent(this,FloatingService::class.java)
+            val intent = Intent(this, FloatingService::class.java)
             stopService(intent)
             if(repository.IsCrop){
                 mWindowManager.removeView(cropview)

@@ -1,4 +1,4 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.translate
 
 class Result {
     companion object{

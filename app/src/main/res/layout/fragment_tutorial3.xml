@@ -6,7 +6,7 @@
     android:background="#F7F3EB"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TutorialFragment">
+    tools:context=".launch.TutorialFragment">
 
     <TextView
         android:id="@+id/apptitle2"

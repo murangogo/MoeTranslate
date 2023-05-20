@@ -1,4 +1,4 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.me
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -8,8 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.moe.moetranslator.databinding.FragmentApiConfigBinding
-import com.moe.moetranslator.databinding.FragmentApiselectBinding
+import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FragmentDeveloperBinding
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position

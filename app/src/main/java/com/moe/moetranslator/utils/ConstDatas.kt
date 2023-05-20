@@ -1,4 +1,4 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.utils
 
 class ConstDatas {
     companion object{

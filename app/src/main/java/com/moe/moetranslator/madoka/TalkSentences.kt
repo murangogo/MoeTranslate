@@ -1,4 +1,4 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.madoka
 
 class TalkSentences {
     companion object{

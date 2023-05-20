@@ -1,4 +1,4 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.translate
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
@@ -7,7 +7,7 @@ import android.os.Build
 import android.util.Log
 import android.view.Display
 import android.view.accessibility.AccessibilityEvent
-import androidx.core.graphics.createBitmap
+import com.moe.moetranslator.utils.ConstDatas
 import java.io.File
 import java.io.FileOutputStream
 
@@ -55,7 +55,7 @@ class LetOnAccessibilityService: AccessibilityService() {
                             cropbitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
                             fileOutputStream.flush()
                             fileOutputStream.close()
-                            Log.d("截图提示","图像编码为"+ConstDatas.pictimes)
+                            Log.d("截图提示","图像编码为"+ ConstDatas.pictimes)
                             val broadcastIntent = Intent(ACTION_SERVICE_STARTED)
                             sendBroadcast(broadcastIntent)
                         } catch (e: Exception) {

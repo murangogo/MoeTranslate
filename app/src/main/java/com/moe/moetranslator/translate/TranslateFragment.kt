@@ -1,16 +1,12 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.translate
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,15 +14,15 @@ import android.view.ViewGroup
 import android.view.accessibility.AccessibilityManager
 import android.widget.*
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import com.moe.moetranslator.databinding.FunWithMadokaFragmentBinding
+import com.moe.moetranslator.utils.ConstDatas
+import com.moe.moetranslator.launch.FirstLaunchPage
+import com.moe.moetranslator.utils.MySharedPreferenceData
+import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.TranslateFragmentBinding
+import com.moe.moetranslator.me.SettingPageActivity
 import translateapi.data.Config
 import translateapi.data.Language
-import translateapi.http.HttpStringCallback
-import translateapi.pic.PicTranslate
 
 
 class TranslateFragment : Fragment() {
@@ -94,7 +90,7 @@ class TranslateFragment : Fragment() {
             config.paste(Config.PASTE_NONE)
             ConstDatas.FilePath = context!!.externalCacheDir.toString()
 
-        val intent1 = Intent(this.context,FirstLaunchPage::class.java)
+        val intent1 = Intent(this.context, FirstLaunchPage::class.java)
         binding.floatball.setBackgroundResource(R.drawable.translatebutton_shape)
         binding.floatball.setOnClickListener {
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
@@ -113,7 +109,7 @@ class TranslateFragment : Fragment() {
                         .setMessage("您未配置百度翻译API，将无法使用翻译功能，请配置百度翻译API。")
                         .setCancelable(false)
                         .setPositiveButton("去配置") { _, _ ->
-                            var intent2 = Intent(context,SettingPageActivity::class.java)
+                            var intent2 = Intent(context, SettingPageActivity::class.java)
                             intent2.putExtra("page",2)
                             startActivity(intent2)
                         }
@@ -186,7 +182,7 @@ class TranslateFragment : Fragment() {
     }
 
     fun startBall(){
-        val intent = Intent(this.context,FloatingService::class.java)
+        val intent = Intent(this.context, FloatingService::class.java)
         context!!.startService(intent)
     }
 

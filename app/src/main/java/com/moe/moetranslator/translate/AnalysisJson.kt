@@ -1,8 +1,7 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.translate
 
 import org.json.simple.JSONObject
 import org.json.simple.parser.*
-import java.util.*
 
 
 class AnalysisJson {

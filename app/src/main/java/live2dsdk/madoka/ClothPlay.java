@@ -2,17 +2,8 @@ package live2dsdk.madoka;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-
-import androidx.annotation.MainThread;
-import androidx.annotation.UiThread;
-
-import com.moe.moetranslator.FunWithMadoka;
-import com.moe.moetranslator.MainActivity;
-
-import java.util.Vector;
 
 import live2dsdk.basic.LAppDefine;
 

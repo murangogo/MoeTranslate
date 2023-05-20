@@ -1,4 +1,4 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.translate
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,10 +7,10 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Point
 import android.graphics.RectF
-import android.icu.number.IntegerWidth
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import com.moe.moetranslator.utils.MySharedPreferenceData
 
 const val RECT_MIN_WIDTH = 50f//框选的最小宽度px
 const val RECT_MIN_HEIGHT = 50f//框选的最小高度px

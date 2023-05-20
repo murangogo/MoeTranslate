@@ -1,8 +1,7 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.madoka
 
 import android.graphics.Typeface
 import android.opengl.GLSurfaceView
-import android.os.Binder
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,8 +14,11 @@ import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.moe.moetranslator.utils.ConstDatas
+import com.moe.moetranslator.FragmentTouchListener
+import com.moe.moetranslator.MainActivity
+import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FunWithMadokaFragmentBinding
 import live2dsdk.madoka.ClothPlay
 import live2dsdk.madoka.GLRenderer

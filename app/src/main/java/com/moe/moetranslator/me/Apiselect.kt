@@ -1,4 +1,4 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.me
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -6,7 +6,7 @@
     android:background="#F7F3EB"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AboutMe" >
+    tools:context=".me.AboutMe" >
 
     <LinearLayout
         android:id="@+id/lin1"

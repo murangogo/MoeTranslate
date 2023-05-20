@@ -1,8 +1,7 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Point
 
 class MySharedPreferenceData(context: Context) {
     private var pref: SharedPreferences

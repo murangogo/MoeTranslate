@@ -1,10 +1,11 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.translate
 
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.method.ScrollingMovementMethod
 import android.widget.TextView
+import com.moe.moetranslator.R
 
 class FloatingTextView(private var context: Context) {
     private var textview = TextView(context)

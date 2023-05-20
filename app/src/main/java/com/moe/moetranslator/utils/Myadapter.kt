@@ -1,15 +1,14 @@
-package com.moe.moetranslator
+package com.moe.moetranslator.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import com.moe.moetranslator.R
 
 class Myadapter(ctx: Context, private var str: Array<String>, private var img: Array<Int>) : BaseAdapter() {
     private var lf: LayoutInflater = LayoutInflater.from(ctx)
