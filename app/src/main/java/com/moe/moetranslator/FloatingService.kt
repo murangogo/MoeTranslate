@@ -75,6 +75,7 @@ class FloatingService : Service() {
                         super.onFailure(e)
                         MainScope().launch {
                             textview.text = "发生了未知错误，可能是由于网络未连接。"
+                            Log.e("ERR",e.toString())
                             translateFinish = true
                         }
                     }
@@ -299,6 +300,8 @@ class FloatingService : Service() {
         override fun onDestroy() {
             super.onDestroy()
             unregisterReceiver(receiver)
+            val intent = Intent(this,FloatingService::class.java)
+            stopService(intent)
             if(repository.IsCrop){
                 mWindowManager.removeView(cropview)
             }

@@ -33,8 +33,10 @@ class ApiConfig : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        binding.baiduaccount.setText(repository.BaiduApiA)
-        binding.baidupassword.setText(repository.BaiduApiP)
+        if(repository.BaiduApiA!=""){
+            binding.baiduaccount.hint = repository.BaiduApiA + "（已保存）"
+            binding.baidupassword.hint = repository.BaiduApiP + "（已保存）"
+        }
         binding.textView5.setOnClickListener {
             val dialogperapi = AlertDialog.Builder(activity)
                 .setTitle("什么是百度翻译API")
