@@ -85,6 +85,7 @@ class AboutMe : Fragment() {
     fun getServiceVersion(myscope: CoroutineScope): Job{
         return myscope.launch { var versionCode:Long = 0
             var versionName = ""
+            var versionContent = ""
             val client = OkHttpClient()
             val request = Request.Builder().url("https://www.moetranslate.top/version.json").build()
 
@@ -95,13 +96,14 @@ class AboutMe : Fragment() {
                     val jo = obj as JSONObject
                     versionCode = jo["versionCode"] as Long
                     versionName = jo["versionName"] as String
+                    versionContent = jo["versionContent"] as String
                 }
                 yield()
                 MainScope().launch {
                     if (BuildConfig.VERSION_CODE < versionCode) {
                         val dialogupdate = AlertDialog.Builder(activity)
                             .setTitle("检测到新版本")
-                            .setMessage("检测到了新版本：$versionName，\n是否现在更新？点击去更新即可跳转到萌译官网，在官网中点击下载即可获取最新版本。")
+                            .setMessage("检测到了新版本：$versionName，\n更新内容：$versionContent\n是否现在更新？点击去更新即可跳转到萌译官网，在官网中点击下载即可获取最新版本。")
                             .setCancelable(false)
                             .setPositiveButton("去更新") { _, _ ->
                                 val url = "https://www.moetranslate.top/"
