@@ -101,7 +101,7 @@ class AboutMe : Fragment() {
                     if (BuildConfig.VERSION_CODE < versionCode) {
                         val dialogupdate = AlertDialog.Builder(activity)
                             .setTitle("检测到新版本")
-                            .setMessage("检测到了新版本：$versionName\n，是否现在更新？点击去更新即可跳转到萌译官网，在官网中点击下载即可获取最新版本。")
+                            .setMessage("检测到了新版本：$versionName，\n是否现在更新？点击去更新即可跳转到萌译官网，在官网中点击下载即可获取最新版本。")
                             .setCancelable(false)
                             .setPositiveButton("去更新") { _, _ ->
                                 val url = "https://www.moetranslate.top/"
