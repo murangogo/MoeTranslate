@@ -89,10 +89,12 @@ class CropView(ctx:Context) : View(ctx) {
             absolutePointOffset_portiait.x = (event.rawX - event.x).toInt()
             absolutePointOffset_portiait.y = (event.rawY - event.y).toInt()
             getabsolute_portiait = true
+            getabsolute_landscape = false
         }else if ((repository.ScreenConfiguration==2) &&(!getabsolute_landscape)){
             absolutePointOffset_landscape.x = (event.rawX - event.x).toInt()
             absolutePointOffset_landscape.y = (event.rawY - event.y).toInt()
             getabsolute_landscape = true
+            getabsolute_portiait = false
         }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {

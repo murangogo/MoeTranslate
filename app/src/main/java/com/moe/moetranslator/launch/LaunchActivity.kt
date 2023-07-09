@@ -19,7 +19,7 @@ class LaunchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_launch)
         repository = MySharedPreferenceData(this)
         MainScope().launch{
-            delay(3000)
+            delay(1500)
             finish()
             if(repository.IsFirstRun){
                 var myintent1 = Intent(this@LaunchActivity, FirstLaunchPage::class.java)

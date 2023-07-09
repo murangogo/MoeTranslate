@@ -160,18 +160,25 @@ class FloatingService : Service() {
                                     repository.saveMovingText(false)
                                     textview.isClickable = false
                                 }else{
-                                    if(!isadded){
-                                        mWindowManager.addView(textview,TextViewParams)
-                                        textview.isClickable = false
-                                        repository.saveMovingText(false)
-                                        mWindowManager.removeView(FloatingBallView)
-                                        mWindowManager.addView(FloatingBallView,FloatingBallParams)
-                                        isadded = true
-                                    }
-                                    if(translateFinish){
-                                        TranslateFunction()
-                                    }else{
-                                        makeToast("上一个翻译任务还在进行中，请稍等...")
+                                    if(applicationContext.resources.configuration.orientation != repository.ScreenConfiguration){
+                                        makeToast("检测到您改变了屏幕方向，请重新选取范围。")
+                                    }else {
+                                        if (!isadded) {
+                                            mWindowManager.addView(textview, TextViewParams)
+                                            textview.isClickable = false
+                                            repository.saveMovingText(false)
+                                            mWindowManager.removeView(FloatingBallView)
+                                            mWindowManager.addView(
+                                                FloatingBallView,
+                                                FloatingBallParams
+                                            )
+                                            isadded = true
+                                        }
+                                        if (translateFinish) {
+                                            TranslateFunction()
+                                        } else {
+                                            makeToast("上一个翻译任务还在进行中，请稍等...")
+                                        }
                                     }
                                 }
                             }else{
@@ -233,16 +240,16 @@ class FloatingService : Service() {
         override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
             when (intent!!.getIntExtra("Opera",0)){
                 1->{
-                    if(applicationContext.resources.configuration.orientation==1){
-                        repository.saveScreenConfiguration(1)
-                    }else{
-                        repository.saveScreenConfiguration(2)
-                    }
-                    cropview.setRect(RectF(5f,5f,350f,350f))
-                    mWindowManager.addView(cropview,CropViewParams)
-                    mWindowManager.removeView(FloatingBallView)
-                    mWindowManager.addView(FloatingBallView,FloatingBallParams)
-                    repository.saveCrop(true)
+                        if(applicationContext.resources.configuration.orientation==1){
+                            repository.saveScreenConfiguration(1)
+                        }else{
+                            repository.saveScreenConfiguration(2)
+                        }
+                        cropview.setRect(RectF(5f,5f,350f,350f))
+                        mWindowManager.addView(cropview,CropViewParams)
+                        mWindowManager.removeView(FloatingBallView)
+                        mWindowManager.addView(FloatingBallView,FloatingBallParams)
+                        repository.saveCrop(true)
                 }
                 2->{
                     if(isadded==false){
@@ -278,7 +285,7 @@ class FloatingService : Service() {
         }
 
         fun makeToast(s:String?){
-            Toast.makeText(applicationContext,s,Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext,s,Toast.LENGTH_SHORT).show()
         }
 
         fun showMyDialog(i: Int){
