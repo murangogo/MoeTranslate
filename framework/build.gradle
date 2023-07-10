@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
+    compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion PROP_MIN_SDK_VERSION
-        targetSdkVersion PROP_TARGET_SDK_VERSION
+        minSdkVersion 23
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -22,13 +22,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    compileOnly(fileTree(dir: '../../Core/android', include: ['Live2DCubismCore.aar']))
+    compileOnly(fileTree(dir: '../app/libs', include: ['Live2DCubismCore.aar']))
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'commons-io:commons-io:2.11.0'
