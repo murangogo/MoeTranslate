@@ -1,5 +1,6 @@
 package com.moe.moetranslator.me
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,12 +26,14 @@ class Errcode : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        var img : ImageView = view.findViewById(R.id.errsheet)
-//        var width:Float = Resources.getSystem().displayMetrics.widthPixels.toFloat()
-//        var height:Float = width / 973*3065
-//        var layoutParams:ViewGroup.LayoutParams = img.layoutParams
-//        layoutParams.height = height.toInt()
-//        img.layoutParams = layoutParams
+        val dialogper3 = AlertDialog.Builder(activity)
+            .setTitle("还未完善")
+            .setMessage("您现在看到的是百度翻译的错误代码，有关腾讯云的错误代码还在整理中，将在后续版本中加入。")
+            .setCancelable(false)
+            .setNegativeButton("我知道了") { _, _ ->}
+            .create()
+        dialogper3.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+        dialogper3.show()
     }
 
 }
