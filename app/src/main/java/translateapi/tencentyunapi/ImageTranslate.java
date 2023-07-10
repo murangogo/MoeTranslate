@@ -49,7 +49,7 @@ public class ImageTranslate
             ImageTranslateRequest req = new ImageTranslateRequest();
             req.setSessionUuid("session-00001");
             req.setScene("doc");
-            //req.setData(ImgMD5);
+            req.setData(ImgMD5);
             req.setSource(From);
             req.setTarget(To);
             req.setProjectId(0L);
@@ -62,7 +62,6 @@ public class ImageTranslate
                     tencentTranslateResult.append("\n");
                 }
             }
-            Log.d("Res",tencentTranslateResult.toString());
         } catch (TencentCloudSDKException e) {
             tencentTranslateResult.append(e.toString());
         }
