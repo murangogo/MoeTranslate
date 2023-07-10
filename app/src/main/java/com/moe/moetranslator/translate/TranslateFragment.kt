@@ -199,19 +199,6 @@ class TranslateFragment : Fragment() {
         binding.help.setOnClickListener {
             context!!.startActivity(intent1)
         }
-
-        binding.btntest.setOnClickListener {
-            var md5Num = ImageTranslate.file2base64(ConstDatas.FilePath + "/" + "1.jpg")
-            Log.d("MD5",md5Num)
-            val dialogper3 = AlertDialog.Builder(activity)
-                .setTitle("未开启通知权限")
-                .setMessage(md5Num)
-                .setCancelable(false)
-                .setNegativeButton("再说吧") { _, _ ->}
-                .create()
-            dialogper3.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-            dialogper3.show()
-        }
     }
 
     fun startBall(){

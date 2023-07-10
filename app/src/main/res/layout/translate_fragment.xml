@@ -90,14 +90,5 @@
             app:layout_constraintHorizontal_bias="0.214"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/btntest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="Button"
-            app:layout_constraintTop_toBottomOf="@+id/floatball"
-            tools:layout_editor_absoluteX="137dp" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
