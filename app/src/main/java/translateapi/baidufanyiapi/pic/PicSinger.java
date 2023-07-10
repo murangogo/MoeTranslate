@@ -1,8 +1,9 @@
-package translateapi.pic;
+package translateapi.baidufanyiapi.pic;
 
-import translateapi.data.Config;
-import translateapi.http.HttpParams;
-import translateapi.utils.FileUtil;
+import translateapi.baidufanyiapi.data.Config;
+import translateapi.baidufanyiapi.http.HttpParams;
+import translateapi.baidufanyiapi.utils.FileUtil;
+
 import java.util.Map;
 
 /**

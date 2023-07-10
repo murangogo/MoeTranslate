@@ -1,11 +1,11 @@
-package translateapi.pic;
+package translateapi.baidufanyiapi.pic;
 
 import android.util.Log;
 
-import translateapi.data.Config;
-import translateapi.http.HttpClient;
-import translateapi.http.HttpParams;
-import translateapi.http.HttpStringCallback;
+import translateapi.baidufanyiapi.http.HttpClient;
+import translateapi.baidufanyiapi.http.HttpParams;
+import translateapi.baidufanyiapi.http.HttpStringCallback;
+import translateapi.baidufanyiapi.data.Config;
 
 import java.io.File;
 

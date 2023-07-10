@@ -1,4 +1,4 @@
-package translateapi.http;
+package translateapi.baidufanyiapi.http;
 
 import okhttp3.*;
 

@@ -8,10 +8,14 @@ class MySharedPreferenceData(context: Context) {
     companion object {
         //部分配置
         private const val IS_FIRST_RUN = "FirstRun"
-        private const val LANGUAGE_FROM = "TranslateFrom"
-        private const val LANGUAGE_TO = "TranslateTo"
-        private const val FROM_NUMBER = "TranslateFromNumber"
-        private const val TO_NUMBER = "TranslateToNumber"
+        private const val BLANGUAGE_FROM = "BTranslateFrom"
+        private const val BLANGUAGE_TO = "BTranslateTo"
+        private const val TLANGUAGE_FROM = "TTranslateFrom"
+        private const val TLANGUAGE_TO = "TTranslateTo"
+        private const val BFROM_NUMBER = "BTranslateFromNumber"
+        private const val BTO_NUMBER = "BTranslateToNumber"
+        private const val TFROM_NUMBER = "TTranslateFromNumber"
+        private const val TTO_NUMBER = "TTranslateToNumber"
         private const val Is_Croping = "IfCroping"
         private const val Is_Moving_Text = "IfMovingText"
         private const val Crop_Scale_x1 = "CropScalex1"
@@ -21,16 +25,23 @@ class MySharedPreferenceData(context: Context) {
         private const val Screen_Configuration = "ScreenConfiguration"
         private const val Baidu_Api_A = "BaiduAPIAccount"
         private const val Baidu_Api_P = "BaiduAPIPassword"
+        private const val Tencent_Api_S = "TencentAPISecretId"
+        private const val Tencent_Api_K = "TencentAPISecretKey"
+        private const val Api_Choose = "ApiChoose"
     }
     init {
         pref = context.getSharedPreferences("config", Context.MODE_PRIVATE)
     }
     //提取数据
     val IsFirstRun: Boolean get() = pref.getBoolean(IS_FIRST_RUN, true)
-    val LanguageFrom : String? get() = pref.getString(LANGUAGE_FROM, "auto")
-    val LanguageTo : String? get() = pref.getString(LANGUAGE_TO, "zh")
-    val FromNum : Int get() = pref.getInt(FROM_NUMBER, 0)
-    val ToNum : Int get() = pref.getInt(TO_NUMBER, 0)
+    val LanguageFrom_Baidu : String? get() = pref.getString(BLANGUAGE_FROM, "auto")
+    val LanguageTo_Baidu : String? get() = pref.getString(BLANGUAGE_TO, "zh")
+    val LanguageFrom_Tencent : String? get() = pref.getString(TLANGUAGE_FROM, "auto")
+    val LanguageTo_Tencent : String? get() = pref.getString(TLANGUAGE_TO, "zh")
+    val BFromNum : Int get() = pref.getInt(BFROM_NUMBER, 0)
+    val BToNum : Int get() = pref.getInt(BTO_NUMBER, 0)
+    val TFromNum : Int get() = pref.getInt(TFROM_NUMBER, 0)
+    val TToNum : Int get() = pref.getInt(TTO_NUMBER, 0)
     val IsCrop : Boolean get() = pref.getBoolean(Is_Croping,false)
     val IsMovingText : Boolean get() = pref.getBoolean(Is_Moving_Text,false)
     val CropScaleX1 : Int get() = pref.getInt(Crop_Scale_x1,0)
@@ -40,6 +51,9 @@ class MySharedPreferenceData(context: Context) {
     val ScreenConfiguration : Int get() = pref.getInt(Screen_Configuration,1)   //1为竖屏，2为横屏
     val BaiduApiA : String? get() = pref.getString(Baidu_Api_A,"")
     val BaiduApiP : String? get() = pref.getString(Baidu_Api_P,"")
+    val TencentApiS : String? get() = pref.getString(Tencent_Api_S,"")
+    val TencentApiK : String? get() = pref.getString(Tencent_Api_K,"")
+    val ApiChoose : Int get() = pref.getInt(Api_Choose,0) //0为腾讯云，1为百度翻译
 
 
     //保存数据
@@ -48,16 +62,28 @@ class MySharedPreferenceData(context: Context) {
         editor.putBoolean(IS_FIRST_RUN,false)
         editor.apply()
     }
-    fun saveFrom(s:String,i:Int) {
+    fun saveBFrom(s:String,i:Int) {
         val editor = pref.edit()
-        editor.putString(LANGUAGE_FROM,s)
-        editor.putInt(FROM_NUMBER,i)
+        editor.putString(BLANGUAGE_FROM,s)
+        editor.putInt(BFROM_NUMBER,i)
         editor.apply()
     }
-    fun saveTo(s:String,i:Int) {
+    fun saveBTo(s:String,i:Int) {
         val editor = pref.edit()
-        editor.putString(LANGUAGE_TO,s)
-        editor.putInt(TO_NUMBER,i)
+        editor.putString(BLANGUAGE_TO,s)
+        editor.putInt(BTO_NUMBER,i)
+        editor.apply()
+    }
+    fun saveTFrom(s:String,i:Int) {
+        val editor = pref.edit()
+        editor.putString(TLANGUAGE_FROM,s)
+        editor.putInt(TFROM_NUMBER,i)
+        editor.apply()
+    }
+    fun saveTTo(s:String,i:Int) {
+        val editor = pref.edit()
+        editor.putString(TLANGUAGE_TO,s)
+        editor.putInt(TTO_NUMBER,i)
         editor.apply()
     }
     fun saveCrop(b:Boolean){
@@ -91,6 +117,21 @@ class MySharedPreferenceData(context: Context) {
     fun saveBaiduAPIP(s:String) {
         val editor = pref.edit()
         editor.putString(Baidu_Api_P,s)
+        editor.apply()
+    }
+    fun saveTencentAPIS(s:String) {
+        val editor = pref.edit()
+        editor.putString(Tencent_Api_S,s)
+        editor.apply()
+    }
+    fun saveTencentAPIK(s:String) {
+        val editor = pref.edit()
+        editor.putString(Tencent_Api_K,s)
+        editor.apply()
+    }
+    fun saveApi(i:Int){
+        val editor = pref.edit()
+        editor.putInt(Api_Choose,i)
         editor.apply()
     }
 }

@@ -13,21 +13,21 @@
 
         <Spinner
             android:id="@+id/ori_language"
-            android:layout_width="275dp"
-            android:layout_height="93dp"
+            android:layout_width="259dp"
+            android:layout_height="84dp"
             android:spinnerMode="dropdown"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.247"
+            app:layout_constraintVertical_bias="0.293"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <Spinner
             android:id="@+id/tar_language"
-            android:layout_width="275dp"
-            android:layout_height="93dp"
-            android:layout_marginTop="70dp"
+            android:layout_width="259dp"
+            android:layout_height="84dp"
+            android:layout_marginTop="40dp"
             android:spinnerMode="dropdown"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,16 +45,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tar_language" />
 
-        <TextView
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
+        <ImageView
             android:id="@+id/help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="授权和教程"
-            android:textColor="#8EA4CA"
-            android:textSize="20sp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/help"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.956"
@@ -69,8 +66,19 @@
             android:text="源语言"
             app:layout_constraintBottom_toTopOf="@+id/ori_language"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.184"
+            app:layout_constraintHorizontal_bias="0.205"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/selectAPI"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="API：百度翻译"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.36"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tar_language" />
 
         <TextView
             android:id="@+id/textView3"
@@ -79,8 +87,17 @@
             android:text="目标语言"
             app:layout_constraintBottom_toTopOf="@+id/tar_language"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.191"
+            app:layout_constraintHorizontal_bias="0.214"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btntest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Button"
+            app:layout_constraintTop_toBottomOf="@+id/floatball"
+            tools:layout_editor_absoluteX="137dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

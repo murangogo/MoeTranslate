@@ -1,4 +1,4 @@
-package translateapi.utils;
+package translateapi.baidufanyiapi.utils;
 
 public class TextUtils {
 

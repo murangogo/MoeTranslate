@@ -21,17 +21,27 @@ import com.moe.moetranslator.utils.MySharedPreferenceData
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.TranslateFragmentBinding
 import com.moe.moetranslator.me.SettingPageActivity
-import translateapi.data.Config
-import translateapi.data.Language
+import translateapi.baidufanyiapi.data.Config
+import translateapi.baidufanyiapi.data.Language
+import translateapi.tencentyunapi.ImageTranslate
 
 
 class TranslateFragment : Fragment() {
     companion object{
         @JvmField
-        val config: Config = Config("", "")
+        val config: Config =
+            Config("", "")
     }
-    private val oriLanguage = arrayOf("自动检测", "中文", "英语", "日语", "韩语", "法语", "西班牙语", "俄语", "葡萄牙语", "德语", "意大利语", "丹麦语", "荷兰语", "马来语", "瑞典语", "印尼语", "波兰语", "罗马尼亚语", "土耳其语", "希腊语", "匈牙利语")
-    private val tarLanguage = arrayOf("中文", "英语", "日语", "韩语", "法语", "西班牙语", "俄语", "葡萄牙语", "德语", "意大利语", "丹麦语", "荷兰语", "马来语", "瑞典语", "印尼语", "波兰语", "罗马尼亚语", "土耳其语", "希腊语", "匈牙利语")
+    lateinit var starAdapter1:ArrayAdapter<Any>
+    lateinit var starAdapter2:ArrayAdapter<Any>
+    private val BoriLanguage = arrayOf("自动检测", "中文", "英语", "日语", "韩语", "法语", "西班牙语", "俄语", "葡萄牙语", "德语", "意大利语", "丹麦语", "荷兰语", "马来语", "瑞典语", "印尼语", "波兰语", "罗马尼亚语", "土耳其语", "希腊语", "匈牙利语")
+    private val BtarLanguage = arrayOf("中文", "英语", "日语", "韩语", "法语", "西班牙语", "俄语", "葡萄牙语", "德语", "意大利语", "丹麦语", "荷兰语", "马来语", "瑞典语", "印尼语", "波兰语", "罗马尼亚语", "土耳其语", "希腊语", "匈牙利语")
+    private val ToriLanguage = arrayOf("自动识别", "简体中文", "繁体中文", "英语", "日语", "韩语", "俄语", "法语", "德语", "意大利语", "西班牙语", "葡萄牙语", "马来西亚语", "泰语", "越南语")
+    private val TtarLanguage_1 = arrayOf("英语", "日语", "韩语", "俄语", "法语", "德语", "意大利语", "西班牙语", "葡萄牙语", "马来西亚语", "泰语", "越南语")
+    private val TtarLanguage_2 = arrayOf("中文", "日语", "韩语", "俄语", "法语", "德语", "意大利语", "西班牙语", "葡萄牙语", "马来西亚语", "泰语", "越南语")
+    private val TtarLanguage_3 = arrayOf("中文", "英语", "韩语")
+    private val TtarLanguage_4 = arrayOf("中文", "英语", "日语")
+    private val TtarLanguage_5 = arrayOf("中文", "英语")
     private lateinit var binding: TranslateFragmentBinding
     private lateinit var repository: MySharedPreferenceData
 
@@ -60,6 +70,11 @@ class TranslateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if(repository.ApiChoose==0){
+            binding.selectAPI.text = "API：腾讯云"
+        }else{
+            binding.selectAPI.text = "API：百度翻译"
+        }
         Log.d("注意","onViewCreated-------")
         initSpinnerForDropdown()
     }
@@ -77,10 +92,15 @@ class TranslateFragment : Fragment() {
     override fun onResume() {
         Log.d("注意", "onResume")
         super.onResume()
-        binding.oriLanguage.setSelection(repository.FromNum)
-        binding.tarLanguage.setSelection(repository.ToNum)
-        config.langfrom(repository.LanguageFrom)
-        config.langto(repository.LanguageTo)
+        if(repository.ApiChoose==0){
+            binding.oriLanguage.setSelection(repository.TFromNum)
+            binding.tarLanguage.setSelection(repository.TToNum)
+        }else{
+            binding.oriLanguage.setSelection(repository.BFromNum)
+            binding.tarLanguage.setSelection(repository.BToNum)
+            config.langfrom(repository.LanguageFrom_Baidu)
+            config.langto(repository.LanguageTo_Baidu)
+        }
     }
 
     override fun onStart() {
@@ -103,10 +123,10 @@ class TranslateFragment : Fragment() {
                     dialogper0.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
                     dialogper0.show()
             }else{
-                if((config.appId=="")||(config.secretKey=="")){
+                if(((repository.ApiChoose==0)&&((repository.TencentApiS=="")||(repository.TencentApiK=="")))||((repository.ApiChoose==1)&&((config.appId=="")||(config.secretKey=="")))){
                     val dialogperapi = AlertDialog.Builder(activity)
-                        .setTitle("未配置百度翻译API")
-                        .setMessage("您未配置百度翻译API，将无法使用翻译功能，请配置百度翻译API。")
+                        .setTitle("未配置${if(repository.ApiChoose==1)"百度翻译" else "腾讯云"}API")
+                        .setMessage("您未配置${if(repository.ApiChoose==1)"百度翻译" else "腾讯云"}API，将无法使用翻译功能，请配置${if(repository.ApiChoose==0)"百度翻译" else "腾讯云"}API。")
                         .setCancelable(false)
                         .setPositiveButton("去配置") { _, _ ->
                             var intent2 = Intent(context, SettingPageActivity::class.java)
@@ -179,6 +199,19 @@ class TranslateFragment : Fragment() {
         binding.help.setOnClickListener {
             context!!.startActivity(intent1)
         }
+
+        binding.btntest.setOnClickListener {
+            var md5Num = ImageTranslate.file2base64(ConstDatas.FilePath + "/" + "1.jpg")
+            Log.d("MD5",md5Num)
+            val dialogper3 = AlertDialog.Builder(activity)
+                .setTitle("未开启通知权限")
+                .setMessage(md5Num)
+                .setCancelable(false)
+                .setNegativeButton("再说吧") { _, _ ->}
+                .create()
+            dialogper3.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+            dialogper3.show()
+        }
     }
 
     fun startBall(){
@@ -189,8 +222,21 @@ class TranslateFragment : Fragment() {
     private fun initSpinnerForDropdown() {
         Log.d("hhh","hhhhh")
         // 声明一个下拉列表的数组适配器
-        val starAdapter1 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, oriLanguage)
-        val starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, tarLanguage)
+        if(repository.ApiChoose==0){
+            starAdapter1 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, ToriLanguage)
+            when(repository.TFromNum){
+                0->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_5)
+                1->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_1)
+                2->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_1)
+                3->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_2)
+                4->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_3)
+                5->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_4)
+                else->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_5)
+            }
+        }else{
+            starAdapter1 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, BoriLanguage)
+            starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, BtarLanguage)
+        }
         // 从布局文件中获取名叫sp_dropdown的下拉框
         binding.oriLanguage.adapter = starAdapter1 // 设置下拉框的数组适配器
         binding.tarLanguage.adapter = starAdapter2
@@ -199,18 +245,55 @@ class TranslateFragment : Fragment() {
         // 给下拉框设置选择监听器，一旦用户选中某一项，就触发监听器的onItemSelected方法
         binding.oriLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, i: Int, l: Long) {
-                config.langfrom(Language.LanguageMap.get(oriLanguage.get(i)))
-                repository.saveFrom(Language.LanguageMap.get(oriLanguage.get(i))!!,i)
-                Log.d("ORICLICK", i.toString() + "即" + oriLanguage.get(i) + "即" + Language.LanguageMap.get(oriLanguage.get(i)))
+                if(repository.ApiChoose==0){
+                    if(repository.TFromNum!=i){
+                        binding.tarLanguage.setSelection(0)
+                        repository.saveTFrom(Language.LanguageMap_Tencent.get(ToriLanguage.get(i))!!,i)
+                        when(repository.TFromNum){
+                            0->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_5)
+                            1->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_1)
+                            2->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_1)
+                            3->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_2)
+                            4->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_3)
+                            5->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_4)
+                            else->starAdapter2 = ArrayAdapter(context!!, android.R.layout.simple_dropdown_item_1line, TtarLanguage_5)
+                        }
+                        binding.tarLanguage.adapter = starAdapter2
+                            if((repository.TFromNum!=1)&&(repository.TFromNum!=2)){
+                                repository.saveTTo("zh",0)
+                                binding.tarLanguage.setSelection(0)
+                            }else{
+                                repository.saveTTo("en",0)
+                                binding.tarLanguage.setSelection(0)
+                            }
+                    }
+                    Log.d("ORICLICK", i.toString() + "即" + ToriLanguage.get(i) + "即" + Language.LanguageMap_Tencent.get(ToriLanguage.get(i)))
+                }else{
+                    config.langfrom(Language.LanguageMap_Baidu.get(BoriLanguage.get(i)))
+                    repository.saveBFrom(Language.LanguageMap_Baidu.get(BoriLanguage.get(i))!!,i)
+                    Log.d("ORICLICK", i.toString() + "即" + BoriLanguage.get(i) + "即" + Language.LanguageMap_Baidu.get(BoriLanguage.get(i)))
+                }
             }
-
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
         binding.tarLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, i: Int, l: Long) {
-                config.langto(Language.LanguageMap.get(tarLanguage.get(i)))
-                repository.saveTo(Language.LanguageMap.get(tarLanguage.get(i))!!,i)
-                Log.d("TARCLICK", i.toString() + "即" + tarLanguage.get(i) + "即" + Language.LanguageMap.get(tarLanguage.get(i)))
+                if(repository.ApiChoose==0){
+                    when(repository.TFromNum){
+                        0->repository.saveTTo(Language.LanguageMap_Tencent.get(TtarLanguage_5.get(i))!!,i)
+                        1->repository.saveTTo(Language.LanguageMap_Tencent.get(TtarLanguage_1.get(i))!!,i)
+                        2->repository.saveTTo(Language.LanguageMap_Tencent.get(TtarLanguage_1.get(i))!!,i)
+                        3->repository.saveTTo(Language.LanguageMap_Tencent.get(TtarLanguage_2.get(i))!!,i)
+                        4->repository.saveTTo(Language.LanguageMap_Tencent.get(TtarLanguage_3.get(i))!!,i)
+                        5->repository.saveTTo(Language.LanguageMap_Tencent.get(TtarLanguage_4.get(i))!!,i)
+                        else->repository.saveTTo(Language.LanguageMap_Tencent.get(TtarLanguage_5.get(i))!!,i)
+                    }
+                    Log.d("TARCLICK", i.toString() + "即" + repository.LanguageTo_Tencent)
+                }else{
+                    config.langto(Language.LanguageMap_Baidu.get(BtarLanguage.get(i)))
+                    repository.saveBTo(Language.LanguageMap_Baidu.get(BtarLanguage.get(i))!!,i)
+                    Log.d("TARCLICK", i.toString() + "即" + BtarLanguage.get(i) + "即" + Language.LanguageMap_Baidu.get(BtarLanguage.get(i)))
+                }
             }
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }

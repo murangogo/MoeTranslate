@@ -1,4 +1,4 @@
-package translateapi.data;
+package translateapi.baidufanyiapi.data;
 
 public class Config {
     /**

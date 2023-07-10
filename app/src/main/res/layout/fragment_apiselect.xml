@@ -23,74 +23,47 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        <RelativeLayout
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/baiduyi"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/baiduyi" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@id/baiduyi"
-                android:text="百度翻译"
-                android:textColor="#6A6464"
-                android:textSize="20sp" />
-
-            <RadioButton
-                android:id="@+id/baiduyibtn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/gptlayout"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
+            android:id="@+id/APIRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <ImageView
-                android:id="@+id/chatgpt"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/chatgpt" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@id/chatgpt"
-                android:text="ChatGPT"
-                android:textColor="#6A6464"
-                android:textSize="20sp" />
+            android:checkedButton="@id/tencentyunbtn">
 
             <RadioButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:clickable="false"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"/>
+                android:id="@+id/tencentyunbtn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableEnd="@drawable/tencentyun50"
+                android:drawablePadding="@dimen/fab_margin"
+                android:text="腾讯云"
+                android:textColor="#6A6464"
+                android:textSize="20sp"
+                android:layoutDirection="rtl"/>
 
-        </RelativeLayout>
-
+            <RadioButton
+                android:layout_marginTop="10dp"
+                android:id="@+id/baiduyibtn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableEnd="@drawable/baiduyi50"
+                android:drawablePadding="@dimen/fab_margin"
+                android:text="百度翻译 "
+                android:textColor="#6A6464"
+                android:textSize="20sp"
+                android:layoutDirection="rtl"/>
         </RadioGroup>
+
+        <RadioButton
+            android:layout_marginTop="10dp"
+            android:id="@+id/chatgptbtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:drawableEnd="@drawable/chatgpt50"
+            android:drawablePadding="@dimen/fab_margin"
+            android:text="ChatGPT(Not available)"
+            android:textColor="#6A6464"
+            android:textSize="20sp"
+            android:layoutDirection="rtl"/>
+
     </LinearLayout>
 
     <TextView

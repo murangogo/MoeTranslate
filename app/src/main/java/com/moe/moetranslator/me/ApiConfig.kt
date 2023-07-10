@@ -35,31 +35,64 @@ class ApiConfig : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if(repository.BaiduApiA!=""){
-            binding.baiduaccount.hint = repository.BaiduApiA + "（已保存）"
-            binding.baidupassword.hint = repository.BaiduApiP + "（已保存）"
+        binding.textViewAPIConfig.text = if (repository.ApiChoose==0) "API：腾讯云" else "API：百度翻译"
+        if((repository.ApiChoose==0)&&(repository.TencentApiS=="")){
+            binding.account.hint = "SecretId"
+            binding.account.hint = "SecretKey"
+        }else if ((repository.ApiChoose==1)&&(repository.BaiduApiA=="")){
+            binding.account.hint = "APP ID"
+            binding.account.hint = "密钥"
+        }
+        if((repository.ApiChoose==0)&&(repository.TencentApiS!="")){
+            binding.account.hint = repository.TencentApiS+"（已保存）"
+            binding.password.hint = repository.TencentApiK+"（已保存）"
+        }else if ((repository.ApiChoose==1)&&(repository.BaiduApiA!="")){
+            binding.account.hint = repository.BaiduApiA + "（已保存）"
+            binding.password.hint = repository.BaiduApiP + "（已保存）"
         }
         binding.textView5.setOnClickListener {
-            val dialogperapi = AlertDialog.Builder(activity)
-                .setTitle("什么是百度翻译API")
-                .setMessage("萌译可以使用百度翻译的API提供翻译服务，这意味着您需要从百度翻译开放平台申请API，点击“现在就去”即可开始申请。请注意在申请时选择个人开发者，申请后开通图片翻译服务（每月可免费享受1万次的调用）。最后在开发者信息中获取APP ID和密钥，复制粘贴在上面即可。")
-                .setCancelable(false)
-                .setPositiveButton("现在就去") { _, _ ->
-                    val url = "https://fanyi-api.baidu.com/"
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = Uri.parse(url)
-                    startActivity(intent)
-                }
-                .setNegativeButton("再说吧") { _, _ ->}
-                .create()
-            dialogperapi.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-            dialogperapi.show()
+            if(repository.ApiChoose==0){
+                val dialogperapi = AlertDialog.Builder(activity)
+                    .setTitle("什么是腾讯云API")
+                    .setMessage("萌译可以使用腾讯云或百度翻译的API提供翻译服务，这意味着您需要从对应的平台申请API。检测到您现在选择的API平台为腾讯云，点击“现在就去”即可开始申请腾讯云API。申请后开通翻译服务（每月可免费享受1万次的调用），然后在控制台的“API密钥管理”中获取SecretId和SecretKey，复制粘贴在上面即可。")
+                    .setCancelable(false)
+                    .setPositiveButton("现在就去") { _, _ ->
+                        val url = "https://console.cloud.tencent.com/cam/capi"
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(url)
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("再说吧") { _, _ ->}
+                    .create()
+                dialogperapi.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                dialogperapi.show()
+            }else{
+                val dialogperapi = AlertDialog.Builder(activity)
+                    .setTitle("什么是百度翻译API")
+                    .setMessage("萌译可以使用腾讯云或百度翻译的API提供翻译服务，这意味着您需要从对应的平台申请API。检测到您现在选择的API平台为百度翻译，点击“现在就去”即可开始申请百度翻译API。请注意在申请时选择个人开发者，申请后开通图片翻译服务（每月可免费享受1万次的调用）。最后在开发者信息中获取APP ID和密钥，复制粘贴在上面即可。")
+                    .setCancelable(false)
+                    .setPositiveButton("现在就去") { _, _ ->
+                        val url = "https://fanyi-api.baidu.com/"
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(url)
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("再说吧") { _, _ ->}
+                    .create()
+                dialogperapi.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                dialogperapi.show()
+            }
         }
         binding.button.setOnClickListener {
-            repository.saveBaiduAPIA(binding.baiduaccount.text.toString())
-            repository.saveBaiduAPIP(binding.baidupassword.text.toString())
-            TranslateFragment.config.appId = repository.BaiduApiA
-            TranslateFragment.config.secretKey = repository.BaiduApiP
+            if(repository.ApiChoose==0){
+                repository.saveTencentAPIS(binding.account.text.toString())
+                repository.saveTencentAPIK(binding.password.text.toString())
+            }else{
+                repository.saveBaiduAPIA(binding.account.text.toString())
+                repository.saveBaiduAPIP(binding.password.text.toString())
+                TranslateFragment.config.appId = repository.BaiduApiA
+                TranslateFragment.config.secretKey = repository.BaiduApiP
+            }
             Toast.makeText(context,"保存成功", Toast.LENGTH_LONG).show()
             activity!!.finish()
         }

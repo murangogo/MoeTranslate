@@ -9,21 +9,35 @@ import android.content.IntentFilter
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.graphics.RectF
+import android.net.Uri
 import android.os.IBinder
 import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.TextView
 import android.widget.Toast
+import com.moe.moetranslator.BuildConfig
 import com.moe.moetranslator.utils.ConstDatas
 import com.moe.moetranslator.utils.MySharedPreferenceData
 import com.moe.moetranslator.R
 import com.moe.moetranslator.translate.TranslateFragment.Companion.config
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import translateapi.http.HttpStringCallback
-import translateapi.pic.PicTranslate
+import kotlinx.coroutines.yield
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.simple.JSONObject
+import org.json.simple.parser.JSONParser
+import translateapi.baidufanyiapi.http.HttpStringCallback
+import translateapi.baidufanyiapi.pic.PicTranslate
+import translateapi.baidufanyiapi.utils.FileUtil
 import kotlin.math.abs
+import translateapi.tencentyunapi.ImageTranslate
+import java.io.File
 
 
 class FloatingService : Service() {
@@ -36,6 +50,8 @@ class FloatingService : Service() {
     private lateinit var TextViewParams: WindowManager.LayoutParams //裁剪框视图参数
     private lateinit var repository: MySharedPreferenceData
     private lateinit var textview:TextView
+    private val job:Job = Job()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
     private var TouchPoint = Point()
     private var OriPoint = Point()
     private var TextTouchPoint = Point()
@@ -49,33 +65,49 @@ class FloatingService : Service() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == LetOnAccessibilityService.ACTION_SERVICE_STARTED) {
-                config.pic(ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
-                Log.d("Path", ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
-                picTranslate.setConfig(config)
-                picTranslate.trans(object : HttpStringCallback() {
-                    override fun onSuccess(response: String?) {
-                        super.onSuccess(response)
-                        Log.d("resp是","$response")
-                        AnalysisJson.jsonParse(response!!)
-                        Log.d("结果","${Result.ResultWords}")
-                        MainScope().launch {
-                            if(Result.ErrorCode=="0"){
-                                textview.text = Result.ResultWords
-                            }else{
-                                textview.text = "发生错误，错误码为：${Result.ErrorCode}，您可在萌译的“Me”页面查找有关此错误码的信息。"
+                if(repository.ApiChoose==0){
+                    getTranslate(scope)
+                }else{
+                    config.pic(ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
+                    Log.d("Path", ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
+                    picTranslate.setConfig(config)
+                    picTranslate.trans(object : HttpStringCallback() {
+                        override fun onSuccess(response: String?) {
+                            super.onSuccess(response)
+                            Log.d("resp是","$response")
+                            AnalysisJson.jsonParse(response!!)
+                            Log.d("结果","${Result.ResultWords}")
+                            MainScope().launch {
+                                if(Result.ErrorCode=="0"){
+                                    textview.text = Result.ResultWords
+                                }else{
+                                    textview.text = "发生错误，错误码为：${Result.ErrorCode}，您可在萌译的“Me”页面查找有关此错误码的信息。"
+                                }
+                                translateFinish = true
                             }
-                            translateFinish = true
                         }
-                    }
-                    override fun onFailure(e: Throwable?) {
-                        super.onFailure(e)
-                        MainScope().launch {
-                            textview.text = "发生了未知错误，可能是由于网络未连接。"
-                            Log.e("ERR",e.toString())
-                            translateFinish = true
+                        override fun onFailure(e: Throwable?) {
+                            super.onFailure(e)
+                            MainScope().launch {
+                                textview.text = "发生了未知错误，可能是由于网络未连接。"
+                                Log.e("ERR",e.toString())
+                                translateFinish = true
+                            }
                         }
-                    }
-                })
+                    })
+                }
+            }
+        }
+    }
+
+    fun getTranslate(myscope: CoroutineScope): Job {
+        return myscope.launch { var versionCode:Long = 0
+            var md5Num = ImageTranslate.file2base64(ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
+            var imageTranslate = ImageTranslate(repository.LanguageFrom_Tencent,repository.LanguageTo_Tencent,repository.TencentApiS,repository.TencentApiK,md5Num)
+            var resultext = imageTranslate.StartTranslate()
+            MainScope().launch {
+                textview.text = resultext
+                translateFinish = true
             }
         }
     }

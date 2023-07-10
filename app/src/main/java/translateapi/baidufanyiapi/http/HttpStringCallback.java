@@ -1,6 +1,6 @@
-package translateapi.http;
+package translateapi.baidufanyiapi.http;
 
-import translateapi.utils.TextUtils;
+import translateapi.baidufanyiapi.utils.TextUtils;
 import okhttp3.Call;
 import okhttp3.Response;
 
