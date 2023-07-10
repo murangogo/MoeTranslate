@@ -203,6 +203,15 @@ public class CubismOffscreenSurfaceAndroid {
         }
     }
 
+    /**
+     * レンダーテクスチャのアドレス（intの配列型）を取得する。
+     *
+     * @return レンダーテクスチャのアドレス
+     */
+    public int[] getRenderTexture() {
+        return renderTexture;
+    }
+
 
     /**
      * Get color buffer.

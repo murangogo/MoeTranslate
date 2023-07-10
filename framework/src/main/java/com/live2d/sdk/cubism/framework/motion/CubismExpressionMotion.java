@@ -19,7 +19,31 @@ import java.util.List;
 /**
  * A motion class for facial expressions.
  */
-public final class CubismExpressionMotion extends ACubismMotion {
+public class CubismExpressionMotion extends ACubismMotion {
+    /**
+     * Calculation method of facial expression parameter values.
+     */
+    public enum ExpressionBlendType {
+        /**
+         * Addition
+         */
+        ADD("Add"),
+        /**
+         * Multiplication
+         */
+        MULTIPLY("Multiply"),
+        /**
+         * Overwriting
+         */
+        OVERWRITE("Overwrite");
+
+        private final String type;
+
+        ExpressionBlendType(String type) {
+            this.type = type;
+        }
+    }
+
     /**
      * Internal class for expression parameter information.
      */
@@ -59,31 +83,16 @@ public final class CubismExpressionMotion extends ACubismMotion {
      * @return created instance
      */
     public static CubismExpressionMotion create(byte[] buffer) {
-        final CubismJson json;
-        json = CubismJson.create(buffer);
-        CubismExpressionMotion expressionMotion = new CubismExpressionMotion();
+        CubismExpressionMotion expression = new CubismExpressionMotion();
+        expression.parse(buffer);
 
-        expressionMotion.setFadeInTime(json.getRoot().get(ExpressionKey.FADE_IN.key).toFloat(DEFAULT_FADE_TIME));
-        expressionMotion.setFadeOutTime(json.getRoot().get(ExpressionKey.FADE_OUT.key).toFloat(DEFAULT_FADE_TIME));
-
-        ACubismJsonValue parameters = json.getRoot().get(ExpressionKey.PARAMETERS.key);
-        // Each parameter setting
-        for (int i = 0; i < parameters.size(); i++) {
-            final ACubismJsonValue param = parameters.get(i);
-
-            // Parameter ID
-            final CubismId parameterId = CubismFramework.getIdManager().getId(param.get(ExpressionKey.ID.key).getString());
-            // Setting of calculation method.
-            final ExpressionBlendType blendType = getBlendMethod(param);
-            // Value
-            final float value = param.get(ExpressionKey.VALUE.key).toFloat();
-
-            // Create a configuration object and add it to the list.
-            ExpressionParameter item = new ExpressionParameter(parameterId, blendType, value);
-            expressionMotion.parameters.add(item);
-        }
-        return expressionMotion;
+        return expression;
     }
+
+    /**
+     * デフォルトコンストラクタ
+     */
+    protected CubismExpressionMotion() {}
 
     @Override
     protected void doUpdateParameters(
@@ -111,6 +120,35 @@ public final class CubismExpressionMotion extends ACubismMotion {
                     // When you set a value that is not in the specification, it is already in the addition mode.
                     break;
             }
+        }
+    }
+
+    /**
+     * exp3.jsonをパースする。
+     *
+     * @param exp3Json exp3.jsonが読み込まれているbyte配列
+     */
+    protected void parse(byte[] exp3Json) {
+        CubismJson json = CubismJson.create(exp3Json);
+
+        setFadeInTime(json.getRoot().get(ExpressionKey.FADE_IN.key).toFloat(DEFAULT_FADE_TIME));
+        setFadeOutTime(json.getRoot().get(ExpressionKey.FADE_OUT.key).toFloat(DEFAULT_FADE_TIME));
+
+        ACubismJsonValue jsonParameters = json.getRoot().get(ExpressionKey.PARAMETERS.key);
+        // Each parameter setting
+        for (int i = 0; i < jsonParameters.size(); i++) {
+            final ACubismJsonValue param = jsonParameters.get(i);
+
+            // Parameter ID
+            final CubismId parameterId = CubismFramework.getIdManager().getId(param.get(ExpressionKey.ID.key).getString());
+            // Setting of calculation method.
+            final ExpressionBlendType blendType = getBlendMethod(param);
+            // Value
+            final float value = param.get(ExpressionKey.VALUE.key).toFloat();
+
+            // Create a configuration object and add it to the list.
+            ExpressionParameter item = new ExpressionParameter(parameterId, blendType, value);
+            this.parameters.add(item);
         }
     }
 
@@ -155,31 +193,7 @@ public final class CubismExpressionMotion extends ACubismMotion {
     }
 
     /**
-     * Calculation method of facial expression parameter values.
-     */
-    private enum ExpressionBlendType {
-        /**
-         * Addition
-         */
-        ADD("Add"),
-        /**
-         * Multiplication
-         */
-        MULTIPLY("Multiply"),
-        /**
-         * Overwriting
-         */
-        OVERWRITE("Overwrite");
-
-        private final String type;
-
-        ExpressionBlendType(String type) {
-            this.type = type;
-        }
-    }
-
-    /**
      * Parameter information list for facial expressions
      */
-    private final List<ExpressionParameter> parameters = new ArrayList<ExpressionParameter>();
+    protected final List<ExpressionParameter> parameters = new ArrayList<ExpressionParameter>();
 }

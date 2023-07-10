@@ -31,9 +31,11 @@ public class CubismModel {
      */
     public static class DrawableColorData {
         /**
-         * Default constructor
+         * Constructor
          */
-        public DrawableColorData() {}
+        public DrawableColorData() {
+            color = new CubismRenderer.CubismTextureColor();
+        }
 
         /**
          * Constructor
@@ -66,6 +68,52 @@ public class CubismModel {
         public boolean isOverwritten;
         /**
          * texture color
+         */
+        public CubismRenderer.CubismTextureColor color;
+    }
+
+    /**
+     * パーツの色をRGBAで扱うための内部クラス
+     */
+    public static class PartColorData {
+        /**
+         * コンストラクタ
+         */
+        public PartColorData() {
+            color = new CubismRenderer.CubismTextureColor();
+        }
+
+        /**
+         * コンストラクタ
+         *
+         * @param isOverwritten SDKで設定した色情報でパーツの描画色を上書きするか。trueなら上書きする。
+         * @param color 色情報
+         */
+        public PartColorData(boolean isOverwritten, CubismRenderer.CubismTextureColor color) {
+            if (color == null) {
+                throw new IllegalArgumentException("color is null");
+            }
+            this.isOverwritten = isOverwritten;
+            this.color = color;
+        }
+
+        /**
+         * コピーコンストラクタ
+         *
+         * @param data コピーするPartColorDataインスタンス
+         */
+        public PartColorData(PartColorData data) {
+            this.isOverwritten = data.isOverwritten;
+            this.color = data.color;
+        }
+
+        /**
+         * SDKで設定した色情報でパーツの描画色を上書きするか。trueなら上書きする。
+         */
+        public boolean isOverwritten;
+
+        /**
+         * パーツの色情報
          */
         public CubismRenderer.CubismTextureColor color;
     }
@@ -210,6 +258,17 @@ public class CubismModel {
         System.arraycopy(tmp, 0, notExistPartOpacities, 0, notExistPartIndices.size());
 
         return partIndex;
+    }
+
+    /**
+     * パーツのIDを取得する。
+     *
+     * @param partIndex 取得するパーツのインデックス
+     * @return パーツのID
+     */
+    public CubismId getPartId(int partIndex){
+        String partId = model.getPartViews()[partIndex].getId();
+        return CubismFramework.getIdManager().getId(partId);
     }
 
     /**
@@ -931,7 +990,7 @@ public class CubismModel {
      */
     public CubismRenderer.CubismTextureColor getMultiplyColor(int drawableIndex) {
         if (getOverwriteFlagForModelMultiplyColors() || getOverwriteFlagForDrawableMultiplyColors(drawableIndex)) {
-            return userMultiplyColors.get(drawableIndex).color;
+            return userDrawableMultiplyColors.get(drawableIndex).color;
         }
 
         float[] color = getDrawableMultiplyColor(drawableIndex);
@@ -955,7 +1014,7 @@ public class CubismModel {
      */
     public CubismRenderer.CubismTextureColor getScreenColor(int drawableIndex) {
         if (getOverwriteFlagForModelScreenColors() || getOverwriteFlagForDrawableScreenColors(drawableIndex)) {
-            return userScreenColors.get(drawableIndex).color;
+            return userDrawableScreenColors.get(drawableIndex).color;
         }
 
         float[] color = getDrawableScreenColor(drawableIndex);
@@ -972,7 +1031,7 @@ public class CubismModel {
     private final CubismRenderer.CubismTextureColor screenColor = new CubismRenderer.CubismTextureColor();
 
     /**
-     * Set the multiply color.
+     * Set the multiply color of Drawable.
      *
      * @param drawableIndex index of the drawable
      * @param color the multiply color instance
@@ -982,7 +1041,7 @@ public class CubismModel {
     }
 
     /**
-     * Set the multiply color.
+     * Set the multiply color of Drawable.
      *
      * @param drawableIndex index of the drawable
      * @param r red value
@@ -991,14 +1050,57 @@ public class CubismModel {
      * @param a alpha value
      */
     public void setMultiplyColor(int drawableIndex, float r, float g, float b, float a) {
-        userMultiplyColors.get(drawableIndex).color.r = r;
-        userMultiplyColors.get(drawableIndex).color.g = g;
-        userMultiplyColors.get(drawableIndex).color.b = b;
-        userMultiplyColors.get(drawableIndex).color.a = a;
+        userDrawableMultiplyColors.get(drawableIndex).color.r = r;
+        userDrawableMultiplyColors.get(drawableIndex).color.g = g;
+        userDrawableMultiplyColors.get(drawableIndex).color.b = b;
+        userDrawableMultiplyColors.get(drawableIndex).color.a = a;
     }
 
     /**
-     * Set the screen color.
+     * Partの乗算色を取得する。
+     *
+     * @param partIndex 取得したいPartのインデックス
+     * @return Partの乗算色
+     */
+    public CubismRenderer.CubismTextureColor getPartMultiplyColor(int partIndex) {
+        return userPartMultiplyColors.get(partIndex).color;
+    }
+
+    /**
+     * Partのスクリーン色を取得する。
+     *
+     * @param partIndex 取得したいPartのインデックス
+     * @return Partのスクリーン色
+     */
+    public CubismRenderer.CubismTextureColor getPartScreenColor(int partIndex) {
+        return userPartScreenColors.get(partIndex).color;
+    }
+
+    /**
+     * Partの乗算色を設定する。
+     *
+     * @param partIndex 乗算色を設定するパーツのインデックス
+     * @param color 乗算色
+     */
+    public void setPartMultiplyColor(int partIndex, CubismRenderer.CubismTextureColor color) {
+        setPartColor(partIndex, color.r, color.g, color.b, color.a, userPartMultiplyColors, userDrawableMultiplyColors);
+    }
+
+    /**
+     * Partの乗算色を設定する。
+     *
+     * @param partIndex 乗算色を設定するパーツのインデックス
+     * @param r 赤
+     * @param g 緑
+     * @param b 青
+     * @param a アルファ
+     */
+    public void setPartMultiplyColor(int partIndex, float r, float g, float b, float a) {
+        setPartColor(partIndex, r, g, b, a, userPartMultiplyColors, userDrawableMultiplyColors);
+    }
+
+    /**
+     * Set the screen color of Drawable.
      *
      * @param drawableIndex index of the drawable
      * @param color the screen color instance
@@ -1008,7 +1110,7 @@ public class CubismModel {
     }
 
     /**
-     * Set the screen color.
+     * Set the screen color of Drawable.
      *
      * @param drawableIndex index of the drawable
      * @param r red value
@@ -1017,10 +1119,33 @@ public class CubismModel {
      * @param a alpha value
      */
     public void setScreenColor(int drawableIndex, float r, float g, float b, float a) {
-        userScreenColors.get(drawableIndex).color.r = r;
-        userScreenColors.get(drawableIndex).color.g = g;
-        userScreenColors.get(drawableIndex).color.b = b;
-        userScreenColors.get(drawableIndex).color.a = a;
+        userDrawableScreenColors.get(drawableIndex).color.r = r;
+        userDrawableScreenColors.get(drawableIndex).color.g = g;
+        userDrawableScreenColors.get(drawableIndex).color.b = b;
+        userDrawableScreenColors.get(drawableIndex).color.a = a;
+    }
+
+    /**
+     * Partのスクリーン色を設定する。
+     *
+     * @param partIndex スクリーン色を設定するパーツのインデックス
+     * @param color スクリーン色
+     */
+    public void setPartScreenColor(int partIndex, CubismRenderer.CubismTextureColor color) {
+        setPartScreenColor(partIndex, color.r, color.g, color.b, color.a);
+    }
+
+    /**
+     * Partのスクリーン色を設定する。
+     *
+     * @param partIndex スクリーン色を設定するパーツのインデックス
+     * @param r 赤
+     * @param g 緑
+     * @param b 青
+     * @param a アルファ
+     */
+    public void setPartScreenColor(int partIndex, float r, float g, float b, float a) {
+        setPartColor(partIndex, r, g, b, a, userPartScreenColors, userDrawableScreenColors);
     }
 
     /**
@@ -1065,7 +1190,7 @@ public class CubismModel {
      * @return If the color information on the SDK is used, return true. If the color information of the model is used, return false.
      */
     public boolean getOverwriteFlagForDrawableMultiplyColors(int drawableIndex) {
-        return userMultiplyColors.get(drawableIndex).isOverwritten;
+        return userDrawableMultiplyColors.get(drawableIndex).isOverwritten;
     }
 
     /**
@@ -1074,7 +1199,27 @@ public class CubismModel {
      * @return If the color information on the SDK is used, return true. If the color information of the model is used, return false.
      */
     public boolean getOverwriteFlagForDrawableScreenColors(int drawableIndex) {
-        return userScreenColors.get(drawableIndex).isOverwritten;
+        return userDrawableScreenColors.get(drawableIndex).isOverwritten;
+    }
+
+    /**
+     * SDKからPartの乗算色を上書きするかどうかのフラグを取得する。
+     *
+     * @param partIndex 上書きするPartのインデックス
+     * @return SDKからPartの乗算色を上書きするか。上書きするならtrue。
+     */
+    public boolean getOverwriteColorForPartMultiplyColors(int partIndex) {
+        return userPartMultiplyColors.get(partIndex).isOverwritten;
+    }
+
+    /**
+     * SDKからPartのスクリーン色を上書きするかどうかのフラグを取得する。
+     *
+     * @param partIndex 上書きするPartのインデックス
+     * @return SDKからPartのスクリーン色を上書きするか。上書きするならtrue。
+     */
+    public boolean getOverwriteColorForPartScreenColors(int partIndex) {
+        return userPartScreenColors.get(partIndex).isOverwritten;
     }
 
     /**
@@ -1083,7 +1228,7 @@ public class CubismModel {
      * @param value If the color information on the SDK is used, this value is true. If the color information of the model is used, this is false.
      */
     public void setOverwriteFlagForDrawableMultiplyColors(int drawableIndex, boolean value) {
-        userMultiplyColors.get(drawableIndex).isOverwritten = value;
+        userDrawableMultiplyColors.get(drawableIndex).isOverwritten = value;
     }
 
     /**
@@ -1092,7 +1237,29 @@ public class CubismModel {
      * @param value If the color information on the SDK is used, this value is true. If the color information of the model is used, this is false.
      */
     public void setOverwriteFlagForDrawableScreenColors(int drawableIndex, boolean value) {
-        userScreenColors.get(drawableIndex).isOverwritten = value;
+        userDrawableScreenColors.get(drawableIndex).isOverwritten = value;
+    }
+
+    /**
+     * SDKからPartの乗算色を上書きするかどうかのフラグを設定する。
+     *
+     * @param partIndex 上書きするPartのインデックス
+     * @param value SDKからPartの乗算色を上書きするかどうか。trueなら上書きする。
+     */
+    public void setOverwriteColorForPartMultiplyColors(int partIndex, boolean value) {
+        userPartMultiplyColors.get(partIndex).isOverwritten = value;
+        setOverwriteColorsForPartColors(partIndex, value, userPartMultiplyColors, userDrawableMultiplyColors);
+    }
+
+    /**
+     * SDKからPartのスクリーン色を上書きするかどうかのフラグを設定する。
+     *
+     * @param partIndex 上書きするPartのインデックス
+     * @param value SDKからPartのスクリーン色を上書きするかどうか。trueなら上書きする。
+     */
+    public void setOverwriteColorForPartScreenColors(int partIndex, boolean value) {
+        userPartScreenColors.get(partIndex).isOverwritten = value;
+        setOverwriteColorsForPartColors(partIndex, value, userPartScreenColors, userDrawableScreenColors);
     }
 
     /**
@@ -1159,6 +1326,24 @@ public class CubismModel {
     }
 
     /**
+     * モデルの不透明度を取得する。
+     *
+     * @return 不透明度の値
+     */
+    public float getModelOpacity() {
+        return modelOpacity;
+    }
+
+    /**
+     * モデルの不透明度を設定する。
+     *
+     * @param value 不透明度の値
+     */
+    public void setModelOpacity(float value) {
+        modelOpacity = value;
+    }
+
+    /**
      * Get the model.
      *
      * @return model
@@ -1210,7 +1395,8 @@ public class CubismModel {
             1.0f,
             1.f
         );
-        DrawableColorData userMultiplyColor = new DrawableColorData(false, mutiplyColor);
+        DrawableColorData userDrawableMultiplyColor = new DrawableColorData(false, mutiplyColor);
+        PartColorData userPartMultiplyColor = new PartColorData(false, mutiplyColor);
 
         // ScreenColors
         CubismRenderer.CubismTextureColor screenColor = new CubismRenderer.CubismTextureColor(
@@ -1219,14 +1405,38 @@ public class CubismModel {
             0.0f,
             1.0f
         );
-        DrawableColorData userScreenColor = new DrawableColorData(false, screenColor);
+        DrawableColorData userDrawableScreenColor = new DrawableColorData(false, screenColor);
+        PartColorData userPartScreenColor = new PartColorData(false, screenColor);
 
+        // To prevent performance degradation due to capacity expansion, HashMap is generated with initial capacity reserved.
+        int partCount = model.getPartViews().length;
+        partChildDrawablesMap = new HashMap<Integer, List<Integer>>(partCount);
+
+        // Setting for Drawables.
         for (CubismDrawableView drawableValue : drawableValues) {
             String id = drawableValue.getId();
             drawableIds.add(CubismFramework.getIdManager().getId(id));
-            userMultiplyColors.add(new DrawableColorData(userMultiplyColor));
-            userScreenColors.add(new DrawableColorData(userScreenColor));
+
+            userDrawableMultiplyColors.add(new DrawableColorData(userDrawableMultiplyColor));
+            userDrawableScreenColors.add(new DrawableColorData(userDrawableScreenColor));
             userCullings.add(new DrawableCullingData(false, false));
+
+            // Bind parent Parts and child Drawables.
+            int parentIndex = drawableValue.getParentPartIndex();
+            if (parentIndex >= 0) {
+                List<Integer> childDrawables = partChildDrawablesMap.get(parentIndex);
+                if (childDrawables == null) {
+                    childDrawables = new ArrayList<Integer>();
+                    partChildDrawablesMap.put(parentIndex, childDrawables);
+                }
+                childDrawables.add(drawableValue.getIndex());
+            }
+        }
+
+        // Setting for Parts.
+        for (int i = 0; i < partCount; i++) {
+            userPartMultiplyColors.add(new PartColorData(userPartMultiplyColor));
+            userPartScreenColors.add(new PartColorData(userPartScreenColor));
         }
     }
 
@@ -1248,6 +1458,74 @@ public class CubismModel {
         return (flag & mask) == mask;
     }
 
+    /**
+     * PartのOverwriteColorを設定する。
+     *
+     * @param partIndex 設定するPartのインデックス
+     * @param r 赤
+     * @param g 緑
+     * @param b 青
+     * @param a アルファ
+     * @param partColors 設定するPartの上書き色のリスト
+     * @param drawableColors Drawableの上書き色のリスト
+     */
+    private void setPartColor(
+        int partIndex,
+        float r, float g, float b, float a,
+        List<PartColorData> partColors,
+        List<DrawableColorData> drawableColors
+    ) {
+        partColors.get(partIndex).color.r = r;
+        partColors.get(partIndex).color.g = g;
+        partColors.get(partIndex).color.b = b;
+        partColors.get(partIndex).color.a = a;
+
+        if (partColors.get(partIndex).isOverwritten) {
+            List<Integer> childDrawables = partChildDrawablesMap.get(partIndex);
+            if(childDrawables == null) return;
+
+            for (int i = 0; i < childDrawables.size(); i++) {
+                int drawableIndex = childDrawables.get(i);
+
+                drawableColors.get(drawableIndex).color.r = r;
+                drawableColors.get(drawableIndex).color.g = g;
+                drawableColors.get(drawableIndex).color.b = b;
+                drawableColors.get(drawableIndex).color.a = a;
+            }
+        }
+    }
+
+    /**
+     * PartのOverwriteFlagを設定する。
+     *
+     * @param partIndex 設定するPartのインデックス
+     * @param value 真偽値
+     * @param partColors 設定するPartの上書き色のリスト
+     * @param drawableColors Drawableの上書き色のリスト
+     */
+    private void setOverwriteColorsForPartColors(
+        int partIndex,
+        boolean value,
+        List<PartColorData> partColors,
+        List<DrawableColorData> drawableColors
+    ) {
+        partColors.get(partIndex).isOverwritten = value;
+
+        List<Integer> childDrawables = partChildDrawablesMap.get(partIndex);
+        if (childDrawables == null) return;
+
+        for (int i = 0; i < childDrawables.size(); i++) {
+            int drawableIndex = childDrawables.get(i);
+            drawableColors.get(drawableIndex).isOverwritten = value;
+
+            if (value) {
+                drawableColors.get(drawableIndex).color.r = partColors.get(partIndex).color.r;
+                drawableColors.get(drawableIndex).color.g = partColors.get(partIndex).color.g;
+                drawableColors.get(drawableIndex).color.b = partColors.get(partIndex).color.b;
+                drawableColors.get(drawableIndex).color.a = partColors.get(partIndex).color.a;
+            }
+        }
+    }
 
     /**
      * List of opacities for non-existent parts
@@ -1280,18 +1558,37 @@ public class CubismModel {
     private CubismParameterView[] parameterValues;
     private CubismPartView[] partValues;
 
+    /**
+     * モデルの不透明度
+     */
+    private float modelOpacity = 1.0f;
+
     private List<CubismId> parameterIds = new ArrayList<CubismId>();
     private List<CubismId> partIds = new ArrayList<CubismId>();
     private List<CubismId> drawableIds = new ArrayList<CubismId>();
 
     /**
-     * List of multiply colors
+     * Drawableの乗算色のリスト
      */
-    private List<DrawableColorData> userMultiplyColors = new ArrayList<DrawableColorData>();
+    private final List<DrawableColorData> userDrawableMultiplyColors = new ArrayList<DrawableColorData>();
     /**
-     * List of screen colors
+     * Drawableのスクリーン色のリスト
      */
-    private List<DrawableColorData> userScreenColors = new ArrayList<DrawableColorData>();
+    private final List<DrawableColorData> userDrawableScreenColors = new ArrayList<DrawableColorData>();
+
+    /**
+     * パーツの乗算色のリスト
+     */
+    private final List<PartColorData> userPartMultiplyColors = new ArrayList<PartColorData>();
+    /**
+     * パーツのスクリーン色のリスト
+     */
+    private final List<PartColorData> userPartScreenColors = new ArrayList<PartColorData>();
+    /**
+     * Partとその子DrawableのListとのMap
+     */
+    private Map<Integer,List<Integer>> partChildDrawablesMap;
+
     /**
      * カリング設定のリスト
      */

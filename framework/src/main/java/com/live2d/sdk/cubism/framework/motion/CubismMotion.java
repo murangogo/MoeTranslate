@@ -203,7 +203,7 @@ public final class CubismMotion extends ACubismMotion {
     }
 
     @Override
-    public boolean isExistOpacity() {
+    public boolean isExistModelOpacity() {
         for (int i = 0; i < motionData.curves.size(); i++) {
             CubismMotionCurve curve = motionData.curves.get(i);
 
@@ -218,8 +218,8 @@ public final class CubismMotion extends ACubismMotion {
     }
 
     @Override
-    public int getOpacityIndex() {
-        if (isExistOpacity()) {
+    public int getModelOpacityIndex() {
+        if (isExistModelOpacity()) {
             for (int i = 0; i < motionData.curves.size(); i++) {
                 CubismMotionCurve curve = motionData.curves.get(i);
 
@@ -235,7 +235,7 @@ public final class CubismMotion extends ACubismMotion {
     }
 
     @Override
-    public CubismId getOpacityId(int index) {
+    public CubismId getModelOpacityId(int index) {
         if (index == -1) {
             return null;
         }
@@ -252,70 +252,8 @@ public final class CubismMotion extends ACubismMotion {
     }
 
     @Override
-    public float getOpacityValue(final float motionTimeSeconds) {
-        if (motionTimeSeconds >= 0.0f) {
-            int index = getOpacityIndex();
-
-            if (index == -1) {
-                return 1.0f;
-            }
-
-            int baseSegmentIndex = motionData.curves.get(index).baseSegmentIndex;
-            int basePointIndex = motionData.segments.get(baseSegmentIndex).basePointIndex;
-            final float fps = 1.0f / motionData.fps;
-            CubismMotionSegmentType segmentType;
-
-
-            for (int segmentPos = 0; segmentPos < motionData.curves.get(index).segmentCount; segmentPos++) {
-                if (segmentPos == 0) {
-                    if (motionTimeSeconds == 0.0f) {
-                        return linearEvaluator.evaluate(motionTimeSeconds, basePointIndex);
-                    }
-
-                    segmentPos += 2;
-                }
-
-                segmentType = motionData.segments.get(index + segmentPos).segmentType;
-                basePointIndex = motionData.segments.get(index + segmentPos).basePointIndex;
-
-                final float pointTime = motionData.points.get(basePointIndex).time;
-
-                switch (segmentType) {
-                    case BEZIER:
-                        basePointIndex += 3;
-                        segmentPos += 7;
-                        break;
-                    case LINEAR:
-                    case STEPPED:
-                    case INVERSESTEPPED:
-                        segmentPos += 3;
-                        break;
-                    default:
-                        assert (false);
-                        break;
-                }
-
-                if (pointTime + fps < motionTimeSeconds) {
-                    continue;
-                }
-
-                switch (segmentType) {
-                    case LINEAR:
-                        return linearEvaluator.evaluate(motionTimeSeconds, basePointIndex);
-                    case BEZIER:
-                        return bezierEvaluator.evaluate(motionTimeSeconds, basePointIndex - 3);
-                    case STEPPED:
-                        return steppedEvaluator.evaluate(motionTimeSeconds, basePointIndex);
-                    case INVERSESTEPPED:
-                        return inverseSteppedEvaluator.evaluate(motionTimeSeconds, basePointIndex);
-
-                    default:
-                        assert (false);
-                        break;
-                }
-            }
-        }
-        return 1.0f;
+    public float getModelOpacityValue() {
+        return modelOpacity;
     }
 
     /**
@@ -339,6 +277,10 @@ public final class CubismMotion extends ACubismMotion {
 
         if (modelCurveIdLipSync == null) {
             modelCurveIdLipSync = CubismFramework.getIdManager().getId(EffectName.LIP_SYNC.name);
+        }
+
+        if (modelCurveIdOpacity == null) {
+            modelCurveIdOpacity = CubismFramework.getIdManager().getId(ID_NAME_OPACITY);
         }
 
         float timeOffsetSeconds = userTimeSeconds - motionQueueEntry.getStartTime();
@@ -397,6 +339,11 @@ public final class CubismMotion extends ACubismMotion {
             } else if (curve.id.equals(modelCurveIdLipSync)) {
                 lipSyncValue = value;
                 isUpdatedLipSync = true;
+            } else if (curve.id.equals(modelCurveIdOpacity)){
+                modelOpacity = value;
+
+                // 不透明度の値が存在すれば反映する。
+                model.setModelOpacity(getModelOpacityValue());
             }
         }
 
@@ -1089,6 +1036,15 @@ public final class CubismMotion extends ACubismMotion {
      * handle to the parameter ID for lip-syncing that the model has. Map a model to a motion.
      */
     private CubismId modelCurveIdLipSync;
+    /**
+     * handle to the parameter ID for opacity that the moder has. Map a model to a motion.
+     */
+    private CubismId modelCurveIdOpacity;
+
+    /**
+     * モーションから取得した不透明度
+     */
+    private float modelOpacity;
 
 
     private final LinearEvaluator linearEvaluator = new LinearEvaluator();

@@ -141,10 +141,9 @@ public class CubismMotionQueueManager {
      *
      * @param model target model
      * @param userTimeSeconds total delta time[s]
-     * @param opacity opacity(Nullable)
      * @return If reflecting the parameter value to the model(the motion is changed.) is successed, return true.
      */
-    protected boolean doUpdateMotion(CubismModel model, float userTimeSeconds, float[] opacity) {
+    protected boolean doUpdateMotion(CubismModel model, float userTimeSeconds) {
         boolean isUpdated = false;
 
         // ---- Do processing ----
@@ -164,11 +163,6 @@ public class CubismMotionQueueManager {
 
             motion.updateParameters(model, motionQueueEntry, userTimeSeconds);
             isUpdated = true;
-
-            // Reflect the opacity value if it exists.
-            if (opacity != null) {
-                opacity[0] = motion.getOpacityValue(userTimeSeconds - motionQueueEntry.getStartTime());
-            }
 
             // Inspect user-triggered events.
             final List<String> firedList = motion.getFiredEvent(

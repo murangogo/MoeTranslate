@@ -7,20 +7,25 @@
 
 package com.live2d.sdk.cubism.framework.model;
 
+import static com.live2d.sdk.cubism.framework.CubismFramework.VERTEX_OFFSET;
+import static com.live2d.sdk.cubism.framework.CubismFramework.VERTEX_STEP;
+import static com.live2d.sdk.cubism.framework.utils.CubismDebug.cubismLogError;
+import static com.live2d.sdk.cubism.framework.utils.CubismDebug.cubismLogInfo;
+
 import com.live2d.sdk.cubism.framework.effect.CubismBreath;
 import com.live2d.sdk.cubism.framework.effect.CubismEyeBlink;
 import com.live2d.sdk.cubism.framework.effect.CubismPose;
 import com.live2d.sdk.cubism.framework.id.CubismId;
 import com.live2d.sdk.cubism.framework.math.CubismModelMatrix;
 import com.live2d.sdk.cubism.framework.math.CubismTargetPoint;
-import com.live2d.sdk.cubism.framework.motion.*;
+import com.live2d.sdk.cubism.framework.motion.CubismExpressionMotion;
+import com.live2d.sdk.cubism.framework.motion.CubismMotion;
+import com.live2d.sdk.cubism.framework.motion.CubismMotionManager;
+import com.live2d.sdk.cubism.framework.motion.CubismMotionQueueManager;
+import com.live2d.sdk.cubism.framework.motion.ICubismMotionEventFunction;
+import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
 import com.live2d.sdk.cubism.framework.physics.CubismPhysics;
 import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
-
-import static com.live2d.sdk.cubism.framework.CubismFramework.VERTEX_OFFSET;
-import static com.live2d.sdk.cubism.framework.CubismFramework.VERTEX_STEP;
-import static com.live2d.sdk.cubism.framework.utils.CubismDebug.cubismLogError;
-import static com.live2d.sdk.cubism.framework.utils.CubismDebug.cubismLogInfo;
 
 /**
  * This is the base class of the model that the user actually utilizes. The user defined model class inherits this class.
@@ -256,12 +261,22 @@ public abstract class CubismUserModel {
     }
 
     /**
-     * Read a model data
+     * モデルデータを読み込む。
+     * NOTE: デフォルトではMOC3の整合性をチェックしない。
      *
-     * @param buffer a buffer where the moc3 file is loaded
+     * @param buffer MOC3ファイルが読み込まれているバイト配列バッファ
      */
     protected void loadModel(final byte[] buffer) {
-        final CubismMoc moc = CubismMoc.create(buffer);
+        loadModel(buffer, false);
+    }
+
+    /**
+     * モデルデータを読み込む。
+     *
+     * @param buffer MOC3ファイルが読み込まれているバイト配列バッファ
+     */
+    protected void loadModel(final byte[] buffer, boolean shouldCheckMocConsistency) {
+        final CubismMoc moc = CubismMoc.create(buffer, shouldCheckMocConsistency);
 
         if (moc == null) {
             cubismLogError("Failed to create CubismMoc instance.");
@@ -448,6 +463,10 @@ public abstract class CubismUserModel {
      * An acceleration in Z-axis direction
      */
     protected float accelerationZ;
+    /**
+     * MOC3の整合性を検証するか。検証するならtrue。
+     */
+    protected boolean mocConsistency;
     /**
      * Whether it is debug mode
      */

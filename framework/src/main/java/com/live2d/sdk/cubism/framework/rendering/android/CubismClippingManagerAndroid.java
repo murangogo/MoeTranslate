@@ -14,8 +14,6 @@ import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
 import com.live2d.sdk.cubism.framework.type.csmRectF;
 
 import java.io.Closeable;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
@@ -71,29 +69,15 @@ class CubismClippingManagerAndroid implements Closeable {
         clippingContextListForMask.clear();
         clippingContextListForDraw.clear();
 
-        if (maskTexture != null) {
-            for (int i = 0; i < maskTexture.textures.length; i++) {
-                glDeleteFramebuffers(1, maskTexture.textures, i);
-            }
-            maskTexture = null;
-        }
-
-        if (maskColorBuffers != null) {
-            for (int i = 0; i < maskColorBuffers.length; i++) {
-                glDeleteTextures(1, maskColorBuffers, i);
-            }
-            maskColorBuffers = null;
-        }
-
-        if (maskRenderTextures != null) {
-            maskRenderTextures = null;
-        }
-
         channelColors.clear();
 
         vertexArrayCache = null;
         uvArrayCache = null;
         indexArrayCache = null;
+
+        if (clearedFrameBufferFlags != null) {
+            clearedFrameBufferFlags = null;
+        }
     }
 
     /**
@@ -111,9 +95,10 @@ class CubismClippingManagerAndroid implements Closeable {
         final int[] drawableMaskCounts,
         final int maskBufferCount
     ) {
-        // レンダーテクスチャの合計枚数の設定（整数でない場合小数点以下を除去）
-        // 負の値が使われている場合は強制的に1枚と設定する
-        this.renderTextureCount = maskBufferCount > 0 ? maskBufferCount : 1;
+        renderTextureCount = maskBufferCount;
+
+        // レンダーテクスチャのクラアフラグの配列の初期化
+        clearedFrameBufferFlags = new boolean[renderTextureCount];
 
         // Register all drawing objects that use clipping masks.
         // The use of clipping masks is usually limited to a few objects.
@@ -143,62 +128,6 @@ class CubismClippingManagerAndroid implements Closeable {
      * @param renderer renderer instance
      */
     public void setupClippingContext(CubismModel model, CubismRendererAndroid renderer, int[] lastFBO, int[] lastViewport) {
-        currentFrameNumber++;
-
-        // FloatBufferのリストが空なら全Drawableの頂点とUV頂点のFloatBufferを作成して格納する
-        final int drawableCount = model.getDrawableCount();
-        if (vertexArrayCache == null) {
-            vertexArrayCache = new FloatBuffer[drawableCount];
-            for (int j = 0; j < clippingContextListForMask.size(); j++) {
-                CubismClippingContext clipContext = clippingContextListForMask.get(j);
-
-                final int clipDrawCount = clipContext.clippingIdCount;
-                for (int i = 0; i < clipDrawCount; i++) {
-                    final int clipDrawIndex = clipContext.clippingIdList[i];
-                    float[] vertexArray = model.getDrawableVertices(clipDrawIndex);
-
-                    ByteBuffer bb = ByteBuffer.allocateDirect(vertexArray.length * 4);
-                    bb.order(ByteOrder.nativeOrder());
-                    FloatBuffer vertexArrayBuffer = bb.asFloatBuffer();
-                    vertexArrayCache[clipDrawIndex] = vertexArrayBuffer;
-                }
-            }
-        }
-        if (uvArrayCache == null) {
-            uvArrayCache = new FloatBuffer[drawableCount];
-            for (int j = 0; j < clippingContextListForMask.size(); j++) {
-                CubismClippingContext clipContext = clippingContextListForMask.get(j);
-
-                final int clipDrawCount = clipContext.clippingIdCount;
-                for (int i = 0; i < clipDrawCount; i++) {
-                    final int clipDrawIndex = clipContext.clippingIdList[i];
-                    float[] uvArray = model.getDrawableVertexUvs(clipDrawIndex);
-
-                    ByteBuffer bb = ByteBuffer.allocateDirect(uvArray.length * 4);
-                    bb.order(ByteOrder.nativeOrder());
-                    FloatBuffer uvArrayBuffer = bb.asFloatBuffer();
-                    uvArrayCache[clipDrawIndex] = uvArrayBuffer;
-                }
-            }
-        }
-        if (indexArrayCache == null) {
-            indexArrayCache = new ShortBuffer[drawableCount];
-            for (int j = 0; j < clippingContextListForMask.size(); j++) {
-                CubismClippingContext clipContext = clippingContextListForMask.get(j);
-
-                final int clipDrawCount = clipContext.clippingIdCount;
-                for (int i = 0; i < clipDrawCount; i++) {
-                    final int clipDrawIndex = clipContext.clippingIdList[i];
-                    short[] indexArray = model.getDrawableVertexIndices(clipDrawIndex);
-
-                    ByteBuffer bb = ByteBuffer.allocateDirect(indexArray.length * 4);
-                    bb.order(ByteOrder.nativeOrder());
-                    ShortBuffer indexArrayBuffer = bb.asShortBuffer();
-                    indexArrayCache[clipDrawIndex] = indexArrayBuffer;
-                }
-            }
-        }
-
         // Prepare all clipping.
         // Set only once when using the same clip (or a group of clips if there are multiple clips).
         int usingClipCount = 0;
@@ -223,44 +152,29 @@ class CubismClippingManagerAndroid implements Closeable {
             // Set up a viewport with the same size as the generated FrameBuffer.
             glViewport(0, 0, (int) clippingMaskBufferSize.x, (int) clippingMaskBufferSize.y);
 
-            for (int renderTextureIndex = 0; renderTextureIndex < renderTextureCount; renderTextureIndex++) {
-                // マスクをアクティブにする
-                currentMaskRenderTexture = getMaskRenderTexture()[renderTextureIndex];
-                // バッファをクリアする
-                renderer.preDraw();
+            // 後の計算のためにインデックスの最初をセットする。
+            currentOffscreenFrame = renderer.getMaskBuffer(0);
 
-                // ----- マスク描画処理 -----
-                // マスク用RenderTextureをactiveにセット
-                glBindFramebuffer(GL_FRAMEBUFFER, currentMaskRenderTexture);
+            // マスク描画処理
+            currentOffscreenFrame.beginDraw(lastFBO);
 
-                // Clear the mask.
-                // (temporary spec) 1 is invalid (not drawn), 0 is valid (drawn).
-                // (In the shader, in Cd*Cs multiply by a value close to 0 to create a mask; multiply by 1 and nothing happens)
-                glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-                glClear(GL_COLOR_BUFFER_BIT);
-
-                // offscreenFrameBufferへ切り替え
-                renderer.offscreenFrameBuffers[renderTextureIndex].beginDraw(lastFBO);
-
-                // Clear the mask.
-                // (temporary spec) 1 is invalid (not drawn), 0 is valid (drawn).
-                // (In the shader, in Cd*Cs multiply by a value close to 0 to create a mask; multiply by 1 and nothing happens)
-                renderer.offscreenFrameBuffers[renderTextureIndex].clear(1.0f, 1.0f, 1.0f, 1.0f);
-            }
-
-            // 後の計算のためにインデックスの最初をセットし直す。
-            currentMaskRenderTexture = getMaskRenderTexture()[0];
-
-            // Clear the buffer.
+            // バッファをクリアする
             renderer.preDraw();
-
-            // ----- マスク描画処理 -----
-            // マスク用RenderTextureをactiveにセット
-            glBindFramebuffer(GL_FRAMEBUFFER, currentMaskRenderTexture);
         }
 
         // Determine the layout of each mask.
         setupLayoutBounds(renderer.isUsingHighPrecisionMask() ? 0 : usingClipCount);
+
+        // サイズがレンダーテクスチャの枚数と合わない場合は合わせる。
+        if (clearedFrameBufferFlags.length != renderTextureCount) {
+            clearedFrameBufferFlags = new boolean[renderTextureCount];
+        }
+        // マスクのクリアフラグを毎フレーム開始時に初期化する。
+        else {
+            for (int i = 0; i < renderTextureCount; i++) {
+                clearedFrameBufferFlags[i] = false;
+            }
+        }
 
         // ---------- Mask Drawing Process -----------
         // Actually generate the masks.
@@ -276,19 +190,21 @@ class CubismClippingManagerAndroid implements Closeable {
             float scaleX, scaleY;
             final float margin = 0.05f;
 
-            // clipContextに設定したレンダーテクスチャをインデックスで取得
-            final int clipContextRenderTexture = getMaskRenderTexture()[clipContext.bufferIndex];
+            // clipContextに設定したオフスクリーンフレームをインデックスで取得
+            final CubismOffscreenSurfaceAndroid clipContextOffscreenFrame = renderer.getMaskBuffer(clipContext.bufferIndex);
 
-            // 現在のレンダーテクスチャがclipContextのものと異なる場合
-            if (currentMaskRenderTexture != clipContextRenderTexture &&
+            // 現在のオフスクリーンフレームがclipContextのものと異なる場合
+            if (currentOffscreenFrame != clipContextOffscreenFrame &&
                 !renderer.isUsingHighPrecisionMask()
             ) {
-                currentMaskRenderTexture = clipContextRenderTexture;
+                currentOffscreenFrame.endDraw();
+                currentOffscreenFrame = clipContextOffscreenFrame;
+
+                // マスク用RenderTextureをactiveにセット。
+                currentOffscreenFrame.beginDraw(lastFBO);
+
                 // バッファをクリアする。
                 renderer.preDraw();
-
-                // マスク用RenderTextureをactiveにセット
-                glBindFramebuffer(GL_FRAMEBUFFER, currentMaskRenderTexture);
             }
 
             if (renderer.isUsingHighPrecisionMask()) {
@@ -380,24 +296,39 @@ class CubismClippingManagerAndroid implements Closeable {
 
                     renderer.isCulling(model.getDrawableCulling(clipDrawIndex));
 
+                    // マスクがクリアされていないなら処理する。
+                    if (!clearedFrameBufferFlags[clipContext.bufferIndex]) {
+                        // マスクをクリアする。
+                        // (仮仕様) 1が無効（描かれない）領域、0が有効（描かれる）領域。（シェーダーCd*Csで0に近い値をかけてマスクを作る。1をかけると何も起こらない）
+                        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+                        glClear(GL_COLOR_BUFFER_BIT);
+                        clearedFrameBufferFlags[clipContext.bufferIndex] = true;
+                    }
+
                     // Apply this special transformation to draw it.
                     // Switching channel is also needed.(A,R,G,B)
                     renderer.setClippingContextBufferForMask(clipContext);
 
-                    FloatBuffer vertexArrayBuffer = vertexArrayCache[clipDrawIndex];
-                    vertexArrayBuffer.clear();
-                    vertexArrayBuffer.put(model.getDrawableVertices(clipDrawIndex));
-                    vertexArrayBuffer.position(0);
+                    // キャッシュされたバッファを取得し、実際のデータを格納する。
+                    CubismDrawableInfoCachesHolder drawableInfoCachesHolder = renderer.getDrawableInfoCachesHolder();
 
-                    FloatBuffer uvArrayBuffer = uvArrayCache[clipDrawIndex];
-                    uvArrayBuffer.clear();
-                    uvArrayBuffer.put(model.getDrawableVertexUvs(clipDrawIndex));
-                    uvArrayBuffer.position(0);
+                    // vertex array
+                    FloatBuffer vertexArrayBuffer = drawableInfoCachesHolder.setUpVertexArray(
+                        clipDrawIndex,
+                        model.getDrawableVertices(clipDrawIndex)
+                    );
 
-                    ShortBuffer indexArrayBuffer = indexArrayCache[clipDrawIndex];
-                    indexArrayBuffer.clear();
-                    indexArrayBuffer.put(model.getDrawableVertexIndices(clipDrawIndex));
-                    indexArrayBuffer.position(0);
+                    // uv array
+                    FloatBuffer uvArrayBuffer = drawableInfoCachesHolder.setUpUvArray(
+                        clipDrawIndex,
+                        model.getDrawableVertexUvs(clipDrawIndex)
+                    );
+
+                    // index array
+                    ShortBuffer indexArrayBuffer = drawableInfoCachesHolder.setUpIndexArray(
+                        clipDrawIndex,
+                        model.getDrawableVertexIndices(clipDrawIndex)
+                    );
 
                     renderer.drawMeshAndroid(
                         model.getDrawableTextureIndex(clipDrawIndex),
@@ -419,8 +350,7 @@ class CubismClippingManagerAndroid implements Closeable {
         if (!renderer.isUsingHighPrecisionMask()) {
             // --- Post Processing ---
             // Return the drawing target
-            for (int i = 0; i < renderTextureCount; i++)
-                renderer.offscreenFrameBuffers[i].endDraw();
+            currentOffscreenFrame.endDraw();
             renderer.setClippingContextBufferForMask(null);
 
             glViewport(lastViewport[0], lastViewport[1], lastViewport[2], lastViewport[3]);
@@ -445,15 +375,6 @@ class CubismClippingManagerAndroid implements Closeable {
      */
     public CubismRenderer.CubismTextureColor getChannelFlagAsColor(int channelNo) {
         return channelColors.get(channelNo);
-    }
-
-    /**
-     * Get color buffer.
-     *
-     * @return color buffer
-     */
-    public int[] getColorBuffer() {
-        return maskColorBuffers;
     }
 
     /**
@@ -500,95 +421,6 @@ class CubismClippingManagerAndroid implements Closeable {
      */
     public int getRenderTextureCount() {
         return renderTextureCount;
-    }
-
-    /**
-     * Get the address of the temporary render texture.
-     * If FrameBufferObject does not exist, create a new one.
-     *
-     * @return address of render texture
-     */
-    public int[] getMaskRenderTexture() {
-        // 前回使ったものを返す。
-        if (maskTexture != null && maskTexture.textures != null) {
-            maskTexture.frameNo = currentFrameNumber;
-
-            return maskRenderTextures;
-        }
-
-        // FrameBufferObjectが存在しない場合、新しく生成する
-        maskRenderTextures = new int[renderTextureCount];
-        // ColorBufferObjectが存在しない場合、新しく生成する
-        maskColorBuffers = new int[renderTextureCount];
-
-        // クリッピングバッファサイズを取得
-        final int width = (int) clippingMaskBufferSize.x;
-        final int height = (int) clippingMaskBufferSize.y;
-
-        for (int index = 0; index < renderTextureCount; index++) {
-            glGenTextures(1, maskColorBuffers, index);
-            glBindTexture(GL_TEXTURE_2D, maskColorBuffers[index]);
-            glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RGBA,
-                width,
-                height,
-                0,
-                GL_RGBA,
-                GL_UNSIGNED_BYTE,
-                null
-            );
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glBindTexture(GL_TEXTURE_2D, 0);
-
-            glGenFramebuffers(1, maskRenderTextures, index);
-            glBindFramebuffer(GL_FRAMEBUFFER, maskRenderTextures[index]);
-            glFramebufferTexture2D(
-                GL_FRAMEBUFFER,
-                GL_COLOR_ATTACHMENT0,
-                GL_TEXTURE_2D,
-                maskColorBuffers[index],
-                0
-            );
-        }
-
-        int[] tmpFrameBufferObject = new int[1];
-        glGetIntegerv(GL_FRAMEBUFFER_BINDING, tmpFrameBufferObject, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, tmpFrameBufferObject[0]);
-
-        maskTexture = new CubismRenderTextureResource(currentFrameNumber, maskRenderTextures);
-        return maskRenderTextures;
-    }
-
-    /**
-     * This class defines resources of render texture.
-     * <p>
-     * It is used in clipping masks.
-     */
-    private static class CubismRenderTextureResource {
-        /**
-         * renderer's frame number
-         */
-        int frameNo;
-        /**
-         * an array of texture address number
-         */
-        int[] textures;
-
-        /**
-         * Constructor
-         *
-         * @param frameNo renderer's frame number
-         * @param textures an array of texture address
-         */
-        CubismRenderTextureResource(int frameNo, int[] textures) {
-            this.frameNo = frameNo;
-            this.textures = textures;
-        }
     }
 
     /**
@@ -742,6 +574,7 @@ class CubismClippingManagerAndroid implements Closeable {
                 cc.layoutBounds.setY(0.0f);
                 cc.layoutBounds.setWidth(1.0f);
                 cc.layoutBounds.setHeight(1.0f);
+                cc.bufferIndex = 0;
             }
             return;
         }
@@ -870,30 +703,19 @@ class CubismClippingManagerAndroid implements Closeable {
 
 
     /**
-     * マスク用レンダーテクスチャのアドレス
+     * 現在のオフスクリーンフレームのインスタンス
      */
-    private int currentMaskRenderTexture;
+    private CubismOffscreenSurfaceAndroid currentOffscreenFrame;
+
     /**
-     * レンダーテクスチャのリスト
+     * マスクのクリアフラグの配列
      */
-    private int[] maskRenderTextures;
-    /**
-     * マスク用カラーバッファのアドレスのリスト
-     */
-    private int[] maskColorBuffers;
-    /**
-     * Frame number given to the mask texture.
-     */
-    private int currentFrameNumber;
+    private boolean[] clearedFrameBufferFlags;
 
     /**
      * list of flags of color channel(RGBA)(0:R, 1:G, 2:B, 3:A)
      */
     private final List<CubismRenderer.CubismTextureColor> channelColors = new ArrayList<CubismRenderer.CubismTextureColor>();
-    /**
-     * texture resources for masks.
-     */
-    private CubismRenderTextureResource maskTexture;
     /**
      * List of clipping contexts for masks.
      */

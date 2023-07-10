@@ -18,15 +18,38 @@ import java.text.ParseException;
  */
 public class CubismMoc {
     /**
-     * Read Moc file from buffer, and create Moc data.
+     * バッファからMocファイルを読み取り、Mocデータを作成する。
+     * NOTE: デフォルトではMOC3の整合性をチェックしない。
      *
-     * @param mocBytes A buffer of Moc file
+     * @param mocBytes MOC3ファイルのバイト配列バッファ
+     * @return MOC3ファイルのインスタンス
      */
     public static CubismMoc create(byte[] mocBytes) {
+        return create(mocBytes, false);
+    }
+
+    /**
+     * バッファからMocファイルを読み取り、Mocデータを作成する。
+     *
+     * @param mocBytes            MOC3ファイルのバイト配列バッファ
+     * @param shouldCheckMocConsistency MOC3の整合性をチェックするか。trueならチェックする。
+     * @return MOC3ファイルのインスタンス
+     */
+    public static CubismMoc create(byte[] mocBytes, boolean shouldCheckMocConsistency) {
         com.live2d.sdk.cubism.core.CubismMoc moc;
 
         if (mocBytes == null) {
             return null;
+        }
+
+        if (shouldCheckMocConsistency) {
+            // .moc3の整合性を確認する。
+            boolean consistency = hasMocConsistency(mocBytes);
+
+            if (!consistency) {
+                CubismDebug.cubismLogError("Inconsistent MOC3.");
+                return null;
+            }
         }
 
         try {

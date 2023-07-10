@@ -256,10 +256,8 @@ class CubismShaderAndroid {
 
             if (isMasked) {
                 glActiveTexture(GL_TEXTURE1);
-                int tex =
-                    renderer.getClippingContextBufferForDraw()
-                            .getClippingManager()
-                            .getColorBuffer()[renderer.getClippingContextBufferForDraw().bufferIndex];
+                // Framebufferに描かれたテクスチャ
+                int tex = renderer.getMaskBuffer(renderer.getClippingContextBufferForDraw().bufferIndex).getColorBuffer()[0];
                 glBindTexture(GL_TEXTURE_2D, tex);
                 glUniform1i(shaderSet.samplerTexture1Location, 1);
 

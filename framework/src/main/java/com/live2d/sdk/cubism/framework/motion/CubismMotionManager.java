@@ -34,28 +34,16 @@ public class CubismMotionManager extends CubismMotionQueueManager {
     }
 
     /**
-     * Update the motion without opacity information.
+     * Update the motion and reflect the parameter values to the model.
      *
      * @param model target model
      * @param deltaTimeSeconds delta time[s]
      * @return If it is updated, return true.
      */
     public boolean updateMotion(CubismModel model, float deltaTimeSeconds) {
-        return updateMotion(model, deltaTimeSeconds, null);
-    }
-
-    /**
-     * Update the motion and reflect the parameter values to the model.
-     *
-     * @param model target model
-     * @param deltaTimeSeconds delta time[s]
-     * @param opacity opcity(Nullable)
-     * @return If it is updated, return true.
-     */
-    public boolean updateMotion(CubismModel model, float deltaTimeSeconds, float[] opacity) {
         userTimeSeconds += deltaTimeSeconds;
 
-        final boolean isUpdated = doUpdateMotion(model, userTimeSeconds, opacity);
+        final boolean isUpdated = doUpdateMotion(model, userTimeSeconds);
 
         if (isFinished()) {
             currentPriority = 0;   // 再生中モーションの優先度を解除

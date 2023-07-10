@@ -13,8 +13,6 @@ import com.live2d.sdk.cubism.framework.model.CubismModel;
 import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
 import com.live2d.sdk.cubism.framework.utils.CubismDebug;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.Collections;
@@ -70,7 +68,17 @@ public class CubismRendererAndroid extends CubismRenderer {
 
     @Override
     public void initialize(CubismModel model, int maskBufferCount) {
+        // 頂点情報をキャッシュする。
+        drawableInfoCachesHolder = new CubismDrawableInfoCachesHolder(model);
+
         if (model.isUsingMasking()) {
+            // マスクバッファの枚数として、0または負の値が指定されている場合は強制的に1枚と設定し、警告ログを出力する。
+            // Webと違いCubismOffscreenSurfaceの配列を作成するため、こちらで不正値を検知し修正する。
+            if (maskBufferCount < 1) {
+                maskBufferCount = 1;
+                CubismDebug.cubismLogWarning("The number of render textures must be an integer greater than or equal to 1. Set the number of render textures to 1.");
+            }
+
             // Initialize clipping mask and buffer preprocessing method
             clippingManager = new CubismClippingManagerAndroid();
             clippingManager.initialize(
@@ -104,13 +112,13 @@ public class CubismRendererAndroid extends CubismRenderer {
 
         if (offscreenFrameBuffers != null) {
             for (int i = 0; i < offscreenFrameBuffers.length; i++) {
-                offscreenFrameBuffers[i].destroyOffscreenFrame();
+                if (offscreenFrameBuffers[i].isValid()) {
+                    offscreenFrameBuffers[i].destroyOffscreenFrame();
+                }
             }
         }
 
-        vertexArrayFloatBufferCache = null;
-        uvArrayFloatBufferCache = null;
-        indexArrayBufferCache = null;
+        drawableInfoCachesHolder = null;
     }
 
     /**
@@ -324,44 +332,6 @@ public class CubismRendererAndroid extends CubismRenderer {
             sortedDrawableIndexList[order] = i;
         }
 
-        // FloatBufferのリストが空なら全Drawableの頂点とUV頂点のFloatBufferを作成して格納する
-        if (vertexArrayFloatBufferCache == null) {
-            vertexArrayFloatBufferCache = new FloatBuffer[drawableCount];
-            for (int i = 0; i < drawableCount; i++) {
-                final int drawableIndex = sortedDrawableIndexList[i];
-                float[] vertexArray = model.getDrawableVertices(drawableIndex);
-
-                ByteBuffer bb = ByteBuffer.allocateDirect(vertexArray.length * 4);
-                bb.order(ByteOrder.nativeOrder());
-                FloatBuffer buffer = bb.asFloatBuffer();
-                vertexArrayFloatBufferCache[drawableIndex] = buffer;
-            }
-        }
-        if (uvArrayFloatBufferCache == null) {
-            uvArrayFloatBufferCache = new FloatBuffer[drawableCount];
-            for (int i = 0; i < drawableCount; i++) {
-                final int drawableIndex = sortedDrawableIndexList[i];
-                float[] uvArray = model.getDrawableVertexUvs(drawableIndex);
-
-                ByteBuffer bb = ByteBuffer.allocateDirect(uvArray.length * 4);
-                bb.order(ByteOrder.nativeOrder());
-                FloatBuffer buffer = bb.asFloatBuffer();
-                uvArrayFloatBufferCache[drawableIndex] = buffer;
-            }
-        }
-        if (indexArrayBufferCache == null) {
-            indexArrayBufferCache = new ShortBuffer[drawableCount];
-            for (int i = 0; i < drawableCount; i++) {
-                final int drawableIndex = sortedDrawableIndexList[i];
-                short[] indexArray = model.getDrawableVertexIndices(drawableIndex);
-
-                ByteBuffer bb = ByteBuffer.allocateDirect(indexArray.length * 4);
-                bb.order(ByteOrder.nativeOrder());
-                ShortBuffer buffer = bb.asShortBuffer();
-                indexArrayBufferCache[drawableIndex] = buffer;
-            }
-        }
-
         // Draw process
         for (int i = 0; i < drawableCount; i++) {
             final int drawableIndex = sortedDrawableIndexList[i];
@@ -373,8 +343,8 @@ public class CubismRendererAndroid extends CubismRenderer {
 
             // Set clipping mask
             CubismClippingContext clipContext = (clippingManager != null)
-                                                ? clippingManager.getClippingContextListForDraw().get(drawableIndex)
-                                                : null;
+                ? clippingManager.getClippingContextListForDraw().get(drawableIndex)
+                : null;
 
             // マスクを描く必要がある
             if (clipContext != null && isUsingHighPrecisionMask()) {
@@ -386,17 +356,14 @@ public class CubismRendererAndroid extends CubismRenderer {
                     // バッファをクリアする
                     preDraw();
 
-                    for (int j = 0; j < clippingManager.getRenderTextureCount(); j++) {
+                    // マスク描画処理
+                    // マスク用RenderTextureをactiveにセット
+                    getMaskBuffer(clipContext.bufferIndex).beginDraw(rendererProfile.lastFBO);
 
-                        offscreenFrameBuffers[j].beginDraw(rendererProfile.lastFBO);
-
-                        final int maskRenderTexture = clipContext.getClippingManager().getMaskRenderTexture()[clipContext.bufferIndex];
-                        glBindFramebuffer(GL_FRAMEBUFFER, maskRenderTexture);
-
-                        // マスクをクリアする
-                        // 1が無効（描かれない）領域、0が有効（描かれる）領域。（シェーダーでCd*Csで0に近い値をかけてマスクを作る。1をかけると何も起こらない）
-                        offscreenFrameBuffers[j].clear(1.0f, 1.0f, 1.0f, 1.0f);
-                    }
+                    // マスクをクリアする。
+                    // 1が無効（描かれない領域）、0が有効（描かれる）領域。（シェーダーでCd*Csで0に近い値をかけてマスクを作る。1をかけると何も起こらない。）
+                    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+                    glClear(GL_COLOR_BUFFER_BIT);
                 }
 
                 final int clipDrawCount = clipContext.clippingIdCount;
@@ -414,20 +381,21 @@ public class CubismRendererAndroid extends CubismRenderer {
                     // チャンネルも切り替える必要がある（A,R,G,B）
                     setClippingContextBufferForMask(clipContext);
 
-                    ShortBuffer indexArrayBuffer = indexArrayBufferCache[clipDrawIndex];
-                    indexArrayBuffer.clear();
-                    indexArrayBuffer.put(model.getDrawableVertexIndices(clipDrawIndex));
-                    indexArrayBuffer.position(0);
-
-                    FloatBuffer vertexArrayBuffer = vertexArrayFloatBufferCache[clipDrawIndex];
-                    vertexArrayBuffer.clear();
-                    vertexArrayBuffer.put(model.getDrawableVertices(clipDrawIndex));
-                    vertexArrayBuffer.position(0);
-
-                    FloatBuffer uvArrayBuffer = uvArrayFloatBufferCache[clipDrawIndex];
-                    uvArrayBuffer.clear();
-                    uvArrayBuffer.put(model.getDrawableVertexUvs(clipDrawIndex));
-                    uvArrayBuffer.position(0);
+                    // vertex array
+                    FloatBuffer vertexArrayBuffer = drawableInfoCachesHolder.setUpVertexArray(
+                        clipDrawIndex,
+                        model.getDrawableVertices(clipDrawIndex)
+                    );
+                    // uv array
+                    FloatBuffer uvArrayBuffer = drawableInfoCachesHolder.setUpUvArray(
+                        clipDrawIndex,
+                        model.getDrawableVertexUvs(clipDrawIndex)
+                    );
+                    // index array
+                    ShortBuffer indexArrayBuffer = drawableInfoCachesHolder.setUpIndexArray(
+                        clipDrawIndex,
+                        model.getDrawableVertexIndices(clipDrawIndex)
+                    );
 
                     drawMeshAndroid(
                         model.getDrawableTextureIndex(clipDrawIndex),
@@ -453,7 +421,6 @@ public class CubismRendererAndroid extends CubismRenderer {
                         rendererProfile.lastViewport[2],
                         rendererProfile.lastViewport[3]
                     );
-                    preDraw();  // バッファをクリアする
                 }
             }
             // クリッピングマスクをセットする
@@ -461,20 +428,23 @@ public class CubismRendererAndroid extends CubismRenderer {
 
             isCulling(model.getDrawableCulling(drawableIndex));
 
-            FloatBuffer vertexArrayBuffer = vertexArrayFloatBufferCache[drawableIndex];
-            vertexArrayBuffer.clear();
-            vertexArrayBuffer.put(model.getDrawableVertices(drawableIndex));
-            vertexArrayBuffer.position(0);
+            // vertex array
+            FloatBuffer vertexArrayBuffer = drawableInfoCachesHolder.setUpVertexArray(
+                drawableIndex,
+                model.getDrawableVertices(drawableIndex)
+            );
 
-            FloatBuffer uvArrayBuffer = uvArrayFloatBufferCache[drawableIndex];
-            uvArrayBuffer.clear();
-            uvArrayBuffer.put(model.getDrawableVertexUvs(drawableIndex));
-            uvArrayBuffer.position(0);
+            // uv array
+            FloatBuffer uvArrayBuffer = drawableInfoCachesHolder.setUpUvArray(
+                drawableIndex,
+                model.getDrawableVertexUvs(drawableIndex)
+            );
 
-            ShortBuffer indexArrayBuffer = indexArrayBufferCache[drawableIndex];
-            indexArrayBuffer.clear();
-            indexArrayBuffer.put(model.getDrawableVertexIndices(drawableIndex));
-            indexArrayBuffer.position(0);
+            // index array
+            ShortBuffer indexArrayBuffer = drawableInfoCachesHolder.setUpIndexArray(
+                drawableIndex,
+                model.getDrawableVertexIndices(drawableIndex)
+            );
 
             drawMeshAndroid(
                 model.getDrawableTextureIndex(drawableIndex),
@@ -492,11 +462,6 @@ public class CubismRendererAndroid extends CubismRenderer {
         }
         postDraw();
     }
-
-    // doDrawModelメソッド内でのみ使用されるキャッシュ変数
-    private FloatBuffer[] vertexArrayFloatBufferCache;
-    private FloatBuffer[] uvArrayFloatBufferCache;
-    private ShortBuffer[] indexArrayBufferCache;
 
     @Override
     protected void drawMesh(CubismModel model, int drawableIndex) {
@@ -579,6 +544,10 @@ public class CubismRendererAndroid extends CubismRenderer {
         return offscreenFrameBuffers[index];
     }
 
+    CubismDrawableInfoCachesHolder getDrawableInfoCachesHolder() {
+        return drawableInfoCachesHolder;
+    }
+
     /**
      * Additional proccesing at the start of drawing
      * This method implements the necessary processing for the clipping mask before drawing the model
@@ -643,4 +612,8 @@ public class CubismRendererAndroid extends CubismRenderer {
      */
     private CubismClippingContext clippingContextBufferForDraw;
 
+    /**
+     * Drawable情報のキャッシュ変数
+     */
+    private CubismDrawableInfoCachesHolder drawableInfoCachesHolder;
 }

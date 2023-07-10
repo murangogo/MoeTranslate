@@ -215,7 +215,7 @@ public abstract class ACubismMotion {
      *
      * @return return true if the key exists
      */
-    public boolean isExistOpacity() {
+    public boolean isExistModelOpacity() {
         return false;
     }
 
@@ -225,7 +225,7 @@ public abstract class ACubismMotion {
      *
      * @return success: index of the transparency curve
      */
-    public int getOpacityIndex() {
+    public int getModelOpacityIndex() {
         return -1;
     }
 
@@ -234,18 +234,8 @@ public abstract class ACubismMotion {
      *
      * @return success: atransparency curve
      */
-    public CubismId getOpacityId(int index) {
+    public CubismId getModelOpacityId(int index) {
         return null;
-    }
-
-    /**
-     * Return the transparency value for the specified time.
-     *
-     * @param motionTimeSeconds current playback duration[s]
-     * @return transparency value the value of Opacity at the relevant time of the motion
-     */
-    public float getOpacityValue(float motionTimeSeconds) {
-        return 1.0f;
     }
 
     /**
@@ -262,6 +252,16 @@ public abstract class ACubismMotion {
         float weight,
         CubismMotionQueueEntry motionQueueEntry
     );
+
+    /**
+     * 指定時間の透明度の値を返す。
+     * NOTE: 更新後の値を取るには`updateParameters()` の後に呼び出す。
+     *
+     * @return success : モーションの当該時間におけるOpacityの値
+     */
+    protected float getModelOpacityValue() {
+        return 1.0f;
+    }
 
     /**
      * Time for fade-in [s]
