@@ -63,7 +63,10 @@ public class ImageTranslate
                 }
             }
         } catch (TencentCloudSDKException e) {
-            tencentTranslateResult.append(e.toString());
+            String s1 = e.toString().split("]code:")[1];
+            StringBuffer sb = new StringBuffer();
+            sb.append("发生错误，错误码为：").append(s1).append("，您可在萌译的“Me”页面查找有关此错误码的信息。");
+            tencentTranslateResult.append(sb);
         }
         return tencentTranslateResult.toString();
     }

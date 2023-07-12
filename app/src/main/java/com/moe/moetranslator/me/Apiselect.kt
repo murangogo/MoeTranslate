@@ -9,12 +9,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.moe.moetranslator.databinding.FragmentApiselectBinding
 import com.moe.moetranslator.utils.MySharedPreferenceData
-import android.R
+import com.moe.moetranslator.R
+import android.graphics.drawable.Drawable
 
 import android.widget.RadioGroup
-
-
-
+import androidx.core.content.res.ResourcesCompat
+import com.moe.moetranslator.utils.UtilTools
 
 
 class Apiselect : Fragment() {
@@ -40,6 +40,18 @@ class Apiselect : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val drawable1: Drawable? = ResourcesCompat.getDrawable(resources,R.drawable.tencentyun,null)
+        drawable1!!.setBounds(0,0,UtilTools.dip2px(context!!,50.0),UtilTools.dip2px(context!!,50.0));//第一0是距左右边距离，第二0是距上下边距离，第三长度,第四宽度
+        binding.tencentyunbtn.setCompoundDrawables(drawable1,null,null,null);//设置drawable
+
+        val drawable2: Drawable? = ResourcesCompat.getDrawable(resources,R.drawable.baiduyi,null)
+        drawable2!!.setBounds(0,0,UtilTools.dip2px(context!!,50.0),UtilTools.dip2px(context!!,50.0));//第一0是距左右边距离，第二0是距上下边距离，第三长度,第四宽度
+        binding.baiduyibtn.setCompoundDrawables(drawable2,null,null,null);//设置drawable
+
+        val drawable3: Drawable? = ResourcesCompat.getDrawable(resources,R.drawable.chatgpt,null)
+        drawable3!!.setBounds(0,0,UtilTools.dip2px(context!!,50.0),UtilTools.dip2px(context!!,50.0));//第一0是距左右边距离，第二0是距上下边距离，第三长度,第四宽度
+        binding.chatgptbtn.setCompoundDrawables(drawable3,null,null,null);//设置drawable
+
         binding.chatgptbtn.setOnClickListener {
             binding.chatgptbtn.isChecked = false;
             Toast.makeText(context,"将在后续版本中推出。", Toast.LENGTH_LONG).show()
