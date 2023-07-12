@@ -125,8 +125,8 @@ class TranslateFragment : Fragment() {
             }else{
                 if(((repository.ApiChoose==0)&&((repository.TencentApiS=="")||(repository.TencentApiK=="")))||((repository.ApiChoose==1)&&((config.appId=="")||(config.secretKey=="")))){
                     val dialogperapi = AlertDialog.Builder(activity)
-                        .setTitle("未配置${if(repository.ApiChoose==1)"百度翻译" else "腾讯云"}API")
-                        .setMessage("您未配置${if(repository.ApiChoose==1)"百度翻译" else "腾讯云"}API，将无法使用翻译功能，请配置${if(repository.ApiChoose==0)"百度翻译" else "腾讯云"}API。")
+                        .setTitle("未配置${if(repository.ApiChoose==0)"腾讯云" else "百度翻译"}API")
+                        .setMessage("您未配置${if(repository.ApiChoose==0)"腾讯云" else "百度翻译"}API，将无法使用翻译功能，请配置${if(repository.ApiChoose==0)"腾讯云" else "百度翻译"}API。")
                         .setCancelable(false)
                         .setPositiveButton("去配置") { _, _ ->
                             var intent2 = Intent(context, SettingPageActivity::class.java)
