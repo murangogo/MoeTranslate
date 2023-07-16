@@ -109,18 +109,18 @@ class Chatwithclaude : Fragment() {
         }
         binding.settingClaude.setOnClickListener {
             val customView:View = LayoutInflater.from(context).inflate(R.layout.claude_setting, null,false)
+            if(repository.ClaudeT!=""){
+                customView.findViewById<EditText>(R.id.slack_token).hint = "（已保存）"
+            }
+            if(repository.ClaudeD!=""){
+                customView.findViewById<EditText>(R.id.slack_memberid).hint = "（已保存）"
+            }
             val mytoken = customView.findViewById<EditText>(R.id.slack_token)
             val mymember = customView.findViewById<EditText>(R.id.slack_memberid)
             val myintr = customView.findViewById<TextView>(R.id.slack_intr)
             val font = Typeface.createFromAsset(context!!.assets, "translatefonts.ttf")
             myintr.typeface = font
             val dialogBuilder = AlertDialog.Builder(context).setView(customView).setCancelable(false).setNegativeButton("取消"){_,_->}.setPositiveButton("保存"){_,_->
-                if(repository.ClaudeT!=""){
-                    customView.findViewById<EditText>(R.id.slack_token).hint = "（已保存）"
-                }
-                if(repository.ClaudeD!=""){
-                    customView.findViewById<EditText>(R.id.slack_memberid).hint = "（已保存）"
-                }
                 repository.saveClaudeT(mytoken.text.toString())
                 repository.saveClaudeD(mymember.text.toString())
                 Toast.makeText(context,"保存成功", Toast.LENGTH_LONG).show()

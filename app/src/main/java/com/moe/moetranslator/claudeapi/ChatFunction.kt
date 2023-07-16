@@ -42,8 +42,15 @@ class ChatFunction {
             } ?: return "No response from bot within timeout."
             return botMessage
         } catch (e: Exception) {
-            e.printStackTrace()
-            return e.toString()
+            return when (e) {
+                is NullPointerException -> {
+                    "设置的Token或Member ID有误，请检查。"
+                }
+
+                else -> {
+                    e.toString()
+                }
+            }
         }
     }
 }
