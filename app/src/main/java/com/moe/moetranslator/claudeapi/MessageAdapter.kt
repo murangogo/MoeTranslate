@@ -15,7 +15,7 @@ class MessageAdapter(private var messages: List<ChatMessage>): RecyclerView.Adap
 
     class MessageViewHolder(val messageView: View) : RecyclerView.ViewHolder(messageView){
         val textView: TextView = messageView.findViewById(R.id.respone_text)
-        var imgview : ImageView = messageView.findViewById(R.id.userimg)
+        var imgview : ImageView = messageView.findViewById(R.id.chatheadimg)
         var mylinearlayout = messageView.findViewById<LinearLayout>(R.id.recycleadapter)
     }
 
@@ -33,7 +33,9 @@ class MessageAdapter(private var messages: List<ChatMessage>): RecyclerView.Adap
     override fun onBindViewHolder(holder: MessageAdapter.MessageViewHolder, position: Int) {
         val currentMessage = messages[position]
         holder.textView.text = currentMessage.content
-        if (currentMessage.sender==2){
+        if (currentMessage.sender==1){
+            holder.imgview.setImageResource(R.drawable.claude)
+        }else{
             holder.imgview.setImageResource(R.drawable.userimg)
             holder.mylinearlayout.setBackgroundColor(Color.argb(217,247,247,248))
         }

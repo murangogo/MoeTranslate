@@ -95,7 +95,6 @@ class Chatwithclaude : Fragment() {
                     binding.buttonSend.isClickable = false
                     // launch a coroutine to send the message and receive the response
                     lifecycleScope.launch(Dispatchers.IO) {
-                        //val response = chatfunction.talk("xoxp-5580890948371-5604711817952-5584407051651-a89dc5f11299f2b1918a8c3b8fe906d3", "U05GNE3J3KR", messageText)
                         val response = chatfunction.talk(repository.ClaudeT!!,repository.ClaudeD!!,messageText)
                         val botMessage = ChatMessage(content = response, timestamp = System.currentTimeMillis(), sender = 1)
                         messageViewModel.insert(botMessage)
