@@ -28,6 +28,8 @@ class MySharedPreferenceData(context: Context) {
         private const val Tencent_Api_S = "TencentAPISecretId"
         private const val Tencent_Api_K = "TencentAPISecretKey"
         private const val Api_Choose = "ApiChoose"
+        private const val Claude_Api_T = "ClaudeAPIToken"
+        private const val Claude_D = "BotID"
     }
     init {
         pref = context.getSharedPreferences("config", Context.MODE_PRIVATE)
@@ -54,6 +56,9 @@ class MySharedPreferenceData(context: Context) {
     val TencentApiS : String? get() = pref.getString(Tencent_Api_S,"")
     val TencentApiK : String? get() = pref.getString(Tencent_Api_K,"")
     val ApiChoose : Int get() = pref.getInt(Api_Choose,0) //0为腾讯云，1为百度翻译
+
+    val ClaudeT : String? get() = pref.getString(Claude_Api_T,"")
+    val ClaudeD : String? get() = pref.getString(Claude_D,"")
 
 
     //保存数据
@@ -122,6 +127,16 @@ class MySharedPreferenceData(context: Context) {
     fun saveTencentAPIS(s:String) {
         val editor = pref.edit()
         editor.putString(Tencent_Api_S,s)
+        editor.apply()
+    }
+    fun saveClaudeT(s:String) {
+        val editor = pref.edit()
+        editor.putString(Claude_Api_T,s)
+        editor.apply()
+    }
+    fun saveClaudeD(s:String) {
+        val editor = pref.edit()
+        editor.putString(Claude_D,s)
         editor.apply()
     }
     fun saveTencentAPIK(s:String) {

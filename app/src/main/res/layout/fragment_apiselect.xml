@@ -57,9 +57,9 @@
             android:id="@+id/chatgptbtn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:drawableEnd="@drawable/chatgpt"
+            android:drawableEnd="@drawable/claude"
             android:drawablePadding="@dimen/fab_margin"
-            android:text="ChatGPT(Not available)"
+            android:text="Claude(Beta)"
             android:textColor="#6A6464"
             android:textSize="20sp"
             android:layoutDirection="rtl"/>

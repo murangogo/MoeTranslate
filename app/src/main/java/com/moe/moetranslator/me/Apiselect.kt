@@ -1,5 +1,7 @@
 package com.moe.moetranslator.me
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,6 +13,7 @@ import com.moe.moetranslator.databinding.FragmentApiselectBinding
 import com.moe.moetranslator.utils.MySharedPreferenceData
 import com.moe.moetranslator.R
 import android.graphics.drawable.Drawable
+import android.net.Uri
 
 import android.widget.RadioGroup
 import androidx.core.content.res.ResourcesCompat
@@ -48,13 +51,20 @@ class Apiselect : Fragment() {
         drawable2!!.setBounds(0,0,UtilTools.dip2px(context!!,50.0),UtilTools.dip2px(context!!,50.0));//第一0是距左右边距离，第二0是距上下边距离，第三长度,第四宽度
         binding.baiduyibtn.setCompoundDrawables(drawable2,null,null,null);//设置drawable
 
-        val drawable3: Drawable? = ResourcesCompat.getDrawable(resources,R.drawable.chatgpt,null)
+        val drawable3: Drawable? = ResourcesCompat.getDrawable(resources,R.drawable.claude,null)
         drawable3!!.setBounds(0,0,UtilTools.dip2px(context!!,50.0),UtilTools.dip2px(context!!,50.0));//第一0是距左右边距离，第二0是距上下边距离，第三长度,第四宽度
         binding.chatgptbtn.setCompoundDrawables(drawable3,null,null,null);//设置drawable
 
         binding.chatgptbtn.setOnClickListener {
             binding.chatgptbtn.isChecked = false;
-            Toast.makeText(context,"将在后续版本中推出。", Toast.LENGTH_LONG).show()
+            val dialogperapi = AlertDialog.Builder(activity)
+                .setTitle("Claude(Beta)")
+                .setMessage("考虑到使用ChatGPT需要借助科学上网，而且目前ChatGPT的账号难以注册，再加上使用cookie来连接ChatGPT非常不稳定。因此改用了国内可用的Claude。Claude类似于ChatGPT，也是一个人工智能聊天机器人，但由于Claude也不支持识图，所以仅推出了聊天功能，并不支持翻译。您可在底部导航栏的“Claude”页面体验。")
+                .setCancelable(false)
+                .setNegativeButton("我知道了") { _, _ ->}
+                .create()
+            dialogperapi.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+            dialogperapi.show()
         }
         when(repository.ApiChoose){
             0->binding.tencentyunbtn.isChecked = true

@@ -35,10 +35,11 @@ class Dialogs {
     @SuppressLint("MissingInflatedId")
     fun FloatFirstDialog(context: Context){
         repository = MySharedPreferenceData(context)
-        val customView:View = LayoutInflater.from(context).inflate(R.layout.floating_dialog_first, null,false);
+        val customView:View = LayoutInflater.from(context).inflate(R.layout.floating_dialog_first, null,false)
         val lv = customView.findViewById<ListView>(R.id.firstList)
         val imgIcon = customView.findViewById<ImageView>(R.id.TitleIcon)
         val myWelcome = customView.findViewById<TextView>(R.id.welcome)
+
         var random = Math.random()
         if(random>0.8){
             myWelcome.text = " 哎呀，摸鱼被发现啦～"

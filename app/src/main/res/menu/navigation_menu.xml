@@ -4,14 +4,19 @@
         android:id="@+id/me_fragment"
         android:title="@string/about_me"
         android:icon="@drawable/me_icon"
-        android:orderInCategory="3"/>
+        android:orderInCategory="4"/>
 
+    <item
+        android:id="@+id/claude_fragment"
+        android:title="@string/claude_page"
+        android:icon="@drawable/claude_chat"
+        android:orderInCategory="2"/>
 
     <item
         android:id="@+id/fun_fragment"
         android:title="@string/fun_with_madoka"
         android:icon="@drawable/madoka_icon"
-        android:orderInCategory="2"/>
+        android:orderInCategory="3"/>
 
 
     <item

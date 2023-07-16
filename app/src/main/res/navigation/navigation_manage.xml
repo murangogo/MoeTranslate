@@ -11,8 +11,8 @@
         android:label="fragment_translate"
         tools:layout="@layout/translate_fragment" >
         <action
-            android:id="@+id/action_translateFragement_to_funWithMadoka"
-            app:destination="@id/fun_fragment" />
+            android:id="@+id/action_translate_fragment_to_chatwithclaude"
+            app:destination="@id/claude_fragment" />
     </fragment>
 
     <fragment
@@ -30,5 +30,15 @@
         android:name="com.moe.moetranslator.me.AboutMe"
         android:label="about_me_fragment"
         tools:layout="@layout/about_me_fragment" />
+
+    <fragment
+        android:id="@+id/claude_fragment"
+        android:name="com.moe.moetranslator.claudeapi.Chatwithclaude"
+        android:label="fragment_chatwithclaude"
+        tools:layout="@layout/fragment_chatwithclaude" >
+        <action
+            android:id="@+id/action_chatwithclaude_to_fun_fragment"
+            app:destination="@id/fun_fragment" />
+    </fragment>
 
 </navigation>

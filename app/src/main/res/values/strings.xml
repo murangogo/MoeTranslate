@@ -5,6 +5,7 @@
     <string name="accessibility_service_description">【功能描述】启用无障碍权限以获取屏幕截图，从而进行翻译。</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="translate_page">Translate</string>
+    <string name="claude_page">Claude</string>
     <string name="fun_with_madoka">Madoka</string>
     <string name="about_me">Me</string>
     <!-- TODO: Remove or change this placeholder text -->
