@@ -35,6 +35,7 @@ class MessageAdapter(private var messages: List<ChatMessage>): RecyclerView.Adap
         holder.textView.text = currentMessage.content
         if (currentMessage.sender==1){
             holder.imgview.setImageResource(R.drawable.claude)
+            holder.mylinearlayout.setBackgroundColor(Color.argb(255,247,243,235))
         }else{
             holder.imgview.setImageResource(R.drawable.userimg)
             holder.mylinearlayout.setBackgroundColor(Color.argb(217,247,247,248))
