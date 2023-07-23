@@ -38,10 +38,10 @@ class ApiConfig : Fragment() {
         binding.textViewAPIConfig.text = if (repository.ApiChoose==0) "API：腾讯云" else "API：百度翻译"
         if((repository.ApiChoose==0)&&(repository.TencentApiS=="")){
             binding.account.hint = "SecretId"
-            binding.account.hint = "SecretKey"
+            binding.password.hint = "SecretKey"
         }else if ((repository.ApiChoose==1)&&(repository.BaiduApiA=="")){
             binding.account.hint = "APP ID"
-            binding.account.hint = "密钥"
+            binding.password.hint = "密钥"
         }
         if((repository.ApiChoose==0)&&(repository.TencentApiS!="")){
             binding.account.hint = repository.TencentApiS+"（已保存）"
@@ -54,8 +54,14 @@ class ApiConfig : Fragment() {
             if(repository.ApiChoose==0){
                 val dialogperapi = AlertDialog.Builder(activity)
                     .setTitle("什么是腾讯云API")
-                    .setMessage("萌译可以使用腾讯云或百度翻译的API提供翻译服务，这意味着您需要从对应的平台申请API。检测到您现在选择的API平台为腾讯云，点击“现在就去”即可开始申请腾讯云API。申请后开通翻译服务（每月可免费享受1万次的调用），然后在控制台的“API密钥管理”中获取SecretId和SecretKey，复制粘贴在上面即可。")
+                    .setMessage("萌译可以使用腾讯云或百度翻译的API提供翻译服务，这意味着您需要从对应的平台申请API。检测到您现在选择的API平台为腾讯云，点击“现在就去”即可开始申请腾讯云API。申请腾讯云API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有1万次的免费调用次数。")
                     .setCancelable(false)
+                    .setNeutralButton("查看教程"){_,_->
+                        val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876975"
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(urlt)
+                        startActivity(intent)
+                    }
                     .setPositiveButton("现在就去") { _, _ ->
                         val url = "https://console.cloud.tencent.com/cam/capi"
                         val intent = Intent(Intent.ACTION_VIEW)
@@ -69,8 +75,14 @@ class ApiConfig : Fragment() {
             }else{
                 val dialogperapi = AlertDialog.Builder(activity)
                     .setTitle("什么是百度翻译API")
-                    .setMessage("萌译可以使用腾讯云或百度翻译的API提供翻译服务，这意味着您需要从对应的平台申请API。检测到您现在选择的API平台为百度翻译，点击“现在就去”即可开始申请百度翻译API。请注意在申请时选择个人开发者，申请后开通图片翻译服务（每月可免费享受1万次的调用）。最后在开发者信息中获取APP ID和密钥，复制粘贴在上面即可。")
+                    .setMessage("萌译可以使用腾讯云或百度翻译的API提供翻译服务，这意味着您需要从对应的平台申请API。检测到您现在选择的API平台为百度翻译，点击“现在就去”即可开始申请百度翻译API。申请百度翻译API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有1万次的免费调用次数。")
                     .setCancelable(false)
+                    .setNeutralButton("查看教程"){_,_->
+                        val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(urlt)
+                        startActivity(intent)
+                    }
                     .setPositiveButton("现在就去") { _, _ ->
                         val url = "https://fanyi-api.baidu.com/"
                         val intent = Intent(Intent.ACTION_VIEW)
