@@ -89,7 +89,7 @@ class FloatingService : Service() {
                         override fun onFailure(e: Throwable?) {
                             super.onFailure(e)
                             MainScope().launch {
-                                textview.text = "发生了未知错误，可能是由于网络未连接。"
+                                textview.text = "发生了未知错误，可能是由于网络未连接。若您连接了wifi，请关闭wifi，使用数据流量再试（这是由于wifi再加上开加速器导致网速缓慢，进一步造成的翻译超时）。"
                                 Log.e("ERR",e.toString())
                                 translateFinish = true
                             }

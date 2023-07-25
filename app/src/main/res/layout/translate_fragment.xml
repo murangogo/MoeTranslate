@@ -38,7 +38,7 @@
             android:id="@+id/floatball"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="100dp"
             android:text="开始吧"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,6 +89,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.214"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:text="建议开启数据流量使用本软件，这是由于wifi再加上开加速器可能导致网速缓慢，进一步造成翻译超时。"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectAPI" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

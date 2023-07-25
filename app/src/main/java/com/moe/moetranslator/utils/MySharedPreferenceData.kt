@@ -55,7 +55,7 @@ class MySharedPreferenceData(context: Context) {
     val BaiduApiP : String? get() = pref.getString(Baidu_Api_P,"")
     val TencentApiS : String? get() = pref.getString(Tencent_Api_S,"")
     val TencentApiK : String? get() = pref.getString(Tencent_Api_K,"")
-    val ApiChoose : Int get() = pref.getInt(Api_Choose,0) //0为腾讯云，1为百度翻译
+    val ApiChoose : Int get() = pref.getInt(Api_Choose,1) //0为腾讯云，1为百度翻译
 
     val ClaudeT : String? get() = pref.getString(Claude_Api_T,"")
     val ClaudeD : String? get() = pref.getString(Claude_D,"")
