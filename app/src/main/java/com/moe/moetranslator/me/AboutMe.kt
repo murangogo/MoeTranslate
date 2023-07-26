@@ -151,6 +151,11 @@ class AboutMe : Fragment() {
             intent3.putExtra("page",3)
             startActivity(intent3)
         }
+        binding.myfaqbtn.setOnClickListener {
+            var intent7 = Intent(context, SettingPageActivity::class.java)
+            intent7.putExtra("page",7)
+            startActivity(intent7)
+        }
         binding.updatebtn.setOnClickListener {
             getServiceVersion(scope)
         }

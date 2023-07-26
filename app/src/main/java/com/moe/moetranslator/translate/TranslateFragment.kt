@@ -116,7 +116,7 @@ class TranslateFragment : Fragment() {
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
                 val dialogper0 = AlertDialog.Builder(activity)
                     .setTitle("安卓版本不支持")
-                    .setMessage("检测到您的安卓版本小于Android 11（API 30）或Harmony OS版本低于3.0，这意味着您无法使用本软件的翻译功能，但您仍然可以使用除翻译功能外的其他功能。若您想体验本软件的全部功能，请升级系统或更换设备。")
+                    .setMessage("检测到您的安卓版本小于Android 11（API 30）或Harmony OS版本低于3.0（如果您的版本大于Harmony 3.0，请查看Me页面的“常见问题”），这意味着您无法使用本软件的翻译功能，但您仍然可以使用除翻译功能外的其他功能。若您想体验本软件的全部功能，请升级系统或更换设备。")
                     .setCancelable(false)
                     .setPositiveButton("我知道了") { _, _ -> }
                     .create()

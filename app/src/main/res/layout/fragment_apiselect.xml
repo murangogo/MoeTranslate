@@ -26,10 +26,9 @@
             android:id="@+id/APIRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checkedButton="@id/tencentyunbtn">
+            android:checkedButton="@id/baiduyibtn">
 
             <RadioButton
-                android:layout_marginTop="10dp"
                 android:id="@+id/baiduyibtn"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -41,6 +40,7 @@
                 android:layoutDirection="rtl"/>
 
             <RadioButton
+                android:layout_marginTop="10dp"
                 android:id="@+id/tencentyunbtn"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"

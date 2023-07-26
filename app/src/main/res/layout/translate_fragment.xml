@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:padding="10dp"
-            android:text="建议开启数据流量使用本软件，这是由于wifi再加上开加速器可能导致网速缓慢，进一步造成翻译超时。"
+            android:text="建议使用数据流量后再启用翻译，这是由于wifi再加上开加速器可能导致网速缓慢，进一步造成翻译超时。"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectAPI" />

@@ -32,6 +32,9 @@ class SettingPageActivity : AppCompatActivity() {
             6->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
                 Developer()
             ).commit()
+            7->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
+                MyFAQPage()
+            ).commit()
             else->Toast.makeText(applicationContext,"未知错误。", Toast.LENGTH_LONG).show()
         }
     }
