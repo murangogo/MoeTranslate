@@ -33,9 +33,11 @@ class FunWithMadoka : Fragment() {
         arrayOf("打招呼...", "冬天...", "打雪仗...", "闲聊...", "关于自己..."),
         arrayOf("打招呼...", "新年快乐...", "新年美食...", "闲聊...", "新年祝福..."),
         arrayOf("打招呼...", "这套泳衣...", "游泳技巧...", "闲聊...", "说再见..."),
-        arrayOf("打招呼...", "新的泳衣...", "关于大海...", "闲聊...", "盛夏的回忆...")
+        arrayOf("打招呼...", "新的泳衣...", "关于大海...", "闲聊...", "盛夏的回忆..."),
+        arrayOf("under construction..."),
+        arrayOf("under construction...")
     )
-    private val mRightMenu = arrayOf("校园制服", "魔法少女", "家庭便服", "温暖冬日", "恭贺新春", "清凉一夏", "海边时光")
+    private val mRightMenu = arrayOf("见泷原校服", "魔法少女", "睡衣", "情人节2018", "晴着ver", "泳装2018", "泳装ver","便服","女仆服（Scene0）")
     private lateinit var binding:FunWithMadokaFragmentBinding
     private lateinit var glRenderer : GLRenderer //自定义渲染器，该渲染器实现GLSurfaceView.Renderer接口
     private lateinit var dialogs: TextView
@@ -114,8 +116,7 @@ class FunWithMadoka : Fragment() {
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
-                            val message = Message()
-                            handler.sendMessage(message)
+                            handler.sendMessage(Message())
                         }
                     }
                     thread!!.start()
@@ -138,11 +139,13 @@ class FunWithMadoka : Fragment() {
                     LAppDelegate.getInstance().view.setChangedModel(true, position)
                     TalkSentences.clothes = position
                     if (ConstDatas.isTalking) {
+                        DisplayText = ""
+                        handler.sendMessage(Message())
                         binding.mycontainer.removeView(dialogs)
                         ConstDatas.isTalking = false
                     }
                 } else {
-                    Toast.makeText(context, "不要着急换衣服呀，让小圆说完吧...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "等等！让小圆说完吧...", Toast.LENGTH_SHORT).show()
                 }
 
             }
