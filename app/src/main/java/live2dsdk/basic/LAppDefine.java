@@ -143,11 +143,13 @@ public class LAppDefine {       //该类主要定义一些常量
     public enum ModelDir {      //枚举，定义模型位置路径
         MADOKA_SCHOOL(0, "Madoka_School"),
         MADOKA_MAGIC(1, "Madoka_Magic"),
-        MADOKA_HOME(2,"Madoka_Home"),
-        MADOKA_WINTER(3, "Madoka_Winter"),
+        MADOKA_PAJAMAS(2,"Madoka_Pajamas"),
+        MADOKA_VALENTINE(3, "Madoka_Valentine"),
         MADOKA_NEWYEAR(4, "Madoka_NewYear"),
         MADOKA_SWIMSUIT(5, "Madoka_Swimsuit"),
-        MADOKA_SWIMWEAR(6, "Madoka_Swimwear");
+        MADOKA_SWIMWEAR(6, "Madoka_Swimwear"),
+        MADOKA_DAYWEAR(6, "Madoka_Daywear"),
+        MADOKA_SCENE0(6, "Madoka_Scene0");
 
 
         private final int order;

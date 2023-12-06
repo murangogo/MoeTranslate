@@ -8,11 +8,11 @@ import android.widget.Toast;
 import live2dsdk.basic.LAppDefine;
 
 public class ClothPlay {
-    public static String[][] motion1 = new String[7][5];
-    public static String[][] motion2 = new String[7][5];
-    public static boolean[][] isContinue = new boolean[7][5];
-    public static String[][] emotion1 = new String[7][5];
-    public static String[][] emotion2 = new String[7][5];
+    public static String[][] motion1 = new String[9][5];
+    public static String[][] motion2 = new String[9][5];
+    public static boolean[][] isContinue = new boolean[9][5];
+    public static String[][] emotion1 = new String[9][5];
+    public static String[][] emotion2 = new String[9][5];
     public static Thread doEandM = null;
     static {
         motion1[0][0] = "2";emotion1[0][0] = "011";
@@ -50,6 +50,16 @@ public class ClothPlay {
         motion1[6][2] = "4";emotion1[6][2] = "040";
         motion1[6][3] = "5";emotion1[6][3] = "051";
         motion1[6][4] = "0";emotion1[6][4] = "011";
+        motion1[7][0] = "1";emotion1[7][0] = "010";
+        motion1[7][1] = "0";emotion1[7][1] = "010";
+        motion1[7][2] = "2";emotion1[7][2] = "011";
+        motion1[7][3] = "0";emotion1[7][3] = "010";
+        motion1[7][4] = "5";emotion1[7][4] = "011";
+        motion1[8][0] = "2";emotion1[8][0] = "011";
+        motion1[8][1] = "4";emotion1[8][1] = "040";
+        motion1[8][2] = "5";emotion1[8][2] = "051";
+        motion1[8][3] = "0";emotion1[8][3] = "011";
+        motion1[8][4] = "0";emotion1[8][4] = "011";
     }
     static {
         isContinue[0][1] = true;
@@ -111,15 +121,18 @@ public class ClothPlay {
            doEandM = new Thread(new Runnable() {
                @Override
                public void run() {
+                   Log.d("播放第一个","");
                    LAppLive2DManager.getInstance().getModel(0).setExpression("mtn_ex_" + emotion1[i][j] + ".exp3.json");
                    LAppLive2DManager.getInstance().getModel(0).startMotion("Motion", Integer.parseInt(motion1[i][j]), LAppDefine.Priority.FORCE.getPriority(),null);
                    if(isContinue[i][j]){
+                       Log.d("有第二个","");
                        try {
                            Thread.sleep(2500);
                        } catch (Throwable e) {
                            Log.d("a","b");
                        }
                        try {
+                       Log.d("播放第二个","");
                        LAppLive2DManager.getInstance().getModel(0).setExpression("mtn_ex_" + emotion2[i][j] + ".exp3.json");
                        LAppLive2DManager.getInstance().getModel(0).startMotion("Motion", Integer.parseInt(motion2[i][j]), LAppDefine.Priority.FORCE.getPriority(),null);
                        Thread.sleep(1500);
