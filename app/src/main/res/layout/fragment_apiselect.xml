@@ -53,18 +53,6 @@
 
         </RadioGroup>
 
-        <RadioButton
-            android:layout_marginTop="10dp"
-            android:id="@+id/chatgptbtn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:drawableEnd="@drawable/claude"
-            android:drawablePadding="@dimen/fab_margin"
-            android:text="Claude(Beta)"
-            android:textColor="#6A6464"
-            android:textSize="20sp"
-            android:layoutDirection="rtl"/>
-
     </LinearLayout>
 
     <TextView

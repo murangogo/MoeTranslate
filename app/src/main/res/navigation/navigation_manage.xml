@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/claude_fragment"
-        android:name="com.moe.moetranslator.claudeapi.Chatwithclaude"
+        android:name="com.moe.moetranslator.geminiapi.ChatwithGemini"
         android:label="fragment_chatwithclaude"
         tools:layout="@layout/fragment_chatwithclaude" >
         <action
