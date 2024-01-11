@@ -3,6 +3,5 @@
 3    package="com.live2d.sdk.cubism.framework" >
 4
 5    <uses-sdk android:minSdkVersion="23" />
-5-->D:\AndroidDevelopBasic\AndroidMD3Version\framework\src\main\AndroidManifest.xml
 6
 7</manifest>

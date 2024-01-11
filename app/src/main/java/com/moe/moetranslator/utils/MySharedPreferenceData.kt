@@ -6,30 +6,39 @@ import android.content.SharedPreferences
 class MySharedPreferenceData(context: Context) {
     private var pref: SharedPreferences
     companion object {
-        //部分配置
+        //是否为第一次运行
         private const val IS_FIRST_RUN = "FirstRun"
+        //百度翻译的源语言和目标语言
         private const val BLANGUAGE_FROM = "BTranslateFrom"
         private const val BLANGUAGE_TO = "BTranslateTo"
-        private const val TLANGUAGE_FROM = "TTranslateFrom"
-        private const val TLANGUAGE_TO = "TTranslateTo"
         private const val BFROM_NUMBER = "BTranslateFromNumber"
         private const val BTO_NUMBER = "BTranslateToNumber"
+        //腾讯云的源语言和目标语言
+        private const val TLANGUAGE_FROM = "TTranslateFrom"
+        private const val TLANGUAGE_TO = "TTranslateTo"
         private const val TFROM_NUMBER = "TTranslateFromNumber"
         private const val TTO_NUMBER = "TTranslateToNumber"
+        //截屏状态检测
         private const val Is_Croping = "IfCroping"
         private const val Is_Moving_Text = "IfMovingText"
+        //截屏尺寸
         private const val Crop_Scale_x1 = "CropScalex1"
         private const val Crop_Scale_x2 = "CropScalex2"
         private const val Crop_Scale_y1 = "CropScaley1"
         private const val Crop_Scale_y2 = "CropScaley2"
+        //屏幕参数（横竖）
         private const val Screen_Configuration = "ScreenConfiguration"
+        //百度翻译API参数
         private const val Baidu_Api_A = "BaiduAPIAccount"
         private const val Baidu_Api_P = "BaiduAPIPassword"
+        //腾讯云API参数
         private const val Tencent_Api_S = "TencentAPISecretId"
         private const val Tencent_Api_K = "TencentAPISecretKey"
+        //翻译API的选择
         private const val Api_Choose = "ApiChoose"
-        private const val Claude_Api_T = "ClaudeAPIToken"
-        private const val Claude_D = "BotID"
+        //Gemini API参数
+        private const val Gemini_Api = "GeminiApi"
+        private const val Gemini_Model = "GeminiModel"
     }
     init {
         pref = context.getSharedPreferences("config", Context.MODE_PRIVATE)
@@ -57,8 +66,8 @@ class MySharedPreferenceData(context: Context) {
     val TencentApiK : String? get() = pref.getString(Tencent_Api_K,"")
     val ApiChoose : Int get() = pref.getInt(Api_Choose,1) //0为腾讯云，1为百度翻译
 
-    val ClaudeT : String? get() = pref.getString(Claude_Api_T,"")
-    val ClaudeD : String? get() = pref.getString(Claude_D,"")
+    val GeminiApi : String? get() = pref.getString(Gemini_Api,"")
+    val GeminiModel : String? get() = pref.getString(Gemini_Model,"gemini-pro")
 
 
     //保存数据
@@ -129,14 +138,14 @@ class MySharedPreferenceData(context: Context) {
         editor.putString(Tencent_Api_S,s)
         editor.apply()
     }
-    fun saveClaudeT(s:String) {
+    fun saveGeminiApi(s:String) {
         val editor = pref.edit()
-        editor.putString(Claude_Api_T,s)
+        editor.putString(Gemini_Api,s)
         editor.apply()
     }
-    fun saveClaudeD(s:String) {
+    fun saveGeminiModel(s:String) {
         val editor = pref.edit()
-        editor.putString(Claude_D,s)
+        editor.putString(Gemini_Model,s)
         editor.apply()
     }
     fun saveTencentAPIK(s:String) {

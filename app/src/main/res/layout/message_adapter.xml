@@ -22,7 +22,7 @@
             android:id="@+id/chatheadimg"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/claude" />
+            android:src="@drawable/gemini" />
 
         <TextView
             android:id="@+id/respone_text"

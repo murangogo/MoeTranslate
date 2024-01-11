@@ -10,6 +10,7 @@ import android.graphics.PixelFormat
 import android.graphics.Point
 import android.graphics.RectF
 import android.net.Uri
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.view.*
@@ -119,7 +120,11 @@ class FloatingService : Service() {
         // 注册广播接收器
         Log.d("注意","正在注册接收器")
         val filter = IntentFilter(LetOnAccessibilityService.ACTION_SERVICE_STARTED)
-        registerReceiver(receiver, filter)
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU){
+            registerReceiver(receiver, filter)
+        }else{
+            registerReceiver(receiver, filter, RECEIVER_EXPORTED)
+        }
         Log.d("注意","接收器已注册")
 
         intent = Intent(this, LetOnAccessibilityService::class.java)
