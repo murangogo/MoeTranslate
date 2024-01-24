@@ -12,3 +12,4 @@ local.properties
 gradlew.bat
 gradlew
 .gitignore
+app/release
