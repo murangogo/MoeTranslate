@@ -35,7 +35,7 @@
         android:id="@+id/claude_fragment"
         android:name="com.moe.moetranslator.geminiapi.ChatwithGemini"
         android:label="fragment_chatwithclaude"
-        tools:layout="@layout/fragment_chatwithclaude" >
+        tools:layout="@layout/fragment_chatwithgemini" >
         <action
             android:id="@+id/action_chatwithclaude_to_fun_fragment"
             app:destination="@id/fun_fragment" />
