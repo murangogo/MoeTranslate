@@ -115,7 +115,7 @@ class ChatwithGemini : Fragment() {
                             )
                         }catch (e: Exception){
                             lifecycleScope.launch(Dispatchers.IO) {
-                                val response = "模型初始化失败，请检查Gemini API是否配置正确。"
+                                val response = "模型初始化失败，请检查Gemini API是否配置正确后重试。"
                                 val botMessage = ChatMessage(content = response, timestamp = System.currentTimeMillis(), sender = 1)
                                 messageViewModel.insert(botMessage)
                             }
