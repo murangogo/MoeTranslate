@@ -83,41 +83,47 @@ class AboutMe : Fragment() {
     }
 
     fun getServiceVersion(myscope: CoroutineScope): Job{
-        return myscope.launch { var versionCode:Long = 0
+        return myscope.launch {
+            var versionCode:Long = 0
             var versionName = ""
             var versionContent = ""
             val client = OkHttpClient()
-            val request = Request.Builder().url("https://www.moetranslate.top/version.json").build()
-
-            client.newCall(request).execute().use { response ->
-                if (response.isSuccessful) {
-                    val jsonData = response.body?.string()
-                    val obj = JSONParser().parse(jsonData)
-                    val jo = obj as JSONObject
-                    versionCode = jo["versionCode"] as Long
-                    versionName = jo["versionName"] as String
-                    versionContent = jo["versionContent"] as String
-                }
-                yield()
-                MainScope().launch {
-                    if (BuildConfig.VERSION_CODE < versionCode) {
-                        val dialogupdate = AlertDialog.Builder(activity)
-                            .setTitle("检测到新版本")
-                            .setMessage("检测到了新版本：$versionName，\n更新内容：$versionContent\n是否现在更新？点击去更新即可跳转到萌译官网，在官网中点击下载即可获取最新版本。")
-                            .setCancelable(false)
-                            .setPositiveButton("去更新") { _, _ ->
-                                val url = "https://www.moetranslate.top/"
-                                val intent = Intent(Intent.ACTION_VIEW)
-                                intent.data = Uri.parse(url)
-                                startActivity(intent)
-                            }
-                            .setNegativeButton("暂不更新") { _, _ -> }
-                            .create()
-                        dialogupdate.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-                        dialogupdate.show()
-                    } else {
-                        Toast.makeText(context, "已是最新版本。", Toast.LENGTH_LONG).show()
+            try{
+                val request = Request.Builder().url("https://www.moetranslate.top/version.json").build()
+                client.newCall(request).execute().use { response ->
+                    if (response.isSuccessful) {
+                        val jsonData = response.body?.string()
+                        val obj = JSONParser().parse(jsonData)
+                        val jo = obj as JSONObject
+                        versionCode = jo["versionCode"] as Long
+                        versionName = jo["versionName"] as String
+                        versionContent = jo["versionContent"] as String
                     }
+                    yield()
+                    MainScope().launch {
+                        if (BuildConfig.VERSION_CODE < versionCode) {
+                            val dialogupdate = AlertDialog.Builder(activity)
+                                .setTitle("检测到新版本")
+                                .setMessage("检测到了新版本：$versionName，\n$versionContent\n是否现在更新？点击去更新即可跳转到萌译官网，在官网中点击下载即可获取最新版本。")
+                                .setCancelable(false)
+                                .setPositiveButton("去更新") { _, _ ->
+                                    val url = "https://www.moetranslate.top/"
+                                    val intent = Intent(Intent.ACTION_VIEW)
+                                    intent.data = Uri.parse(url)
+                                    startActivity(intent)
+                                }
+                                .setNegativeButton("暂不更新") { _, _ -> }
+                                .create()
+                            dialogupdate.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                            dialogupdate.show()
+                        } else {
+                            Toast.makeText(context, "已是最新版本。", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }catch (_:Exception){
+                MainScope().launch{
+                    Toast.makeText(context, "检查更新失败，可能是网络未连接。", Toast.LENGTH_LONG).show()
                 }
             }
         }

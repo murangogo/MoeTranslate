@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FragmentDeveloperBinding
 import nl.dionsegijn.konfetti.core.Party
@@ -79,13 +81,24 @@ class Developer : Fragment() {
         binding.wechat.setOnClickListener {
             val dialogperapi = AlertDialog.Builder(activity)
                 .setTitle("萌译官方公众号")
-                .setMessage("您可以在微信搜索“MoeTranslator”，来关注官方公众号。")
+                .setMessage("    您可以截图下面的二维码，在微信中扫一扫；或者在微信搜索“MoeTranslator”来关注官方公众号。\n")
                 .setCancelable(false)
                 .setPositiveButton("我知道了") { _, _ -> }
                 .create()
+
+            // 创建一个新的ImageView
+            val imageView = ImageView(activity)
+            // 转换二维码图片
+            val qrCodeDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qrcode, null)
+            // 设置ImageView的图像为二维码
+            imageView.setImageDrawable(qrCodeDrawable)
+            // 使用setView方法将ImageView添加到AlertDialog中
+            dialogperapi.setView(imageView)
+
             dialogperapi.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
             dialogperapi.show()
         }
+
         binding.github.setOnClickListener {
             val dialogperapi = AlertDialog.Builder(activity)
                 .setTitle("萌译的GitHub仓库")

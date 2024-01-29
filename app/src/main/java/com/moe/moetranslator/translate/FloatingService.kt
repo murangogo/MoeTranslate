@@ -76,7 +76,7 @@ class FloatingService : Service() {
                         override fun onSuccess(response: String?) {
                             super.onSuccess(response)
                             Log.d("resp是","$response")
-                            AnalysisJson.jsonParse(response!!)
+                            AnalysisJson.jsonParse(response!!,repository.ApiChoose)
                             Log.d("结果","${Result.ResultWords}")
                             MainScope().launch {
                                 if(Result.ErrorCode=="0"){
@@ -106,8 +106,10 @@ class FloatingService : Service() {
             var md5Num = ImageTranslate.file2base64(ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
             var imageTranslate = ImageTranslate(repository.LanguageFrom_Tencent,repository.LanguageTo_Tencent,repository.TencentApiS,repository.TencentApiK,md5Num)
             var resultext = imageTranslate.StartTranslate()
+            AnalysisJson.jsonParse(resultext,repository.ApiChoose)
             MainScope().launch {
-                textview.text = resultext
+                textview.text = Result.ResultWords
+                Log.d("jsonanalysis","服务："+Result.ResultWords)
                 translateFinish = true
             }
         }
@@ -304,12 +306,20 @@ class FloatingService : Service() {
                     }
                 }
                 3->{
-                    showMyDialog(2)
+                    if(!isadded){
+                        makeToast("您还没有进行翻译，无需关闭翻译结果哦～")
+                    }else{
+                        mWindowManager.removeView(textview)
+                        isadded = false
+                    }
                 }
                 4->{
-                        stopSelf()
+                    showMyDialog(2)
                 }
                 5->{
+                    stopSelf()
+                }
+                6->{
                     makeToast(intent.getStringExtra("Message"))
                 }
                 else->{
