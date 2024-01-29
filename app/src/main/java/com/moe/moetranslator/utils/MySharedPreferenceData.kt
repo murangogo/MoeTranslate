@@ -39,6 +39,8 @@ class MySharedPreferenceData(context: Context) {
         //Gemini API参数
         private const val Gemini_Api = "GeminiApi"
         private const val Gemini_Model = "GeminiModel"
+        //检查更新版本
+        private const val Not_Update_Code = "NotUpdateCode"
     }
     init {
         pref = context.getSharedPreferences("config", Context.MODE_PRIVATE)
@@ -68,6 +70,8 @@ class MySharedPreferenceData(context: Context) {
 
     val GeminiApi : String? get() = pref.getString(Gemini_Api,"")
     val GeminiModel : String? get() = pref.getString(Gemini_Model,"gemini-pro")
+
+    val NotUpadateCode : Long get() = pref.getLong(Not_Update_Code,0)
 
 
     //保存数据
@@ -156,6 +160,11 @@ class MySharedPreferenceData(context: Context) {
     fun saveApi(i:Int){
         val editor = pref.edit()
         editor.putInt(Api_Choose,i)
+        editor.apply()
+    }
+    fun saveUpdateCode(i:Long){
+        val editor = pref.edit()
+        editor.putLong(Not_Update_Code,i)
         editor.apply()
     }
 }

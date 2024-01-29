@@ -3,6 +3,7 @@ package com.moe.moetranslator.translate
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,12 +16,23 @@ import android.view.accessibility.AccessibilityManager
 import android.widget.*
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
+import com.moe.moetranslator.BuildConfig
 import com.moe.moetranslator.utils.ConstDatas
 import com.moe.moetranslator.launch.FirstLaunchPage
 import com.moe.moetranslator.utils.MySharedPreferenceData
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.TranslateFragmentBinding
 import com.moe.moetranslator.me.SettingPageActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.simple.JSONObject
+import org.json.simple.parser.JSONParser
 import translateapi.baidufanyiapi.data.Config
 import translateapi.baidufanyiapi.data.Language
 import translateapi.tencentyunapi.ImageTranslate
@@ -44,9 +56,12 @@ class TranslateFragment : Fragment() {
     private val TtarLanguage_5 = arrayOf("中文", "英语")
     private lateinit var binding: TranslateFragmentBinding
     private lateinit var repository: MySharedPreferenceData
+    //检查更新使用的协程
+    private val job:Job = Job()
+    val scope = CoroutineScope(Dispatchers.Default + job)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("注意","onCreate")
+        Log.d("注意","FYonCreate")
         super.onCreate(savedInstanceState)
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
             AlertDialog.Builder(activity)
@@ -60,6 +75,12 @@ class TranslateFragment : Fragment() {
         repository = MySharedPreferenceData(context!!)
         config.appId = repository.BaiduApiA
         config.secretKey = repository.BaiduApiP
+        try {
+            checkForUpdates(scope)
+        }catch (_:Exception){
+
+        }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -198,6 +219,53 @@ class TranslateFragment : Fragment() {
 
         binding.help.setOnClickListener {
             context!!.startActivity(intent1)
+        }
+    }
+
+    fun checkForUpdates(myscope: CoroutineScope): Job {
+        return myscope.launch {
+            var versionCode:Long = 0
+            var versionName = ""
+            var versionContent = ""
+            val client = OkHttpClient()
+            try{
+                val request = Request.Builder().url("https://www.moetranslate.top/version.json").build()
+
+                client.newCall(request).execute().use { response ->
+                    if (response.isSuccessful) {
+                        val jsonData = response.body?.string()
+                        val obj = JSONParser().parse(jsonData)
+                        val jo = obj as JSONObject
+                        versionCode = jo["versionCode"] as Long
+                        versionName = jo["versionName"] as String
+                        versionContent = jo["versionContent"] as String
+                    }
+                    yield()
+                    MainScope().launch {
+                        if ((BuildConfig.VERSION_CODE < versionCode)&&(repository.NotUpadateCode!= versionCode)) {
+                            val dialogupdate = AlertDialog.Builder(activity)
+                                .setTitle("检测到新版本")
+                                .setMessage("检测到了新版本：$versionName，\n$versionContent\n是否现在更新？点击去更新即可跳转到萌译官网，在官网中点击下载即可获取最新版本。")
+                                .setCancelable(false)
+                                .setNeutralButton("此版本不再提醒"){_,_->
+                                    repository.saveUpdateCode(versionCode)
+                                }
+                                .setPositiveButton("去更新") { _, _ ->
+                                    val url = "https://www.moetranslate.top/"
+                                    val intent = Intent(Intent.ACTION_VIEW)
+                                    intent.data = Uri.parse(url)
+                                    startActivity(intent)
+                                }
+                                .setNegativeButton("暂不更新") { _, _ -> }
+                                .create()
+                            dialogupdate.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                            dialogupdate.show()
+                        }
+                    }
+                }
+            }catch (_:Exception){
+
+            }
         }
     }
 

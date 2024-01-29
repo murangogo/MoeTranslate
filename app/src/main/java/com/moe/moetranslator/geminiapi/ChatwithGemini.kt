@@ -148,12 +148,12 @@ class ChatwithGemini : Fragment() {
                         } catch (e: ServerException){
                             messageViewModel.appendContentByTimestamp(
                                 currenttime,
-                                "服务器返回信息："+e.message.toString()
+                                "服务器返回信息："+e.message.toString()+"\n开发者备注：若提示地区不可用，请更换科学上网地区为国外节点。"
                             )
                         } catch (e: Exception){
                             messageViewModel.appendContentByTimestamp(
                                 currenttime,
-                                "其他类型错误："+e.message.toString()+"\n开发者备注：大概率是API密钥含有中文或空格或其他非法字符导致的。"
+                                "其他类型错误："+e.message.toString()
                             )
                         }
                         MainScope().launch {
@@ -172,11 +172,11 @@ class ChatwithGemini : Fragment() {
             val redColor = ForegroundColorSpan(Color.parseColor("#E05858"))
             val startIndex1 = fullText.indexOf("科学上网")
             val endIndex1 = startIndex1 + "科学上网".length
-            val greenColor = ForegroundColorSpan(Color.parseColor("#6BC968"))
+            val blueColor = ForegroundColorSpan(Color.parseColor("#1485EE"))
             val startIndex2 = fullText.indexOf("配置非常简单")
             val endIndex2 = startIndex2 + "配置非常简单".length
             spannableString.setSpan(redColor, startIndex1, endIndex1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            spannableString.setSpan(greenColor, startIndex2, endIndex2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(blueColor, startIndex2, endIndex2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             textView.text = spannableString
 
             if(repository.GeminiApi!=""){

@@ -24,10 +24,11 @@ import java.lang.Exception
 
 class Dialogs {
     private lateinit var repository: MySharedPreferenceData
-    private var str = arrayOf("  选取翻译范围","  调整翻译结果位置","  字体大小设置","  关闭悬浮球","  回到萌译主界面")
+    private var str = arrayOf("  选取翻译范围","  调整翻译结果位置","  关闭翻译结果","  字体大小设置","  关闭悬浮球","  回到萌译主界面")
     private var img = arrayOf(
         R.drawable.cut_screen,
         R.drawable.word_position,
+        R.drawable.close_text,
         R.drawable.font_size,
         R.drawable.close_floatingball,
         R.drawable.back_moe
@@ -65,43 +66,51 @@ class Dialogs {
             override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 when(p2){
                     0->{
-                        val intent1 = Intent(context, FloatingService::class.java)
-                        val intent2 = Intent(context, FloatingService::class.java)
+                        val intent = Intent(context, FloatingService::class.java)
                         if(repository.IsCrop){
-                            intent2.putExtra("Opera",5)
-                            intent2.putExtra("Message","不可以重复打开选取框哦～")
-                            context.startService(intent2)
+                            intent.putExtra("Opera",6)
+                            intent.putExtra("Message","不可以重复打开选取框哦～")
+                            context.startService(intent)
                         }else if (repository.IsMovingText){
-                            intent2.putExtra("Opera",5)
-                            intent2.putExtra("Message","请先调整翻译结果位置")
-                            context.startService(intent2)
+                            intent.putExtra("Opera",6)
+                            intent.putExtra("Message","请先调整翻译结果位置")
+                            context.startService(intent)
                         }else{
-                            intent1.putExtra("Opera",1)
-                            context.startService(intent1)
+                            intent.putExtra("Opera",1)
+                            context.startService(intent)
                         }
                         myDialog.dismiss()
                     }
                     1->{
-                        val intent1 = Intent(context, FloatingService::class.java)
-                        val intent2 = Intent(context, FloatingService::class.java)
+                        val intent = Intent(context, FloatingService::class.java)
                         if(repository.IsCrop){
-                            intent2.putExtra("Opera",5)
-                            intent2.putExtra("Message","请先选取完截图位置")
-                            context.startService(intent2)
+                            intent.putExtra("Opera",6)
+                            intent.putExtra("Message","请先选取完截图位置")
+                            context.startService(intent)
                         }else if (repository.IsMovingText){
-                            intent2.putExtra("Opera",5)
-                            intent2.putExtra("Message","不可以重复打开翻译结果调整界面哦～")
-                            context.startService(intent2)
+                            intent.putExtra("Opera",6)
+                            intent.putExtra("Message","不可以重复打开翻译结果调整界面哦～")
+                            context.startService(intent)
                         }else{
-                            intent1.putExtra("Opera",2)
-                            context.startService(intent1)
+                            intent.putExtra("Opera",2)
+                            context.startService(intent)
                         }
                         myDialog.dismiss()
                     }
                     2->{
                         val intent = Intent(context, FloatingService::class.java)
-                        intent.putExtra("Opera",3)
-                        context.startService(intent)
+                        if(repository.IsCrop){
+                            intent.putExtra("Opera",6)
+                            intent.putExtra("Message","请先选取完截图位置")
+                            context.startService(intent)
+                        }else if (repository.IsMovingText){
+                            intent.putExtra("Opera",6)
+                            intent.putExtra("Message","请先调整翻译结果位置")
+                            context.startService(intent)
+                        }else{
+                            intent.putExtra("Opera",3)
+                            context.startService(intent)
+                        }
                         myDialog.dismiss()
                     }
                     3->{
@@ -111,6 +120,12 @@ class Dialogs {
                         myDialog.dismiss()
                     }
                     4->{
+                        val intent = Intent(context, FloatingService::class.java)
+                        intent.putExtra("Opera",5)
+                        context.startService(intent)
+                        myDialog.dismiss()
+                    }
+                    5->{
                         val intent = Intent(context, MainActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)
