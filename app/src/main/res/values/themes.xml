@@ -7,7 +7,7 @@
     <style name="Theme.MT" parent="Base.Theme.MT" />
     <style name="maintheme" parent="Base.Theme.MT">
         <item name="colorPrimaryDark">#F7F3EB</item>
-        <item name="android:navigationBarColor">#F2ECF6</item>
+        <item name="android:navigationBarColor">#F1F4FD</item>
     </style>
     <style name="settheme" parent="Base.Theme.MT">
         <item name="colorPrimaryDark">#F7F3EB</item>

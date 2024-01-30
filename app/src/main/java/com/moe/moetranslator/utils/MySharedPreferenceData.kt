@@ -41,6 +41,8 @@ class MySharedPreferenceData(context: Context) {
         private const val Gemini_Model = "GeminiModel"
         //检查更新版本
         private const val Not_Update_Code = "NotUpdateCode"
+        //通知公告
+        private const val Notice_Code = "NoticeCode"
     }
     init {
         pref = context.getSharedPreferences("config", Context.MODE_PRIVATE)
@@ -72,6 +74,8 @@ class MySharedPreferenceData(context: Context) {
     val GeminiModel : String? get() = pref.getString(Gemini_Model,"gemini-pro")
 
     val NotUpadateCode : Long get() = pref.getLong(Not_Update_Code,0)
+
+    val NoticeCode : Long get() = pref.getLong(Notice_Code,0)
 
 
     //保存数据
@@ -165,6 +169,11 @@ class MySharedPreferenceData(context: Context) {
     fun saveUpdateCode(i:Long){
         val editor = pref.edit()
         editor.putLong(Not_Update_Code,i)
+        editor.apply()
+    }
+    fun saveNoticeCode(i:Long){
+        val editor = pref.edit()
+        editor.putLong(Notice_Code,i)
         editor.apply()
     }
 }

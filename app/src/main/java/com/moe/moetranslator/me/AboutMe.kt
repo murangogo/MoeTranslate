@@ -163,6 +163,7 @@ class AboutMe : Fragment() {
             startActivity(intent7)
         }
         binding.updatebtn.setOnClickListener {
+            Toast.makeText(context, "正在检查更新...", Toast.LENGTH_LONG).show()
             getServiceVersion(scope)
         }
         binding.cleanbtn.setOnClickListener {

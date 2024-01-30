@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -57,8 +58,10 @@ class TranslateFragment : Fragment() {
     private lateinit var binding: TranslateFragmentBinding
     private lateinit var repository: MySharedPreferenceData
     //检查更新使用的协程
-    private val job:Job = Job()
-    val scope = CoroutineScope(Dispatchers.Default + job)
+    private val job1:Job = Job()
+    private val job2:Job = Job()
+    val scope1 = CoroutineScope(Dispatchers.Default + job1)
+    val scope2 = CoroutineScope(Dispatchers.Default + job2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("注意","FYonCreate")
@@ -76,11 +79,15 @@ class TranslateFragment : Fragment() {
         config.appId = repository.BaiduApiA
         config.secretKey = repository.BaiduApiP
         try {
-            checkForUpdates(scope)
+            checkForUpdates(scope1)
         }catch (_:Exception){
 
         }
+        try {
+            getNewNotice(scope2,0)
+        }catch (_:Exception){
 
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -95,6 +102,17 @@ class TranslateFragment : Fragment() {
             binding.selectAPI.text = "API：腾讯云"
         }else{
             binding.selectAPI.text = "API：百度翻译"
+        }
+        MainScope().launch {
+            try {
+                val noticecode = getNoticeCode()
+                Log.d("注意","get: "+noticecode)
+                if(repository.NoticeCode<noticecode){
+                    binding.notice.setImageResource(R.drawable.red_notice)
+                }
+            }catch (_:Exception){
+
+            }
         }
         Log.d("注意","onViewCreated-------")
         initSpinnerForDropdown()
@@ -220,6 +238,15 @@ class TranslateFragment : Fragment() {
         binding.help.setOnClickListener {
             context!!.startActivity(intent1)
         }
+
+        binding.notice.setOnClickListener {
+            try {
+                Toast.makeText(context, "正在获取通知...", Toast.LENGTH_LONG).show()
+                getNewNotice(scope2,1)
+            }catch (_:Exception){
+
+            }
+        }
     }
 
     fun checkForUpdates(myscope: CoroutineScope): Job {
@@ -267,6 +294,70 @@ class TranslateFragment : Fragment() {
 
             }
         }
+    }
+    fun getNewNotice(myscope: CoroutineScope,noticecase:Int): Job {
+        return myscope.launch {
+            var NoticeCode:Long = 0
+            var NoticeName = ""
+            var NoticeContent = ""
+            val client = OkHttpClient()
+            try{
+                val request = Request.Builder().url("https://www.moetranslate.top/notice.json").build()
+
+                client.newCall(request).execute().use { response ->
+                    if (response.isSuccessful) {
+                        val jsonData = response.body?.string()
+                        val obj = JSONParser().parse(jsonData)
+                        val jo = obj as JSONObject
+                        NoticeCode = jo["NoticeCode"] as Long
+                        NoticeName = jo["NoticeName"] as String
+                        NoticeContent = jo["NoticeContent"] as String
+                    }
+                    yield()
+                    MainScope().launch {
+                        if ((repository.NoticeCode < NoticeCode)||(noticecase==1)) {
+                            val dialogupdate = AlertDialog.Builder(activity)
+                                .setTitle(NoticeName)
+                                .setMessage(NoticeContent)
+                                .setCancelable(false)
+                                .setPositiveButton("我知道了") { _, _ ->
+                                    repository.saveNoticeCode(NoticeCode)
+                                }
+                                .create()
+                            dialogupdate.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                            dialogupdate.show()
+                        }
+                        binding.notice.setImageResource(R.drawable.notice)
+                    }
+                }
+            }catch (_:Exception){
+                if(noticecase==1){
+                    MainScope().launch{
+                        Toast.makeText(context, "获取通知失败，可能是网络未连接。", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getNoticeCode(): Long = withContext(Dispatchers.IO) {
+        var NoticeCode:Long = 0
+        val client = OkHttpClient()
+        try{
+            val request = Request.Builder().url("https://www.moetranslate.top/notice.json").build()
+
+            client.newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    val jsonData = response.body?.string()
+                    val obj = JSONParser().parse(jsonData)
+                    val jo = obj as JSONObject
+                    NoticeCode = jo["NoticeCode"] as Long
+                }
+            }
+        }catch (e:Exception){
+            return@withContext -1L
+        }
+        return@withContext NoticeCode
     }
 
     fun startBall(){

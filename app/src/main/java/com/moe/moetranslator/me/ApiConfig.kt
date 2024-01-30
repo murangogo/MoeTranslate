@@ -36,19 +36,28 @@ class ApiConfig : Fragment() {
     override fun onStart() {
         super.onStart()
         binding.textViewAPIConfig.text = if (repository.ApiChoose==0) "API：腾讯云" else "API：百度翻译"
-        if((repository.ApiChoose==0)&&(repository.TencentApiS=="")){
-            binding.account.hint = "SecretId"
-            binding.password.hint = "SecretKey"
-        }else if ((repository.ApiChoose==1)&&(repository.BaiduApiA=="")){
-            binding.account.hint = "APP ID"
-            binding.password.hint = "密钥"
-        }
-        if((repository.ApiChoose==0)&&(repository.TencentApiS!="")){
-            binding.account.hint = repository.TencentApiS+"（已保存）"
-            binding.password.hint = repository.TencentApiK+"（已保存）"
-        }else if ((repository.ApiChoose==1)&&(repository.BaiduApiA!="")){
-            binding.account.hint = repository.BaiduApiA + "（已保存）"
-            binding.password.hint = repository.BaiduApiP + "（已保存）"
+        if(repository.ApiChoose==0){
+            if(repository.TencentApiS==""){
+                binding.account.hint = "SecretId（未填写）"
+            }else{
+                binding.account.hint = repository.TencentApiS+"（已保存）"
+            }
+            if(repository.TencentApiS==""){
+                binding.password.hint = "SecretKey（未填写）"
+            }else{
+                binding.password.hint = repository.TencentApiK+"（已保存）"
+            }
+        }else{
+            if(repository.BaiduApiA==""){
+                binding.account.hint = "APP ID（未填写）"
+            }else{
+                binding.account.hint = repository.BaiduApiA + "（已保存）"
+            }
+            if(repository.BaiduApiP==""){
+                binding.password.hint = "密钥（未填写）"
+            }else{
+                binding.password.hint = repository.BaiduApiP + "（已保存）"
+            }
         }
         binding.textView5.setOnClickListener {
             if(repository.ApiChoose==0){
