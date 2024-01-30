@@ -29,10 +29,12 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/edittext_api"
         android:drawableLeft="@drawable/baseline_lock"
+        android:ems="15"
         android:drawablePadding="12dp"
         android:hint="您的Gemini API"
-        android:inputType="text"
+        android:inputType="textMultiLine"
         android:paddingLeft="10dp"
+        android:paddingRight="3dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"/>
 
