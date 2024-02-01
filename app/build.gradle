@@ -11,8 +11,8 @@ android {
         applicationId "com.moe.moetranslator"
         minSdk 29
         targetSdk 34
-        versionCode 19
-        versionName "4.0.1"
+        versionCode 20
+        versionName "4.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -60,4 +60,5 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation("com.google.ai.client.generativeai:generativeai:0.1.2")
+    implementation 'org.jsoup:jsoup:1.17.2'
 }

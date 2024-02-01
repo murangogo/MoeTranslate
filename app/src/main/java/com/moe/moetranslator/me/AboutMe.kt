@@ -157,6 +157,11 @@ class AboutMe : Fragment() {
             intent3.putExtra("page",3)
             startActivity(intent3)
         }
+        binding.readbtn.setOnClickListener {
+            var intent4 = Intent(context, SettingPageActivity::class.java)
+            intent4.putExtra("page",4)
+            startActivity(intent4)
+        }
         binding.myfaqbtn.setOnClickListener {
             var intent7 = Intent(context, SettingPageActivity::class.java)
             intent7.putExtra("page",7)
