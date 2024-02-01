@@ -29,6 +29,9 @@ class SettingPageActivity : AppCompatActivity() {
             3->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
                 Errcode()
             ).commit()
+            4->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
+                ReadPage()
+            ).commit()
             6->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
                 Developer()
             ).commit()
