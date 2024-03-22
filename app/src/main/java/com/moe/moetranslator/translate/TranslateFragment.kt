@@ -333,7 +333,7 @@ class TranslateFragment : Fragment() {
             }catch (_:Exception){
                 if(noticecase==1){
                     MainScope().launch{
-                        Toast.makeText(context, "获取通知失败，可能是网络未连接。", Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, "获取通知失败，可能是网络未连接。", Toast.LENGTH_LONG).show()
                     }
                 }
             }
