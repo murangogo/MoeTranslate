@@ -117,13 +117,13 @@ class AboutMe : Fragment() {
                             dialogupdate.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
                             dialogupdate.show()
                         } else {
-                            Toast.makeText(context, "已是最新版本。", Toast.LENGTH_LONG).show()
+                            Toast.makeText(activity, "已是最新版本。", Toast.LENGTH_LONG).show()
                         }
                     }
                 }
             }catch (_:Exception){
                 MainScope().launch{
-                    Toast.makeText(context, "检查更新失败，可能是网络未连接。", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "检查更新失败，可能是网络未连接。", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -174,7 +174,7 @@ class AboutMe : Fragment() {
         binding.cleanbtn.setOnClickListener {
             val dialogperapi = AlertDialog.Builder(activity)
                 .setTitle("清除缓存")
-                .setMessage("萌译最多缓存最近200张翻译时的截图，截图大于200张时会进行覆盖，这些截图保存在Android/data/com.moe.translator/cache文件夹中。您可以随时在文件管理中查看。一般来说，这些截图不会占用太多空间，当然，您也可以选择现在清除这些缓存数据。")
+                .setMessage("萌译最多缓存最近200张翻译时的截图，截图大于200张时会进行覆盖，这些截图保存在Android/data/com.moe.moetranslator/cache文件夹中。您可以随时在文件管理中查看。一般来说，这些截图不会占用太多空间，当然，您也可以选择现在清除这些缓存数据。")
                 .setCancelable(false)
                 .setPositiveButton("清除缓存") { _, _ ->
                     val success = deleteDir(File(ConstDatas.FilePath))
