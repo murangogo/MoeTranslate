@@ -3,7 +3,6 @@ package com.moe.moetranslator.translate
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -32,11 +31,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.json.simple.JSONObject
-import org.json.simple.parser.JSONParser
+import org.json.JSONObject
 import translateapi.baidufanyiapi.data.Config
 import translateapi.baidufanyiapi.data.Language
-import translateapi.tencentyunapi.ImageTranslate
 
 
 class TranslateFragment : Fragment() {
@@ -261,11 +258,12 @@ class TranslateFragment : Fragment() {
                 client.newCall(request).execute().use { response ->
                     if (response.isSuccessful) {
                         val jsonData = response.body?.string()
-                        val obj = JSONParser().parse(jsonData)
-                        val jo = obj as JSONObject
-                        versionCode = jo["versionCode"] as Long
-                        versionName = jo["versionName"] as String
-                        versionContent = jo["versionContent"] as String
+                        if(jsonData!=null){
+                            val jo = JSONObject(jsonData)
+                            versionCode = jo.getLong("versionCode")
+                            versionName = jo.getString("versionName")
+                            versionContent = jo.getString("versionContent")
+                        }
                     }
                     yield()
                     MainScope().launch {
@@ -307,11 +305,14 @@ class TranslateFragment : Fragment() {
                 client.newCall(request).execute().use { response ->
                     if (response.isSuccessful) {
                         val jsonData = response.body?.string()
-                        val obj = JSONParser().parse(jsonData)
-                        val jo = obj as JSONObject
-                        NoticeCode = jo["NoticeCode"] as Long
-                        NoticeName = jo["NoticeName"] as String
-                        NoticeContent = jo["NoticeContent"] as String
+                        if(jsonData!=null){
+                            val jo = JSONObject(jsonData)
+                            NoticeCode = jo.getLong("NoticeCode")
+                            NoticeName = jo.getString("NoticeName")
+                            NoticeContent = jo.getString("NoticeContent")
+                        }else{
+                            Log.d("JSON","NULL了")
+                        }
                     }
                     yield()
                     MainScope().launch {
@@ -349,9 +350,10 @@ class TranslateFragment : Fragment() {
             client.newCall(request).execute().use { response ->
                 if (response.isSuccessful) {
                     val jsonData = response.body?.string()
-                    val obj = JSONParser().parse(jsonData)
-                    val jo = obj as JSONObject
-                    NoticeCode = jo["NoticeCode"] as Long
+                    if(jsonData!=null){
+                        val jo = JSONObject(jsonData)
+                        NoticeCode = jo.getLong("NoticeCode")
+                    }
                 }
             }
         }catch (e:Exception){
