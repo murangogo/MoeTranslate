@@ -26,19 +26,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.simple.JSONObject
-import org.json.simple.parser.JSONParser
 import translateapi.baidufanyiapi.http.HttpStringCallback
 import translateapi.baidufanyiapi.pic.PicTranslate
-import translateapi.baidufanyiapi.utils.FileUtil
 import kotlin.math.abs
 import translateapi.tencentyunapi.ImageTranslate
-import java.io.File
 
 
 class FloatingService : Service() {

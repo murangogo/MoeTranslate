@@ -21,8 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.json.simple.JSONObject
-import org.json.simple.parser.JSONParser
+import org.json.JSONObject
 import java.io.File
 
 
@@ -93,11 +92,10 @@ class AboutMe : Fragment() {
                 client.newCall(request).execute().use { response ->
                     if (response.isSuccessful) {
                         val jsonData = response.body?.string()
-                        val obj = JSONParser().parse(jsonData)
-                        val jo = obj as JSONObject
-                        versionCode = jo["versionCode"] as Long
-                        versionName = jo["versionName"] as String
-                        versionContent = jo["versionContent"] as String
+                        val jo = JSONObject(jsonData!!)
+                        versionCode = jo.getLong("versionCode")
+                        versionName = jo.getString("versionName")
+                        versionContent = jo.getString("versionContent")
                     }
                     yield()
                     MainScope().launch {

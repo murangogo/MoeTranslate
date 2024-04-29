@@ -1,11 +1,13 @@
 package com.moe.moetranslator.translate
 
+import org.json.JSONObject
+
 class Result {
     companion object{
         @JvmField
         var ErrorCode: String? = null
         @JvmField
-        var mp: Map<String, String>? = null
+        var data: JSONObject? = null
         @JvmField
         var OriginalWords: String? = null
         @JvmField
