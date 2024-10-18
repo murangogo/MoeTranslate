@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.moe.moetranslator.R
-import com.moe.moetranslator.databinding.FragmentApiselectBinding
 import com.moe.moetranslator.databinding.FragmentErrcodeBinding
 import com.moe.moetranslator.utils.MySharedPreferenceData
 

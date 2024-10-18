@@ -9,7 +9,7 @@
         android:id="@+id/translate_fragment"
         android:name="com.moe.moetranslator.translate.TranslateFragment"
         android:label="fragment_translate"
-        tools:layout="@layout/translate_fragment" >
+        tools:layout="@layout/fragment_translate" >
         <action
             android:id="@+id/action_translate_fragment_to_chatwithclaude"
             app:destination="@id/claude_fragment" />
@@ -29,7 +29,7 @@
         android:id="@+id/me_fragment"
         android:name="com.moe.moetranslator.me.AboutMe"
         android:label="about_me_fragment"
-        tools:layout="@layout/about_me_fragment" />
+        tools:layout="@layout/fragment_about_me" />
 
     <fragment
         android:id="@+id/claude_fragment"

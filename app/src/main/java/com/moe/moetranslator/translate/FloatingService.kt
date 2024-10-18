@@ -9,7 +9,6 @@ import android.content.IntentFilter
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.graphics.RectF
-import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -17,11 +16,9 @@ import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.TextView
 import android.widget.Toast
-import com.moe.moetranslator.BuildConfig
 import com.moe.moetranslator.utils.ConstDatas
 import com.moe.moetranslator.utils.MySharedPreferenceData
 import com.moe.moetranslator.R
-import com.moe.moetranslator.translate.TranslateFragment.Companion.config
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -57,37 +54,37 @@ class FloatingService : Service() {
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == LetOnAccessibilityService.ACTION_SERVICE_STARTED) {
+            if (intent?.action == ScreenShotAccessibilityService.ACTION_SERVICE_STARTED) {
                 if(repository.ApiChoose==0){
                     getTranslate(scope)
                 }else{
-                    config.pic(ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
-                    Log.d("Path", ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
-                    picTranslate.setConfig(config)
-                    picTranslate.trans(object : HttpStringCallback() {
-                        override fun onSuccess(response: String?) {
-                            super.onSuccess(response)
-                            Log.d("resp是","$response")
-                            AnalysisJson.jsonParse(response!!,repository.ApiChoose)
-                            Log.d("结果","${Result.ResultWords}")
-                            MainScope().launch {
-                                if(Result.ErrorCode=="0"){
-                                    textview.text = Result.ResultWords
-                                }else{
-                                    textview.text = "发生错误，错误码为：${Result.ErrorCode}，您可在萌译的“Me”页面查找有关此错误码的信息。"
-                                }
-                                translateFinish = true
-                            }
-                        }
-                        override fun onFailure(e: Throwable?) {
-                            super.onFailure(e)
-                            MainScope().launch {
-                                textview.text = "发生了未知错误，可能是由于网络未连接。若您连接了wifi，请关闭wifi，使用数据流量再试（这是由于wifi再加上开加速器导致网速缓慢，进一步造成的翻译超时）。"
-                                Log.e("ERR",e.toString())
-                                translateFinish = true
-                            }
-                        }
-                    })
+//                    config.pic(ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
+//                    Log.d("Path", ConstDatas.FilePath + "/" + ConstDatas.pictimes + ".jpg")
+//                    picTranslate.setConfig(config)
+//                    picTranslate.trans(object : HttpStringCallback() {
+//                        override fun onSuccess(response: String?) {
+//                            super.onSuccess(response)
+//                            Log.d("resp是","$response")
+//                            AnalysisJson.jsonParse(response!!,repository.ApiChoose)
+//                            Log.d("结果","${Result.ResultWords}")
+//                            MainScope().launch {
+//                                if(Result.ErrorCode=="0"){
+//                                    textview.text = Result.ResultWords
+//                                }else{
+//                                    textview.text = "发生错误，错误码为：${Result.ErrorCode}，您可在萌译的“Me”页面查找有关此错误码的信息。"
+//                                }
+//                                translateFinish = true
+//                            }
+//                        }
+//                        override fun onFailure(e: Throwable?) {
+//                            super.onFailure(e)
+//                            MainScope().launch {
+//                                textview.text = "发生了未知错误，可能是由于网络未连接。若您连接了wifi，请关闭wifi，使用数据流量再试（这是由于wifi再加上开加速器导致网速缓慢，进一步造成的翻译超时）。"
+//                                Log.e("ERR",e.toString())
+//                                translateFinish = true
+//                            }
+//                        }
+//                    })
                 }
             }
         }
@@ -113,7 +110,7 @@ class FloatingService : Service() {
 
         // 注册广播接收器
         Log.d("注意","正在注册接收器")
-        val filter = IntentFilter(LetOnAccessibilityService.ACTION_SERVICE_STARTED)
+        val filter = IntentFilter(ScreenShotAccessibilityService.ACTION_SERVICE_STARTED)
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU){
             registerReceiver(receiver, filter)
         }else{
@@ -121,7 +118,7 @@ class FloatingService : Service() {
         }
         Log.d("注意","接收器已注册")
 
-        intent = Intent(this, LetOnAccessibilityService::class.java)
+        intent = Intent(this, ScreenShotAccessibilityService::class.java)
         repository = MySharedPreferenceData(this)
         mWindowManager = getSystemService(WINDOW_SERVICE) as WindowManager  //初始化视窗管理器
         dialogs = Dialogs() //创建Dialogs对象

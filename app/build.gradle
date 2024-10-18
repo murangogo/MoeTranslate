@@ -10,9 +10,9 @@ android {
     defaultConfig {
         applicationId "com.moe.moetranslator"
         minSdk 29
-        targetSdk 34
-        versionCode 22
-        versionName "4.0.4"
+        targetSdk 35
+        versionCode 23
+        versionName "5.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.preference:preference-ktx:1.2.1'
     def room_version = "2.5.0"
     apply plugin: 'kotlin-kapt'
     implementation 'nl.dionsegijn:konfetti-xml:2.0.2'
@@ -54,6 +55,16 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // To recognize Chinese script
+    implementation 'com.google.mlkit:text-recognition-chinese:16.0.1'
+
+    // To recognize Latin script
+    implementation 'com.google.mlkit:text-recognition:16.0.1'
+
+    // To recognize Japanese script
+    implementation 'com.google.mlkit:text-recognition-japanese:16.0.1'
+
     //如果您已迁移到androidx
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"

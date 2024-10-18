@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">萌译</string>
+    <string name="floating_ball_menu">悬浮球菜单</string>
+    <string name="accessibility_service_label">萌译翻译服务</string>
+    <string name="accessibility_service_description">【功能描述】\n启用无障碍权限以获取屏幕截图，从而进行翻译。\n在给予权限时，会弹出警告，请放心，萌译不会收集您的任何信息。</string>
+    <string name="translate_page">翻译</string>
+    <string name="claude_page">Gemini</string>
+    <string name="fun_with_madoka">Madoka</string>
+    <string name="about_me">设置</string>
+    <string name="api_name">API：</string>
+    <string name="tencent_cloud">腾讯云</string>
+    <string name="baidu_translate">百度翻译</string>
+    <string name="android_sdk_old_title">安卓版本过低</string>
+    <string name="android_sdk_old_content">看起来您的安卓版本小于Android 11（API 30）或Harmony OS版本低于3.0，这意味着您无法使用本软件的翻译功能，但您仍然可以使用除翻译功能外的其他功能。若您想体验本软件的全部功能，请升级系统或更换设备。</string>
+    <string name="user_known">我知道了</string>
+    <string name="find_new_version">发现新版本</string>
+    <string name="version_name">版本号：</string>
+    <string name="ignore_update">此版本不再提醒</string>
+    <string name="go_to_update">去更新</string>
+    <string name="not_update">暂不更新</string>
+    <string name="update_prompt">是否现在更新？点击去更新即可跳转到萌译官网，在官网中点击下载即可获取最新版本。</string>
+    <string name="getting_notification">正在获取通知......</string>
+    <string name="nllb_not_download_content">看起来您选择了NLLB作为翻译模型，但似乎还没有下载NLLB模型文件，因此无法进行翻译。点击去下载即可进入下载页面；当然，您也可以选择其他翻译API来使用翻译功能。</string>
+    <string name="go_to_download">去下载</string>
+    <string name="nllb_not_download_title">未下载NLLB模型文件</string>
+    <string name="user_cancel">取消</string>
+    <string name="baidu_api_not_config_content">看起来您选择了百度翻译作为翻译API，但似乎还没有配置它，因此无法进行翻译。点击去配置即可进入API设置页面；当然，您也可以选择其他翻译API来使用翻译功能。</string>
+    <string name="api_not_config_title">未配置翻译API</string>
+    <string name="go_to_config">去配置</string>
+    <string name="custom_api_not_config_content">看起来您使用了自定义翻译API，但似乎还没有配置它，因此无法进行翻译。点击去配置即可进入API设置页面；当然，您也可以选择其他翻译API来使用翻译功能。</string>
+    <string name="tencent_api_not_config_content">看起来您选择了腾讯云作为翻译API，但似乎还没有配置它，因此无法进行翻译。点击去配置即可进入API设置页面；当然，您也可以选择其他翻译API来使用翻译功能。</string>
+    <string name="not_accessibility_service_title">未授予无障碍权限</string>
+    <string name="not_accessibility_service_content">看起来您没有授予萌译无障碍权限，截图翻译需要获取无障碍权限来进行截图，点击去授予即可授予应用无障碍权限。\n\n具体的授权路径不同品牌的设备略有差别，大概是：\n<b>通用选项卡→已下载的应用→找到“萌译翻译服务”→使用“萌译翻译服务”。</b>\n在给予权限时，会弹出警告，请放心，萌译不会收集您的任何信息。</string>
+    <string name="go_to_grant">去授予</string>
+    <string name="not_floating_title">未授予悬浮窗权限</string>
+    <string name="not_floating_content">看起来您没有授予萌译悬浮窗权限，截图翻译需要获取悬浮窗权限来随时随地显示悬浮球，点击去授予即可授予应用悬浮窗权限。\n\n具体的授权路径大致是：\n<b>在列表中找到“萌译”→授予萌译“显示在其他应用上层”的权限。</b></string>
+    <string name="not_notify_title">未授予通知权限</string>
+    <string name="not_notify_content">看起来您没有授予萌译通知权限，截图翻译需要获取通知权限，点击去授予即可授予应用通知权限。</string>
+    <string name="select_source_language">选择源语言</string>
+    <string name="select_target_language">选择目标语言</string>
+    <string name="custom_api_select_language">自定义</string>
+    <string name="source_language">源语言：</string>
+    <string name="target_language">目标语言：</string>
+    <string name="getting_update">正在检查更新......</string>
+    <string name="no_update">已是最新版本</string>
+    <string name="internet_error">网络出现问题，请检查后重试</string>
+    <string name="get_notification_error">获取通知失败，可能是网络未连接</string>
+    <string name="translation_mode">翻译模式</string>
+    <string name="api_configuration">API配置</string>
+    <string name="personalization_setting">个性化设置</string>
+    <string name="article_page">壹日 · 壹篇</string>
+    <string name="faq_title">常见问题</string>
+    <string name="error_code">错误代码</string>
+    <string name="check_update">检查更新</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="about_page">关于</string>
+    <string name="choose_mode">选择您希望使用的翻译模式</string>
+    <string name="ocr_mode">本地OCR识别+文本翻译<font color="#E25A5C">（推荐）</font></string>
+    <string name="ocr_mode_description">在本地进行离线OCR来提取图片中的文字，再对文字进行翻译。支持本地AI离线文字翻译，也支持使用预置的云端文字翻译API，还支持使用自定义的云端文字翻译API。需要注意的是离线OCR识别仅支持中文、日文、英文三种。这种方式花费的数据流量非常少；如果您完全选择本地处理，甚至可以做到完全离线。</string>
+    <string name="pic_mode">直接上传图片进行翻译</string>
+    <string name="pic_mode_description">直接把截图上传到云端API进行翻译。支持使用预置的云端图片翻译API，也支持使用自定义的云端图片翻译API，<font color="#E25A5C">不支持本地翻译</font>。这种方式花费的数据流量相对来说要多一些。</string>
+    <string name="mlkit_name">ML Kit</string>
+    <string name="mlkit_description">谷歌推出的机器学习套件，运行在设备端，无需网络，即点即用。翻译是该机器学习套件的一个功能。</string>
+    <string name="nllb_name">NLLB翻译模型</string>
+    <string name="nllb_description">Meta推出的专为翻译而生的模型，全称为“No Language Left Behind”，顾名思义，支持多种语言。该模型的翻译效果更好，但需要下载后使用，点击下方的“管理NLLB模型文件”可进行模型文件的下载、删除等操作。<font color="#E25A5C">使用该模型需要设备至少拥有8GB的运行内存</font>。</string>
+    <string name="manage_nllb_models">管理NLLB模型文件</string>
+    <string name="baiduapi_name">百度翻译</string>
+    <string name="baiduapi_description">百度翻译的API，点击下方的“管理百度翻译API”即可设置API，还可以在其中查看API的申请教程（每月有万级的免费调用额度）。</string>
+    <string name="tencentapi_name">腾讯云</string>
+    <string name="tencentapi_description">腾讯云的翻译API，点击下方的“管理腾讯云API”即可设置API，还可以在其中查看API的申请教程（每月有万级的免费调用额度）。</string>
+    <string name="ai_title">本地AI翻译</string>
+    <string name="pre_api_title">预置云端API</string>
+    <string name="custom_api_text_title"><font color="#E25A5C">（高级设置）</font>自定义云端文本翻译API</string>
+    <string name="custom_api_text_1">自定义云端<font color="#E25A5C">文本</font>翻译API1</string>
+    <string name="custom_api_text_2">自定义云端<font color="#E25A5C">文本</font>翻译API2</string>
+    <string name="custom_api_text_3">自定义云端<font color="#E25A5C">文本</font>翻译API3</string>
+    <string name="manage_baidu_api">管理百度翻译API</string>
+    <string name="manage_tencent_api">管理腾讯云API</string>
+    <string name="manage_custom_api_text_1">管理自定义云端文本翻译API1</string>
+    <string name="manage_custom_api_text_2">管理自定义云端文本翻译API2</string>
+    <string name="manage_custom_api_text_3">管理自定义云端文本翻译API3</string>
+    <string name="current_mode_text">当前翻译模式：本地OCR识别+文本翻译</string>
+    <string name="current_mode_pic">当前翻译模式：直接上传图片进行翻译</string>
+    <string name="custom_api_pic_title"><font color="#E25A5C">（高级设置）</font>自定义云端图片翻译API</string>
+    <string name="custom_api_pic_1">自定义云端<font color="#E25A5C">图片</font>翻译API1</string>
+    <string name="custom_api_pic_2">自定义云端<font color="#E25A5C">图片</font>翻译API2</string>
+    <string name="custom_api_pic_3">自定义云端<font color="#E25A5C">图片</font>翻译API3</string>
+    <string name="manage_custom_api_pic_1">管理自定义云端图片翻译API1</string>
+    <string name="manage_custom_api_pic_2">管理自定义云端图片翻译API2</string>
+    <string name="manage_custom_api_pic_3">管理自定义云端图片翻译API3</string>
+    <string name="no_less_one">需选择一个选项</string>
+    <string name="small_ram_title">运行内存小于8GB</string>
+    <string name="small_ram_content">看起来您选择了NLLB作为翻译API，但似乎您的设备的运行内存小于8G，这可能会导致在模型推理时出现问题。请您放心，程序不会因此阻止您使用该模型，但不保证在运行内存小于8G的情况下不会出现意外。</string>
+    <string name="custom_api_select_language_title">自定义API不支持选择语言</string>
+    <string name="custom_api_select_language_content">看起来您使用了自定义翻译API，在这种情况下，您不该使用萌译来选择源语言和目标语言，相反，您应该将源语言和目标语言写进API中，因为萌译不知道您自定义的API规定的语言代码（一些API提供商并不使用BCP-47代码作为他们的语言代码）。</string>
+</resources>

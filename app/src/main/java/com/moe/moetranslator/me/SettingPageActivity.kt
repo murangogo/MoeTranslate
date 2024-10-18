@@ -6,10 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.moe.moetranslator.databinding.ActivitySettingPageBinding
-import com.moe.moetranslator.me.ApiConfig
-import com.moe.moetranslator.me.Apiselect
-import com.moe.moetranslator.me.Developer
-import com.moe.moetranslator.me.Errcode
 
 class SettingPageActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingPageBinding
@@ -21,10 +17,10 @@ class SettingPageActivity : AppCompatActivity() {
         setContentView(binding.root)
         when(intent.getIntExtra("page",0)){
             1->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
-                Apiselect()
+                TranslationMode()
             ).commit()
             2->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
-                ApiConfig()
+                APIConfig()
             ).commit()
             3->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
                 Errcode()
@@ -36,7 +32,7 @@ class SettingPageActivity : AppCompatActivity() {
                 Developer()
             ).commit()
             7->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
-                MyFAQPage()
+                FAQPage()
             ).commit()
             else->Toast.makeText(applicationContext,"未知错误。", Toast.LENGTH_LONG).show()
         }
