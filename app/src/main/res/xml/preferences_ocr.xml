@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:key="ui_current_mode_text"
+        app:title="@string/current_mode_text"
+        app:titleTextAppearance="?android:attr/textAppearanceLarge"
+        app:iconSpaceReserved="false" />
+
+    <PreferenceCategory
+        app:key="ui_local_ai_translation"
+        app:title="@string/ai_title"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="mlkit_translation"
+            app:title="@string/mlkit_name"
+            app:icon="@drawable/mlkit"
+            app:summary="@string/mlkit_description"/>
+
+        <SwitchPreferenceCompat
+            app:key="nllb_translation"
+            app:title="@string/nllb_name"
+            app:icon="@drawable/meta_nllb"
+            app:summary="@string/nllb_description"/>
+
+        <Preference
+            app:key="manage_nllb_model"
+            app:title="@string/manage_nllb_models" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="ui_cloud_api_translation_text"
+        app:title="@string/pre_api_title"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="ui_baidu_translation_text"
+            app:title="@string/baiduapi_name"
+            app:icon="@drawable/baiduyi"
+            app:summary="@string/baiduapi_description"/>
+
+        <Preference
+            app:key="ui_manage_baidu_api_text"
+            app:title="@string/manage_baidu_api" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_tencent_translation_text"
+            app:title="@string/tencentapi_name"
+            app:icon="@drawable/tencentyun"
+            app:summary="@string/tencentapi_description"/>
+
+        <Preference
+            app:key="ui_manage_tencent_api_text"
+            app:title="@string/manage_tencent_api" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="ui_custom_cloud_api_translation_text"
+        app:title="@string/custom_api_text_title"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="ui_custom_api_1_text"
+            app:title="@string/custom_api_text_1" />
+
+        <Preference
+            app:key="ui_manage_custom_api_1_text"
+            app:title="@string/manage_custom_api_text_1" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_custom_api_2_text"
+            app:title="@string/custom_api_text_2" />
+
+        <Preference
+            app:key="ui_manage_custom_api_2_text"
+            app:title="@string/manage_custom_api_text_2" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_custom_api_3_text"
+            app:title="@string/custom_api_text_3" />
+
+        <Preference
+            app:key="ui_manage_custom_api_3_text"
+            app:title="@string/manage_custom_api_text_3" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

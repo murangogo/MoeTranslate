@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:key="ui_current_mode_pic"
+        app:title="@string/current_mode_pic"
+        app:titleTextAppearance="?android:attr/textAppearanceLarge"
+        app:iconSpaceReserved="false" />
+
+    <PreferenceCategory
+        app:key="ui_cloud_api_translation_pic"
+        app:title="@string/pre_api_title"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="ui_baidu_translation_pic"
+            app:title="@string/baiduapi_name"
+            app:icon="@drawable/baiduyi"
+            app:summary="@string/baiduapi_description"/>
+
+        <Preference
+            app:key="ui_manage_baidu_api_pic"
+            app:title="@string/manage_baidu_api" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_tencent_translation_pic"
+            app:title="@string/tencentapi_name"
+            app:icon="@drawable/tencentyun"
+            app:summary="@string/tencentapi_description"/>
+
+        <Preference
+            app:key="uimanage_tencent_api_pic"
+            app:title="@string/manage_tencent_api" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="ui_custom_cloud_api_translation_pic"
+        app:title="@string/custom_api_pic_title"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="ui_custom_api_1_pic"
+            app:title="@string/custom_api_pic_1" />
+
+        <Preference
+            app:key="ui_manage_custom_api_1_pic"
+            app:title="@string/manage_custom_api_pic_1" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_custom_api_2_pic"
+            app:title="@string/custom_api_pic_2" />
+
+        <Preference
+            app:key="ui_manage_custom_api_2_pic"
+            app:title="@string/manage_custom_api_pic_2" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_custom_api_3_pic"
+            app:title="@string/custom_api_pic_3" />
+
+        <Preference
+            app:key="ui_manage_custom_api_3_pic"
+            app:title="@string/manage_custom_api_pic_3" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

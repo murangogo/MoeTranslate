@@ -1,8 +1,5 @@
 /.gradle
 /.idea
-/app/release
 /build
-/gradle
 local.properties
-gradlew
-gradlew.bat
+/framework/build/

@@ -1,24 +1,31 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Base application theme. -->
-    <style name="Base.Theme.MT" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.MT" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">#55AEEA</item>
     </style>
 
     <style name="Theme.MT" parent="Base.Theme.MT" />
-    <style name="maintheme" parent="Base.Theme.MT">
-        <item name="colorPrimaryDark">#F7F3EB</item>
-        <item name="android:navigationBarColor">#F1F4FD</item>
-    </style>
-    <style name="settheme" parent="Base.Theme.MT">
-        <item name="colorPrimaryDark">#F7F3EB</item>
-        <item name="android:navigationBarColor">#F7F3EB</item>
-    </style>
-    <style name="splashtheme" parent="Base.Theme.MT">
-        <item name="colorPrimaryDark">#FAC7B7</item>
-        <item name="android:navigationBarColor">#FAC7B7</item>
-    </style>
+
     <style name="tutorialtheme" parent="Base.Theme.MT">
         <item name="colorPrimaryDark">#F7F3EB</item>
         <item name="android:navigationBarColor">#F7F3EB</item>
     </style>
+
+    <style name="maintheme" parent="Base.Theme.MT">
+        <item name="colorPrimaryDark">#F7F3EB</item>
+        <item name="android:navigationBarColor">#F1F4FD</item>
+    </style>
+
+    <style name="settheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimaryDark">#F7F3EB</item>
+        <item name="android:navigationBarColor">#F7F3EB</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="splashtheme" parent="Base.Theme.MT">
+        <item name="colorPrimaryDark">#FAC7B7</item>
+        <item name="android:navigationBarColor">#FAC7B7</item>
+    </style>
+
 </resources>
