@@ -22,10 +22,17 @@ class CustomPreference private constructor(context: Context) {
     //Ignore_Version(Long)：记录用户忽略的版本号
     //Read_Notice(Long)：记录用户已读的通知号
 
-    //Baidu_Translate_EncryptedKey(Str)：KeyStore参数，存储百度翻译API
-    //Baidu_Translate_IV(Str)：KeyStore参数，存储百度翻译API
-    //Tencent_Cloud_EncryptedKey(Str)：KeyStore参数，存储腾讯云API
-    //Tencent_Cloud_IV(Str)：KeyStore参数，存储腾讯云API
+    //Baidu_Translate_ACCOUNT_EncryptedKey(Str)：KeyStore参数，存储百度翻译API（APPID）
+    //Baidu_Translate_ACCOUNT_IV(Str)：KeyStore参数，存储百度翻译API（APPID）
+
+    //Baidu_Translate_SECRETKEY_EncryptedKey(Str)：KeyStore参数，存储百度翻译API（SecretKey）
+    //Baidu_Translate_SECRETKEY_IV(Str)：KeyStore参数，存储百度翻译API（SecretKey）
+
+    //Tencent_Cloud_ACCOUNT_EncryptedKey(Str)：KeyStore参数，存储腾讯云API（APPID）
+    //Tencent_Cloud_ACCOUNT_IV(Str)：KeyStore参数，存储腾讯云API（APPID）
+
+    //Tencent_Cloud_SECRETKEY_EncryptedKey(Str)：KeyStore参数，存储腾讯云API（SecretKey）
+    //Tencent_Cloud_SECRETKEY_IV(Str)：KeyStore参数，存储腾讯云API（SecretKey）
 
     //Custom_Text_API_1(Str)：用户自定义的文本翻译API1
     //Custom_Text_JSON_Parse_1(Str)：用户自定义的文本翻译API1对应的JSON解析方法

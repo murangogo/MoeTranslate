@@ -94,4 +94,19 @@
     <string name="small_ram_content">看起来您选择了NLLB作为翻译API，但似乎您的设备的运行内存小于8G，这可能会导致在模型推理时出现问题。请您放心，程序不会因此阻止您使用该模型，但不保证在运行内存小于8G的情况下不会出现意外。</string>
     <string name="custom_api_select_language_title">自定义API不支持选择语言</string>
     <string name="custom_api_select_language_content">看起来您使用了自定义翻译API，在这种情况下，您不该使用萌译来选择源语言和目标语言，相反，您应该将源语言和目标语言写进API中，因为萌译不知道您自定义的API规定的语言代码（一些API提供商并不使用BCP-47代码作为他们的语言代码）。</string>
+    <string name="whatsthis">这是什么？</string>
+    <string name="save">保存</string>
+    <string name="baidu_hint_account">APP ID</string>
+    <string name="baidu_hint_secret_key">密钥</string>
+    <string name="tencent_hint_account">SecretId</string>
+    <string name="tencent_hint_secret_key">SecretKey</string>
+    <string name="fill_blank">请将API信息填写完整</string>
+    <string name="save_successfully">保存成功</string>
+    <string name="api_saved">（已加密保存）</string>
+    <string name="whats_baidu_translate_title">什么是百度翻译API</string>
+    <string name="whats_baidu_translate_content">萌译可以使用百度翻译或腾讯云的API提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为百度翻译，点击“现在就去”即可开始申请百度翻译API。申请百度翻译API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有万级的免费调用次数。\n当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
+    <string name="view_tutorial">查看教程</string>
+    <string name="go_now">现在就去</string>
+    <string name="whats_tencent_cloud_title">什么是腾讯云API</string>
+    <string name="whats_tencent_cloud_content">萌译可以使用百度翻译或腾讯云的API提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为腾讯云，点击“现在就去”即可开始申请腾讯云API。申请腾讯云API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有万级的免费调用次数。 当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
 </resources>

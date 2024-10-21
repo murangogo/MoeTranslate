@@ -30,7 +30,7 @@
             app:summary="@string/tencentapi_description"/>
 
         <Preference
-            app:key="uimanage_tencent_api_pic"
+            app:key="ui_manage_tencent_api_pic"
             app:title="@string/manage_tencent_api" />
 
     </PreferenceCategory>

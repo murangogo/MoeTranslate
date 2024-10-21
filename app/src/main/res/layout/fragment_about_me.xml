@@ -34,7 +34,7 @@
             <RelativeLayout
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:id="@+id/apiselectbtn"
+                android:id="@+id/translate_mode_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -65,7 +65,7 @@
             <RelativeLayout
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:id="@+id/apisetbtn"
+                android:id="@+id/api_config_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
@@ -97,7 +97,7 @@
             <RelativeLayout
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:id="@+id/themesetbtn"
+                android:id="@+id/personalization_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
@@ -129,7 +129,7 @@
             <RelativeLayout
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:id="@+id/readbtn"
+                android:id="@+id/read_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
@@ -161,7 +161,7 @@
             <RelativeLayout
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:id="@+id/myfaqbtn"
+                android:id="@+id/faq_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
@@ -193,7 +193,7 @@
             <RelativeLayout
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:id="@+id/errcodebtn"
+                android:id="@+id/error_code_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
@@ -239,7 +239,7 @@
             <RelativeLayout
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:id="@+id/updatebtn"
+                android:id="@+id/update_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -270,7 +270,7 @@
             <RelativeLayout
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:id="@+id/cleanbtn"
+                android:id="@+id/clean_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
@@ -313,7 +313,7 @@
             <RelativeLayout
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:id="@+id/aboutbtn"
+                android:id="@+id/developer_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">

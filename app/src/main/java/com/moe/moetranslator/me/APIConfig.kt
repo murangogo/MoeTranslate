@@ -49,23 +49,42 @@ class APIConfig : PreferenceFragmentCompat() {
             }
         }
 
-        // 设置跳转到其他Activity的Preference
-//        setNavigationPreference("manage_nllb_model", NLLBModelManagementActivity::class.java)
-//        setNavigationPreference("manage_baidu_api", BaiduAPIManagementActivity::class.java)
-//        setNavigationPreference("manage_tencent_api", TencentAPIManagementActivity::class.java)
-//        setNavigationPreference("manage_custom_api_1", CustomAPI1ManagementActivity::class.java)
-//        setNavigationPreference("manage_custom_api_2", CustomAPI2ManagementActivity::class.java)
-//        setNavigationPreference("manage_custom_api_3", CustomAPI3ManagementActivity::class.java)
+        if (prefs.getInt("Translate_Mode", 0) == 0){
+            findPreference<Preference>("ui_manage_baidu_api_text")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_BAIDU_API)
+                }
+                startActivity(intent)
+                true
+            }
+
+            findPreference<Preference>("ui_manage_tencent_api_text")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_TENCENT_API)
+                }
+                startActivity(intent)
+                true
+            }
+        }else{
+            findPreference<Preference>("ui_manage_baidu_api_pic")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_BAIDU_API)
+                }
+                startActivity(intent)
+                true
+            }
+
+            findPreference<Preference>("ui_manage_tencent_api_pic")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_TENCENT_API)
+                }
+                startActivity(intent)
+                true
+            }
+        }
 
         // 从 SharedPreferences 加载设置
         loadSettingsFromSharedPreferences()
-    }
-
-    private fun setNavigationPreference(key: String, activityClass: Class<out Activity>) {
-        findPreference<Preference>(key)?.setOnPreferenceClickListener {
-            startActivity(Intent(requireContext(), activityClass))
-            true
-        }
     }
 
     private fun changeCustomPreferences(key: String) {

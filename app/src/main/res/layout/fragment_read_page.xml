@@ -44,6 +44,7 @@
                 android:id="@+id/passage_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#63615E"
                 android:text="加载中..."
                 android:textSize="18sp"
                 android:layout_marginBottom="16dp" />

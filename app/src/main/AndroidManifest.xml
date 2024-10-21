@@ -9,7 +9,9 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -24,13 +26,17 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.MT"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".me.ManageActivity"
+            android:exported="false"
+            android:theme="@style/tutorialtheme" />
         <activity
             android:name=".me.SettingPageActivity"
             android:exported="false"
-            android:theme="@style/settheme"/>
+            android:theme="@style/settheme" />
         <activity
             android:name=".launch.LaunchActivity"
             android:exported="true"
@@ -49,8 +55,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/maintheme">
-        </activity>
+            android:theme="@style/maintheme" />
 
         <service
             android:name=".translate.ScreenShotAccessibilityService"

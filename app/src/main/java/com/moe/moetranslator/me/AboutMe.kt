@@ -49,36 +49,41 @@ class AboutMe : Fragment() {
         }
 
         sizecalculator()
-        binding.apiselectbtn.setOnClickListener{
-            var intent1 = Intent(context, SettingPageActivity::class.java)
-            intent1.putExtra("page",1)
-            startActivity(intent1)
+        binding.translateModeBtn.setOnClickListener{
+            val intent = Intent(requireContext(), SettingPageActivity::class.java)
+            intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_TRANSLATE_MODE)
+            startActivity(intent)
         }
-        binding.apisetbtn.setOnClickListener {
-            var intent2 = Intent(context, SettingPageActivity::class.java)
-            intent2.putExtra("page",2)
-            startActivity(intent2)
+        binding.apiConfigBtn.setOnClickListener {
+            val intent = Intent(requireContext(), SettingPageActivity::class.java)
+            intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_API_CONFIG)
+            startActivity(intent)
         }
-        binding.errcodebtn.setOnClickListener {
-            var intent3 = Intent(context, SettingPageActivity::class.java)
-            intent3.putExtra("page",3)
-            startActivity(intent3)
+        binding.personalizationBtn.setOnClickListener {
+            val intent = Intent(requireContext(), SettingPageActivity::class.java)
+            intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_PERSONALIZATION)
+            startActivity(intent)
         }
-        binding.readbtn.setOnClickListener {
-            var intent4 = Intent(context, SettingPageActivity::class.java)
-            intent4.putExtra("page",4)
-            startActivity(intent4)
+        binding.readBtn.setOnClickListener {
+            val intent = Intent(requireContext(), SettingPageActivity::class.java)
+            intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_READ)
+            startActivity(intent)
         }
-        binding.myfaqbtn.setOnClickListener {
-            var intent7 = Intent(context, SettingPageActivity::class.java)
-            intent7.putExtra("page",7)
-            startActivity(intent7)
+        binding.faqBtn.setOnClickListener {
+            val intent = Intent(requireContext(), SettingPageActivity::class.java)
+            intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_FAQ)
+            startActivity(intent)
         }
-        binding.updatebtn.setOnClickListener {
+        binding.errorCodeBtn.setOnClickListener {
+            val intent = Intent(requireContext(), SettingPageActivity::class.java)
+            intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_ERROR_CODE)
+            startActivity(intent)
+        }
+        binding.updateBtn.setOnClickListener{
             makeToast(getString(R.string.getting_update))
             checkForUpdate()
         }
-        binding.cleanbtn.setOnClickListener {
+        binding.cleanBtn.setOnClickListener {
             val dialogperapi = AlertDialog.Builder(activity)
                 .setTitle("清除缓存")
                 .setMessage("萌译最多缓存最近200张翻译时的截图，截图大于200张时会进行覆盖，这些截图保存在Android/data/com.moe.moetranslator/cache文件夹中。您可以随时在文件管理中查看。一般来说，这些截图不会占用太多空间，当然，您也可以选择现在清除这些缓存数据。")
@@ -97,10 +102,10 @@ class AboutMe : Fragment() {
             dialogperapi.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
             dialogperapi.show()
         }
-        binding.aboutbtn.setOnClickListener {
-            var intent6 = Intent(context, SettingPageActivity::class.java)
-            intent6.putExtra("page",6)
-            startActivity(intent6)
+        binding.developerBtn.setOnClickListener {
+            val intent = Intent(requireContext(), SettingPageActivity::class.java)
+            intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_DEVELOPER)
+            startActivity(intent)
         }
     }
 

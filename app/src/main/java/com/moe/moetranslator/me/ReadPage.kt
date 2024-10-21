@@ -1,13 +1,10 @@
 package com.moe.moetranslator.me
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.moe.moetranslator.R
-import com.moe.moetranslator.databinding.FragmentApiConfigBinding
 import com.moe.moetranslator.databinding.FragmentReadPageBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
