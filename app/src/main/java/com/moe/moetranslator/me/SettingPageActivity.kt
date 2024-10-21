@@ -8,6 +8,18 @@ import android.widget.Toast
 import com.moe.moetranslator.databinding.ActivitySettingPageBinding
 
 class SettingPageActivity : AppCompatActivity() {
+
+    companion object {
+        const val EXTRA_FRAGMENT_TYPE = "fragment_type"
+        const val TYPE_FRAGMENT_TRANSLATE_MODE = 1
+        const val TYPE_FRAGMENT_API_CONFIG = 2
+        const val TYPE_FRAGMENT_PERSONALIZATION = 3
+        const val TYPE_FRAGMENT_READ = 4
+        const val TYPE_FRAGMENT_FAQ = 5
+        const val TYPE_FRAGMENT_ERROR_CODE = 6
+        const val TYPE_FRAGMENT_DEVELOPER = 7
+    }
+
     private lateinit var binding: ActivitySettingPageBinding
     @SuppressLint("CommitTransaction")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,26 +27,30 @@ class SettingPageActivity : AppCompatActivity() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) //锁定竖屏
         binding = ActivitySettingPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        when(intent.getIntExtra("page",0)){
-            1->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
+
+        when(intent.getIntExtra(EXTRA_FRAGMENT_TYPE,0)){
+            TYPE_FRAGMENT_TRANSLATE_MODE->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
                 TranslationMode()
             ).commit()
-            2->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
+            TYPE_FRAGMENT_API_CONFIG->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
                 APIConfig()
             ).commit()
-            3->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
-                Errcode()
-            ).commit()
-            4->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
+//            TYPE_FRAGMENT_PERSONALIZATION->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
+//                //TODO Personalization
+//            ).commit()
+            TYPE_FRAGMENT_READ->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
                 ReadPage()
             ).commit()
-            6->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
-                Developer()
-            ).commit()
-            7->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
+            TYPE_FRAGMENT_FAQ->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
                 FAQPage()
             ).commit()
-            else->Toast.makeText(applicationContext,"未知错误。", Toast.LENGTH_LONG).show()
+            TYPE_FRAGMENT_ERROR_CODE->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
+                Errcode()
+            ).commit()
+            TYPE_FRAGMENT_DEVELOPER->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
+                Developer()
+            ).commit()
+            else->Toast.makeText(applicationContext,"Unknown Error.", Toast.LENGTH_LONG).show()
         }
     }
 }

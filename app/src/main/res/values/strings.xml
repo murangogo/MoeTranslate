@@ -93,4 +93,19 @@
     <string name="small_ram_content">It looks like you have selected NLLB as the translation API, but it seems that your device has less than 8G of RAM, which may cause problems when inferring the model. Please rest assured that the program will not prevent you from using the model, but there is no guarantee that there will be no accidents when the RAM is less than 8G.</string>
     <string name="custom_api_select_language_title">Custom API does not support language selection</string>
     <string name="custom_api_select_language_content">It looks like you are using a custom translation API. In this case, you should not use MoeTranslate to select the source and target languages. Instead, you should write the source and target languages ​​into the API because MoeTranslate does not know the language codes specified by your custom API (some API providers do not use BCP-47 codes as their language codes).</string>
+    <string name="whatsthis">What\'s this?</string>
+    <string name="save">Save</string>
+    <string name="baidu_hint_account">APP ID</string>
+    <string name="baidu_hint_secret_key">SecretKey</string>
+    <string name="tencent_hint_account">SecretId</string>
+    <string name="tencent_hint_secret_key">SecretKey</string>
+    <string name="fill_blank">Please fill in the API information completely</string>
+    <string name="save_successfully">Saved successfully</string>
+    <string name="api_saved">（Encrypted storage）</string>
+    <string name="whats_baidu_translate_title">What is Baidu Translate API</string>
+    <string name="whats_baidu_translate_content">MoeTranslate can use the API of Baidu Translate or Tencent Cloud to provide translation services, which means you need to apply for the API from the corresponding platform. The API platform you have selected now seems to be Baidu Translate. Click \"Go Now\" to start applying for the Baidu Translate API. For detailed tutorials on applying for the Baidu Translate API, click \"View Tutorial\". Please note that the application of these APIs is free, and there are tens of thousands of free calls per month.\nOf course, if you think the steps to apply for the API are too cumbersome, MoeTranslate also provides click-to-use translation options, such as ML Kit and NLLB Translation, which also have good translation results.</string>
+    <string name="view_tutorial">View Tutorial</string>
+    <string name="go_now">Go Now</string>
+    <string name="whats_tencent_cloud_title">What is Tencent Cloud API</string>
+    <string name="whats_tencent_cloud_content">MoeTranslate can use Baidu Translate or Tencent Cloud\'s API to provide translation services, which means you need to apply for the API from the corresponding platform. The API platform you have selected now seems to be Tencent Cloud. Click \"Go Now\" to start applying for Tencent Cloud API. For detailed tutorials on applying for Tencent Cloud API, click \"View Tutorial\". Please note that the application of these APIs is free, and there are tens of thousands of free calls per month.\nOf course, if you think the steps to apply for the API are too cumbersome, MoeTranslate also provides click-to-use translation options, such as ML Kit and NLLB Translation, which also have good translation results.</string>
 </resources>
