@@ -14,6 +14,7 @@ class CustomPreference private constructor(context: Context) {
     //Custom_Text_API(Int)：用户选择的自定义的文本翻译API，用户最多可添加三个自定义的文本翻译API（0，1，2）
     //Custom_Pic_API(Int)：用户选择的自定义的图片翻译API，用户最多可添加三个自定义的图片翻译API（0，1，2）
 
+    //Download_MLKit(Boolean)：用户是否已经下载ML Kit模型
     //Download_NLLB(Boolean)：用户是否已经下载NLLB模型
 
     //Source_Language(Str)：记录当前的源语言

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MoeTranslator</string>
-    <string name="floating_ball_menu">Floating Ball Menu</string>
+    <string name="floating_ball_menu_1">Floating Ball Menu</string>
     <string name="accessibility_service_label">MoeTranslator Translate Service</string>
     <string name="accessibility_service_description">[Function Description] \nEnable accessibility permissions to take screenshots for translation.\nWhen granting permissions, a warning will pop up. Please rest assured that Mengyi will not collect any of your information.</string>
     <string name="translate_page">Translate</string>
@@ -60,9 +60,9 @@
     <string name="pic_mode">Upload Images Directly for Translation</string>
     <string name="pic_mode_description">Upload the screenshot directly to the cloud API for translation. It supports using the preset cloud image translation API, and also supports using the custom cloud image translation API. <font color="#E25A5C">It does not support local translation</font>. This method consumes relatively more data traffic.</string>
     <string name="mlkit_name">ML Kit</string>
-    <string name="mlkit_description">The machine learning suite launched by Google runs on the device side, without the need for a network, and is click-and-use. Translation is a function of this machine learning suite.</string>
+    <string name="mlkit_description">Google\'s machine learning kit runs on the device and is suitable for casual and simple translation. <font color="#E25A5C">You need to download a model file of about 100MB for the first run</font>. After the download is complete, you can use it right away without the need for a network connection. Click \"Manage ML Kit model files\" below to download and delete model files.</string>
     <string name="nllb_name">NLLB Translate Model</string>
-    <string name="nllb_description">Meta\'s model is designed for translation. The full name is \"No Language Left Behind\". As the name suggests, it supports multiple languages. This model has better translation effect, but it needs to be downloaded before use. Click \"Manage NLLB model files\" below to download and delete model files.<font color="#E25A5C"> To use this model, the device must have at least 8GB of RAM</font>.</string>
+    <string name="nllb_description">Meta\'s model, which is designed for translation, is called \"No Language Left Behind\". As the name suggests, it supports multiple languages. The translation effect of this model is better, but it also needs to be downloaded before use. <font color="#E25A5C">When running for the first time, you need to download a model file of about 1GB. At the same time, the device needs to have at least 8GB of RAM to use this model</font>. After the download is complete, there is no need for a network connection, and it can be used immediately. Click \"Manage NLLB model files\" below to download and delete model files.</string>
     <string name="manage_nllb_models">Manage NLLB Model Files</string>
     <string name="baiduapi_name">Baidu Translate</string>
     <string name="baiduapi_description">Baidu Translate API, click \"Manage Baidu Translate API\" below to set up the API, where you can also view the API application tutorial (there is a free call quota of 10,000 per month).</string>
@@ -108,4 +108,26 @@
     <string name="go_now">Go Now</string>
     <string name="whats_tencent_cloud_title">What is Tencent Cloud API</string>
     <string name="whats_tencent_cloud_content">MoeTranslate can use Baidu Translate or Tencent Cloud\'s API to provide translation services, which means you need to apply for the API from the corresponding platform. The API platform you have selected now seems to be Tencent Cloud. Click \"Go Now\" to start applying for Tencent Cloud API. For detailed tutorials on applying for Tencent Cloud API, click \"View Tutorial\". Please note that the application of these APIs is free, and there are tens of thousands of free calls per month.\nOf course, if you think the steps to apply for the API are too cumbersome, MoeTranslate also provides click-to-use translation options, such as ML Kit and NLLB Translation, which also have good translation results.</string>
+    <string name="manage_mlkit_models">Manage ML Kit Model Files</string>
+    <string name="mlkit_not_download_title">ML Kit model file not downloaded</string>
+    <string name="mlkit_not_download_content">It looks like you have selected ML Kit as the translation model, but it seems that the ML Kit model file has not been downloaded yet, so translation cannot be performed. Click Go to Download to enter the download page. <font color="#E25A5C">The first run requires downloading a model file of about 100MB</font>, so it is recommended to download in a WIFI environment. After the download is complete, there is no need for a network, and it can be used immediately.</string>
+    <string name="startup_success">Startup Success</string>
+    <string name="startup_failure">Startup Failure：</string>
+    <string name="accessibility_recycle">The accessibility permission has been reclaimed by the system. You can re-grant the relevant permission in the tutorial in the upper right corner of the homepage.</string>
+    <string name="floating_ball_menu_2">Floating Ball Menu</string>
+    <string name="floating_ball_menu_3">Floating Ball Menu</string>
+    <string-array name="menu_item">
+        <item>Select Translation Area</item>
+        <item>Adjust Translation Result Position</item>
+        <item>Close Translation Result</item>
+        <item>Set Font Size</item>
+        <item>Close Floating Ball</item>
+        <item>Return to MoeTranslate Main Page</item>
+    </string-array>
+    <string name="repeat_crop">Cannot open the selection box repeatedly</string>
+    <string name="repeat_textview">Cannot enter the translation result adjustment state repeatedly</string>
+    <string name="textview_first">Please adjust the translation result position first</string>
+    <string name="crop_first">Please select the screenshot area first</string>
+    <string name="finish_textview">Adjustment completed</string>
+
 </resources>

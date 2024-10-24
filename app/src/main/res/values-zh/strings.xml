@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">萌译</string>
-    <string name="floating_ball_menu">悬浮球菜单</string>
+    <string name="floating_ball_menu_1">哎呀，摸鱼被发现啦～</string>
     <string name="accessibility_service_label">萌译翻译服务</string>
     <string name="accessibility_service_description">【功能描述】\n启用无障碍权限以获取屏幕截图，从而进行翻译。\n在给予权限时，会弹出警告，请放心，萌译不会收集您的任何信息。</string>
     <string name="translate_page">翻译</string>
@@ -61,9 +61,9 @@
     <string name="pic_mode">直接上传图片进行翻译</string>
     <string name="pic_mode_description">直接把截图上传到云端API进行翻译。支持使用预置的云端图片翻译API，也支持使用自定义的云端图片翻译API，<font color="#E25A5C">不支持本地翻译</font>。这种方式花费的数据流量相对来说要多一些。</string>
     <string name="mlkit_name">ML Kit</string>
-    <string name="mlkit_description">谷歌推出的机器学习套件，运行在设备端，无需网络，即点即用。翻译是该机器学习套件的一个功能。</string>
+    <string name="mlkit_description">谷歌推出的机器学习套件，运行在设备端，适用于随意且简单的翻译。<font color="#E25A5C">首次运行时需下载约100MB的模型文件</font>，后续则无需网络，即点即用。点击下方的“管理ML Kit模型文件”可进行模型文件的下载、删除等操作。</string>
     <string name="nllb_name">NLLB翻译模型</string>
-    <string name="nllb_description">Meta推出的专为翻译而生的模型，全称为“No Language Left Behind”，顾名思义，支持多种语言。该模型的翻译效果更好，但需要下载后使用，点击下方的“管理NLLB模型文件”可进行模型文件的下载、删除等操作。<font color="#E25A5C">使用该模型需要设备至少拥有8GB的运行内存</font>。</string>
+    <string name="nllb_description">Meta推出的专为翻译而生的模型，全称为“No Language Left Behind”，顾名思义，支持多种语言。该模型的翻译效果更好，但同样需要下载后使用。<font color="#E25A5C">首次运行时需下载约1GB的模型文件，同时，使用该模型需要设备至少拥有8GB的运行内存</font>。下载完成后，同样无需网络，即点即用。点击下方的“管理NLLB模型文件”可进行模型文件的下载、删除等操作。</string>
     <string name="manage_nllb_models">管理NLLB模型文件</string>
     <string name="baiduapi_name">百度翻译</string>
     <string name="baiduapi_description">百度翻译的API，点击下方的“管理百度翻译API”即可设置API，还可以在其中查看API的申请教程（每月有万级的免费调用额度）。</string>
@@ -109,4 +109,25 @@
     <string name="go_now">现在就去</string>
     <string name="whats_tencent_cloud_title">什么是腾讯云API</string>
     <string name="whats_tencent_cloud_content">萌译可以使用百度翻译或腾讯云的API提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为腾讯云，点击“现在就去”即可开始申请腾讯云API。申请腾讯云API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有万级的免费调用次数。 当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
+    <string name="manage_mlkit_models">管理ML Kit模型文件</string>
+    <string name="mlkit_not_download_title">未下载ML Kit模型文件</string>
+    <string name="mlkit_not_download_content">看起来您选择了ML Kit作为翻译模型，但似乎还没有下载ML Kit模型文件，因此无法进行翻译。点击去下载即可进入下载页面，<font color="#E25A5C">首次运行时需下载约100MB的模型文件</font>，因此推荐在WIFI环境中下载。后续则无需网络，即点即用。</string>
+    <string name="startup_success">启动成功</string>
+    <string name="startup_failure">启动失败：</string>
+    <string name="accessibility_recycle">无障碍权限被系统回收，可在主页右上角教程处重新授予相关权限</string>
+    <string name="floating_ball_menu_2">你好鸭～</string>
+    <string name="floating_ball_menu_3">要来杯果汁吗？</string>
+    <string-array name="menu_item">
+        <item>选取翻译区域</item>
+        <item>调整翻译结果位置</item>
+        <item>关闭翻译结果</item>
+        <item>字体大小设置</item>
+        <item>关闭悬浮球</item>
+        <item>回到萌译主界面</item>
+    </string-array>
+    <string name="repeat_crop">不可以重复打开选取框</string>
+    <string name="repeat_textview">不可以重复进入翻译结果调整状态</string>
+    <string name="textview_first">请先调整翻译结果位置</string>
+    <string name="crop_first">请先选取完截图位置</string>
+    <string name="finish_textview">调整完成</string>
 </resources>

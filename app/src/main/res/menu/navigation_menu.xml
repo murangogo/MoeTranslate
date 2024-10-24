@@ -3,7 +3,7 @@
     <item
         android:id="@+id/me_fragment"
         android:title="@string/about_me"
-        android:icon="@drawable/me_icon"
+        android:icon="@drawable/setting_icon"
         android:orderInCategory="4"/>
 
     <item

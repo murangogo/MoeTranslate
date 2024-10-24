@@ -1,28 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <!--Root container-->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/root_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:ignore="UselessParent">
+        <ImageView
+            android:id="@+id/floating_ball_icon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:padding="5dp"
+            android:src="@drawable/floatball">
+        </ImageView>
 
-        <!--View while view is collapsed-->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/collapse_view"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@drawable/floatball"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

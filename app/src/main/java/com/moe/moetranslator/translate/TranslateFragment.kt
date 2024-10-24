@@ -61,19 +61,22 @@ class TranslateFragment : Fragment() {
         }
 
         binding.notice.setOnClickListener {
-                makeToast(getString(R.string.getting_notification))
+                showToast(getString(R.string.getting_notification))
                 checkNotification(true)
         }
 
         // 未生效
         binding.floatball.setBackgroundResource(R.drawable.translatebutton_shape)
+//        binding.floatball.setOnClickListener {
+//            if(checkAndroidSDK() && checkAccessibilityService() && checkFloatingBall() && checkNotify() && checkTranslateAPI()){
+//                if((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 0) && (prefs.getInt("OCR_AI",0) == 1)){
+//                    checkRAM()
+//                }
+//                launchFloatingBallService()
+//            }
+//        }
         binding.floatball.setOnClickListener {
-            if(checkAndroidSDK() && checkAccessibilityService() && checkFloatingBall() && checkNotify() && checkTranslateAPI()){
-                if((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 0) && (prefs.getInt("OCR_AI",0) == 1)){
-                    checkRAM()
-                }
-                startBall()
-            }
+            launchFloatingBallService()
         }
 
         if(((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 3)) || ((prefs.getInt("Translate_Mode",0) == 1) && (prefs.getInt("Pic_API",0) == 2))){
@@ -106,7 +109,7 @@ class TranslateFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             when (val result = notificationChecker.checkNotification()) {
                 is NotificationResult.NotificationAvailable -> { if ((prefs.getLong("Read_Notice",0) != result.notificationCode) || userGet) showNotificationDialog(result)}
-                else -> { if (userGet) makeToast(getString(R.string.get_notification_error)) }
+                else -> { if (userGet) showToast(getString(R.string.get_notification_error)) }
             }
         }
     }
@@ -140,7 +143,21 @@ class TranslateFragment : Fragment() {
         val ret: Boolean = when {
             translateMode == 0 -> when (ocrApi) {
                 0 ->{
-                    if ((ocrAi == 1) && (!(prefs.getBoolean("Download_NLLB",false)))) {
+                    if((ocrAi == 0) && (!(prefs.getBoolean("Download_MLKit",false)))){
+                        Log.d(TAG, "Download_MLKit"+prefs.getBoolean("Download_MLKit",false).toString())
+                        val dialog = AlertDialog.Builder(requireContext())
+                            .setTitle(R.string.mlkit_not_download_title)
+                            .setMessage(R.string.mlkit_not_download_content)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.go_to_download) { _, _ ->
+                                // TODO：跳转到下载页面
+                            }
+                            .setNegativeButton(R.string.user_cancel, null)
+                            .create()
+                        dialog.show()
+                        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                        false
+                    } else if ((ocrAi == 1) && (!(prefs.getBoolean("Download_NLLB",false)))) {
                         Log.d(TAG, "Download_NLLB"+prefs.getBoolean("Download_NLLB",false).toString())
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.nllb_not_download_title)
@@ -519,12 +536,32 @@ class TranslateFragment : Fragment() {
         super.onStart()
     }
 
-    private fun startBall(){
-        val intent = Intent(this.context, FloatingService::class.java)
-        requireContext().startService(intent)
+    // 实际启动服务的方法
+    private fun launchFloatingBallService() {
+        try {
+            val context = requireContext()
+            // 检查服务是否已经在运行
+            if (!isServiceRunning(FloatingBallService::class.java)) {
+                val serviceIntent = Intent(requireContext(), FloatingBallService::class.java)
+                requireContext().startService(serviceIntent)
+                showToast(getString(R.string.startup_success))
+            } else {
+                showToast("已在运行")
+            }
+        } catch (e: Exception) {
+            showToast(getString(R.string.startup_failure)+e.toString())
+        }
     }
 
-    private fun makeToast(str: String){
+    // 检查服务是否正在运行
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        Log.d("SERVICE",manager.getRunningServices(Int.MAX_VALUE).toString())
+        return manager.getRunningServices(Int.MAX_VALUE)
+            .any { it.service.className == serviceClass.name }
+    }
+
+    private fun showToast(str: String){
         Toast.makeText(requireContext(), str, Toast.LENGTH_LONG).show()
     }
 }
