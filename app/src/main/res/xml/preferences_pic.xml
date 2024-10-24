@@ -42,6 +42,7 @@
 
         <SwitchPreferenceCompat
             app:key="ui_custom_api_1_pic"
+            app:icon="@drawable/custom_1"
             app:title="@string/custom_api_pic_1" />
 
         <Preference
@@ -50,6 +51,7 @@
 
         <SwitchPreferenceCompat
             app:key="ui_custom_api_2_pic"
+            app:icon="@drawable/custom_2"
             app:title="@string/custom_api_pic_2" />
 
         <Preference
@@ -58,6 +60,7 @@
 
         <SwitchPreferenceCompat
             app:key="ui_custom_api_3_pic"
+            app:icon="@drawable/custom_3"
             app:title="@string/custom_api_pic_3" />
 
         <Preference

@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.GET_PACKAGE_INFO" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -38,16 +35,6 @@
             android:exported="false"
             android:theme="@style/settheme" />
         <activity
-            android:name=".launch.LaunchActivity"
-            android:exported="true"
-            android:theme="@style/splashtheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".launch.FirstLaunchPage"
             android:exported="false"
             android:theme="@style/tutorialtheme" />
@@ -56,6 +43,15 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/maintheme" />
+        <activity
+            android:name=".launch.LaunchActivity"
+            android:exported="true"
+            android:theme="@style/splashtheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".translate.ScreenShotAccessibilityService"
@@ -66,13 +62,13 @@
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
-
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
         </service>
+
         <service
-            android:name=".translate.FloatingService"
+            android:name=".translate.FloatingBallService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaProjection" />

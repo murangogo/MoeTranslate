@@ -38,6 +38,7 @@ android {
 
 dependencies {
     implementation 'androidx.preference:preference-ktx:1.2.1'
+    implementation 'androidx.lifecycle:lifecycle-service:2.8.6'
     def room_version = "2.5.0"
     apply plugin: 'kotlin-kapt'
     implementation 'nl.dionsegijn:konfetti-xml:2.0.2'
@@ -64,6 +65,9 @@ dependencies {
 
     // To recognize Japanese script
     implementation 'com.google.mlkit:text-recognition-japanese:16.0.1'
+
+    implementation 'com.google.mlkit:translate:17.0.3'
+
 
     //如果您已迁移到androidx
     implementation "androidx.room:room-runtime:$room_version"

@@ -1,78 +1,116 @@
 package com.moe.moetranslator.translate
 
 import android.accessibilityservice.AccessibilityService
-import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import android.util.Log
-import android.view.Display
+import android.view.Display.DEFAULT_DISPLAY
 import android.view.accessibility.AccessibilityEvent
-import com.moe.moetranslator.utils.ConstDatas
-import java.io.File
-import java.io.FileOutputStream
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+
+// 单例类管理SharedFlow
+object ScreenshotManager {
+    private val _screenshotFlow = MutableSharedFlow<Bitmap>()
+    val screenshotFlow = _screenshotFlow.asSharedFlow()
+
+    suspend fun emitScreenshot(screenshot: Bitmap) {
+        _screenshotFlow.emit(screenshot)
+    }
+}
 
 class ScreenShotAccessibilityService: AccessibilityService() {
-    companion object {
-        const val ACTION_SERVICE_STARTED = "TakeScreenshotOver"
-    }
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-    override fun onAccessibilityEvent(p0: AccessibilityEvent?) {
-    }
-
-    override fun onInterrupt() {
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if(intent!=null){
-            getScreenshot(intent.getIntExtra("x1",0),intent.getIntExtra("y1",0),intent.getIntExtra("x2",0),intent.getIntExtra("y2",0))
+    // 当用户点击悬浮球时调用此方法
+    fun takeScreenshot() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {  // Android 11及以上
+            takeScreenshotImpl()
         }
-        return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun getScreenshot(CropScaleX1 : Int,CropScaleY1 : Int,CropScaleX2 : Int,CropScaleY2 : Int){
-        Log.d("坐标","x1 = $CropScaleX1, y1 = $CropScaleY1, x2 = $CropScaleX2, y2 = $CropScaleY2")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val callback: TakeScreenshotCallback = object : TakeScreenshotCallback {
-                override fun onSuccess(screenshotResult: ScreenshotResult) {
-                    val hardwarebuffer = screenshotResult.hardwareBuffer
-                    val colorSpace = screenshotResult.colorSpace
-                    if (hardwarebuffer.width > 0 && hardwarebuffer.height > 0) {
-                        val bitmap = Bitmap.wrapHardwareBuffer(hardwarebuffer, colorSpace)
-                        Log.d("大小","H = ${bitmap!!.height}, W = ${bitmap.width}")
-                        var cropbitmap:Bitmap
-                        cropbitmap = if(CropScaleX1==0&&CropScaleY1==0&&CropScaleX2==0&&CropScaleY2==0){
-                            bitmap
-                        }else{
-                            Bitmap.createBitmap(bitmap!!,CropScaleX1,CropScaleY1,CropScaleX2 - CropScaleX1,CropScaleY2 - CropScaleY1)
-                        }
-                        if (ConstDatas.pictimes > 200) {
-                            ConstDatas.pictimes = 0
-                        }
-                        ConstDatas.pictimes++
-                        val screenshotfile = File(ConstDatas.FilePath, ConstDatas.pictimes.toString() + ".jpg")
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun takeScreenshotImpl() {
+        try {
+            takeScreenshot(
+                DEFAULT_DISPLAY,
+                mainExecutor,
+                object : TakeScreenshotCallback {
+                    override fun onSuccess(screenshot: ScreenshotResult) {
+                        var bitmap: Bitmap? = null
                         try {
-                            val fileOutputStream = FileOutputStream(screenshotfile)
-                            cropbitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-                            fileOutputStream.flush()
-                            fileOutputStream.close()
-                            Log.d("截图提示","图像编码为"+ ConstDatas.pictimes)
-                            val broadcastIntent = Intent(ACTION_SERVICE_STARTED)
-                            sendBroadcast(broadcastIntent)
+                            bitmap = Bitmap.wrapHardwareBuffer(
+                                screenshot.hardwareBuffer,
+                                screenshot.colorSpace
+                            )?.copy(Bitmap.Config.ARGB_8888, true)
+                            //使用sharedflow，发送截图完成信号以及bitmap
+                            bitmap?.let { nonNullBitmap ->
+                                // 在协程中发送截图事件
+                                serviceScope.launch {
+                                    try {
+                                        ScreenshotManager.emitScreenshot(nonNullBitmap)
+                                    } catch (e: Exception) {
+                                        showToast("Error emitting screenshot：$e")
+                                    }
+                                }
+                            }
                         } catch (e: Exception) {
-                            throw RuntimeException(e)
+                            Log.e("Screenshot", "Error processing screenshot", e)
+                        } finally {
+                            screenshot.hardwareBuffer.close()
                         }
                     }
+
+                    override fun onFailure(errorCode: Int) {
+                        val errorText = when (errorCode){
+                            ERROR_TAKE_SCREENSHOT_INTERNAL_ERROR -> "The status of taking screenshot is failure and the reason is internal error."
+                            ERROR_TAKE_SCREENSHOT_NO_ACCESSIBILITY_ACCESS -> "The status of taking screenshot is failure and the reason is no accessibility access."
+                            ERROR_TAKE_SCREENSHOT_INTERVAL_TIME_SHORT -> "The status of taking screenshot is failure and the reason is that too little time has elapsed since the last screenshot."
+                            ERROR_TAKE_SCREENSHOT_INVALID_DISPLAY -> "The status of taking screenshot is failure and the reason is invalid display Id."
+                            else -> "Unknown error: $errorCode"
+                        }
+                        showToast(errorText)
+                    }
                 }
-                override fun onFailure(i: Int) {
-                    Log.d("Fail", "onFailure = $i")
-                }
-            }
-            takeScreenshot(Display.DEFAULT_DISPLAY, this.mainExecutor, callback)
+            )
+        } catch (e: Exception) {
+            showToast("Failed to take screenshot：$e")
+        }
+    }
+
+
+    fun showToast(message: String) {
+        serviceScope.launch {
+            Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
         }
     }
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        Log.d("connect","service connected successful");
+        AccessibilityServiceManager.setService(this)
+        Log.d("CONNECT", "Service Connected")
+    }
+
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
+        // 处理无障碍事件
+    }
+
+    override fun onInterrupt() {
+        // 处理中断
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // 取消服务
+        AccessibilityServiceManager.setService(null)
+        // 取消所有协程
+        serviceScope.cancel()
     }
 }
