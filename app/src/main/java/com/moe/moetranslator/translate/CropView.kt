@@ -10,6 +10,7 @@ import android.graphics.RectF
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewTreeObserver
 import com.moe.moetranslator.utils.MySharedPreferenceData
 
 const val RECT_MIN_WIDTH = 50f//框选的最小宽度px
@@ -18,7 +19,8 @@ const val RECT_MIN_HEIGHT = 50f//框选的最小高度px
 class CropView(ctx:Context) : View(ctx) {
     private val mActionMovePoint = Point()  //point，储存x，y两个坐标
     private val mOriPoint = Point() //point，储存原来的x，y两个坐标
-    private lateinit var mRect : RectF  //矩形信息，mRect即为最初的矩形
+    val absolutePointOffset = Point() //point，绝对坐标偏移量
+    lateinit var mRect : RectF  //矩形信息，mRect即为最初的矩形
     private lateinit var mInitRect : RectF  //最开始的裁剪框
     private var mRectLeft : RectF = RectF() //左侧矩形阴影区域
     private var mRectTop : RectF = RectF()  //上侧矩形阴影区域
@@ -29,15 +31,23 @@ class CropView(ctx:Context) : View(ctx) {
     private var actionDownRectTop = 0f  //按下时的顶
     private var actionDownRectRight = 0f    //按下时的右
     private var actionDownRectBottom = 0f   //按下时的底
-    private var getabsolute_landscape : Boolean = false
-    private var getabsolute_portiait : Boolean = false
-    private val absolutePointOffset_landscape = Point() //point，竖屏时的绝对坐标偏移量
-    private val absolutePointOffset_portiait = Point() //point，横屏时的绝对坐标偏移量
-    private var repository: MySharedPreferenceData = MySharedPreferenceData(ctx)
 
     fun setRect(rectF: RectF) {  //设置初始矩形宽高
         mRect = RectF(rectF)
         mInitRect = RectF(rectF)
+
+        // 等待视图布局完成后再获取位置
+        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                // 获取位置
+                absolutePointOffset.x = getViewOffset().x
+                absolutePointOffset.y = getViewOffset().y
+                Log.d("OFFSET", "x: ${absolutePointOffset.x} y: ${absolutePointOffset.y}")
+
+                // 移除监听器，避免重复调用
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })
     }
 
     @SuppressLint("DrawAllocation")
@@ -81,21 +91,17 @@ class CropView(ctx:Context) : View(ctx) {
         canvas.drawLines(pts, paint)
     }
 
+    private fun getViewOffset(): Point {
+        val location = IntArray(2)
+        this.getLocationOnScreen(location)
+        return Point(location[0], location[1])
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
+
         mActionMovePoint.x = event.x.toInt() //获取触摸的x坐标
         mActionMovePoint.y = event.y.toInt() //获取触摸的y坐标
-        //获取绝对坐标和相对坐标的偏移量
-        if((repository.ScreenConfiguration==1) &&(!getabsolute_portiait)){
-            absolutePointOffset_portiait.x = (event.rawX - event.x).toInt()
-            absolutePointOffset_portiait.y = (event.rawY - event.y).toInt()
-            getabsolute_portiait = true
-            getabsolute_landscape = false
-        }else if ((repository.ScreenConfiguration==2) &&(!getabsolute_landscape)){
-            absolutePointOffset_landscape.x = (event.rawX - event.x).toInt()
-            absolutePointOffset_landscape.y = (event.rawY - event.y).toInt()
-            getabsolute_landscape = true
-            getabsolute_portiait = false
-        }
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 mOriPoint.x = event.x.toInt()
@@ -196,18 +202,18 @@ class CropView(ctx:Context) : View(ctx) {
                     8 -> {
                         //x的更新策略
                         if ((mRect.left <= 5) && (mActionMovePoint.x - mOriPoint.x < 0)) {    //贴近左边缘
-                            Log.d("Message", "贴近左边缘")
+                            Log.d("Message", "close to left edge")
                         } else if ((mRect.right >= width - 5) && (mActionMovePoint.x - mOriPoint.x > 0)) { //贴近右边缘
-                            Log.d("Message", "贴近右边缘")
+                            Log.d("Message", "close to right edge")
                         } else {
                             mRect.left = mRect.left + (mActionMovePoint.x - mOriPoint.x)
                             mRect.right = mRect.right + (mActionMovePoint.x - mOriPoint.x)
                         }
                         //y的更新策略
                         if ((mRect.top <= 5) && (mActionMovePoint.y - mOriPoint.y) < 0) {    //贴近左边缘
-                            Log.d("Message", "贴近上边缘")
+                            Log.d("Message", "close to top edge")
                         } else if ((mRect.bottom >= height - 5) && (mActionMovePoint.y - mOriPoint.y > 0)) { //贴近右边缘
-                            Log.d("Message", "贴近下边缘")
+                            Log.d("Message", "close to bottom edge")
                         } else {
                             mRect.top = mRect.top + (mActionMovePoint.y - mOriPoint.y)
                             mRect.bottom = mRect.bottom + (mActionMovePoint.y - mOriPoint.y)
@@ -220,6 +226,7 @@ class CropView(ctx:Context) : View(ctx) {
                 invalidate()
                 return mPressPointIndex != -1
             }
+
             MotionEvent.ACTION_UP -> {
                 //抬手检查
                 if(mRect.left<5){
@@ -235,11 +242,6 @@ class CropView(ctx:Context) : View(ctx) {
                     mRect.bottom = height-5f
                 }
                 invalidate()
-                if(repository.ScreenConfiguration==1){
-                    repository.saveScale(mRect.left.toInt()+absolutePointOffset_portiait.x,mRect.top.toInt()+absolutePointOffset_portiait.y,mRect.right.toInt()+absolutePointOffset_portiait.x,mRect.bottom.toInt()+absolutePointOffset_portiait.y)
-                }else{
-                    repository.saveScale(mRect.left.toInt()+absolutePointOffset_landscape.x,mRect.top.toInt()+absolutePointOffset_landscape.y,mRect.right.toInt()+absolutePointOffset_landscape.x,mRect.bottom.toInt()+absolutePointOffset_landscape.y)
-                }
                 mPressPointIndex = -1
             }
         }

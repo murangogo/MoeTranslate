@@ -16,7 +16,7 @@ import kotlin.coroutines.resumeWithException
 
 
 // TODO 多行合并为一行可选
-// TODO 测试没有文字的清情况
+// TODO 测试没有文字的情况
 object OCRTextRecognizer {
     private val recognizers = mutableMapOf<String, TextRecognizer>()
 

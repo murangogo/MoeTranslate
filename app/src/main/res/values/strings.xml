@@ -62,7 +62,7 @@
     <string name="mlkit_name">ML Kit</string>
     <string name="mlkit_description">Google\'s machine learning kit runs on the device and is suitable for casual and simple translation. <font color="#E25A5C">You need to download a model file of about 100MB for the first run</font>. After the download is complete, you can use it right away without the need for a network connection. Click \"Manage ML Kit model files\" below to download and delete model files.</string>
     <string name="nllb_name">NLLB Translate Model</string>
-    <string name="nllb_description">Meta\'s model, which is designed for translation, is called \"No Language Left Behind\". As the name suggests, it supports multiple languages. The translation effect of this model is better, but it also needs to be downloaded before use. <font color="#E25A5C">When running for the first time, you need to download a model file of about 1GB. At the same time, the device needs to have at least 8GB of RAM to use this model</font>. After the download is complete, there is no need for a network connection, and it can be used immediately. Click \"Manage NLLB model files\" below to download and delete model files.</string>
+    <string name="nllb_description">Meta\'s model, which is designed for translation, is called \"No Language Left Behind\". As the name suggests, it supports multiple languages. The translation effect of this model is better, but it also needs to be downloaded before use. <font color="#E25A5C">When running for the first time, you need to download a model file of about 1GB. At the same time, the device needs to have at least 6GB of RAM to use this model</font>. After the download is complete, there is no need for a network connection, and it can be used immediately. Click \"Manage NLLB model files\" below to download and delete model files.</string>
     <string name="manage_nllb_models">Manage NLLB Model Files</string>
     <string name="baiduapi_name">Baidu Translate</string>
     <string name="baiduapi_description">Baidu Translate API, click \"Manage Baidu Translate API\" below to set up the API, where you can also view the API application tutorial (there is a free call quota of 10,000 per month).</string>
@@ -89,8 +89,8 @@
     <string name="manage_custom_api_pic_2">Manage custom cloud image translation API2</string>
     <string name="manage_custom_api_pic_3">Manage custom cloud image translation API3</string>
     <string name="no_less_one">Please select an option</string>
-    <string name="small_ram_title">RAM is less than 8GB</string>
-    <string name="small_ram_content">It looks like you have selected NLLB as the translation API, but it seems that your device has less than 8G of RAM, which may cause problems when inferring the model. Please rest assured that the program will not prevent you from using the model, but there is no guarantee that there will be no accidents when the RAM is less than 8G.</string>
+    <string name="small_ram_title">RAM is less than 6GB</string>
+    <string name="small_ram_content">It looks like you have selected NLLB as the translation API, but it seems that your device has less than 8G of RAM, which may cause problems when inferring the model. Please rest assured that the program will not prevent you from using the model, but there is no guarantee that there will be no accidents when the RAM is less than 6G.</string>
     <string name="custom_api_select_language_title">Custom API does not support language selection</string>
     <string name="custom_api_select_language_content">It looks like you are using a custom translation API. In this case, you should not use MoeTranslate to select the source and target languages. Instead, you should write the source and target languages ​​into the API because MoeTranslate does not know the language codes specified by your custom API (some API providers do not use BCP-47 codes as their language codes).</string>
     <string name="whatsthis">What\'s this?</string>
@@ -129,5 +129,31 @@
     <string name="textview_first">Please adjust the translation result position first</string>
     <string name="crop_first">Please select the screenshot area first</string>
     <string name="finish_textview">Adjustment completed</string>
+    <string name="initialization_start">Start model initialization, please start using translation after initialization is completed...</string>
+    <string name="initialization_complete">Model initialization completed</string>
+    <string name="initialization_failed">Model initialization failed, possibly due to insufficient memory.</string>
+    <string name="initialization_not_complete">The model has not been initialized and the translation function cannot be used.</string>
+    <string name="finish_crop">Selection completed</string>
+    <string name="not_added_remove">The translation result view has not been added and does not need to be removed.</string>
+    <string name="orientation_changed">Screen orientation change detected, please reselect the screenshot area</string>
+    <string name="download_tips">In this page, you can download the NLLB model file. In order to keep the download process uninterrupted, please <font color="#E25A5C">do not leave this page while downloading</font>. Since the file is hosted in Cloudflare R2, it may not be available for download depending on network conditions. You can flexibly switch between Wi-Fi and data traffic, and enable or disable the VPN.\n</string>
+    <string name="download_manually">If the file cannot be downloaded in any case, please <font color="#30d3f3">click here</font> to see how to download it manually.</string>
+    <string name="start_download">Start Download</string>
+    <string name="delete_models">Delete Models</string>
+    <string name="stop_download">Stop Downloading</string>
+    <string name="get_download_info_error">Failed to get download information：%s</string>
+    <string name="download_files_prompt">The following %d files will be downloaded in turn:</string>
+    <string name="download_total_size">Total Size：%s</string>
+    <string name="download_start_tips">Download tips</string>
+    <string name="download_failed">Download Failed：%s</string>
+    <string name="download_pause">The download has been stopped</string>
+    <string name="current_download">Downloading：%s  %d/%d</string>
+    <string name="verify_file">Verifying file：%s</string>
+    <string name="delete_download">All files deleted</string>
+    <string name="delete_download_failed">Failed to delete folder：%s</string>
+    <string name="please_wait">Please wait</string>
+    <string name="get_download_info">Getting download information...</string>
+    <string name="nllb_status_download">NLLB model download status: Downloaded</string>
+    <string name="nllb_status_not_download">NLLB model download status: Not downloaded</string>
 
 </resources>

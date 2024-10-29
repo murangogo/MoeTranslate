@@ -3,6 +3,7 @@ package com.moe.moetranslator.translate
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
+import android.graphics.RectF
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -12,26 +13,33 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import com.google.mlkit.nl.translate.Translator
 import com.moe.moetranslator.R
 import com.moe.moetranslator.utils.CustomPreference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import translationapi.nllbtranslation.NLLBTranslation
 import kotlin.math.abs
 
 // 悬浮球配置
 // TODO :自定义反应时间
 data class FloatingBallConfig(
     val floatingBallInitialX: Int = 80,
-    val floatingBallInitialY: Int = 80,
+    val floatingBallInitialY: Int = 200,
     val CLICK_SLOP:Float = 5f,           // 点击判定的最大移动距离
     val LONG_PRESS_SLOP:Float = 10f,     // 长按判定的最大移动距离
     val LONG_PRESS_DELAY:Long = 500L   // 长按触发时间（毫秒）
 )
 
 data class FloatingTextViewConfig(
-    val floatingBallInitialX: Int = 50,
-    val floatingBallInitialY: Int = 50
+    val floatingTextViewInitialX: Int = 0,
+    val floatingTextViewInitialY: Int = 0
+)
+
+data class CropViewConfig(
+    val cropViewInitialX: Int = 50,
+    val cropViewInitialY: Int = 50
 )
 
 // 手势类型
@@ -52,6 +60,8 @@ class FloatingBallService : LifecycleService() {
     private lateinit var windowManager: WindowManager
     private lateinit var floatingBallView: View
     private lateinit var floatingTextView: TextView
+    private lateinit var cropView: CropView
+
     private var floatingBallParams: WindowManager.LayoutParams? = null
     private var floatingTextViewParams: WindowManager.LayoutParams? = null
     private var cropViewParams: WindowManager.LayoutParams? = null
@@ -61,6 +71,7 @@ class FloatingBallService : LifecycleService() {
     // 配置
     private var floatingBallConfig = FloatingBallConfig()
     private var floatingTextViewConfig = FloatingTextViewConfig()
+    private var cropViewConfig = CropViewConfig()
 
     // 悬浮球触摸相关变量
     private var floatingBallInitialX: Int = 0
@@ -84,6 +95,15 @@ class FloatingBallService : LifecycleService() {
     // 当前悬浮球状态
     private var currentBallStatus: BallStatus = BallStatus.Normal
 
+    // 保存裁剪框状态
+    private var mRectF: RectF? = null
+
+    // 保存目前的横竖屏配置
+    private var orientation = -1
+
+    // 初始化的翻译对象
+    private lateinit var translator: TranslationAPI
+
     override fun onCreate() {
         super.onCreate()
         prefs = CustomPreference.getInstance(this)
@@ -93,6 +113,24 @@ class FloatingBallService : LifecycleService() {
 
     @SuppressLint("InflateParams")
     private fun initialize() {
+        // 初始化翻译API
+        Log.d("初始化！", "初始化！")
+        if (prefs.getInt("Translate_Mode", 0) == 0){
+            when (prefs.getInt("OCR_API", 0)) {
+                0 -> when (prefs.getInt("OCR_AI", 0)){
+                    0 -> {}
+                    1 -> translator = NLLBTranslation(this)
+                    else -> {}
+                }
+                else -> {}
+            }
+        }else{
+            when (prefs.getInt("Pic_API", 0)){
+                0 -> {}
+                else -> {}
+            }
+        }
+
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
         // 创建悬浮窗参数
@@ -114,8 +152,9 @@ class FloatingBallService : LifecycleService() {
             flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
             width = WindowManager.LayoutParams.WRAP_CONTENT
             height = WindowManager.LayoutParams.WRAP_CONTENT
-            x = floatingTextViewConfig.floatingBallInitialX
-            y = floatingTextViewConfig.floatingBallInitialY
+            gravity = Gravity.CENTER
+            x = floatingTextViewConfig.floatingTextViewInitialX
+            y = floatingTextViewConfig.floatingTextViewInitialY
         }
 
         // 设置裁剪框视图参数
@@ -125,6 +164,9 @@ class FloatingBallService : LifecycleService() {
             flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
             width = WindowManager.LayoutParams.MATCH_PARENT
             height = WindowManager.LayoutParams.MATCH_PARENT
+            gravity = Gravity.START or Gravity.TOP
+            x = cropViewConfig.cropViewInitialX
+            y = cropViewConfig.cropViewInitialY
         }
 
 
@@ -134,6 +176,9 @@ class FloatingBallService : LifecycleService() {
 
         // 创建翻译结果视图
         floatingTextView = FloatingTextView.translateTextView(this)
+
+        // 创建裁剪框视图
+        cropView = CropView(this)
 
         // 添加到窗口
         windowManager.addView(floatingBallView, floatingBallParams)
@@ -266,7 +311,11 @@ class FloatingBallService : LifecycleService() {
                             is BallStatus.Crop -> showToast(getString(R.string.crop_first))
                             is BallStatus.MovingText -> showToast(getString(R.string.textview_first))
                             is BallStatus.Normal -> {
-                                // 判断是否添加了翻译结果
+                                if(isViewAdded(floatingTextView)){
+                                    windowManager.removeView(floatingTextView)
+                                }else{
+                                    showToast(getString(R.string.not_added_remove), true)
+                                }
                             }
                         }
                     }
@@ -291,6 +340,22 @@ class FloatingBallService : LifecycleService() {
 
     private fun setCropView(){
 
+        // 若有保存的裁剪框，则直接应用
+        if ((orientation == this.resources.configuration.orientation) && (mRectF != null)){
+            cropView.setRect(mRectF!!)
+        }else{
+            cropView.setRect(RectF(5f, 5f, 350f, 350f))
+        }
+
+        windowManager.addView(cropView, cropViewParams)
+
+        // 存储屏幕方向
+        orientation = this.resources.configuration.orientation
+
+        // 保持悬浮球在最上层
+        windowManager.removeView(floatingBallView)
+        windowManager.addView(floatingBallView, floatingBallParams)
+        currentBallStatus = BallStatus.Crop
     }
 
     private fun setMovingTextView(){
@@ -298,6 +363,10 @@ class FloatingBallService : LifecycleService() {
             setFloatingTextViewTouchable(true)
         }else{
             windowManager.addView(floatingTextView, floatingTextViewParams)
+
+            // 保持悬浮球在最上层
+            windowManager.removeView(floatingBallView)
+            windowManager.addView(floatingBallView, floatingBallParams)
             setFloatingTextViewTouchable(true)
         }
         currentBallStatus = BallStatus.MovingText
@@ -310,11 +379,26 @@ class FloatingBallService : LifecycleService() {
                     showToast(getString(R.string.accessibility_recycle))
                     return
                 }else{
-                    AccessibilityServiceManager.takeScreenshot()
+                    if(!isViewAdded(floatingTextView)){
+                        windowManager.addView(floatingTextView, floatingTextViewParams)
+
+                        // 保持悬浮球在最上层
+                        windowManager.removeView(floatingBallView)
+                        windowManager.addView(floatingBallView, floatingBallParams)
+                        setFloatingTextViewTouchable(false)
+                    }
+                    if (orientation == this.resources.configuration.orientation){
+                        AccessibilityServiceManager.takeScreenshot(mRectF, cropView.absolutePointOffset)
+                    }else{
+                        showToast(getString(R.string.orientation_changed))
+                    }
                 }
             }
             is BallStatus.Crop -> {
-
+                mRectF = cropView.mRect
+                windowManager.removeView(cropView)
+                showToast(getString(R.string.finish_crop), true)
+                currentBallStatus = BallStatus.Normal
             }
             is BallStatus.MovingText -> {
                 setFloatingTextViewTouchable(false)
@@ -341,11 +425,8 @@ class FloatingBallService : LifecycleService() {
         Log.d("SCREENSHOT", "processScreenShot")
         try{
             if(prefs.getInt("Translate_Mode", 0) == 0){
-                // TODO OCR翻译
-                val txt = OCRTextRecognizer.getPicText("zh", bitmap)
-                floatingTextView.text = txt
-                val str = ""
-                translateByText(str)
+                val txt = OCRTextRecognizer.getPicText(prefs.getString("Source_Language", "ja"), bitmap)
+                translateByText(txt)
             }else{
                 // 上传图片翻译
                 translateByPic(bitmap)
@@ -358,8 +439,22 @@ class FloatingBallService : LifecycleService() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun translateByText(str: String){
-
+        translator.getTranslation(str, prefs.getString("Source_Language", "ja"), prefs.getString("Target_Language", "zh")){
+            result->
+            lifecycleScope.launch(Dispatchers.Main) {
+                when (result) {
+                    is TranslationAPI.TranslationResult.Success -> {
+                        // 直接使用 translatedText，而不是整个 result 对象
+                        floatingTextView.text = str + "\n\n" + result.translatedText
+                    }
+                    is TranslationAPI.TranslationResult.Error -> {
+                        floatingTextView.text = "Translation failed: ${result.error.message}"
+                    }
+                }
+            }
+        }
     }
 
     private fun translateByPic(bitmap: Bitmap){

@@ -2,6 +2,8 @@ package com.moe.moetranslator.translate
 
 import android.accessibilityservice.AccessibilityService
 import android.graphics.Bitmap
+import android.graphics.Point
+import android.graphics.RectF
 import android.os.Build
 import android.util.Log
 import android.view.Display.DEFAULT_DISPLAY
@@ -15,6 +17,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // 单例类管理SharedFlow
 object ScreenshotManager {
@@ -30,14 +33,14 @@ class ScreenShotAccessibilityService: AccessibilityService() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     // 当用户点击悬浮球时调用此方法
-    fun takeScreenshot() {
+    fun takeScreenshot(mRectF: RectF?, offset: Point) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {  // Android 11及以上
-            takeScreenshotImpl()
+            takeScreenshotImpl(mRectF, offset)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    private fun takeScreenshotImpl() {
+    private fun takeScreenshotImpl(mRectF: RectF?, offset: Point) {
         try {
             takeScreenshot(
                 DEFAULT_DISPLAY,
@@ -50,17 +53,45 @@ class ScreenShotAccessibilityService: AccessibilityService() {
                                 screenshot.hardwareBuffer,
                                 screenshot.colorSpace
                             )?.copy(Bitmap.Config.ARGB_8888, true)
+
+                            Log.d("ASSOFFSET", "x:"+offset.x+"  y:"+offset.y)
+                            if (mRectF != null){
+                                bitmap = Bitmap.createBitmap(
+                                    bitmap!!,
+                                    mRectF.left.toInt() + offset.x,    // 起始X坐标
+                                    mRectF.top.toInt() + offset.y,     // 起始Y坐标
+                                    mRectF.width().toInt(), // 裁剪宽度
+                                    mRectF.height().toInt() // 裁剪高度
+                                )
+                            }
+
                             //使用sharedflow，发送截图完成信号以及bitmap
                             bitmap?.let { nonNullBitmap ->
-                                // 在协程中发送截图事件
                                 serviceScope.launch {
-                                    try {
-                                        ScreenshotManager.emitScreenshot(nonNullBitmap)
-                                    } catch (e: Exception) {
-                                        showToast("Error emitting screenshot：$e")
+
+                                    // 在IO线程保存图片
+                                    val savePath = withContext(Dispatchers.IO) {
+                                        ImageFileManager.saveBitmapToCache(
+                                            applicationContext,
+                                            nonNullBitmap
+                                        )
+                                    }
+
+                                    when(savePath){
+                                        null -> {
+                                            showToast("Failed to save image")
+                                        }
+                                        else -> {
+                                            try {
+                                                ScreenshotManager.emitScreenshot(nonNullBitmap)
+                                            } catch (e: Exception) {
+                                                showToast("Error emitting screenshot：$e")
+                                            }
+                                        }
                                     }
                                 }
                             }
+
                         } catch (e: Exception) {
                             Log.e("Screenshot", "Error processing screenshot", e)
                         } finally {

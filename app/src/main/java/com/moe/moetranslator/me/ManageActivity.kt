@@ -4,15 +4,8 @@ import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.ActivityManageBinding
-import com.moe.moetranslator.databinding.ActivitySettingPageBinding
 
 class ManageActivity : AppCompatActivity() {
 
@@ -34,9 +27,12 @@ class ManageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         when(intent.getIntExtra(EXTRA_FRAGMENT_TYPE,0)){
-//            TYPE_FRAGMENT_MANAGE_NLLB->supportFragmentManager.beginTransaction().replace(binding.manageFragmentContainer.id,
-//                //TODO DOWNLOAD
-//            ).commit()
+            TYPE_FRAGMENT_MANAGE_NLLB-> {
+                val fragment = DownloadFragment()
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
             TYPE_FRAGMENT_MANAGE_BAIDU_API->{
                 val fragment = OnlineAPI()
                 val args = Bundle().apply {
