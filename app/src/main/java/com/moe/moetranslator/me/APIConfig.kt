@@ -50,6 +50,15 @@ class APIConfig : PreferenceFragmentCompat() {
         }
 
         if (prefs.getInt("Translate_Mode", 0) == 0){
+
+            findPreference<Preference>("manage_nllb_model")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_NLLB)
+                }
+                startActivity(intent)
+                true
+            }
+
             findPreference<Preference>("ui_manage_baidu_api_text")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_BAIDU_API)

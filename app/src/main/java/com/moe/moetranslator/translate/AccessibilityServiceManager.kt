@@ -1,5 +1,8 @@
 package com.moe.moetranslator.translate
 
+import android.graphics.Point
+import android.graphics.RectF
+
 object AccessibilityServiceManager {
     private var screenShotService: ScreenShotAccessibilityService? = null
 
@@ -9,7 +12,7 @@ object AccessibilityServiceManager {
 
     fun getService(): ScreenShotAccessibilityService? = screenShotService
 
-    fun takeScreenshot() {
-        screenShotService?.takeScreenshot()
+    fun takeScreenshot(mRectF: RectF?, offset: Point) {
+        screenShotService?.takeScreenshot(mRectF, offset)
     }
 }

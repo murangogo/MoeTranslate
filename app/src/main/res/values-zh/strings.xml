@@ -63,7 +63,7 @@
     <string name="mlkit_name">ML Kit</string>
     <string name="mlkit_description">谷歌推出的机器学习套件，运行在设备端，适用于随意且简单的翻译。<font color="#E25A5C">首次运行时需下载约100MB的模型文件</font>，后续则无需网络，即点即用。点击下方的“管理ML Kit模型文件”可进行模型文件的下载、删除等操作。</string>
     <string name="nllb_name">NLLB翻译模型</string>
-    <string name="nllb_description">Meta推出的专为翻译而生的模型，全称为“No Language Left Behind”，顾名思义，支持多种语言。该模型的翻译效果更好，但同样需要下载后使用。<font color="#E25A5C">首次运行时需下载约1GB的模型文件，同时，使用该模型需要设备至少拥有8GB的运行内存</font>。下载完成后，同样无需网络，即点即用。点击下方的“管理NLLB模型文件”可进行模型文件的下载、删除等操作。</string>
+    <string name="nllb_description">Meta推出的专为翻译而生的模型，全称为“No Language Left Behind”，顾名思义，支持多种语言。该模型的翻译效果更好，但同样需要下载后使用。<font color="#E25A5C">首次运行时需下载约1GB的模型文件，同时，使用该模型需要设备至少拥有6GB的运行内存</font>。下载完成后，同样无需网络，即点即用。点击下方的“管理NLLB模型文件”可进行模型文件的下载、删除等操作。</string>
     <string name="manage_nllb_models">管理NLLB模型文件</string>
     <string name="baiduapi_name">百度翻译</string>
     <string name="baiduapi_description">百度翻译的API，点击下方的“管理百度翻译API”即可设置API，还可以在其中查看API的申请教程（每月有万级的免费调用额度）。</string>
@@ -90,8 +90,8 @@
     <string name="manage_custom_api_pic_2">管理自定义云端图片翻译API2</string>
     <string name="manage_custom_api_pic_3">管理自定义云端图片翻译API3</string>
     <string name="no_less_one">需选择一个选项</string>
-    <string name="small_ram_title">运行内存小于8GB</string>
-    <string name="small_ram_content">看起来您选择了NLLB作为翻译API，但似乎您的设备的运行内存小于8G，这可能会导致在模型推理时出现问题。请您放心，程序不会因此阻止您使用该模型，但不保证在运行内存小于8G的情况下不会出现意外。</string>
+    <string name="small_ram_title">运行内存小于6GB</string>
+    <string name="small_ram_content">看起来您选择了NLLB作为翻译API，但似乎您的设备的运行内存小于6G，这可能会导致在模型推理时出现问题。请您放心，程序不会因此阻止您使用该模型，但不保证在运行内存小于8G的情况下不会出现意外。</string>
     <string name="custom_api_select_language_title">自定义API不支持选择语言</string>
     <string name="custom_api_select_language_content">看起来您使用了自定义翻译API，在这种情况下，您不该使用萌译来选择源语言和目标语言，相反，您应该将源语言和目标语言写进API中，因为萌译不知道您自定义的API规定的语言代码（一些API提供商并不使用BCP-47代码作为他们的语言代码）。</string>
     <string name="whatsthis">这是什么？</string>
@@ -130,4 +130,30 @@
     <string name="textview_first">请先调整翻译结果位置</string>
     <string name="crop_first">请先选取完截图位置</string>
     <string name="finish_textview">调整完成</string>
+    <string name="initialization_start">开始模型初始化，请在初始化完成后开始使用翻译......</string>
+    <string name="initialization_complete">模型初始化完成</string>
+    <string name="initialization_failed">模型初始化失败，可能是内存不足</string>
+    <string name="initialization_not_complete">模型还未初始化，无法使用翻译功能</string>
+    <string name="finish_crop">选取完成</string>
+    <string name="not_added_remove">没有添加翻译结果视图，无需移除</string>
+    <string name="orientation_changed">检测到屏幕方向更改，请重新选取截屏区域</string>
+    <string name="download_tips">在本页面中，您可以下载NLLB模型文件。为了保持下载过程不被打断，请您在<font color="#E25A5C">进行下载时不要离开本页面</font>。由于文件托管在Cloudflare R2中，视网络状况可能会出现无法下载等情况；请您灵活切换WLAN与数据流量，以及开启或关闭VPN。</string>
+    <string name="download_manually">若无论如何文件都无法下载成功，请<font color="#30d3f3">点击这里</font>查看手动下载的方法。</string>
+    <string name="start_download">开始下载</string>
+    <string name="delete_models">删除模型</string>
+    <string name="stop_download">停止下载</string>
+    <string name="get_download_info_error">获取下载信息失败：%s</string>
+    <string name="download_files_prompt">将开始依次下载下面的 %d 个文件：</string>
+    <string name="download_total_size">总大小：%s</string>
+    <string name="download_start_tips">下载提示</string>
+    <string name="download_failed">下载失败：%s</string>
+    <string name="download_pause">下载已被停止</string>
+    <string name="current_download">正在下载：%s  %d/%d</string>
+    <string name="verify_file">正在校验文件：%s</string>
+    <string name="delete_download">已删除全部文件</string>
+    <string name="delete_download_failed">删除文件失败：%s</string>
+    <string name="please_wait">请等待</string>
+    <string name="get_download_info">正在获取下载信息......</string>
+    <string name="nllb_status_download">NLLB模型下载状态：已下载</string>
+    <string name="nllb_status_not_download">NLLB模型下载状态：未下载</string>
 </resources>

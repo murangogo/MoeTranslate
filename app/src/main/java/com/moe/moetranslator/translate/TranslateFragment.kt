@@ -28,6 +28,7 @@ import com.moe.moetranslator.utils.NotificationChecker
 import com.moe.moetranslator.utils.NotificationResult
 import com.moe.moetranslator.utils.UpdateResult
 import kotlinx.coroutines.launch
+import translationapi.nllbtranslation.NLLBTranslation
 
 val TAG = "TranslateFragment"
 
@@ -67,16 +68,14 @@ class TranslateFragment : Fragment() {
 
         // 未生效
         binding.floatball.setBackgroundResource(R.drawable.translatebutton_shape)
-//        binding.floatball.setOnClickListener {
-//            if(checkAndroidSDK() && checkAccessibilityService() && checkFloatingBall() && checkNotify() && checkTranslateAPI()){
-//                if((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 0) && (prefs.getInt("OCR_AI",0) == 1)){
-//                    checkRAM()
-//                }
-//                launchFloatingBallService()
-//            }
-//        }
+
         binding.floatball.setOnClickListener {
-            launchFloatingBallService()
+            if(checkAndroidSDK() && checkAccessibilityService() && checkFloatingBall() && checkNotify() && checkTranslateAPI()){
+                if((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 0) && (prefs.getInt("OCR_AI",0) == 1)){
+                    checkRAM()
+                }
+                launchFloatingBallService()
+            }
         }
 
         if(((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 3)) || ((prefs.getInt("Translate_Mode",0) == 1) && (prefs.getInt("Pic_API",0) == 2))){
@@ -449,7 +448,7 @@ class TranslateFragment : Fragment() {
 
         val totalMemoryGB = memoryInfo.totalMem / (1024 * 1024 * 1024.0)
 
-        if(totalMemoryGB < 8) {
+        if(totalMemoryGB < 6) {
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(R.string.small_ram_title)
                 .setMessage(R.string.small_ram_content)
@@ -544,9 +543,9 @@ class TranslateFragment : Fragment() {
             if (!isServiceRunning(FloatingBallService::class.java)) {
                 val serviceIntent = Intent(requireContext(), FloatingBallService::class.java)
                 requireContext().startService(serviceIntent)
-                showToast(getString(R.string.startup_success))
+                showToast(getString(R.string.startup_success), true)
             } else {
-                showToast("已在运行")
+                showToast("already running")
             }
         } catch (e: Exception) {
             showToast(getString(R.string.startup_failure)+e.toString())
@@ -561,7 +560,11 @@ class TranslateFragment : Fragment() {
             .any { it.service.className == serviceClass.name }
     }
 
-    private fun showToast(str: String){
-        Toast.makeText(requireContext(), str, Toast.LENGTH_LONG).show()
+    private fun showToast(str: String, isShort: Boolean = false){
+        if (isShort) {
+            Toast.makeText(requireContext(), str, Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), str, Toast.LENGTH_LONG).show()
+        }
     }
 }
