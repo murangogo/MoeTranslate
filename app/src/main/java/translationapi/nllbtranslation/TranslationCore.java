@@ -62,7 +62,7 @@ public class TranslationCore {
         String decoderPath = ctx.getExternalFilesDir(null).getPath() + "/models/NLLB_decoder.onnx";
         String vocabPath = ctx.getExternalFilesDir(null).getPath() + "/models/sentencepiece_bpe.model";
         String embedAndLmHeadPath = ctx.getExternalFilesDir(null).getPath() + "/models/NLLB_embed_and_lm_head.onnx";
-        String cacheInitializerPath = ctx.getExternalFilesDir(null).getPath() + "/NLLB_cache_initializer.onnx";
+        String cacheInitializerPath = ctx.getExternalFilesDir(null).getPath() + "/models/NLLB_cache_initializer.onnx";
 
         final Thread t = new Thread("textTranslation") {
             public void run() {

@@ -23,12 +23,13 @@ import com.moe.moetranslator.launch.FirstLaunchPage
 import com.moe.moetranslator.utils.UpdateChecker
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FragmentTranslateBinding
+import com.moe.moetranslator.me.ManageActivity
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.NotificationChecker
 import com.moe.moetranslator.utils.NotificationResult
 import com.moe.moetranslator.utils.UpdateResult
 import kotlinx.coroutines.launch
-import translationapi.nllbtranslation.NLLBTranslation
+import java.io.File
 
 val TAG = "TranslateFragment"
 
@@ -40,6 +41,12 @@ class TranslateFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 创建文件夹
+        val modelDir = File(requireContext().getExternalFilesDir(null), "models")
+        if (!modelDir.exists()) {
+            modelDir.mkdirs()
+        }
 
         prefs = CustomPreference.getInstance(requireContext())
         updateChecker = UpdateChecker(requireContext())
@@ -149,7 +156,10 @@ class TranslateFragment : Fragment() {
                             .setMessage(R.string.mlkit_not_download_content)
                             .setCancelable(false)
                             .setPositiveButton(R.string.go_to_download) { _, _ ->
-                                // TODO：跳转到下载页面
+                                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_MLKIT)
+                                }
+                                startActivity(intent)
                             }
                             .setNegativeButton(R.string.user_cancel, null)
                             .create()
@@ -163,7 +173,10 @@ class TranslateFragment : Fragment() {
                             .setMessage(R.string.nllb_not_download_content)
                             .setCancelable(false)
                             .setPositiveButton(R.string.go_to_download) { _, _ ->
-                                // TODO：跳转到下载页面
+                                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_NLLB)
+                                }
+                                startActivity(intent)
                             }
                             .setNegativeButton(R.string.user_cancel, null)
                             .create()
@@ -175,13 +188,16 @@ class TranslateFragment : Fragment() {
                     }
                 }
                 1 -> {
-                    if(prefs.getString("Baidu_Translate_EncryptedKey","") == ""){
+                    if(prefs.getString("Baidu_Translate_ACCOUNT_EncryptedKey","") == ""){
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
                             .setMessage(R.string.baidu_api_not_config_content)
                             .setCancelable(false)
                             .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                // TODO：跳转到API设置页面
+                                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_BAIDU_API)
+                                }
+                                startActivity(intent)
                             }
                             .setNegativeButton(R.string.user_cancel, null)
                             .create()
@@ -193,13 +209,16 @@ class TranslateFragment : Fragment() {
                     }
                 }
                 2 -> {
-                    if(prefs.getString("Tencent_Cloud_EncryptedKey","") == ""){
+                    if(prefs.getString("Tencent_Cloud_ACCOUNT_EncryptedKey","") == ""){
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
                             .setMessage(R.string.tencent_api_not_config_content)
                             .setCancelable(false)
                             .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                // TODO：跳转到API设置页面
+                                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_TENCENT_API)
+                                }
+                                startActivity(intent)
                             }
                             .setNegativeButton(R.string.user_cancel, null)
                             .create()
@@ -271,13 +290,16 @@ class TranslateFragment : Fragment() {
             }
             else -> when (picApi) {
                 0 -> {
-                    if(prefs.getString("Baidu_Translate_EncryptedKey","") == ""){
+                    if(prefs.getString("Baidu_Translate_ACCOUNT_EncryptedKey","") == ""){
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
                             .setMessage(R.string.baidu_api_not_config_content)
                             .setCancelable(false)
                             .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                // TODO：跳转到API设置页面
+                                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_BAIDU_API)
+                                }
+                                startActivity(intent)
                             }
                             .setNegativeButton(R.string.user_cancel, null)
                             .create()
@@ -289,13 +311,16 @@ class TranslateFragment : Fragment() {
                     }
                 }
                 1 -> {
-                    if(prefs.getString("Tencent_Cloud_EncryptedKey","") == ""){
+                    if(prefs.getString("Tencent_Cloud_ACCOUNT_EncryptedKey","") == ""){
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
                             .setMessage(R.string.tencent_api_not_config_content)
                             .setCancelable(false)
                             .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                // TODO：跳转到API设置页面
+                                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_TENCENT_API)
+                                }
+                                startActivity(intent)
                             }
                             .setNegativeButton(R.string.user_cancel, null)
                             .create()

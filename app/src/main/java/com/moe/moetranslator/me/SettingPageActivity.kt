@@ -35,9 +35,9 @@ class SettingPageActivity : AppCompatActivity() {
             TYPE_FRAGMENT_API_CONFIG->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
                 APIConfig()
             ).commit()
-//            TYPE_FRAGMENT_PERSONALIZATION->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
-//                //TODO Personalization
-//            ).commit()
+            TYPE_FRAGMENT_PERSONALIZATION->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
+                PersonalizationConfig()
+            ).commit()
             TYPE_FRAGMENT_READ->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
                 ReadPage()
             ).commit()

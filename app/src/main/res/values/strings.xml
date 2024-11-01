@@ -103,11 +103,11 @@
     <string name="save_successfully">Saved successfully</string>
     <string name="api_saved">（Encrypted storage）</string>
     <string name="whats_baidu_translate_title">What is Baidu Translate API</string>
-    <string name="whats_baidu_translate_content">MoeTranslate can use the API of Baidu Translate or Tencent Cloud to provide translation services, which means you need to apply for the API from the corresponding platform. The API platform you have selected now seems to be Baidu Translate. Click \"Go Now\" to start applying for the Baidu Translate API. For detailed tutorials on applying for the Baidu Translate API, click \"View Tutorial\". Please note that the application of these APIs is free, and there are tens of thousands of free calls per month.\nOf course, if you think the steps to apply for the API are too cumbersome, MoeTranslate also provides click-to-use translation options, such as ML Kit and NLLB Translation, which also have good translation results.</string>
+    <string name="whats_baidu_translate_content">MoeTranslate can use the API of Baidu Translate or Tencent Cloud to provide translation services, which means you need to apply for the API from the corresponding platform. The API platform you have selected now seems to be Baidu Translate. Click \"Go Now\" to start applying for the Baidu Translate API. For detailed tutorials on applying for the Baidu Translate API, click \"View Tutorial\". Please note that the application of these APIs is free, and there are tens of thousands of free calls per month.\n\nOf course, if you think the steps to apply for the API are too cumbersome, MoeTranslate also provides click-to-use translation options, such as ML Kit and NLLB Translation, which also have good translation results.</string>
     <string name="view_tutorial">View Tutorial</string>
     <string name="go_now">Go Now</string>
     <string name="whats_tencent_cloud_title">What is Tencent Cloud API</string>
-    <string name="whats_tencent_cloud_content">MoeTranslate can use Baidu Translate or Tencent Cloud\'s API to provide translation services, which means you need to apply for the API from the corresponding platform. The API platform you have selected now seems to be Tencent Cloud. Click \"Go Now\" to start applying for Tencent Cloud API. For detailed tutorials on applying for Tencent Cloud API, click \"View Tutorial\". Please note that the application of these APIs is free, and there are tens of thousands of free calls per month.\nOf course, if you think the steps to apply for the API are too cumbersome, MoeTranslate also provides click-to-use translation options, such as ML Kit and NLLB Translation, which also have good translation results.</string>
+    <string name="whats_tencent_cloud_content">MoeTranslate can use Baidu Translate or Tencent Cloud\'s API to provide translation services, which means you need to apply for the API from the corresponding platform. The API platform you have selected now seems to be Tencent Cloud. Click \"Go Now\" to start applying for Tencent Cloud API. For detailed tutorials on applying for Tencent Cloud API, click \"View Tutorial\". Please note that the application of these APIs is free, and there are tens of thousands of free calls per month.\n\nOf course, if you think the steps to apply for the API are too cumbersome, MoeTranslate also provides click-to-use translation options, such as ML Kit and NLLB Translation, which also have good translation results.</string>
     <string name="manage_mlkit_models">Manage ML Kit Model Files</string>
     <string name="mlkit_not_download_title">ML Kit model file not downloaded</string>
     <string name="mlkit_not_download_content">It looks like you have selected ML Kit as the translation model, but it seems that the ML Kit model file has not been downloaded yet, so translation cannot be performed. Click Go to Download to enter the download page. <font color="#E25A5C">The first run requires downloading a model file of about 100MB</font>, so it is recommended to download in a WIFI environment. After the download is complete, there is no need for a network, and it can be used immediately.</string>
@@ -116,14 +116,6 @@
     <string name="accessibility_recycle">The accessibility permission has been reclaimed by the system. You can re-grant the relevant permission in the tutorial in the upper right corner of the homepage.</string>
     <string name="floating_ball_menu_2">Floating Ball Menu</string>
     <string name="floating_ball_menu_3">Floating Ball Menu</string>
-    <string-array name="menu_item">
-        <item>Select Translation Area</item>
-        <item>Adjust Translation Result Position</item>
-        <item>Close Translation Result</item>
-        <item>Set Font Size</item>
-        <item>Close Floating Ball</item>
-        <item>Return to MoeTranslate Main Page</item>
-    </string-array>
     <string name="repeat_crop">Cannot open the selection box repeatedly</string>
     <string name="repeat_textview">Cannot enter the translation result adjustment state repeatedly</string>
     <string name="textview_first">Please adjust the translation result position first</string>
@@ -155,5 +147,28 @@
     <string name="get_download_info">Getting download information...</string>
     <string name="nllb_status_download">NLLB model download status: Downloaded</string>
     <string name="nllb_status_not_download">NLLB model download status: Not downloaded</string>
+    <string name="mlkit_download_tips">In this page, you can download ML Kit model files. In order to keep the download process from being interrupted, please <font color="#E25A5C">do not leave this page while downloading</font>. Since the model file is stored on Google\'s server, and the download operation is encapsulated in the ML Kit library, it cannot be controlled separately. Therefore, the download may not be possible depending on the network conditions; please flexibly switch WLAN and data traffic, and enable Or turn off the VPN.\n\nSince the download operation is encapsulated in the ML Kit library, the download progress cannot be displayed in the software. The download operation will call the system downloader and the progress should be displayed in the notification bar. <font color="#E25A5C">The total size of the files to be downloaded is expected to be about 100MB</font>.</string>
+    <string name="mlkit_status_download">ML Kit model download status: Downloaded</string>
+    <string name="mlkit_status_not_download">ML Kit model download status: Not Downloaded</string>
+    <string name="check_mlkit_download_error">Check status failed：%s</string>
+    <string name="current_download_mlkit">Downloading：%s Language Model</string>
+    <string name="is_translating">The last translation task is still in progress, please wait...</string>
+    <string name="translation_failed">Translation Failed：%s</string>
+    <string name="font_title">Font</string>
+    <string name="font_summary">Current font：%s\nChoose a font you like</string>
+    <string name="font_default">Follow the system</string>
+    <string name="font_setting">Font settings</string>
+    <string name="font_choose">Select font（ttf）</string>
+    <string name="font_success">Font set successfully</string>
+    <string name="font_failed">Font setting failed：%s</string>
+    <string name="font_size_float">You can enter decimals</string>
+    <string name="font_size_setting">Set font size</string>
+    <string name="font_size_invalid">Please enter a valid number</string>
+    <string name="font_size_summary">Current size：%s\nYou can enter decimals</string>
+    <string name="font_size_title">Font Size</string>
+    <string name="font_size_hint">Current size：%s</string>
+    <string name="model_hasbeen_download_title">The model file has been downloaded</string>
+    <string name="model_hasbeen_download_content">The model file has already been downloaded to your device, so there is no need to download it again. If you do need to re-download the model file, you can click \"Delete Models\" to re-download the model.</string>
+
 
 </resources>

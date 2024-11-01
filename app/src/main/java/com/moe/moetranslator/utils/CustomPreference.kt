@@ -48,6 +48,9 @@ class CustomPreference private constructor(context: Context) {
     //Custom_Pic_API_3：用户自定义的图片翻译API3
     //Custom_Pic_JSON_Parse_3(Str)：用户自定义的图片翻译API3对应的JSON解析方法
 
+    //Custom_Result_Font(Str)：用户自定义的翻译结果字体
+    //Custom_Result_Font_Size(Float)：用户自定义的翻译结果字体大小
+
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     companion object {

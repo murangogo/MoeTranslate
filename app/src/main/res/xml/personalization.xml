@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="翻译结果框"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:key="result_font"
+            android:title="@string/font_title"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            android:key="result_font_size"
+            android:title="@string/font_size_title"
+            app:iconSpaceReserved="false"/>
+
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="result_view_font_color"
+            app:iconSpaceReserved="false"
+            android:defaultValue="@color/primary"
+            android:summary="选择一个你喜欢的字体颜色吧"
+            android:title="字体颜色"/>
+
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:key="result_view_background_color"
+            app:iconSpaceReserved="false"
+            android:defaultValue="@color/primary"
+            android:summary="选择一个你喜欢的背景颜色吧"
+            android:title="背景颜色"/>
+
+        <SwitchPreference
+            app:iconSpaceReserved="false"
+            android:key="result_penetrable"
+            android:title="穿透性"
+            android:summary="开启后翻译结果框将可穿透，但透明度会增加"
+            android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="OCR相关"
+        app:iconSpaceReserved="false"
+        android:key="ocr_settings">
+
+        <ListPreference
+            android:key="ocr_merge_mode"
+            app:iconSpaceReserved="false"
+            android:title="合并多行OCR结果"
+            android:summary="OCR结果会把一段内的文字分割为多行，大多数情况下会影响翻译效果，建议选择“直接拼接”"
+            android:defaultValue="2"/>
+
+        <!--            android:entries="@array/ocr_merge_modes"-->
+        <!--            android:entryValues="@array/ocr_merge_mode_values"-->
+
+        <ListPreference
+            android:key="ocr_merge_mode"
+            app:iconSpaceReserved="false"
+            android:title="同时显示原文"
+            android:summary="（仅对OCR模式生效）在显示翻译结果的同时，显示OCR后的原文"
+            android:defaultValue="2"/>
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>
