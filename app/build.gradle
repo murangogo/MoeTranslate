@@ -56,6 +56,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.1'
 
     // 导航Fragment组件
     implementation 'androidx.navigation:navigation-fragment-ktx:2.8.3'
@@ -68,6 +69,9 @@ dependencies {
 
     // OKHttp网络库
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+
+    // 颜色选择
+    implementation 'com.jaredrummler:colorpicker:1.1.0'
 
     // ML Kit的OCR识别库
     // 中文识别

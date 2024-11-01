@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,7 @@ import java.io.RandomAccessFile
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.roundToInt
-import com.moe.moetranslator.databinding.FragmentDownloadBinding
+import com.moe.moetranslator.databinding.FragmentNllbDownloadBinding
 import com.moe.moetranslator.utils.CustomPreference
 import java.util.Locale
 
@@ -39,10 +40,10 @@ data class FileInfo(
     val md5Checksum: String
 )
 
-class DownloadFragment : Fragment() {
+class NLLBDownloadFragment : Fragment() {
 
     // 初始化视图绑定
-    private lateinit var binding: FragmentDownloadBinding
+    private lateinit var binding: FragmentNllbDownloadBinding
 
     // 是否正在下载，默认false
     private val isDownloading = AtomicBoolean(false)
@@ -71,7 +72,7 @@ class DownloadFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentDownloadBinding.inflate(inflater, container, false)
+        binding = FragmentNllbDownloadBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -97,8 +98,20 @@ class DownloadFragment : Fragment() {
                 stopDownload()
             } else {
                 // 未在下载，点击按钮为“开始下载”
-                prepareDownload()
+                if (prefs.getBoolean("Download_NLLB",false)){
+                    val dialog = AlertDialog.Builder(requireContext())
+                        .setTitle(R.string.model_hasbeen_download_title)
+                        .setMessage(R.string.model_hasbeen_download_content)
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.user_known, null)
+                        .create()
+                    dialog.show()
+                    dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                } else {
+                    prepareDownload()
+                }
             }
+
         }
 
         binding.deleteButton.setOnClickListener {
@@ -163,7 +176,15 @@ class DownloadFragment : Fragment() {
             .setTitle(R.string.download_start_tips)
             .setMessage(message)
             .setCancelable(false)
-            .setNegativeButton(R.string.user_cancel, null)
+            .setNegativeButton(R.string.user_cancel){_, _ ->
+                binding.downloadButton.text = getString(R.string.start_download)
+                binding.downloadButton.isClickable = true
+                if(prefs.getBoolean("Download_NLLB",false)){
+                    binding.statusText.text = getString(R.string.nllb_status_download)
+                }else{
+                    binding.statusText.text = getString(R.string.nllb_status_not_download)
+                }
+            }
             .setPositiveButton(R.string.start_download) { _, _ ->
                 startDownload()
             }
@@ -360,6 +381,17 @@ class DownloadFragment : Fragment() {
         // 更新下载进度
         currentProgress.downloadedBytes = downloadedBytes
 
+        // 如果已经存在完整文件
+        if (downloadedBytes >= fileInfo.fileSize){
+            // 验证完整文件的MD5
+            if (!verifyCompletedFile(fileInfo, file, fileInfo.md5Checksum)) {
+                file.delete()
+                throw Exception("MD5 checksum mismatch for ${fileInfo.fileName}")
+            }else{
+                return
+            }
+        }
+
         // 下载文件，支持断点续传
         val request = Request.Builder()
             .url(fileInfo.downloadUrl)
@@ -403,9 +435,9 @@ class DownloadFragment : Fragment() {
                     downloadedBytes += bytesRead
                     currentProgress.downloadedBytes = downloadedBytes
 
-                    // 更新下载速度，0.5s更新一次
+                    // 更新下载速度，1s更新一次
                     val currentTime = System.currentTimeMillis()
-                    if (currentTime - lastUpdateTime >= 500) {
+                    if (currentTime - lastUpdateTime >= 1000) {
                         val speed = downloadedBytes - lastBytesRead
                         val progress = (downloadedBytes * 100.0 / fileInfo.fileSize).roundToInt()
 
@@ -436,8 +468,10 @@ class DownloadFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.Main) {
                 binding.statusText.text = getString(R.string.verify_file, fileInfo.fileName)
             }
+            Log.d("MD5", calculateMD5(file) + " except " + expectedMd5)
             calculateMD5(file) == expectedMd5
         } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }
@@ -460,7 +494,6 @@ class DownloadFragment : Fragment() {
                 val modelDir = File(requireContext().getExternalFilesDir(null), "models")
                 if (modelDir.exists()) {
                     modelDir.listFiles()?.forEach { it.delete() }
-                    modelDir.delete()
                 }
                 clearDownloadProgress()
                 currentProgress = DownloadProgress()

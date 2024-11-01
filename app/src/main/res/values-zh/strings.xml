@@ -104,11 +104,11 @@
     <string name="save_successfully">保存成功</string>
     <string name="api_saved">（已加密保存）</string>
     <string name="whats_baidu_translate_title">什么是百度翻译API</string>
-    <string name="whats_baidu_translate_content">萌译可以使用百度翻译或腾讯云的API提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为百度翻译，点击“现在就去”即可开始申请百度翻译API。申请百度翻译API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有万级的免费调用次数。\n当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
+    <string name="whats_baidu_translate_content">萌译可以使用百度翻译或腾讯云的API提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为百度翻译，点击“现在就去”即可开始申请百度翻译API。申请百度翻译API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有万级的免费调用次数。\n\n当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
     <string name="view_tutorial">查看教程</string>
     <string name="go_now">现在就去</string>
     <string name="whats_tencent_cloud_title">什么是腾讯云API</string>
-    <string name="whats_tencent_cloud_content">萌译可以使用百度翻译或腾讯云的API提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为腾讯云，点击“现在就去”即可开始申请腾讯云API。申请腾讯云API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有万级的免费调用次数。 当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
+    <string name="whats_tencent_cloud_content">萌译可以使用百度翻译或腾讯云的API提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为腾讯云，点击“现在就去”即可开始申请腾讯云API。申请腾讯云API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有万级的免费调用次数。\n\n当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
     <string name="manage_mlkit_models">管理ML Kit模型文件</string>
     <string name="mlkit_not_download_title">未下载ML Kit模型文件</string>
     <string name="mlkit_not_download_content">看起来您选择了ML Kit作为翻译模型，但似乎还没有下载ML Kit模型文件，因此无法进行翻译。点击去下载即可进入下载页面，<font color="#E25A5C">首次运行时需下载约100MB的模型文件</font>，因此推荐在WIFI环境中下载。后续则无需网络，即点即用。</string>
@@ -117,14 +117,6 @@
     <string name="accessibility_recycle">无障碍权限被系统回收，可在主页右上角教程处重新授予相关权限</string>
     <string name="floating_ball_menu_2">你好鸭～</string>
     <string name="floating_ball_menu_3">要来杯果汁吗？</string>
-    <string-array name="menu_item">
-        <item>选取翻译区域</item>
-        <item>调整翻译结果位置</item>
-        <item>关闭翻译结果</item>
-        <item>字体大小设置</item>
-        <item>关闭悬浮球</item>
-        <item>回到萌译主界面</item>
-    </string-array>
     <string name="repeat_crop">不可以重复打开选取框</string>
     <string name="repeat_textview">不可以重复进入翻译结果调整状态</string>
     <string name="textview_first">请先调整翻译结果位置</string>
@@ -156,4 +148,28 @@
     <string name="get_download_info">正在获取下载信息......</string>
     <string name="nllb_status_download">NLLB模型下载状态：已下载</string>
     <string name="nllb_status_not_download">NLLB模型下载状态：未下载</string>
+    <string name="mlkit_download_tips">在本页面中，您可以下载ML Kit模型文件。为了保持下载过程不被打断，请您在<font color="#E25A5C">进行下载时不要离开本页面</font>。由于模型文件存放在谷歌的服务器上，且下载操作被封装在了ML Kit库中，无法单独进行控制，因此视网络状况可能会出现无法下载等情况；请您灵活切换WLAN与数据流量，以及开启或关闭VPN。\n\n由于下载操作被封装在ML Kit库中，因此软件内无法显示下载进度，下载操作会调用系统下载器，进度应该会显示在通知栏中，<font color="#E25A5C">预计需要下载的文件总大小在100MB左右</font>。</string>
+    <string name="mlkit_status_download">ML Kit模型下载状态：已下载</string>
+    <string name="mlkit_status_not_download">ML Kit模型下载状态：未下载</string>
+    <string name="check_mlkit_download_error">检查状态失败：%s</string>
+    <string name="current_download_mlkit">正在下载：%s语言模型</string>
+    <string name="is_translating">上一个翻译任务还在进行中，请稍等......</string>
+    <string name="translation_failed">翻译失败：%s</string>
+    <string name="font_title">字体</string>
+    <string name="font_summary">当前字体：%s\n选择一个你喜欢的字体吧</string>
+    <string name="font_default">跟随系统</string>
+    <string name="font_setting">字体设置</string>
+    <string name="font_choose">选择字体（ttf）</string>
+    <string name="font_success">字体设置成功</string>
+    <string name="font_failed">字体设置失败：%s</string>
+    <string name="font_size_float">可以输入小数</string>
+    <string name="font_size_setting">设置字体大小</string>
+    <string name="font_size_invalid">请输入有效的数字</string>
+    <string name="font_size_summary">当前大小：%s\n可以输入小数</string>
+    <string name="font_size_title">字体大小</string>
+    <string name="font_size_hint">当前大小：%s</string>
+    <string name="model_hasbeen_download_title">模型文件已经下载</string>
+    <string name="model_hasbeen_download_content">模型文件已经下载到了您的手机上，无需重复下载。如确实需要重新下载模型文件，您可以点击“删除模型”后，重新下载模型。</string>
+
+
 </resources>

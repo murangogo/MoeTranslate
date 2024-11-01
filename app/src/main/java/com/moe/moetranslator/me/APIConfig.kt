@@ -51,6 +51,14 @@ class APIConfig : PreferenceFragmentCompat() {
 
         if (prefs.getInt("Translate_Mode", 0) == 0){
 
+            findPreference<Preference>("manage_mlkit_model")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_MLKIT)
+                }
+                startActivity(intent)
+                true
+            }
+
             findPreference<Preference>("manage_nllb_model")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_NLLB)

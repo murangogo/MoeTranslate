@@ -11,11 +11,12 @@ class ManageActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_FRAGMENT_TYPE = "fragment_type"
-        const val TYPE_FRAGMENT_MANAGE_NLLB = 1
-        const val TYPE_FRAGMENT_MANAGE_BAIDU_API = 2
-        const val TYPE_FRAGMENT_MANAGE_TENCENT_API = 3
-        const val TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API = 4
-        const val TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API = 5
+        const val TYPE_FRAGMENT_MANAGE_MLKIT = 1
+        const val TYPE_FRAGMENT_MANAGE_NLLB = 2
+        const val TYPE_FRAGMENT_MANAGE_BAIDU_API = 3
+        const val TYPE_FRAGMENT_MANAGE_TENCENT_API = 4
+        const val TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API = 5
+        const val TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API = 6
     }
 
     private lateinit var binding: ActivityManageBinding
@@ -27,8 +28,14 @@ class ManageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         when(intent.getIntExtra(EXTRA_FRAGMENT_TYPE,0)){
+            TYPE_FRAGMENT_MANAGE_MLKIT-> {
+                val fragment = MLKitDownloadFragment()
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
             TYPE_FRAGMENT_MANAGE_NLLB-> {
-                val fragment = DownloadFragment()
+                val fragment = NLLBDownloadFragment()
                 supportFragmentManager.beginTransaction()
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()

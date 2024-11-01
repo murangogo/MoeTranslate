@@ -5,5 +5,6 @@
     <color name="ic_launcher_background">#FFF2F2</color>
 
     <!-- 文字颜色 -->
+    <color name="primary">#55AEEA</color>
     <color name="accent">#33B5E5</color>
 </resources>

@@ -1,5 +1,6 @@
 package translationapi.baidutranslation
 
+import android.util.Log
 import com.moe.moetranslator.translate.TranslationAPI
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
@@ -12,10 +13,12 @@ import java.security.NoSuchAlgorithmException
 import java.util.concurrent.TimeUnit
 
 
-class BaiduTranslationText(private val appId: String, private val secretKey: String): TranslationAPI {
+class BaiduTranslationText(private val appId: String, private val secretKey: String) :
+    TranslationAPI {
     private var currentTask: Thread? = null
     private val TRANS_API_HOST = "https://fanyi-api.baidu.com/api/trans/vip/translate"
     private val SOCKET_TIMEOUT = 10L // 10秒
+
     // 创建OkHttpClient实例
     private val client = OkHttpClient.Builder()
         .connectTimeout(SOCKET_TIMEOUT, TimeUnit.SECONDS)
@@ -41,7 +44,9 @@ class BaiduTranslationText(private val appId: String, private val secretKey: Str
 
     private fun translate(query: String, from: String, to: String): String {
         // 构建参数
-        val params = buildParams(query, from, to)
+        val params = buildParams(query, modifyTargetLanguage(from), modifyTargetLanguage(to))
+
+        Log.d("BAIDU", "$query+ $from+ ${modifyTargetLanguage(to)}")
 
         // 构建URL
         val urlBuilder = TRANS_API_HOST.toHttpUrl().newBuilder()
@@ -65,8 +70,9 @@ class BaiduTranslationText(private val appId: String, private val secretKey: Str
             val responseBody = response.body?.string()
                 ?: throw IOException("Empty response body")
 
-//            return parseResponse(responseBody)
-            return responseBody
+
+            Log.d("BAIDU", responseBody)
+            return parseResponse(responseBody)
         }
     }
 
@@ -76,7 +82,7 @@ class BaiduTranslationText(private val appId: String, private val secretKey: Str
 
             // 检查是否有错误
             if (jsonObject.has("error_code")) {
-                throw IOException("Translation error: ${jsonObject.getString("error_msg")}")
+                throw IOException(jsonObject.getString("error_msg"))
             }
 
             // 获取翻译结果
@@ -95,6 +101,24 @@ class BaiduTranslationText(private val appId: String, private val secretKey: Str
         } catch (e: Exception) {
             throw IOException("Failed to parse response: ${e.message}")
         }
+    }
+
+    private fun modifyTargetLanguage(to: String): String = when (to) {
+        "ko" -> "kor"
+        "bg" -> "bul"
+        "fi" -> "fin"
+        "sl" -> "slo"
+        "zh-TW" -> "cht"
+        "fr" -> "fra"
+        "ar" -> "ara"
+        "et" -> "est"
+        "sv" -> "swe"
+        "vi" -> "vie"
+        "ja" -> "jp"
+        "es" -> "spa"
+        "da" -> "dan"
+        "ro" -> "rom"
+        else -> to
     }
 
     override fun cancelTranslation() {

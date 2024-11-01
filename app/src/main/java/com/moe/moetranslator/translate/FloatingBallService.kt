@@ -13,13 +13,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.google.mlkit.nl.translate.Translator
 import com.moe.moetranslator.R
 import com.moe.moetranslator.utils.CustomPreference
+import com.moe.moetranslator.utils.KeystoreManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import translationapi.baidutranslation.BaiduTranslationText
 import translationapi.nllbtranslation.NLLBTranslation
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
 
 // 悬浮球配置
@@ -68,6 +70,9 @@ class FloatingBallService : LifecycleService() {
 
     private lateinit var prefs: CustomPreference
 
+    // 是否正在翻译，默认false
+    private val isTranslating = AtomicBoolean(false)
+
     // 配置
     private var floatingBallConfig = FloatingBallConfig()
     private var floatingTextViewConfig = FloatingTextViewConfig()
@@ -99,7 +104,7 @@ class FloatingBallService : LifecycleService() {
     private var mRectF: RectF? = null
 
     // 保存目前的横竖屏配置
-    private var orientation = -1
+    private var orientation = 1
 
     // 初始化的翻译对象
     private lateinit var translator: TranslationAPI
@@ -114,21 +119,25 @@ class FloatingBallService : LifecycleService() {
     @SuppressLint("InflateParams")
     private fun initialize() {
         // 初始化翻译API
-        Log.d("初始化！", "初始化！")
-        if (prefs.getInt("Translate_Mode", 0) == 0){
-            when (prefs.getInt("OCR_API", 0)) {
-                0 -> when (prefs.getInt("OCR_AI", 0)){
-                    0 -> {}
-                    1 -> translator = NLLBTranslation(this)
+        try {
+            if (prefs.getInt("Translate_Mode", 0) == 0){
+                when (prefs.getInt("OCR_API", 0)) {
+                    0 -> when (prefs.getInt("OCR_AI", 0)){
+                        0 -> {}
+                        1 -> translator = NLLBTranslation(this)
+                        else -> {}
+                    }
+                    1 -> translator = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
                     else -> {}
                 }
-                else -> {}
+            }else{
+                when (prefs.getInt("Pic_API", 0)){
+                    0 -> {}
+                    else -> {}
+                }
             }
-        }else{
-            when (prefs.getInt("Pic_API", 0)){
-                0 -> {}
-                else -> {}
-            }
+        } catch (e: Exception){
+            showToast("Initialize Error: $e")
         }
 
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -323,7 +332,8 @@ class FloatingBallService : LifecycleService() {
                         // 设置字体大小
                     }
                     4 -> {
-                        // 停止服务，关闭所有窗口
+                        // 停止服务，移除所有窗口（悬浮球、翻译结果框、框选框等）
+                        stopServiceAndRemoveViews()
                     }
                     5 -> {
                         // 回到主界面
@@ -388,7 +398,11 @@ class FloatingBallService : LifecycleService() {
                         setFloatingTextViewTouchable(false)
                     }
                     if (orientation == this.resources.configuration.orientation){
-                        AccessibilityServiceManager.takeScreenshot(mRectF, cropView.absolutePointOffset)
+                        if(isTranslating.get()){
+                            showToast(getString(R.string.is_translating), true)
+                        }else{
+                            AccessibilityServiceManager.takeScreenshot(mRectF, cropView.absolutePointOffset)
+                        }
                     }else{
                         showToast(getString(R.string.orientation_changed))
                     }
@@ -413,6 +427,7 @@ class FloatingBallService : LifecycleService() {
             ScreenshotManager.screenshotFlow.collect { bitmap ->
                 try {
                     Log.d("SCREENSHOT", "getScreenShot")
+                    isTranslating.set(true)
                     processScreenshot(bitmap)
                 } catch (e: Exception) {
                     showToast("OCR Failed：$e")
@@ -425,7 +440,8 @@ class FloatingBallService : LifecycleService() {
         Log.d("SCREENSHOT", "processScreenShot")
         try{
             if(prefs.getInt("Translate_Mode", 0) == 0){
-                val txt = OCRTextRecognizer.getPicText(prefs.getString("Source_Language", "ja"), bitmap)
+                // OCR后文本翻译
+                val txt = OCRTextRecognizer.getPicText(prefs.getString("Source_Language", "ja"), bitmap, 2)
                 translateByText(txt)
             }else{
                 // 上传图片翻译
@@ -435,22 +451,22 @@ class FloatingBallService : LifecycleService() {
             e.printStackTrace()
             showToast("Translate Failed：$e")
         }finally {
+            isTranslating.set(false)
             bitmap.recycle()
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    // 文本翻译
     private fun translateByText(str: String){
         translator.getTranslation(str, prefs.getString("Source_Language", "ja"), prefs.getString("Target_Language", "zh")){
             result->
             lifecycleScope.launch(Dispatchers.Main) {
                 when (result) {
                     is TranslationAPI.TranslationResult.Success -> {
-                        // 直接使用 translatedText，而不是整个 result 对象
-                        floatingTextView.text = str + "\n\n" + result.translatedText
+                        floatingTextView.text = result.translatedText
                     }
                     is TranslationAPI.TranslationResult.Error -> {
-                        floatingTextView.text = "Translation failed: ${result.error.message}"
+                        floatingTextView.text = getString(R.string.translation_failed, result.error.message)
                     }
                 }
             }
@@ -458,7 +474,7 @@ class FloatingBallService : LifecycleService() {
     }
 
     private fun translateByPic(bitmap: Bitmap){
-
+        // TODO 图片翻译
     }
 
     fun showToast(message: String, isShort: Boolean = false) {
@@ -479,6 +495,31 @@ class FloatingBallService : LifecycleService() {
             true
         } catch (e: IllegalArgumentException) {
             false
+        }
+    }
+
+    private fun stopServiceAndRemoveViews() {
+        try {
+            // 移除所有窗口
+            if (isViewAdded(floatingBallView)) {
+                windowManager.removeView(floatingBallView)
+            }
+            if (isViewAdded(floatingTextView)) {
+                windowManager.removeView(floatingTextView)
+            }
+            if (isViewAdded(cropView)) {
+                windowManager.removeView(cropView)
+            }
+
+            // 清理资源
+            OCRTextRecognizer.cleanup()
+            handler.removeCallbacks(longPressRunnable)
+            lifecycleScope.cancel()
+
+            // 停止服务
+            stopSelf()
+        } catch (e: Exception) {
+            showToast("Stop service failed: ${e.message}")
         }
     }
 
