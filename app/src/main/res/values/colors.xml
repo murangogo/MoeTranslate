@@ -7,4 +7,8 @@
     <!-- 文字颜色 -->
     <color name="primary">#55AEEA</color>
     <color name="accent">#33B5E5</color>
+
+    <!-- 个性化设置默认颜色 -->
+    <color name="result_view_font_color_default">#E8DCD1</color>
+    <color name="result_view_background_color_default">#D94B2C23</color>
 </resources>

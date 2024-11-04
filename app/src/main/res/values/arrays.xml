@@ -8,4 +8,30 @@
         <item>Close Floating Ball</item>
         <item>Return to MoeTranslate Main Page</item>
     </string-array>
+
+    <string-array name="ocr_merge_mode_entries">
+        <item>No merging</item>
+        <item>Segmented merging</item>
+        <item>Direct merging</item>
+    </string-array>
+
+
+    <string-array name="ocr_merge_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="show_source_text_entries">
+        <item>Not shown</item>
+        <item>Above the original text</item>
+        <item>Below the original text</item>
+    </string-array>
+
+
+    <string-array name="show_source_text_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>
