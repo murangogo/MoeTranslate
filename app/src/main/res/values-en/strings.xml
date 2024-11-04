@@ -170,6 +170,20 @@
     <string name="font_size_hint">Current size：%s</string>
     <string name="model_hasbeen_download_title">The model file has been downloaded</string>
     <string name="model_hasbeen_download_content">The model file has already been downloaded to your device, so there is no need to download it again. If you do need to re-download the model file, you can click \"Delete Models\" to re-download the model.</string>
+    <string name="font_color">Font Color</string>
+    <string name="font_color_summary">Choose a font color you like</string>
+    <string name="result_background_color">Background Color</string>
+    <string name="result_background_color_summary">Choose a background color that you like</string>
+    <string name="penetrability">Permeability</string>
+    <string name="penetrability_summary">When turned on, the translation result box will be transparent, but the transparency will increase</string>
+    <string name="translate_result_box">Translation results box</string>
+    <string name="merge_ocr">Merge multi-line OCR results</string>
+    <string name="merge_ocr_summary">Current mode：%s\nThe default OCR result will split a piece of text into multiple lines, which greatly reduces the translation effect. It is recommended to choose \"Direct merging\" to get the best results in most cases</string>
+    <string name="no_merge">No merging</string>
+    <string name="segmented_merging">Segmented merging</string>
+    <string name="direct_mergig">Direct mergig</string>
+    <string name="show_source_text_title">Also show original text</string>
+    <string name="show_source_text_summary">Current mode：%s\n(only available in OCR mode) displays the translation result and the original text after OCR</string>
 
 
 </resources>

@@ -441,7 +441,7 @@ class FloatingBallService : LifecycleService() {
         try{
             if(prefs.getInt("Translate_Mode", 0) == 0){
                 // OCR后文本翻译
-                val txt = OCRTextRecognizer.getPicText(prefs.getString("Source_Language", "ja"), bitmap, 2)
+                val txt = OCRTextRecognizer.getPicText(prefs.getString("Source_Language", "ja"), bitmap, prefs.getInt("Custom_OCR_Merge_Mode", 2))
                 translateByText(txt)
             }else{
                 // 上传图片翻译
@@ -463,7 +463,13 @@ class FloatingBallService : LifecycleService() {
             lifecycleScope.launch(Dispatchers.Main) {
                 when (result) {
                     is TranslationAPI.TranslationResult.Success -> {
-                        floatingTextView.text = result.translatedText
+                        if(prefs.getInt("Custom_Show_Source_Mode", 0) == 0){
+                            floatingTextView.text = result.translatedText
+                        }else if(prefs.getInt("Custom_Show_Source_Mode", 0) == 1){
+                            floatingTextView.text = str+"\n\n"+result.translatedText
+                        }else{
+                            floatingTextView.text = result.translatedText+"\n\n"+str
+                        }
                     }
                     is TranslationAPI.TranslationResult.Error -> {
                         floatingTextView.text = getString(R.string.translation_failed, result.error.message)
@@ -525,23 +531,34 @@ class FloatingBallService : LifecycleService() {
 
     private fun setFloatingTextViewTouchable(touchable: Boolean) {
         floatingTextView.isClickable = touchable
-        // TODO 可穿透放入个性化设置
-        floatingTextViewParams?.apply {
-            if (touchable) {
-                flags = flags and WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE.inv()
-            } else {
-                flags = flags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        if (prefs.getBoolean("Custom_Result_Penetrability", true)){
+            floatingTextViewParams?.apply {
+                if (touchable) {
+                    flags = flags and WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE.inv()
+                } else {
+                    flags = flags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                }
+                windowManager.updateViewLayout(floatingTextView, this)
             }
-            windowManager.updateViewLayout(floatingTextView, this)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        // 移除所有窗口
+        if (isViewAdded(floatingBallView)) {
+            windowManager.removeView(floatingBallView)
+        }
+        if (isViewAdded(floatingTextView)) {
+            windowManager.removeView(floatingTextView)
+        }
+        if (isViewAdded(cropView)) {
+            windowManager.removeView(cropView)
+        }
+
         // 清理资源
         OCRTextRecognizer.cleanup()
         handler.removeCallbacks(longPressRunnable)
-        windowManager.removeView(floatingBallView)
         lifecycleScope.cancel()
     }
 }

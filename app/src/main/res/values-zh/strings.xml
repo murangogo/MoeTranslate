@@ -170,6 +170,20 @@
     <string name="font_size_hint">当前大小：%s</string>
     <string name="model_hasbeen_download_title">模型文件已经下载</string>
     <string name="model_hasbeen_download_content">模型文件已经下载到了您的手机上，无需重复下载。如确实需要重新下载模型文件，您可以点击“删除模型”后，重新下载模型。</string>
+    <string name="font_color">字体颜色</string>
+    <string name="font_color_summary">选择一个你喜欢的字体颜色吧</string>
+    <string name="result_background_color">背景颜色</string>
+    <string name="result_background_color_summary">选择一个你喜欢的背景颜色吧</string>
+    <string name="penetrability">可穿透性</string>
+    <string name="penetrability_summary">开启后翻译结果框将可穿透，但透明度会增加</string>
+    <string name="translate_result_box">翻译结果框</string>
+    <string name="merge_ocr">合并多行OCR结果</string>
+    <string name="merge_ocr_summary">当前模式：%s\n默认OCR结果会将一段文字分成多行，大大降低翻译效果。建议选择“直接合并”以获得绝大多数情况下的最佳效果</string>
+    <string name="no_merge">不合并</string>
+    <string name="segmented_merging">分段合并</string>
+    <string name="direct_mergig">直接合并</string>
+    <string name="show_source_text_title">同时显示原文</string>
+    <string name="show_source_text_summary">当前模式：%s\n（仅对OCR模式生效）在显示翻译结果的同时，也显示OCR后的原文</string>
 
 
 </resources>

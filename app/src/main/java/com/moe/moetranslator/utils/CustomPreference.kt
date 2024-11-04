@@ -50,6 +50,11 @@ class CustomPreference private constructor(context: Context) {
 
     //Custom_Result_Font(Str)：用户自定义的翻译结果字体
     //Custom_Result_Font_Size(Float)：用户自定义的翻译结果字体大小
+    //Custom_Result_Font_Color(Int)：用户自定义的翻译结果字体颜色
+    //Custom_Result_Background_Color(Int)：用户自定义的翻译结果背景颜色
+    //Custom_Result_Penetrability(Boolean)：翻译结果的可穿透性
+    //Custom_OCR_Merge_Mode(Int)：合并OCR结果的模式
+    //Custom_Show_Source_Mode(Int)：显示原文模式
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 

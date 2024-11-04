@@ -184,8 +184,6 @@ class ChatwithGemini : Fragment() {
             }
             val mygeminiapi = customView.findViewById<EditText>(R.id.gemini_api)
             val myintr = customView.findViewById<TextView>(R.id.gemini_intr)
-            val font = Typeface.createFromAsset(context!!.assets, "translatefonts.ttf")
-            myintr.typeface = font
             val dialogBuilder = AlertDialog.Builder(context).setView(customView).setCancelable(false).setNegativeButton("取消"){_,_->}.setPositiveButton("保存"){_,_->
                 repository.saveGeminiApi(mygeminiapi.text.toString())
                 Toast.makeText(context,"保存成功，请点击右上角清除聊天记录后再开始对话。", Toast.LENGTH_LONG).show()
@@ -207,8 +205,6 @@ class ChatwithGemini : Fragment() {
             val dialogBuilder = AlertDialog.Builder(context).setView(customView).setCancelable(false).setNegativeButton("取消"){_,_->}
             dialogBuilder.setTitle("清除聊天记录")
             textcon.text = "    确认清除聊天记录吗？这也会清除AI的记忆。"
-            val font = Typeface.createFromAsset(context!!.assets, "translatefonts.ttf")
-            textcon.typeface = font
             dialogBuilder.setPositiveButton("确认") {_,_->
                 messageViewModel.deleteAll()
                 Toast.makeText(context,"清除成功", Toast.LENGTH_LONG).show()

@@ -8,4 +8,30 @@
         <item>关闭悬浮球</item>
         <item>回到萌译主界面</item>
     </string-array>
+
+    <string-array name="ocr_merge_mode_entries">
+        <item>不合并</item>
+        <item>分段合并</item>
+        <item>直接合并</item>
+    </string-array>
+
+
+    <string-array name="ocr_merge_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="show_source_text_entries">
+        <item>不显示</item>
+        <item>在原文上方</item>
+        <item>在原文下方</item>
+    </string-array>
+
+
+    <string-array name="show_source_text_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>
