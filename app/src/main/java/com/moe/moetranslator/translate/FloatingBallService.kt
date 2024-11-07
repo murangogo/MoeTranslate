@@ -23,6 +23,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import translationapi.baidutranslation.BaiduTranslationText
 import translationapi.mlkittranslation.MLKitTranslation
+import translationapi.niutrans.NiuTranslation
 import translationapi.nllbtranslation.NLLBTranslation
 import translationapi.volctranslation.VolcTranslation
 import java.util.concurrent.atomic.AtomicBoolean
@@ -132,6 +133,7 @@ class FloatingBallService : LifecycleService() {
                         else -> {}
                     }
                     1 -> translator = VolcTranslation(KeystoreManager.retrieveKey(this, "Volc_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Volc_SECRETKEY")!!)
+                    2 -> translator = NiuTranslation(KeystoreManager.retrieveKey(this, "Niutrans")!!)
                     3 -> translator = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
                     else -> {}
                 }

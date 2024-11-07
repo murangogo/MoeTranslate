@@ -42,7 +42,7 @@ class ManageActivity : AppCompatActivity() {
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()
             }
-            TYPE_FRAGMENT_MANAGE_BAIDU_API->{
+            TYPE_FRAGMENT_MANAGE_VOLC_API->{
                 val fragment = OnlineAPI()
                 val args = Bundle().apply {
                     putString("api_type", "volc")
@@ -52,7 +52,7 @@ class ManageActivity : AppCompatActivity() {
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()
             }
-            TYPE_FRAGMENT_MANAGE_TENCENT_API->{
+            TYPE_FRAGMENT_MANAGE_NIU_API->{
                 val fragment = OnlineAPI()
                 val args = Bundle().apply {
                     putString("api_type", "niu")
