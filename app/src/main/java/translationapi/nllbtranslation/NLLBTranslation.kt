@@ -4,9 +4,10 @@ import android.content.Context
 import android.widget.Toast
 import com.moe.moetranslator.R
 import com.moe.moetranslator.translate.CustomLocale
-import com.moe.moetranslator.translate.TranslationAPI
+import com.moe.moetranslator.translate.TranslationResult
+import com.moe.moetranslator.translate.TranslationTextAPI
 
-class NLLBTranslation(context: Context) : TranslationAPI {
+class NLLBTranslation(context: Context) : TranslationTextAPI {
     private val ctx = context.applicationContext
     private var currentTask: Thread? = null
     private var isInitialized = false
@@ -30,7 +31,7 @@ class NLLBTranslation(context: Context) : TranslationAPI {
         text: String,
         sourceLanguage: String,
         targetLanguage: String,
-        callback: (TranslationAPI.TranslationResult) -> Unit
+        callback: (TranslationResult) -> Unit
     ) {
         if (isInitialized){
 
@@ -38,16 +39,16 @@ class NLLBTranslation(context: Context) : TranslationAPI {
                 try {
                     nllbTranslator.translate(text, CustomLocale(sourceLanguage), CustomLocale(targetLanguage), object: TranslationListener{
                         override fun onTranslationComplete(result: String) {
-                            callback(TranslationAPI.TranslationResult.Success(result))
+                            callback(TranslationResult.Success(result))
                         }
 
                         override fun onTranslationError(e: java.lang.Exception) {
-                            callback(TranslationAPI.TranslationResult.Error(e))
+                            callback(TranslationResult.Error(e))
                         }
 
                     })
                 } catch (e: Exception) {
-                    callback(TranslationAPI.TranslationResult.Error(e))
+                    callback(TranslationResult.Error(e))
                 }
 
             }.apply { start() }

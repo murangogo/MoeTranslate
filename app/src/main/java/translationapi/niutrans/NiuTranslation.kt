@@ -1,7 +1,8 @@
 package translationapi.niutrans
 
 import android.util.Log
-import com.moe.moetranslator.translate.TranslationAPI
+import com.moe.moetranslator.translate.TranslationResult
+import com.moe.moetranslator.translate.TranslationTextAPI
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -9,7 +10,7 @@ import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class NiuTranslation(private val apiKey: String) : TranslationAPI {
+class NiuTranslation(private val apiKey: String) : TranslationTextAPI {
     private var currentTask: Thread? = null
     private val API_HOST = "http://api.niutrans.com/NiuTransServer/translation"
     private val SOCKET_TIMEOUT = 10L // 10秒
@@ -26,14 +27,14 @@ class NiuTranslation(private val apiKey: String) : TranslationAPI {
         text: String,
         sourceLanguage: String,
         targetLanguage: String,
-        callback: (TranslationAPI.TranslationResult) -> Unit
+        callback: (TranslationResult) -> Unit
     ) {
         currentTask = Thread {
             try {
                 val result = translate(text, sourceLanguage, targetLanguage)
-                callback(TranslationAPI.TranslationResult.Success(result))
+                callback(TranslationResult.Success(result))
             } catch (e: Exception) {
-                callback(TranslationAPI.TranslationResult.Error(e))
+                callback(TranslationResult.Error(e))
             }
         }.apply { start() }
     }

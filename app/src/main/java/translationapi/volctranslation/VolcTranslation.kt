@@ -1,12 +1,13 @@
 package translationapi.volctranslation
 
 import android.util.Log
-import com.moe.moetranslator.translate.TranslationAPI
+import com.moe.moetranslator.translate.TranslationResult
+import com.moe.moetranslator.translate.TranslationTextAPI
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Date
 
-class VolcTranslation(private val ak: String, private val sk: String): TranslationAPI {
+class VolcTranslation(private val ak: String, private val sk: String): TranslationTextAPI {
 
     private var currentTask: Thread? = null
     private val region: String = "cn-north-1"
@@ -19,16 +20,16 @@ class VolcTranslation(private val ak: String, private val sk: String): Translati
         text: String,
         sourceLanguage: String,
         targetLanguage: String,
-        callback: (TranslationAPI.TranslationResult) -> Unit
+        callback: (TranslationResult) -> Unit
     ) {
         currentTask = Thread {
             try {
                 // 这里因为只支持一段文字，所以转为一个单元素列表
                 val list = listOf(text)
                 val result = translate(list, sourceLanguage, targetLanguage)
-                callback(TranslationAPI.TranslationResult.Success(result))
+                callback(TranslationResult.Success(result))
             } catch (e: Exception) {
-                callback(TranslationAPI.TranslationResult.Error(e))
+                callback(TranslationResult.Error(e))
             }
         }.apply { start() }
     }

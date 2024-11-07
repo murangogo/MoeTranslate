@@ -22,9 +22,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import translationapi.baidutranslation.BaiduTranslationText
+import translationapi.customtranslation.CustomTranslationPic
+import translationapi.customtranslation.CustomTranslationText
 import translationapi.mlkittranslation.MLKitTranslation
 import translationapi.niutrans.NiuTranslation
 import translationapi.nllbtranslation.NLLBTranslation
+import translationapi.tencentcloud.TencentTranslationText
 import translationapi.volctranslation.VolcTranslation
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
@@ -112,7 +115,8 @@ class FloatingBallService : LifecycleService() {
     private var orientation = 1
 
     // 初始化的翻译对象
-    private lateinit var translator: TranslationAPI
+    private var translatorText: TranslationTextAPI? = null
+    private var translatorPic: TranslationPicAPI? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -128,19 +132,23 @@ class FloatingBallService : LifecycleService() {
             if (prefs.getInt("Translate_Mode", 0) == 0){
                 when (prefs.getInt("OCR_API", 0)) {
                     0 -> when (prefs.getInt("OCR_AI", 0)){
-                        0 -> translator = MLKitTranslation()
-                        1 -> translator = NLLBTranslation(this)
-                        else -> {}
+                        0 -> translatorText = MLKitTranslation()
+                        1 -> translatorText = NLLBTranslation(this)
+                        else -> { showToast("Unknown Translator.") }
                     }
-                    1 -> translator = VolcTranslation(KeystoreManager.retrieveKey(this, "Volc_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Volc_SECRETKEY")!!)
-                    2 -> translator = NiuTranslation(KeystoreManager.retrieveKey(this, "Niutrans")!!)
-                    3 -> translator = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
-                    else -> {}
+                    1 -> translatorText = VolcTranslation(KeystoreManager.retrieveKey(this, "Volc_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Volc_SECRETKEY")!!)
+                    2 -> translatorText = NiuTranslation(KeystoreManager.retrieveKey(this, "Niutrans")!!)
+                    3 -> translatorText = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
+                    4 -> translatorText = TencentTranslationText(KeystoreManager.retrieveKey(this, "Tencent_Cloud_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Tencent_Cloud_SECRETKEY")!!)
+                    5 -> translatorText = CustomTranslationText()
+                    else -> { showToast("Unknown Translator.") }
                 }
             }else{
                 when (prefs.getInt("Pic_API", 0)){
                     0 -> {}
-                    else -> {}
+                    1 -> {}
+                    2 -> translatorPic = CustomTranslationPic()
+                    else -> { showToast("Unknown Translator.") }
                 }
             }
         } catch (e: Exception){
@@ -484,11 +492,11 @@ class FloatingBallService : LifecycleService() {
 
     // 文本翻译
     private fun translateByText(str: String){
-        translator.getTranslation(str, prefs.getString("Source_Language", "ja"), prefs.getString("Target_Language", "zh")){
+        translatorText?.getTranslation(str, prefs.getString("Source_Language", "ja"), prefs.getString("Target_Language", "zh")){
             result->
             lifecycleScope.launch(Dispatchers.Main) {
                 when (result) {
-                    is TranslationAPI.TranslationResult.Success -> {
+                    is TranslationResult.Success -> {
                         if(prefs.getInt("Custom_Show_Source_Mode", 0) == 0){
                             floatingTextView.text = result.translatedText
                         }else if(prefs.getInt("Custom_Show_Source_Mode", 0) == 1){
@@ -497,7 +505,7 @@ class FloatingBallService : LifecycleService() {
                             floatingTextView.text = result.translatedText+"\n\n"+str
                         }
                     }
-                    is TranslationAPI.TranslationResult.Error -> {
+                    is TranslationResult.Error -> {
                         floatingTextView.text = getString(R.string.translation_failed, result.error.message)
                     }
                 }
@@ -546,7 +554,7 @@ class FloatingBallService : LifecycleService() {
 
             // 清理资源
             OCRTextRecognizer.cleanup()
-            translator.release()
+            translatorText?.release()
             handler.removeCallbacks(longPressRunnable)
             lifecycleScope.cancel()
 
@@ -586,7 +594,7 @@ class FloatingBallService : LifecycleService() {
 
         // 清理资源
         OCRTextRecognizer.cleanup()
-        translator.release()
+        translatorText?.release()
         handler.removeCallbacks(longPressRunnable)
         lifecycleScope.cancel()
     }
