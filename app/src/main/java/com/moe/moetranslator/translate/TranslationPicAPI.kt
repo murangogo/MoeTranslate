@@ -1,14 +1,12 @@
 package com.moe.moetranslator.translate
-interface TranslationAPI {
-    // 定义翻译结果的封装类
-    sealed class TranslationResult {
-        data class Success(val translatedText: String) : TranslationResult()
-        data class Error(val error: Exception) : TranslationResult()
-    }
+
+import android.graphics.Bitmap
+
+interface TranslationPicAPI {
 
     // 异步翻译方法
     fun getTranslation(
-        text: String,
+        pic: Bitmap,
         sourceLanguage: String,
         targetLanguage: String,
         callback: (TranslationResult) -> Unit

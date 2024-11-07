@@ -1,7 +1,8 @@
 package translationapi.baidutranslation
 
 import android.util.Log
-import com.moe.moetranslator.translate.TranslationAPI
+import com.moe.moetranslator.translate.TranslationResult
+import com.moe.moetranslator.translate.TranslationTextAPI
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -14,7 +15,7 @@ import java.util.concurrent.TimeUnit
 
 
 class BaiduTranslationText(private val appId: String, private val secretKey: String) :
-    TranslationAPI {
+    TranslationTextAPI {
     private var currentTask: Thread? = null
     private val TRANS_API_HOST = "https://fanyi-api.baidu.com/api/trans/vip/translate"
     private val SOCKET_TIMEOUT = 10L // 10秒
@@ -30,14 +31,14 @@ class BaiduTranslationText(private val appId: String, private val secretKey: Str
         text: String,
         sourceLanguage: String,
         targetLanguage: String,
-        callback: (TranslationAPI.TranslationResult) -> Unit
+        callback: (TranslationResult) -> Unit
     ) {
         currentTask = Thread {
             try {
                 val result = translate(text, sourceLanguage, targetLanguage)
-                callback(TranslationAPI.TranslationResult.Success(result))
+                callback(TranslationResult.Success(result))
             } catch (e: Exception) {
-                callback(TranslationAPI.TranslationResult.Error(e))
+                callback(TranslationResult.Error(e))
             }
         }.apply { start() }
     }

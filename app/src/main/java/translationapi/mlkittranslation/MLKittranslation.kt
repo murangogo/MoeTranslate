@@ -7,11 +7,12 @@ import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
-import com.moe.moetranslator.translate.TranslationAPI
+import com.moe.moetranslator.translate.TranslationResult
+import com.moe.moetranslator.translate.TranslationTextAPI
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 
-class MLKitTranslation : TranslationAPI {
+class MLKitTranslation : TranslationTextAPI {
     private var currentTranslator: Translator? = null
     private val modelManager = RemoteModelManager.getInstance()
     private var source: String = ""
@@ -49,7 +50,7 @@ class MLKitTranslation : TranslationAPI {
         text: String,
         sourceLanguage: String,
         targetLanguage: String,
-        callback: (TranslationAPI.TranslationResult) -> Unit
+        callback: (TranslationResult) -> Unit
     ) {
         // 取消之前的翻译任务
         currentJob?.cancel()
@@ -65,7 +66,7 @@ class MLKitTranslation : TranslationAPI {
                 // 检查语言模型是否下载完成
                 val modelsReady = checkModelsStatus()
                 if (!modelsReady) {
-                    callback(TranslationAPI.TranslationResult.Error(
+                    callback(TranslationResult.Error(
                         Exception("Required language models are not downloaded yet")
                     ))
                     return@launch
@@ -92,7 +93,7 @@ class MLKitTranslation : TranslationAPI {
 
             } catch (e: Exception) {
                 if (e !is CancellationException) {
-                    callback(TranslationAPI.TranslationResult.Error(e))
+                    callback(TranslationResult.Error(e))
                 }
             }
         }
@@ -100,16 +101,16 @@ class MLKitTranslation : TranslationAPI {
 
     private fun translateText(
         text: String,
-        callback: (TranslationAPI.TranslationResult) -> Unit
+        callback: (TranslationResult) -> Unit
     ) {
         currentTranslator?.translate(text)
             ?.addOnSuccessListener { translatedText ->
                 Log.d("MLKIT", translatedText)
                 // 检查job是否仍然活跃，避免在取消后回调
-                callback(TranslationAPI.TranslationResult.Success(translatedText))
+                callback(TranslationResult.Success(translatedText))
             }
             ?.addOnFailureListener { exception ->
-                callback(TranslationAPI.TranslationResult.Error(exception))
+                callback(TranslationResult.Error(exception))
             }
     }
 

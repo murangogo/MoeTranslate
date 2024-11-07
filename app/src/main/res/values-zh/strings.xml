@@ -164,7 +164,7 @@
     <string name="font_size_title">字体大小</string>
     <string name="font_size_hint">当前大小：%s</string>
     <string name="model_hasbeen_download_title">模型文件已经下载</string>
-    <string name="model_hasbeen_download_content">模型文件已经下载到了您的手机上，无需重复下载。如确实需要重新下载模型文件，您可以点击“删除模型”后，重新下载模型。</string>
+    <string name="model_hasbeen_download_content">模型文件已经下载到了您的设备上，无需重复下载。如确实需要重新下载模型文件，您可以点击“删除模型”后，重新下载模型。</string>
     <string name="font_color">字体颜色</string>
     <string name="font_color_summary">选择一个你喜欢的字体颜色吧</string>
     <string name="result_background_color">背景颜色</string>
