@@ -134,7 +134,7 @@ class OnlineAPI : Fragment() {
             dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
         }
         binding.saveOnlineApiButton.setOnClickListener {
-            if (binding.account.text.isBlank() || binding.secretKey.text.isBlank()) {
+            if (binding.secretKey.text.isBlank()) {
                 Toast.makeText(context, getString(R.string.fill_blank), Toast.LENGTH_LONG).show()
             } else {
                 KeystoreManager.storeKey(

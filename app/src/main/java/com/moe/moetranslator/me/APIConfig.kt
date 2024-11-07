@@ -70,7 +70,7 @@ class APIConfig : PreferenceFragmentCompat() {
 
             findPreference<Preference>("ui_manage_volc_api_text")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
-                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_BAIDU_API)
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_VOLC_API)
                 }
                 startActivity(intent)
                 true
@@ -78,7 +78,7 @@ class APIConfig : PreferenceFragmentCompat() {
 
             findPreference<Preference>("ui_manage_niu_api_text")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
-                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_TENCENT_API)
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_NIU_API)
                 }
                 startActivity(intent)
                 true
