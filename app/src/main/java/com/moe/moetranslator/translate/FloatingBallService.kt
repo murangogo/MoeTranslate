@@ -1,6 +1,7 @@
 package com.moe.moetranslator.translate
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.graphics.RectF
@@ -13,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import com.moe.moetranslator.MainActivity
 import com.moe.moetranslator.R
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.KeystoreManager
@@ -20,7 +22,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import translationapi.baidutranslation.BaiduTranslationText
+import translationapi.mlkittranslation.MLKitTranslation
 import translationapi.nllbtranslation.NLLBTranslation
+import translationapi.volctranslation.VolcTranslation
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
 
@@ -123,11 +127,12 @@ class FloatingBallService : LifecycleService() {
             if (prefs.getInt("Translate_Mode", 0) == 0){
                 when (prefs.getInt("OCR_API", 0)) {
                     0 -> when (prefs.getInt("OCR_AI", 0)){
-                        0 -> {}
+                        0 -> translator = MLKitTranslation()
                         1 -> translator = NLLBTranslation(this)
                         else -> {}
                     }
-                    1 -> translator = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
+                    1 -> translator = VolcTranslation(KeystoreManager.retrieveKey(this, "Volc_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Volc_SECRETKEY")!!)
+                    3 -> translator = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
                     else -> {}
                 }
             }else{
@@ -330,6 +335,7 @@ class FloatingBallService : LifecycleService() {
                     }
                     3 -> {
                         // 设置字体大小
+                        showFontSizeDialog()
                     }
                     4 -> {
                         // 停止服务，移除所有窗口（悬浮球、翻译结果框、框选框等）
@@ -337,6 +343,7 @@ class FloatingBallService : LifecycleService() {
                     }
                     5 -> {
                         // 回到主界面
+                        backToMainActivity()
                     }
                 }
                 dialog.dismiss()
@@ -436,6 +443,23 @@ class FloatingBallService : LifecycleService() {
         }
     }
 
+    private fun showFontSizeDialog(){
+        val dialog = Dialogs.fontSizeDialog(this, floatingTextView, null)
+        dialog.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY)
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+    }
+
+    private fun backToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP
+            addCategory(Intent.CATEGORY_LAUNCHER)
+        }
+        startActivity(intent)
+    }
+
     private suspend fun processScreenshot(bitmap: Bitmap) {
         Log.d("SCREENSHOT", "processScreenShot")
         try{
@@ -448,10 +472,10 @@ class FloatingBallService : LifecycleService() {
                 translateByPic(bitmap)
             }
         }catch (e: Exception){
+            isTranslating.set(false)
             e.printStackTrace()
             showToast("Translate Failed：$e")
         }finally {
-            isTranslating.set(false)
             bitmap.recycle()
         }
     }
@@ -475,6 +499,7 @@ class FloatingBallService : LifecycleService() {
                         floatingTextView.text = getString(R.string.translation_failed, result.error.message)
                     }
                 }
+                isTranslating.set(false)
             }
         }
     }
@@ -519,6 +544,7 @@ class FloatingBallService : LifecycleService() {
 
             // 清理资源
             OCRTextRecognizer.cleanup()
+            translator.release()
             handler.removeCallbacks(longPressRunnable)
             lifecycleScope.cancel()
 
@@ -558,6 +584,7 @@ class FloatingBallService : LifecycleService() {
 
         // 清理资源
         OCRTextRecognizer.cleanup()
+        translator.release()
         handler.removeCallbacks(longPressRunnable)
         lifecycleScope.cancel()
     }

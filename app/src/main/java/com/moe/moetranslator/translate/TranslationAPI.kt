@@ -1,5 +1,4 @@
 package com.moe.moetranslator.translate
-
 interface TranslationAPI {
     // 定义翻译结果的封装类
     sealed class TranslationResult {

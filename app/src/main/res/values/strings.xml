@@ -7,7 +7,7 @@
     <string name="claude_page">Gemini</string>
     <string name="fun_with_madoka">Madoka</string>
     <string name="about_me">Settings</string>
-    <string name="api_name">API：</string>
+    <string name="api_name">API：%s</string>
     <string name="tencent_cloud">Tencent Cloud</string>
     <string name="baidu_translate">Baidu Translate</string>
     <string name="android_sdk_old_title">Android version is too low</string>
@@ -24,11 +24,10 @@
     <string name="go_to_download">Go to Download</string>
     <string name="nllb_not_download_title">NLLB model file not downloaded</string>
     <string name="user_cancel">Cancel</string>
-    <string name="baidu_api_not_config_content">It looks like you have selected Baidu Translate as the translation API, but it seems that you have not configured it yet, so translation is not possible. Click Config to enter the API settings page; of course, you can also select other translation APIs to use the translation function.</string>
+    <string name="api_not_config_content">It looks like you have selected %s as the translation API, but it seems that you have not configured it yet, so translation is not possible. Click Config to enter the API settings page; of course, you can also select other translation APIs to use the translation function.</string>
     <string name="api_not_config_title">Translation API not configured</string>
     <string name="go_to_config">Config</string>
     <string name="custom_api_not_config_content">It looks like you have used a custom translation API, but it seems that you have not configured it yet, so translation is not possible. Click Config to enter the API settings page; of course, you can also choose other translation APIs to use the translation function.</string>
-    <string name="tencent_api_not_config_content">It looks like you have selected Tencent Cloud as the translation API, but it seems that you have not configured it yet, so translation is not possible. Click Config to enter the API settings page; of course, you can also select other translation APIs to use the translation function.</string>
     <string name="not_accessibility_service_title">Accessibility permissions not granted</string>
     <string name="not_accessibility_service_content">It seems that you have not granted MoeTranslate accessibility permissions. Screenshot Translation requires accessibility permissions to take screenshots. Click to grant accessibility permissions to grant the app.\n\nThe specific authorization path varies slightly on devices of different brands, roughly:\n<b>General tab → Downloaded apps → Find \"MoeTranslateTranslation Service\" → Use \"MoeTranslate Translation Service\".</b>\nWhen granting permissions, a warning will pop up. Please rest assured that MoeTranslate will not collect any of your information.</string>
     <string name="go_to_grant">Grant</string>
@@ -65,8 +64,8 @@
     <string name="nllb_description">Meta\'s model, which is designed for translation, is called \"No Language Left Behind\". As the name suggests, it supports multiple languages. The translation effect of this model is better, but it also needs to be downloaded before use. <font color="#E25A5C">When running for the first time, you need to download a model file of about 1GB. At the same time, the device needs to have at least 6GB of RAM to use this model</font>. After the download is complete, there is no need for a network connection, and it can be used immediately. Click \"Manage NLLB model files\" below to download and delete model files.</string>
     <string name="manage_nllb_models">Manage NLLB Model Files</string>
     <string name="baiduapi_name">Baidu Translate</string>
-    <string name="baiduapi_description">Baidu Translate API, click \"Manage Baidu Translate API\" below to set up the API, where you can also view the API application tutorial (there is a free call quota of 10,000 per month).</string>
-    <string name="tencentapi_description">Tencent Cloud\'s translation API, click \"Manage Tencent Cloud API\" below to set up the API, where you can also view the API application tutorial (there is a free call quota of 10,000 per month).</string>
+    <string name="baiduapi_description">Baidu Translate\'s API, click \"Manage Baidu Translate API\" below to set up the API, and you can also view the API application tutorial (there is a free call quota of 1 million characters per month).</string>
+    <string name="tencentapi_description">Tencent Cloud\'s translation API, click \"Manage Tencent Cloud API\" below to set up the API, and you can also view the API application tutorial (there is a free call quota of 5 million characters per month).</string>
     <string name="tencentapi_name">Tencent Cloud</string>
     <string name="ai_title">Local AI Translation</string>
     <string name="pre_api_title">Pre-Configured Cloud API</string>
@@ -102,12 +101,8 @@
     <string name="fill_blank">Please fill in the API information completely</string>
     <string name="save_successfully">Saved successfully</string>
     <string name="api_saved">（Encrypted storage）</string>
-    <string name="whats_baidu_translate_title">What is Baidu Translate API</string>
-    <string name="whats_baidu_translate_content">MoeTranslate can use the API of Baidu Translate or Tencent Cloud to provide translation services, which means you need to apply for the API from the corresponding platform. The API platform you have selected now seems to be Baidu Translate. Click \"Go Now\" to start applying for the Baidu Translate API. For detailed tutorials on applying for the Baidu Translate API, click \"View Tutorial\". Please note that the application of these APIs is free, and there are tens of thousands of free calls per month.\n\nOf course, if you think the steps to apply for the API are too cumbersome, MoeTranslate also provides click-to-use translation options, such as ML Kit and NLLB Translation, which also have good translation results.</string>
     <string name="view_tutorial">View Tutorial</string>
     <string name="go_now">Go Now</string>
-    <string name="whats_tencent_cloud_title">What is Tencent Cloud API</string>
-    <string name="whats_tencent_cloud_content">MoeTranslate can use Baidu Translate or Tencent Cloud\'s API to provide translation services, which means you need to apply for the API from the corresponding platform. The API platform you have selected now seems to be Tencent Cloud. Click \"Go Now\" to start applying for Tencent Cloud API. For detailed tutorials on applying for Tencent Cloud API, click \"View Tutorial\". Please note that the application of these APIs is free, and there are tens of thousands of free calls per month.\n\nOf course, if you think the steps to apply for the API are too cumbersome, MoeTranslate also provides click-to-use translation options, such as ML Kit and NLLB Translation, which also have good translation results.</string>
     <string name="manage_mlkit_models">Manage ML Kit Model Files</string>
     <string name="mlkit_not_download_title">ML Kit model file not downloaded</string>
     <string name="mlkit_not_download_content">It looks like you have selected ML Kit as the translation model, but it seems that the ML Kit model file has not been downloaded yet, so translation cannot be performed. Click Go to Download to enter the download page. <font color="#E25A5C">The first run requires downloading a model file of about 100MB</font>, so it is recommended to download in a WIFI environment. After the download is complete, there is no need for a network, and it can be used immediately.</string>
@@ -183,6 +178,20 @@
     <string name="direct_mergig">Direct mergig</string>
     <string name="show_source_text_title">Also show original text</string>
     <string name="show_source_text_summary">Current mode：%s\n(only available in OCR mode) displays the translation result and the original text after OCR</string>
+    <string name="volcapi_name">Volc Engine</string>
+    <string name="volcapi_description">Volc Engine API, click \"Manage Volc Engine API\" below to set up the API, and you can also view the API application tutorial (there is a free call quota of 2 million characters per month).</string>
+    <string name="manage_volc_api">Manage Volc Engine API</string>
+    <string name="niuapi_name">NiuTrans</string>
+    <string name="niuapi_description">NiuTrans API, click \"Manage NiuTrans API\" below to set up the API, and you can also view the API application tutorial (there is a free call quota of 200,000 characters per day).</string>
+    <string name="manage_niu_api">Manage NiuTrans API</string>
+    <string name="baiduapi_description_pic">Baidu Translate\'s API, click \"Manage Baidu Translate API\" below to set up the API, and you can also view the API application tutorial (there are 10,000 free calls for image translation per month).</string>
+    <string name="tencentapi_description_pic">Tencent Cloud\'s translation API,  click \"Manage Tencent Cloud API\" below to set up the API, and you can also view the API application tutorial (10,000 free calls for image translation per month).</string>
+    <string name="volc_hint_account">Access Key ID</string>
+    <string name="volc_hint_secret_key">Secret Access Key</string>
+    <string name="whats_api_title">What is %s API</string>
+    <string name="whats_api_content">MoeTranslate can use the APIs of different platforms to provide translation services, which means that you need to apply for APIs from the corresponding platform. The API platform you have chosen now seems to be %1$s, click \"Go Now\" to start applying for %1$s API. For a detailed tutorial on how to apply for %1$s API, please click \"View Tutorial\". Please note that these APIs are free to apply for, and there are quite a few free calls per month.\n\nOf course, if you think that the steps of applying for an API are too cumbersome, MoeTranslate also provides point-and-click translation options, such as ML Kit and NLLB translation, which also have good translation results.</string>
+    <string name="niu_hint_secret_key">API-KEY</string>
+    <string name="niu_noneed">No need to fill in</string>
 
 
 </resources>

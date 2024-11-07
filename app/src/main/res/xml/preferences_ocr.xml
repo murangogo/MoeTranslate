@@ -41,6 +41,26 @@
         app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
+            app:key="ui_volc_translation_text"
+            app:title="@string/volcapi_name"
+            app:icon="@drawable/volc_engine"
+            app:summary="@string/volcapi_description"/>
+
+        <Preference
+            app:key="ui_manage_volc_api_text"
+            app:title="@string/manage_volc_api" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_niu_translation_text"
+            app:title="@string/niuapi_name"
+            app:icon="@drawable/niutrans"
+            app:summary="@string/niuapi_description"/>
+
+        <Preference
+            app:key="ui_manage_niu_api_text"
+            app:title="@string/manage_niu_api" />
+
+        <SwitchPreferenceCompat
             app:key="ui_baidu_translation_text"
             app:title="@string/baiduapi_name"
             app:icon="@drawable/baiduyi"

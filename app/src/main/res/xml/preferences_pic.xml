@@ -17,7 +17,7 @@
             app:key="ui_baidu_translation_pic"
             app:title="@string/baiduapi_name"
             app:icon="@drawable/baiduyi"
-            app:summary="@string/baiduapi_description"/>
+            app:summary="@string/baiduapi_description_pic"/>
 
         <Preference
             app:key="ui_manage_baidu_api_pic"
@@ -27,7 +27,7 @@
             app:key="ui_tencent_translation_pic"
             app:title="@string/tencentapi_name"
             app:icon="@drawable/tencentyun"
-            app:summary="@string/tencentapi_description"/>
+            app:summary="@string/tencentapi_description_pic"/>
 
         <Preference
             app:key="ui_manage_tencent_api_pic"

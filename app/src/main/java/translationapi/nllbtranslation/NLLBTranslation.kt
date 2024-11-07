@@ -6,23 +6,24 @@ import com.moe.moetranslator.R
 import com.moe.moetranslator.translate.CustomLocale
 import com.moe.moetranslator.translate.TranslationAPI
 
-class NLLBTranslation(val ctx: Context) : TranslationAPI {
+class NLLBTranslation(context: Context) : TranslationAPI {
+    private val ctx = context.applicationContext
     private var currentTask: Thread? = null
     private var isInitialized = false
 
     private var nllbTranslator: TranslationCore = TranslationCore(ctx, object :InitializationListener{
         override fun onInitializationComplete() {
             isInitialized = true
-            Toast.makeText(ctx, ctx.getString(R.string.initialization_complete), Toast.LENGTH_LONG).show()
+            showToast(R.string.initialization_complete)
         }
         override fun onInitializationError(e: Exception) {
             e.printStackTrace()
-            Toast.makeText(ctx, ctx.getString(R.string.initialization_failed), Toast.LENGTH_LONG).show()
+            showToast(R.string.initialization_failed)
         }
     })
 
     init {
-        Toast.makeText(ctx, ctx.getString(R.string.initialization_start), Toast.LENGTH_LONG).show()
+        showToast(R.string.initialization_start)
     }
 
     override fun getTranslation(
@@ -52,16 +53,26 @@ class NLLBTranslation(val ctx: Context) : TranslationAPI {
             }.apply { start() }
 
         }else{
-            Toast.makeText(ctx, ctx.getString(R.string.initialization_not_complete), Toast.LENGTH_LONG).show()
+            showToast(R.string.initialization_not_complete)
         }
     }
 
     override fun cancelTranslation() {
-        currentTask?.interrupt()
+        currentTask?.let {
+            if (it.isAlive) {
+                it.interrupt()
+            }
+        }
         currentTask = null
     }
 
     override fun release() {
         cancelTranslation()
+    }
+
+    private fun showToast(@androidx.annotation.StringRes messageId: Int) {
+        android.os.Handler(android.os.Looper.getMainLooper()).post {
+            Toast.makeText(ctx, ctx.getString(messageId), Toast.LENGTH_LONG).show()
+        }
     }
 }
