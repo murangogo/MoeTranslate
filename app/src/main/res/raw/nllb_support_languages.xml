@@ -2,6 +2,22 @@
 
 <languages>
     <language>
+        <code>zh</code>
+        <code_NLLB>zho_Hans</code_NLLB>
+    </language>
+    <language>
+        <code>en</code>
+        <code_NLLB>eng_Latn</code_NLLB>
+    </language>
+    <language>
+        <code>ja</code>
+        <code_NLLB>jpn_Jpan</code_NLLB>
+    </language>
+    <language>
+        <code>ko</code>
+        <code_NLLB>kor_Hang</code_NLLB>
+    </language>
+    <language>
         <code>ar</code>
         <code_NLLB>arb_Arab</code_NLLB>
     </language>
@@ -54,10 +70,6 @@
         <code_NLLB>cat_Latn</code_NLLB>
     </language>
     <language>
-        <code>zh</code>
-        <code_NLLB>zho_Hans</code_NLLB>
-    </language>
-    <language>
         <code>cs</code>
         <code_NLLB>ces_Latn</code_NLLB>
     </language>
@@ -88,10 +100,6 @@
     <language>
         <code>el</code>
         <code_NLLB>ell_Grek</code_NLLB>
-    </language>
-    <language>
-        <code>en</code>
-        <code_NLLB>eng_Latn</code_NLLB>
     </language>
     <language>
         <code>es</code>
@@ -129,10 +137,6 @@
         <code>hu</code>
         <code_NLLB>hun_Latn</code_NLLB>
     </language>
-    <!--<language>
-        <code>id</code>
-        <code_NLLB>ind_Latn</code_NLLB>
-    </language>-->  <!-- NLLB treats this language (indonesian) as if it were English (bug) -->
     <language>
         <code>jv</code>
         <code_NLLB>jav_Latn</code_NLLB>
@@ -164,14 +168,6 @@
     <language>
         <code>it</code>
         <code_NLLB>ita_Latn</code_NLLB>
-    </language>
-    <language>
-        <code>ja</code>
-        <code_NLLB>jpn_Jpan</code_NLLB>
-    </language>
-    <language>
-        <code>ko</code>
-        <code_NLLB>kor_Hang</code_NLLB>
     </language>
     <language>
         <code>mk</code>

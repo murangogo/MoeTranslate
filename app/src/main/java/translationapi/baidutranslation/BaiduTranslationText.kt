@@ -103,6 +103,7 @@ class BaiduTranslationText(private val appId: String, private val secretKey: Str
         }
     }
 
+    // 因为百度翻译的API没有使用BCP-47代码作为他们的语言代码，因此需要转换
     private fun modifyTargetLanguage(to: String): String = when (to) {
         "ko" -> "kor"
         "bg" -> "bul"
@@ -122,7 +123,11 @@ class BaiduTranslationText(private val appId: String, private val secretKey: Str
     }
 
     override fun cancelTranslation() {
-        currentTask?.interrupt()
+        currentTask?.let {
+            if (it.isAlive) {
+                it.interrupt()
+            }
+        }
         currentTask = null
     }
 

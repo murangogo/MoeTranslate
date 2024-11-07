@@ -4,7 +4,6 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.ActivityManager
 import android.app.AlertDialog
 import android.app.NotificationManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -28,7 +27,9 @@ import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.NotificationChecker
 import com.moe.moetranslator.utils.NotificationResult
 import com.moe.moetranslator.utils.UpdateResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 val TAG = "TranslateFragment"
@@ -85,7 +86,7 @@ class TranslateFragment : Fragment() {
             }
         }
 
-        if(((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 3)) || ((prefs.getInt("Translate_Mode",0) == 1) && (prefs.getInt("Pic_API",0) == 2))){
+        if(((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 5)) || ((prefs.getInt("Translate_Mode",0) == 1) && (prefs.getInt("Pic_API",0) == 2))){
             binding.SourceLanguageName.text = getString(R.string.custom_api_select_language)
             binding.TargetLanguageName.text = getString(R.string.custom_api_select_language)
         }else{
@@ -188,10 +189,52 @@ class TranslateFragment : Fragment() {
                     }
                 }
                 1 -> {
+                    if(prefs.getString("Volc_ACCOUNT_EncryptedKey","") == ""){
+                        val dialog = AlertDialog.Builder(requireContext())
+                            .setTitle(R.string.api_not_config_title)
+                            .setMessage(getString(R.string.api_not_config_content, getString(R.string.volcapi_name)))
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.go_to_config) { _, _ ->
+                                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_VOLC_API)
+                                }
+                                startActivity(intent)
+                            }
+                            .setNegativeButton(R.string.user_cancel, null)
+                            .create()
+                        dialog.show()
+                        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                        false
+                    }else{
+                        true
+                    }
+                }
+                2 -> {
+                    if(prefs.getString("Niutrans_EncryptedKey","") == ""){
+                        val dialog = AlertDialog.Builder(requireContext())
+                            .setTitle(R.string.api_not_config_title)
+                            .setMessage(getString(R.string.api_not_config_content, getString(R.string.niuapi_name)))
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.go_to_config) { _, _ ->
+                                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_NIU_API)
+                                }
+                                startActivity(intent)
+                            }
+                            .setNegativeButton(R.string.user_cancel, null)
+                            .create()
+                        dialog.show()
+                        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                        false
+                    }else{
+                        true
+                    }
+                }
+                3 -> {
                     if(prefs.getString("Baidu_Translate_ACCOUNT_EncryptedKey","") == ""){
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
-                            .setMessage(R.string.baidu_api_not_config_content)
+                            .setMessage(getString(R.string.api_not_config_content, getString(R.string.baiduapi_name)))
                             .setCancelable(false)
                             .setPositiveButton(R.string.go_to_config) { _, _ ->
                                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
@@ -208,11 +251,11 @@ class TranslateFragment : Fragment() {
                         true
                     }
                 }
-                2 -> {
+                4 -> {
                     if(prefs.getString("Tencent_Cloud_ACCOUNT_EncryptedKey","") == ""){
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
-                            .setMessage(R.string.tencent_api_not_config_content)
+                            .setMessage(getString(R.string.api_not_config_content, getString(R.string.tencentapi_name)))
                             .setCancelable(false)
                             .setPositiveButton(R.string.go_to_config) { _, _ ->
                                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
@@ -293,7 +336,7 @@ class TranslateFragment : Fragment() {
                     if(prefs.getString("Baidu_Translate_ACCOUNT_EncryptedKey","") == ""){
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
-                            .setMessage(R.string.baidu_api_not_config_content)
+                            .setMessage(getString(R.string.api_not_config_content, getString(R.string.baiduapi_name)))
                             .setCancelable(false)
                             .setPositiveButton(R.string.go_to_config) { _, _ ->
                                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
@@ -314,7 +357,7 @@ class TranslateFragment : Fragment() {
                     if(prefs.getString("Tencent_Cloud_ACCOUNT_EncryptedKey","") == ""){
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
-                            .setMessage(R.string.tencent_api_not_config_content)
+                            .setMessage(getString(R.string.api_not_config_content, getString(R.string.tencentapi_name)))
                             .setCancelable(false)
                             .setPositiveButton(R.string.go_to_config) { _, _ ->
                                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
@@ -519,7 +562,7 @@ class TranslateFragment : Fragment() {
     }
 
     private fun showLanguageListDialog(type: Int) {
-        if(((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 3)) || ((prefs.getInt("Translate_Mode",0) == 1) && (prefs.getInt("Pic_API",0) == 2))){
+        if(((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 5)) || ((prefs.getInt("Translate_Mode",0) == 1) && (prefs.getInt("Pic_API",0) == 2))){
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(R.string.custom_api_select_language_title)
                 .setMessage(R.string.custom_api_select_language_content)

@@ -8,7 +8,7 @@
     <string name="claude_page">Gemini</string>
     <string name="fun_with_madoka">Madoka</string>
     <string name="about_me">设置</string>
-    <string name="api_name">API：</string>
+    <string name="api_name">API：%s</string>
     <string name="tencent_cloud">腾讯云</string>
     <string name="baidu_translate">百度翻译</string>
     <string name="android_sdk_old_title">安卓版本过低</string>
@@ -25,11 +25,10 @@
     <string name="go_to_download">去下载</string>
     <string name="nllb_not_download_title">未下载NLLB模型文件</string>
     <string name="user_cancel">取消</string>
-    <string name="baidu_api_not_config_content">看起来您选择了百度翻译作为翻译API，但似乎还没有配置它，因此无法进行翻译。点击去配置即可进入API设置页面；当然，您也可以选择其他翻译API来使用翻译功能。</string>
+    <string name="api_not_config_content">看起来您选择了%s作为翻译API，但似乎还没有配置它，因此无法进行翻译。点击去配置即可进入API设置页面；当然，您也可以选择其他翻译API来使用翻译功能。</string>
     <string name="api_not_config_title">未配置翻译API</string>
     <string name="go_to_config">去配置</string>
     <string name="custom_api_not_config_content">看起来您使用了自定义翻译API，但似乎还没有配置它，因此无法进行翻译。点击去配置即可进入API设置页面；当然，您也可以选择其他翻译API来使用翻译功能。</string>
-    <string name="tencent_api_not_config_content">看起来您选择了腾讯云作为翻译API，但似乎还没有配置它，因此无法进行翻译。点击去配置即可进入API设置页面；当然，您也可以选择其他翻译API来使用翻译功能。</string>
     <string name="not_accessibility_service_title">未授予无障碍权限</string>
     <string name="not_accessibility_service_content">看起来您没有授予萌译无障碍权限，截图翻译需要获取无障碍权限来进行截图，点击去授予即可授予应用无障碍权限。\n\n具体的授权路径不同品牌的设备略有差别，大概是：\n<b>通用选项卡→已下载的应用→找到“萌译翻译服务”→使用“萌译翻译服务”。</b>\n在给予权限时，会弹出警告，请放心，萌译不会收集您的任何信息。</string>
     <string name="go_to_grant">去授予</string>
@@ -66,9 +65,9 @@
     <string name="nllb_description">Meta推出的专为翻译而生的模型，全称为“No Language Left Behind”，顾名思义，支持多种语言。该模型的翻译效果更好，但同样需要下载后使用。<font color="#E25A5C">首次运行时需下载约1GB的模型文件，同时，使用该模型需要设备至少拥有6GB的运行内存</font>。下载完成后，同样无需网络，即点即用。点击下方的“管理NLLB模型文件”可进行模型文件的下载、删除等操作。</string>
     <string name="manage_nllb_models">管理NLLB模型文件</string>
     <string name="baiduapi_name">百度翻译</string>
-    <string name="baiduapi_description">百度翻译的API，点击下方的“管理百度翻译API”即可设置API，还可以在其中查看API的申请教程（每月有万级的免费调用额度）。</string>
+    <string name="baiduapi_description">百度翻译的API，点击下方的“管理百度翻译API”即可设置API，还可以在其中查看API的申请教程（每月有100万字符的免费调用额度）。</string>
     <string name="tencentapi_name">腾讯云</string>
-    <string name="tencentapi_description">腾讯云的翻译API，点击下方的“管理腾讯云API”即可设置API，还可以在其中查看API的申请教程（每月有万级的免费调用额度）。</string>
+    <string name="tencentapi_description">腾讯云的翻译API，点击下方的“管理腾讯云API”即可设置API，还可以在其中查看API的申请教程（每月有500万字符的免费调用额度）。</string>
     <string name="ai_title">本地AI翻译</string>
     <string name="pre_api_title">预置云端API</string>
     <string name="custom_api_text_title"><font color="#E25A5C">（高级设置）</font>自定义云端文本翻译API</string>
@@ -103,12 +102,8 @@
     <string name="fill_blank">请将API信息填写完整</string>
     <string name="save_successfully">保存成功</string>
     <string name="api_saved">（已加密保存）</string>
-    <string name="whats_baidu_translate_title">什么是百度翻译API</string>
-    <string name="whats_baidu_translate_content">萌译可以使用百度翻译或腾讯云的API提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为百度翻译，点击“现在就去”即可开始申请百度翻译API。申请百度翻译API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有万级的免费调用次数。\n\n当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
     <string name="view_tutorial">查看教程</string>
     <string name="go_now">现在就去</string>
-    <string name="whats_tencent_cloud_title">什么是腾讯云API</string>
-    <string name="whats_tencent_cloud_content">萌译可以使用百度翻译或腾讯云的API提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为腾讯云，点击“现在就去”即可开始申请腾讯云API。申请腾讯云API的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有万级的免费调用次数。\n\n当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
     <string name="manage_mlkit_models">管理ML Kit模型文件</string>
     <string name="mlkit_not_download_title">未下载ML Kit模型文件</string>
     <string name="mlkit_not_download_content">看起来您选择了ML Kit作为翻译模型，但似乎还没有下载ML Kit模型文件，因此无法进行翻译。点击去下载即可进入下载页面，<font color="#E25A5C">首次运行时需下载约100MB的模型文件</font>，因此推荐在WIFI环境中下载。后续则无需网络，即点即用。</string>
@@ -184,6 +179,20 @@
     <string name="direct_mergig">直接合并</string>
     <string name="show_source_text_title">同时显示原文</string>
     <string name="show_source_text_summary">当前模式：%s\n（仅对OCR模式生效）在显示翻译结果的同时，也显示OCR后的原文</string>
+    <string name="volcapi_name">火山引擎</string>
+    <string name="volcapi_description">火山引擎的API，点击下方的“管理火山引擎API”即可设置API，还可以在其中查看API的申请教程（每月有200万字符的免费调用额度）。</string>
+    <string name="manage_volc_api">管理火山引擎API</string>
+    <string name="niuapi_name">小牛翻译</string>
+    <string name="niuapi_description">小牛翻译的API，点击下方的“管理小牛翻译API”即可设置API，还可以在其中查看API的申请教程（每天有20万字符的免费调用额度）。</string>
+    <string name="manage_niu_api">管理小牛翻译API</string>
+    <string name="baiduapi_description_pic">百度翻译的API，点击下方的“管理百度翻译API”即可设置API，还可以在其中查看API的申请教程（每月有1万次的图片翻译免费调用次数）。</string>
+    <string name="tencentapi_description_pic">腾讯云的翻译API，点击下方的“管理腾讯云API”即可设置API，还可以在其中查看API的申请教程（每月有1万次的图片翻译免费调用次数）。</string>
+    <string name="volc_hint_account">Access Key ID</string>
+    <string name="volc_hint_secret_key">Secret Access Key</string>
+    <string name="whats_api_title">什么是%sAPI</string>
+    <string name="whats_api_content">萌译可以使用不同平台的API来提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为%1$s，点击“现在就去”即可开始申请%1$sAPI。申请%1$sAPI的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有相当多的免费调用次数。\n\n当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
+    <string name="niu_hint_secret_key">API-KEY</string>
+    <string name="niu_noneed">无需填写</string>
 
 
 </resources>

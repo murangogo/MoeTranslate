@@ -35,10 +35,22 @@ object TranslateTools {
                 1 -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
-                        else -> R.raw.baidu_text_support_languages
+                        else -> R.raw.volc_support_languages
                     }
                 }
                 2 -> {
+                    when (type){
+                        1 -> R.raw.ocr_support_languages
+                        else -> R.raw.niutrans_support_languages
+                    }
+                }
+                3 -> {
+                    when (type){
+                        1 -> R.raw.ocr_support_languages
+                        else -> R.raw.baidu_text_support_languages
+                    }
+                }
+                4 -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
                         else -> R.raw.tencent_text_support_language

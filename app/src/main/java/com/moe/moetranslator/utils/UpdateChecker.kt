@@ -19,10 +19,14 @@ class UpdateChecker(private val context: Context) {
                 .url("https://www.moetranslate.top/version.json")
                 .build()
 
-            val response = client.newCall(request).execute()
-            if (!response.isSuccessful) throw IOException("Unexpected code $response")
+            var jsonString = ""
 
-            val jsonString = response.body?.string() ?: throw IOException("Empty response body")
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                jsonString = response.body?.string() ?: throw IOException("Empty response body")
+            }
+
             val jsonObject = JSONObject(jsonString)
             val latestVersionCode = jsonObject.getLong("versionCode")
             val latestVersionName = jsonObject.getString("versionName")

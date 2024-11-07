@@ -39,76 +39,46 @@ class OnlineAPI : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.tvApiType.text =
-            if (apiType == "baidu") getString(R.string.api_name) + getString(R.string.baiduapi_name) else getString(
-                R.string.api_name
-            ) + getString(R.string.tencentapi_name)
-        if (apiType == "baidu"){
-            if (prefs.getString("Baidu_Translate_ACCOUNT_EncryptedKey","") != ""){
-                binding.account.hint = getString(R.string.api_saved)
-                binding.secretKey.hint = getString(R.string.api_saved)
-            }else{
-                binding.account.hint = getString(R.string.baidu_hint_account)
-                binding.secretKey.hint = getString(R.string.baidu_hint_secret_key)
+        when (apiType){
+            "volc" -> prepareVolc()
+            "niu" -> prepareNiu()
+            "baidu" -> prepareBaidu()
+            "tencent" -> prepareTencent()
+            else -> Toast.makeText(context, "Unknow Error.", Toast.LENGTH_LONG).show()
+        }
+    }
 
-            }
+    private fun prepareVolc(){
+        binding.tvApiType.text = getString(R.string.api_name, getString(R.string.volcapi_name))
+        if (prefs.getString("Volc_ACCOUNT_EncryptedKey","") != ""){
+            binding.account.hint = getString(R.string.api_saved)
+            binding.secretKey.hint = getString(R.string.api_saved)
         }else{
-            if (prefs.getString("Tencent_Cloud_ACCOUNT_EncryptedKey","") != ""){
-                binding.account.hint = getString(R.string.api_saved)
-                binding.secretKey.hint = getString(R.string.api_saved)
-            }else{
-                binding.account.hint = getString(R.string.tencent_hint_account)
-                binding.secretKey.hint = getString(R.string.tencent_hint_secret_key)
-            }
+            binding.account.hint = getString(R.string.volc_hint_account)
+            binding.secretKey.hint = getString(R.string.volc_hint_secret_key)
         }
-
         binding.whatsThis.setOnClickListener {
-
-            if(apiType == "baidu"){
-                val dialog = AlertDialog.Builder(activity)
-                    .setTitle(R.string.whats_baidu_translate_title)
-                    .setMessage(R.string.whats_baidu_translate_content)
-                    .setCancelable(false)
-                    .setNeutralButton(R.string.view_tutorial){_,_->
-                        val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(urlt)
-                        startActivity(intent)
-                    }
-                    .setPositiveButton(R.string.go_now) { _, _ ->
-                        val url = "https://fanyi-api.baidu.com/"
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(url)
-                        startActivity(intent)
-                    }
-                    .setNegativeButton(R.string.user_cancel) { _, _ ->}
-                    .create()
-                dialog.show()
-                dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-            } else {
-                val dialog = AlertDialog.Builder(activity)
-                    .setTitle(R.string.whats_tencent_cloud_title)
-                    .setMessage(R.string.whats_tencent_cloud_content)
-                    .setCancelable(false)
-                    .setNeutralButton(R.string.view_tutorial){_,_->
-                        val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(urlt)
-                        startActivity(intent)
-                    }
-                    .setPositiveButton(R.string.go_now) { _, _ ->
-                        val url = "https://fanyi-api.baidu.com/"
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(url)
-                        startActivity(intent)
-                    }
-                    .setNegativeButton(R.string.user_cancel) { _, _ ->}
-                    .create()
-                dialog.show()
-                dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-            }
+            val dialog = AlertDialog.Builder(activity)
+                .setTitle(getString(R.string.whats_api_title, getString(R.string.volcapi_name)))
+                .setMessage(getString(R.string.whats_api_content, getString(R.string.volcapi_name)))
+                .setCancelable(false)
+                .setNeutralButton(R.string.view_tutorial){_,_->
+                    val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(urlt)
+                    startActivity(intent)
+                }
+                .setPositiveButton(R.string.go_now) { _, _ ->
+                    val url = "https://fanyi-api.baidu.com/"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                }
+                .setNegativeButton(R.string.user_cancel) { _, _ ->}
+                .create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
         }
-
         binding.saveOnlineApiButton.setOnClickListener {
             if (binding.account.text.isBlank() || binding.secretKey.text.isBlank()) {
                 Toast.makeText(context, getString(R.string.fill_blank), Toast.LENGTH_LONG).show()
@@ -116,12 +86,163 @@ class OnlineAPI : Fragment() {
                 KeystoreManager.storeKey(
                     requireContext(),
                     binding.account.text.toString().trim(),
-                    if (apiType == "baidu") "Baidu_Translate_ACCOUNT" else "Tencent_Cloud_ACCOUNT"
+                    "Volc_ACCOUNT"
                 )
                 KeystoreManager.storeKey(
                     requireContext(),
                     binding.secretKey.text.toString().trim(),
-                    if (apiType == "baidu") "Baidu_Translate_SECRETKEY" else "Tencent_Cloud_SECRETKEY"
+                    "Volc_SECRETKEY"
+                )
+                Toast.makeText(context, getString(R.string.save_successfully), Toast.LENGTH_LONG).show()
+                requireActivity().finish()
+            }
+        }
+    }
+
+    private fun prepareNiu(){
+        binding.tvApiType.text = getString(R.string.api_name, getString(R.string.niuapi_name))
+        binding.account.hint = getString(R.string.niu_noneed)
+        binding.account.isFocusable = false
+        binding.account.isClickable = false
+        binding.account.isCursorVisible = false
+        binding.account.isLongClickable = false
+        if (prefs.getString("Niutrans_EncryptedKey","") != ""){
+            binding.secretKey.hint = getString(R.string.api_saved)
+        }else{
+            binding.secretKey.hint = getString(R.string.niu_hint_secret_key)
+        }
+        binding.whatsThis.setOnClickListener {
+            val dialog = AlertDialog.Builder(activity)
+                .setTitle(getString(R.string.whats_api_title, getString(R.string.niuapi_name)))
+                .setMessage(getString(R.string.whats_api_content, getString(R.string.niuapi_name)))
+                .setCancelable(false)
+                .setNeutralButton(R.string.view_tutorial){_,_->
+                    val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(urlt)
+                    startActivity(intent)
+                }
+                .setPositiveButton(R.string.go_now) { _, _ ->
+                    val url = "https://fanyi-api.baidu.com/"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                }
+                .setNegativeButton(R.string.user_cancel) { _, _ ->}
+                .create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+        }
+        binding.saveOnlineApiButton.setOnClickListener {
+            if (binding.account.text.isBlank() || binding.secretKey.text.isBlank()) {
+                Toast.makeText(context, getString(R.string.fill_blank), Toast.LENGTH_LONG).show()
+            } else {
+                KeystoreManager.storeKey(
+                    requireContext(),
+                    binding.secretKey.text.toString().trim(),
+                    "Niutrans"
+                )
+                Toast.makeText(context, getString(R.string.save_successfully), Toast.LENGTH_LONG).show()
+                requireActivity().finish()
+            }
+        }
+    }
+
+    private fun prepareBaidu(){
+        binding.tvApiType.text = getString(R.string.api_name, getString(R.string.baiduapi_name))
+        if (prefs.getString("Baidu_Translate_ACCOUNT_EncryptedKey","") != ""){
+            binding.account.hint = getString(R.string.api_saved)
+            binding.secretKey.hint = getString(R.string.api_saved)
+        }else{
+            binding.account.hint = getString(R.string.baidu_hint_account)
+            binding.secretKey.hint = getString(R.string.baidu_hint_secret_key)
+        }
+        binding.whatsThis.setOnClickListener {
+            val dialog = AlertDialog.Builder(activity)
+                .setTitle(getString(R.string.whats_api_title, getString(R.string.baiduapi_name)))
+                .setMessage(getString(R.string.whats_api_content, getString(R.string.baiduapi_name)))
+                .setCancelable(false)
+                .setNeutralButton(R.string.view_tutorial){_,_->
+                    val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(urlt)
+                    startActivity(intent)
+                }
+                .setPositiveButton(R.string.go_now) { _, _ ->
+                    val url = "https://fanyi-api.baidu.com/"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                }
+                .setNegativeButton(R.string.user_cancel) { _, _ ->}
+                .create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+        }
+        binding.saveOnlineApiButton.setOnClickListener {
+            if (binding.account.text.isBlank() || binding.secretKey.text.isBlank()) {
+                Toast.makeText(context, getString(R.string.fill_blank), Toast.LENGTH_LONG).show()
+            } else {
+                KeystoreManager.storeKey(
+                    requireContext(),
+                    binding.account.text.toString().trim(),
+                    "Baidu_Translate_ACCOUNT"
+                )
+                KeystoreManager.storeKey(
+                    requireContext(),
+                    binding.secretKey.text.toString().trim(),
+                    "Baidu_Translate_SECRETKEY"
+                )
+                Toast.makeText(context, getString(R.string.save_successfully), Toast.LENGTH_LONG).show()
+                requireActivity().finish()
+            }
+        }
+    }
+
+    private fun prepareTencent(){
+        binding.tvApiType.text = getString(R.string.api_name, getString(R.string.tencentapi_name))
+        if (prefs.getString("Tencent_Cloud_ACCOUNT_EncryptedKey","") != ""){
+            binding.account.hint = getString(R.string.api_saved)
+            binding.secretKey.hint = getString(R.string.api_saved)
+        }else{
+            binding.account.hint = getString(R.string.tencent_hint_account)
+            binding.secretKey.hint = getString(R.string.tencent_hint_secret_key)
+        }
+        binding.whatsThis.setOnClickListener {
+            val dialog = AlertDialog.Builder(activity)
+                .setTitle(getString(R.string.whats_api_title, getString(R.string.tencentapi_name)))
+                .setMessage(getString(R.string.whats_api_content, getString(R.string.tencentapi_name)))
+                .setCancelable(false)
+                .setNeutralButton(R.string.view_tutorial){_,_->
+                    val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(urlt)
+                    startActivity(intent)
+                }
+                .setPositiveButton(R.string.go_now) { _, _ ->
+                    val url = "https://fanyi-api.baidu.com/"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                }
+                .setNegativeButton(R.string.user_cancel) { _, _ ->}
+                .create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+        }
+        binding.saveOnlineApiButton.setOnClickListener {
+            if (binding.account.text.isBlank() || binding.secretKey.text.isBlank()) {
+                Toast.makeText(context, getString(R.string.fill_blank), Toast.LENGTH_LONG).show()
+            } else {
+                KeystoreManager.storeKey(
+                    requireContext(),
+                    binding.account.text.toString().trim(),
+                    "Tencent_Cloud_ACCOUNT"
+                )
+                KeystoreManager.storeKey(
+                    requireContext(),
+                    binding.secretKey.text.toString().trim(),
+                    "Tencent_Cloud_SECRETKEY"
                 )
                 Toast.makeText(context, getString(R.string.save_successfully), Toast.LENGTH_LONG).show()
                 requireActivity().finish()

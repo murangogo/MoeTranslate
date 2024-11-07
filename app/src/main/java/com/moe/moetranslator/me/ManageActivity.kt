@@ -13,8 +13,10 @@ class ManageActivity : AppCompatActivity() {
         const val EXTRA_FRAGMENT_TYPE = "fragment_type"
         const val TYPE_FRAGMENT_MANAGE_MLKIT = 1
         const val TYPE_FRAGMENT_MANAGE_NLLB = 2
-        const val TYPE_FRAGMENT_MANAGE_BAIDU_API = 3
-        const val TYPE_FRAGMENT_MANAGE_TENCENT_API = 4
+        const val TYPE_FRAGMENT_MANAGE_VOLC_API = 3
+        const val TYPE_FRAGMENT_MANAGE_NIU_API = 4
+        const val TYPE_FRAGMENT_MANAGE_BAIDU_API = 5
+        const val TYPE_FRAGMENT_MANAGE_TENCENT_API = 6
         const val TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API = 5
         const val TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API = 6
     }
@@ -36,6 +38,26 @@ class ManageActivity : AppCompatActivity() {
             }
             TYPE_FRAGMENT_MANAGE_NLLB-> {
                 val fragment = NLLBDownloadFragment()
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
+            TYPE_FRAGMENT_MANAGE_BAIDU_API->{
+                val fragment = OnlineAPI()
+                val args = Bundle().apply {
+                    putString("api_type", "volc")
+                }
+                fragment.arguments = args
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
+            TYPE_FRAGMENT_MANAGE_TENCENT_API->{
+                val fragment = OnlineAPI()
+                val args = Bundle().apply {
+                    putString("api_type", "niu")
+                }
+                fragment.arguments = args
                 supportFragmentManager.beginTransaction()
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()
