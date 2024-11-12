@@ -7,6 +7,14 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Date
 
+/**
+ * 火山引擎的文本翻译
+ * 请求方法：POST
+ * URL中有API版本和操作信息
+ * 需要特殊的认证头信息，通过VolcSign签名器处理
+ * 请求参数放在请求体中，以json形式发送
+ */
+
 class VolcTranslation(private val ak: String, private val sk: String): TranslationTextAPI {
 
     private var currentTask: Thread? = null

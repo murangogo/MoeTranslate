@@ -21,8 +21,9 @@ import com.moe.moetranslator.utils.KeystoreManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import translationapi.baidutranslation.BaiduTranslationImage
 import translationapi.baidutranslation.BaiduTranslationText
-import translationapi.customtranslation.CustomTranslationPic
+import translationapi.customtranslation.CustomTranslationImage
 import translationapi.customtranslation.CustomTranslationText
 import translationapi.mlkittranslation.MLKitTranslation
 import translationapi.niutrans.NiuTranslation
@@ -145,9 +146,9 @@ class FloatingBallService : LifecycleService() {
                 }
             }else{
                 when (prefs.getInt("Pic_API", 0)){
-                    0 -> {}
+                    0 -> translatorPic = BaiduTranslationImage(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
                     1 -> {}
-                    2 -> translatorPic = CustomTranslationPic()
+                    2 -> translatorPic = CustomTranslationImage()
                     else -> { showToast("Unknown Translator.") }
                 }
             }
@@ -478,8 +479,9 @@ class FloatingBallService : LifecycleService() {
                 val txt = OCRTextRecognizer.getPicText(prefs.getString("Source_Language", "ja"), bitmap, prefs.getInt("Custom_OCR_Merge_Mode", 2))
                 translateByText(txt)
             }else{
-                // 上传图片翻译
-                translateByPic(bitmap)
+                // 上传图片翻译，注意要创建bitmap副本并交给图片翻译API处理
+                val bitmapCopy = bitmap.copy(bitmap.config, true)
+                translateByPic(bitmapCopy)  // 副本的生命周期由翻译API管理
             }
         }catch (e: Exception){
             isTranslating.set(false)
@@ -515,7 +517,20 @@ class FloatingBallService : LifecycleService() {
     }
 
     private fun translateByPic(bitmap: Bitmap){
-        // TODO 图片翻译
+        translatorPic?.getTranslation(bitmap, prefs.getString("Source_Language", "ja"), prefs.getString("Target_Language", "zh")){
+                result->
+            lifecycleScope.launch(Dispatchers.Main) {
+                when (result) {
+                    is TranslationResult.Success -> {
+                        floatingTextView.text = result.translatedText
+                    }
+                    is TranslationResult.Error -> {
+                        floatingTextView.text = getString(R.string.translation_failed, result.error.message)
+                    }
+                }
+                isTranslating.set(false)
+            }
+        }
     }
 
     fun showToast(message: String, isShort: Boolean = false) {
@@ -555,6 +570,7 @@ class FloatingBallService : LifecycleService() {
             // 清理资源
             OCRTextRecognizer.cleanup()
             translatorText?.release()
+            translatorPic?.release()
             handler.removeCallbacks(longPressRunnable)
             lifecycleScope.cancel()
 
@@ -595,6 +611,7 @@ class FloatingBallService : LifecycleService() {
         // 清理资源
         OCRTextRecognizer.cleanup()
         translatorText?.release()
+        translatorPic?.release()
         handler.removeCallbacks(longPressRunnable)
         lifecycleScope.cancel()
     }
