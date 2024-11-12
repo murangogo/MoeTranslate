@@ -106,7 +106,6 @@ class MLKitTranslation : TranslationTextAPI {
         currentTranslator?.translate(text)
             ?.addOnSuccessListener { translatedText ->
                 Log.d("MLKIT", translatedText)
-                // 检查job是否仍然活跃，避免在取消后回调
                 callback(TranslationResult.Success(translatedText))
             }
             ?.addOnFailureListener { exception ->

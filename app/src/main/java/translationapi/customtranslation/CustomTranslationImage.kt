@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import com.moe.moetranslator.translate.TranslationPicAPI
 import com.moe.moetranslator.translate.TranslationResult
 
-class CustomTranslationPic: TranslationPicAPI {
+class CustomTranslationImage: TranslationPicAPI {
     override fun getTranslation(
         pic: Bitmap,
         sourceLanguage: String,

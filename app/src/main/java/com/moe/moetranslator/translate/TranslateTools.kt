@@ -53,7 +53,7 @@ object TranslateTools {
                 4 -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
-                        else -> R.raw.tencent_text_support_language
+                        else -> R.raw.tencent_text_support_languages
                     }
                 }
                 else -> {
@@ -68,12 +68,15 @@ object TranslateTools {
             }
             else -> when (picApi) {
                 0 -> {
-                    R.raw.baidu_pic_support_languages
+                    when (type){
+                        1 -> R.raw.baidu_pic_src_support_languages
+                        else -> R.raw.baidu_pic_tar_support_languages
+                    }
                 }
                 1 -> {
                     when (type){
-                        1 -> R.raw.tencent_pic_src_support_language
-                        else -> R.raw.tencent_pic_tar_support_language
+                        1 -> R.raw.tencent_pic_src_support_languages
+                        else -> R.raw.tencent_pic_tar_support_languages
                     }
                 }
                 else -> {

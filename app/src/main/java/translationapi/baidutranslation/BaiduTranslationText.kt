@@ -13,6 +13,11 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.concurrent.TimeUnit
 
+/**
+ * 百度翻译的文本翻译
+ * 请求方法：GET
+ * 请求参数全部放在了URL中，没有特殊的请求体
+ */
 
 class BaiduTranslationText(private val appId: String, private val secretKey: String) :
     TranslationTextAPI {
