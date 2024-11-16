@@ -28,6 +28,7 @@ import translationapi.customtranslation.CustomTranslationText
 import translationapi.mlkittranslation.MLKitTranslation
 import translationapi.niutrans.NiuTranslation
 import translationapi.nllbtranslation.NLLBTranslation
+import translationapi.tencentcloud.TencentTranslationImage
 import translationapi.tencentcloud.TencentTranslationText
 import translationapi.volctranslation.VolcTranslation
 import java.util.concurrent.atomic.AtomicBoolean
@@ -147,7 +148,7 @@ class FloatingBallService : LifecycleService() {
             }else{
                 when (prefs.getInt("Pic_API", 0)){
                     0 -> translatorPic = BaiduTranslationImage(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
-                    1 -> {}
+                    1 -> translatorPic = TencentTranslationImage(KeystoreManager.retrieveKey(this, "Tencent_Cloud_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Tencent_Cloud_SECRETKEY")!!)
                     2 -> translatorPic = CustomTranslationImage()
                     else -> { showToast("Unknown Translator.") }
                 }

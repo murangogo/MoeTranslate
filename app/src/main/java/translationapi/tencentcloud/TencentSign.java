@@ -31,13 +31,12 @@ public class TencentSign {
         return CryptoUtils.bytesToHex(d).toLowerCase();
     }
 
-    public static HashMap<String, String> getSignature(String sid, String skey, String payload) throws Exception {
+    public static HashMap<String, String> getSignature(String sid, String skey, String action, String payload) throws Exception {
         SECRET_ID = sid;
         SECRET_KEY = skey;
         String service = "tmt";
         String host = "tmt.tencentcloudapi.com";
         String region = "ap-beijing";
-        String action = "TextTranslate";
         String version = "2018-03-21";
         String algorithm = "TC3-HMAC-SHA256";
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
