@@ -63,7 +63,7 @@ class TencentTranslationText(
             Log.d("TENCENT", "Request: $query, from: $from, to: $to")
 
             // 获取签名和请求头
-            val headers = TencentSign.getSignature(secretId,secretKey,requestBody)
+            val headers = TencentSign.getSignature(secretId,secretKey,"TextTranslate", requestBody)
 
             // 构建请求
             val request = Request.Builder()
