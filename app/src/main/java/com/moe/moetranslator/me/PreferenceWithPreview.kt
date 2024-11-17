@@ -43,7 +43,7 @@ class PreferenceWithPreview : Preference {
             if (customPicName.isEmpty()) {
                 // 如果没有自定义图片，加载默认图片
                 Glide.with(context)
-                    .load(R.drawable.floatball)
+                    .load(R.drawable.floating_ball_icon)
                     .transform(CircleCrop())
                     .override(100, 100)
                     .into(imageView)
@@ -57,12 +57,12 @@ class PreferenceWithPreview : Preference {
                         .load(iconFile)
                         .transform(CircleCrop())
                         .override(100, 100)
-                        .error(R.drawable.floatball) // 加载失败时显示默认图片
+                        .error(R.drawable.floating_ball_icon) // 加载失败时显示默认图片
                         .into(imageView)
                 } else {
                     // 如果文件不存在，加载默认图片
                     Glide.with(context)
-                        .load(R.drawable.floatball)
+                        .load(R.drawable.floating_ball_icon)
                         .transform(CircleCrop())
                         .override(100, 100)
                         .into(imageView)
