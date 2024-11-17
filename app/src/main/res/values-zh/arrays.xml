@@ -24,8 +24,8 @@
 
     <string-array name="show_source_text_entries">
         <item>不显示</item>
-        <item>在原文上方</item>
-        <item>在原文下方</item>
+        <item>在结果上方</item>
+        <item>在结果下方</item>
     </string-array>
 
 

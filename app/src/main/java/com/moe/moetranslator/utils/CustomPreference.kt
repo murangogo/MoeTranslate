@@ -72,6 +72,8 @@ class CustomPreference private constructor(context: Context) {
     //Custom_Result_Penetrability(Boolean)：翻译结果的可穿透性
     //Custom_OCR_Merge_Mode(Int)：合并OCR结果的模式
     //Custom_Show_Source_Mode(Int)：显示原文模式
+    //Custom_Long_Press_Delay(Long)：长按判定时间
+    //Custom_Floating_Pic(Str)：用户自定义的悬浮球图片
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 

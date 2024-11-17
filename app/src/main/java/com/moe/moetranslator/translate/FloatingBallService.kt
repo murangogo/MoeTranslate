@@ -3,6 +3,7 @@ package com.moe.moetranslator.translate
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.PixelFormat
 import android.graphics.RectF
 import android.os.Handler
@@ -10,6 +11,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LifecycleService
@@ -31,17 +33,17 @@ import translationapi.nllbtranslation.NLLBTranslation
 import translationapi.tencentcloud.TencentTranslationImage
 import translationapi.tencentcloud.TencentTranslationText
 import translationapi.volctranslation.VolcTranslation
+import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
 
 // 悬浮球配置
-// TODO :自定义反应时间
 data class FloatingBallConfig(
     val floatingBallInitialX: Int = 80,
     val floatingBallInitialY: Int = 200,
     val CLICK_SLOP:Float = 5f,           // 点击判定的最大移动距离
     val LONG_PRESS_SLOP:Float = 10f,     // 长按判定的最大移动距离
-    val LONG_PRESS_DELAY:Long = 500L   // 长按触发时间（毫秒）
+    var LONG_PRESS_DELAY:Long = 500L   // 长按触发时间（毫秒）
 )
 
 data class FloatingTextViewConfig(
@@ -195,8 +197,6 @@ class FloatingBallService : LifecycleService() {
             y = cropViewConfig.cropViewInitialY
         }
 
-
-
         // 创建悬浮球视图
         floatingBallView = LayoutInflater.from(this).inflate(R.layout.floatball_layout, null)
 
@@ -205,6 +205,31 @@ class FloatingBallService : LifecycleService() {
 
         // 创建裁剪框视图
         cropView = CropView(this)
+
+        // 设置悬浮球图标
+        val customPicName = prefs.getString("Custom_Floating_Pic", "")
+        if (customPicName.isNotEmpty()) {
+            try {
+                val iconFile = File(getExternalFilesDir(null), "icon/$customPicName")
+                if (iconFile.exists()) {
+                    // 使用BitmapFactory加载图片
+                    val bitmap = BitmapFactory.decodeFile(iconFile.absolutePath)
+                    floatingBallView.findViewById<ImageView>(R.id.floating_ball_icon)
+                        .setImageBitmap(bitmap)
+                } else {
+                    // 文件不存在时显示默认图片
+                    floatingBallView.findViewById<ImageView>(R.id.floating_ball_icon)
+                        .setImageResource(R.drawable.floatball)
+                }
+            } catch (e: Exception) {
+                // 发生错误时显示默认图片
+                floatingBallView.findViewById<ImageView>(R.id.floating_ball_icon)
+                    .setImageResource(R.drawable.floatball)
+            }
+        }
+
+        // 设置长按判定时间
+        floatingBallConfig.LONG_PRESS_DELAY = prefs.getLong("Custom_Long_Press_Delay", 500L)
 
         // 添加到窗口
         windowManager.addView(floatingBallView, floatingBallParams)

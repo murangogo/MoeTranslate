@@ -24,8 +24,8 @@
 
     <string-array name="show_source_text_entries">
         <item>Not shown</item>
-        <item>Above the original text</item>
-        <item>Below the original text</item>
+        <item>Above the result text</item>
+        <item>Below the result text</item>
     </string-array>
 
 

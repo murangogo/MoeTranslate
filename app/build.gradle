@@ -100,6 +100,9 @@ dependencies {
     // 撒花效果组件
     implementation 'nl.dionsegijn:konfetti-xml:2.0.2'
 
+    // 图片处理
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+
     // Live2D的SDK
     implementation(fileTree(dir: 'libs', include: ['Live2DCubismCore.aar']))
     // Live2D依赖模块
