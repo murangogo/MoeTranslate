@@ -219,12 +219,12 @@ class FloatingBallService : LifecycleService() {
                 } else {
                     // 文件不存在时显示默认图片
                     floatingBallView.findViewById<ImageView>(R.id.floating_ball_icon)
-                        .setImageResource(R.drawable.floatball)
+                        .setImageResource(R.drawable.floating_ball_icon)
                 }
             } catch (e: Exception) {
                 // 发生错误时显示默认图片
                 floatingBallView.findViewById<ImageView>(R.id.floating_ball_icon)
-                    .setImageResource(R.drawable.floatball)
+                    .setImageResource(R.drawable.floating_ball_icon)
             }
         }
 
