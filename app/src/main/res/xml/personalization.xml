@@ -3,6 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:title="@string/floating_ball"
+        app:iconSpaceReserved="false">
+
+        <com.moe.moetranslator.me.PreferenceWithPreview
+            android:key="floating_ball_pic"
+            app:iconSpaceReserved="false"
+            android:title="@string/floating_ball_pic_title" />
+
+        <Preference
+            android:key="floating_ball_press"
+            app:iconSpaceReserved="false"
+            android:title="@string/floating_ball_press_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/translate_result_box"
         app:iconSpaceReserved="false">
 

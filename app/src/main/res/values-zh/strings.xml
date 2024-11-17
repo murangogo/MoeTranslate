@@ -155,7 +155,7 @@
     <string name="font_default">跟随系统</string>
     <string name="font_setting">字体设置</string>
     <string name="font_choose">选择字体（ttf）</string>
-    <string name="font_success">字体设置成功</string>
+    <string name="set_success">设置成功</string>
     <string name="font_failed">字体设置失败：%s</string>
     <string name="font_size_float">可以输入小数</string>
     <string name="font_size_setting">设置字体大小</string>
@@ -193,6 +193,17 @@
     <string name="whats_api_content">萌译可以使用不同平台的API来提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为%1$s，点击“现在就去”即可开始申请%1$sAPI。申请%1$sAPI的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有相当多的免费调用次数。\n\n当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
     <string name="niu_hint_secret_key">API-KEY</string>
     <string name="niu_noneed">无需填写</string>
+    <string name="floating_ball">悬浮球</string>
+    <string name="floating_ball_pic_summary">当前图片：%s\n选择一个你喜欢的悬浮球图标吧，图片长宽比为1：1时效果更好哦</string>
+    <string name="floating_ball_pic_title">悬浮球图标</string>
+    <string name="floating_ball_press_title">长按判定时间</string>
+    <string name="floating_ball_press_summary">当前判定时间：%s ms\n长按悬浮球，弹出菜单的判定时间，单位为毫秒</string>
+    <string name="ball_setting">悬浮球图标</string>
+    <string name="ball_icon_default">恢复默认</string>
+    <string name="pic_choose">选择图片（png/jpg）</string>
+    <string name="default_name">默认</string>
+    <string name="current_judgment_time">当前判定时间：%s ms</string>
+    <string name="int_only">输入整数</string>
 
 
 </resources>

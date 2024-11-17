@@ -155,7 +155,7 @@
     <string name="font_default">Follow the system</string>
     <string name="font_setting">Font settings</string>
     <string name="font_choose">Select font（ttf）</string>
-    <string name="font_success">Font set successfully</string>
+    <string name="set_success">Setup successful</string>
     <string name="font_failed">Font setting failed：%s</string>
     <string name="font_size_float">You can enter decimals</string>
     <string name="font_size_setting">Set font size</string>
@@ -193,6 +193,17 @@
     <string name="whats_api_content">MoeTranslate can use the APIs of different platforms to provide translation services, which means that you need to apply for APIs from the corresponding platform. The API platform you have chosen now seems to be %1$s, click \"Go Now\" to start applying for %1$s API. For a detailed tutorial on how to apply for %1$s API, please click \"View Tutorial\". Please note that these APIs are free to apply for, and there are quite a few free calls per month.\n\nOf course, if you think that the steps of applying for an API are too cumbersome, MoeTranslate also provides point-and-click translation options, such as ML Kit and NLLB translation, which also have good translation results.</string>
     <string name="niu_hint_secret_key">API-KEY</string>
     <string name="niu_noneed">"No need to fill in "</string>
+    <string name="floating_ball">Floating ball</string>
+    <string name="floating_ball_pic_summary">Current image：%s\nChoose a floating ball icon you like, and the image aspect ratio is 1:1 to work better</string>
+    <string name="floating_ball_pic_title">Floating Ball Icon</string>
+    <string name="floating_ball_press_title">Long press determine time</string>
+    <string name="floating_ball_press_summary">Current judgment time：%s ms\nPress and hold the floating ball, and the judgment time of the menu will pop up, in milliseconds</string>
+    <string name="ball_setting">Floating ball icon</string>
+    <string name="ball_icon_default">Restore default</string>
+    <string name="pic_choose">Select picture（png/jpg）</string>
+    <string name="default_name">Default</string>
+    <string name="current_judgment_time">Current judgment time：%s ms</string>
+    <string name="int_only">Enter an integer</string>
 
 
 </resources>
