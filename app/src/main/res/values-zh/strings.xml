@@ -204,6 +204,31 @@
     <string name="default_name">默认</string>
     <string name="current_judgment_time">当前判定时间：%s ms</string>
     <string name="int_only">输入整数</string>
+    <string name="introduce_custom_text_api_title">自定义文本翻译API功能说明</string>
+    <string name="introduce_custom_text_api_content">\n⚠️注意：<b>这是一个高级功能，需要您了解基本的API调用知识。</b>\n\n<big>一、基本说明</big>\n此功能允许您配置自己的<b>文本翻译API</b>，支持GET和POST两种请求方式（对于文本翻译，POST的Content-Type是且只能是“application/json; charset=utf-8”，<b>不需</b>显式填写在下面的请求头中，已预置好）。所有API响应必须为JSON格式。\n\n<big>二、使用场景</big>\n一般来说，由于各大翻译API提供商都有自己的签名算法，无法通过简单的GET/POST请求接入，因此实际上自定义文本翻译API可以接入的商用API接口数量有限，更贴合实际的使用场景为接入自己搭建的翻译API接口。\n\n<big>三、参数说明</big>\n1、请求方法：可以为GET或POST\n2、基础URL：可指定http或https，如不指定scheme，则默认为https\n3、查询参数（仅GET）：附加于基础URL之后的参数\n4、请求头：发送请求时的头部\n5、JSON请求体（仅POST）：发送请求时附带的JSON内容\n6、JSON响应路径：调用API后，从响应的JSON中获取翻译结果的路径\n\n注意：\n1、在“查询参数”和“JSON请求体”中，<b>使用“usesourcetext”代表待翻译的文本</b>；\n2、务必将“源语言”和“目标语言”的语言代码包含在“查询参数”或“JSON请求体”中；\n3、同时请注意将主页面指定“源语言”，因为萌译在使用OCR识别文字时，需要知道“源语言”是什么。\n\n<big>四、请求示例</big>\n<b>GET请求</b>\n基础URL：\nhttps://api.example.com/translate\n\n查询参数：\nkey：text，value：usesourcetext；\nkey：source，value：ja；\nkey：target，value：zh\n\n请求头：\nAuthorization = my_custom_token\n\n<b>POST请求</b>\n基础URL：\nhttps://api.example.com/translate\n\n请求头：\nAuthorization = my_custom_token\n\nJSON请求体:\nkey：text，value：usesourcetext；\nkey：source，value：ja；\nkey：target，value：zh\n\n\n<big>五、JSON响应路径</big>\n<b>举例1：</b>\n假设成功响应的JSON如下：\n\n{\n    \"code\": 0,\n    \"msg\": \"success\",\n    \"data\": {\n        \"translation\": \"你好世界\"\n    }\n}\n\n则JSON响应路径应填写：data.translation\n\n<b>举例2：</b>\n假设成功响应的JSON如下：\n\n{\n    \"code\": 0,\n    \"msg\": \"success\",\n    \"result\": \"你好世界\"\n}\n\n则JSON响应路径应填写：result\n\n<big>六、在使用该功能之前</big>\n您可以先使用Postman、Reqable等工具测试API响应，待测试成功后再将相关参数填入该功能中。</string>
+    <string name="dont_konw_custom">😵不知道这是什么？点我查看提示。</string>
+    <string name="request_method">请求方法</string>
+    <string name="base_url">基础URL</string>
+    <string name="headers">请求头</string>
+    <string name="add_header">添加请求头</string>
+    <string name="json_body">JSON请求体</string>
+    <string name="add_json_field">添加JSON字段</string>
+    <string name="query_parameters">查询参数</string>
+    <string name="json_response_path">JSON响应路径</string>
+    <string name="save_configuration">保存配置信息</string>
+    <string name="add_query_parameter">添加查询参数</string>
+    <string name="use_source_text">在Value字段中，使用“usesourcetext”代表待翻译的文本</string>
+    <string name="use_img_base64">在Value字段中，使用“useimgbase64”代表待翻译的图片的base64</string>
+    <string name="use_img_file">在Value字段中，使用“useimgfile”代表待翻译的图片文件</string>
+    <string name="request_body">请求体</string>
+    <string name="add_body_field">添加请求体字段</string>
+    <string name="introduce_custom_pic_api_title">自定义图片翻译API功能说明</string>
+    <string name="introduce_custom_pic_api_content">\n⚠️注意：<b>这是一个高级功能，需要您了解基本的API调用知识。</b>\n\n<big>一、基本说明</big>\n此功能允许您配置自己的<b>图片翻译API</b>，支持GET和POST两种请求方式（对于图片翻译，POST的Content-Type可以是“application/json; charset=utf-8”或“multipart/form-data”，只需在Content-Type选择框中选择，<b>不需</b>重复显式填写在下面的请求头中）。所有API响应必须为JSON格式。\n\n<big>二、使用场景</big>\n一般来说，由于各大翻译API提供商都有自己的签名算法，无法通过简单的GET/POST请求接入，因此实际上自定义图片翻译API可以接入的商用API接口数量有限，更贴合实际的使用场景为接入自己搭建的翻译API接口。\n\n<big>三、参数说明</big>\n1、请求方法：可以为GET或POST\n2、Content-Type（仅POST）：可以为“application/json”或“multipart/form-data”\n3、基础URL：可指定http或https，如不指定scheme，则默认为https\n4、查询参数（仅GET）：附加于基础URL之后的参数\n5、请求头：发送请求时的头部\n6、请求体（仅POST）：发送请求时附带的内容\n7、JSON响应路径：调用API后，从响应的JSON中获取翻译结果的路径\n\n注意：\n1、在“查询参数”和“Content-Type为‘application/json’的请求体”中，<b>使用“useimgbase64”代表待翻译的图片文件</b>；\n2、在“Content-Type为‘multipart/form-data’的请求体”中，<b>使用“useimgfile”代表待翻译的图片文件</b>；\n3、同时请注意，务必将“源语言”和“目标语言”的语言代码包含在“查询参数”或“请求体”中。\n\n<big>四、请求示例</big>\n<b>GET请求</b>\n基础URL：\nhttps://api.example.com/translate\n\n查询参数：\nkey：img，value：useimgbase64；\nkey：source，value：ja；\nkey：target，value：zh\n\n请求头：\nAuthorization = my_custom_token\n\n<b>POST请求</b>\nContent-Type:\napplication/json\n\n基础URL：\nhttps://api.example.com/translate\n\n请求头：\nAuthorization = my_custom_token\n\n请求体:\nkey：img，value：useimgbase64；\nkey：source，value：ja；\nkey：target，value：zh\n\n<b>POST请求</b>\nContent-Type:\nmultipart/form-data\n\n基础URL：\nhttps://api.example.com/translate\n\n请求头：\nAuthorization = my_custom_token\n\n请求体:\nkey：img，value：useimgfile；\nkey：source，value：ja；\nkey：target，value：zh\n\n\n<big>五、JSON响应路径</big>\n<b>举例1：</b>\n假设成功响应的JSON如下：\n\n{\n    \"code\": 0,\n    \"msg\": \"success\",\n    \"data\": {\n        \"translation\": \"你好世界\"\n    }\n}\n\n则JSON响应路径应填写：data.translation\n\n<b>举例2：</b>\n假设成功响应的JSON如下：\n\n{\n    \"code\": 0,\n    \"msg\": \"success\",\n    \"result\": \"你好世界\"\n}\n\n则JSON响应路径应填写：result\n\n<big>六、在使用该功能之前</big>\n您可以先使用Postman、Reqable等工具测试API响应，待测试成功后再将相关参数填入该功能中。</string>
+    <string name="introduce_not_show_again">不再提醒</string>
+    <string name="failed_save_config">保存配置失败：%s</string>
+    <string name="key_value_blank">存在空的Key或Value</string>
+    <string name="url_blank">URL不能为空</string>
+    <string name="response_json_blank">JSON响应路径不能为空</string>
 
 
 </resources>

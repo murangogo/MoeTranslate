@@ -1,5 +1,6 @@
 package com.moe.moetranslator.me
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -54,6 +55,29 @@ class CustomTextAPI :Fragment() {
         if ( config!= null ){
             loadConfig()
         }
+
+        binding.introduce.setOnClickListener{
+            showIntroduce()
+        }
+
+        if(!prefs.getBoolean("Read_Custom_Text_Introduce", false)){
+            showIntroduce()
+        }
+    }
+
+    private fun showIntroduce(){
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.introduce_custom_text_api_title)
+            .setMessage(R.string.introduce_custom_text_api_content)
+            .setCancelable(false)
+            .setPositiveButton(R.string.user_known, null)
+            .setNeutralButton(R.string.introduce_not_show_again){
+                    _, _ ->
+                prefs.setBoolean("Read_Custom_Text_Introduce", true)
+            }
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
     private fun setupMethodSpinner() {
@@ -102,23 +126,28 @@ class CustomTextAPI :Fragment() {
 
     private fun saveConfiguration() {
         try{
-            val normalizedUrl = UrlUtils.normalizeUrl(binding.editBaseUrl.text.toString())
+            val normalizedUrl = UrlUtils.normalizeUrl(requireContext(), binding.editBaseUrl.text.toString())
+
+            if(binding.editJsonPath.text.toString().trim().isBlank()){
+                throw Exception(getString(R.string.response_json_blank))
+            }
 
             val config = CustomTextAPIConfig(
                 method = if (isPostMethod) "POST" else "GET",
                 baseUrl = normalizedUrl,
-                queryParams = collectKeyValuePairs(binding.containerGetParams),
+                queryParams = if (isPostMethod) mutableListOf<KeyValuePair>() else collectKeyValuePairs(binding.containerGetParams),
                 headers = collectKeyValuePairs(binding.containerHeaders),
-                jsonBody = collectKeyValuePairs(binding.containerJsonBody),
-                jsonResponsePath = binding.editJsonPath.text.toString()
+                jsonBody = if (isPostMethod) collectKeyValuePairs(binding.containerJsonBody) else mutableListOf<KeyValuePair>(),
+                jsonResponsePath = binding.editJsonPath.text.toString().trim()
             )
 
             lifecycleScope.launch {
                 saveTextConfig(prefs, config, apiCode!!)
-                showToast("Configuration saved successfully")
+                showToast(getString(R.string.save_successfully))
+                requireActivity().finish()
             }
         } catch (e: Exception){
-            showToast("Error saving configuration: ${e.message}")
+            showToast(getString(R.string.failed_save_config, e.message))
         }
     }
 
@@ -183,7 +212,7 @@ class CustomTextAPI :Fragment() {
             if (key.isNotBlank() && value.isNotBlank()) {
                 pairs.add(KeyValuePair(key, value))
             }else{
-                throw Exception("Key or value is blank")
+                throw Exception(getString(R.string.key_value_blank))
             }
         }
 
