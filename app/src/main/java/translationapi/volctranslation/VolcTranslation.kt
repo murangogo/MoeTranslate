@@ -11,7 +11,7 @@ import java.util.Date
  * 火山引擎的文本翻译
  * 请求方法：POST
  * URL中有API版本和操作信息
- * 需要特殊的认证头信息，通过VolcSign签名器处理
+ * 需要特殊的认证头信息，通过VolcSign签名器处理，显式设置Content-Type为application/json
  * 请求参数放在请求体中，以json形式发送
  */
 

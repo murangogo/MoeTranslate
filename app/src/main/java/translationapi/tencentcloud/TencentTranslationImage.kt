@@ -16,6 +16,14 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
+/**
+ * 腾讯云的图片翻译
+ * 请求方法：POST
+ * URL没有查询参数
+ * 腾讯云API需要特殊的认证头信息，通过TencentSign.getSignature生成，显式设置Content-Type为application/json
+ * 请求参数放在请求体中，图片数据转换为Base64格式，以json形式发送
+ */
+
 class TencentTranslationImage(
     private val secretId: String,
     private val secretKey: String

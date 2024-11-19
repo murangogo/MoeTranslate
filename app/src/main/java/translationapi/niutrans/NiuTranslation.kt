@@ -13,14 +13,15 @@ import java.util.concurrent.TimeUnit
 /**
  * 小牛翻译的文本翻译
  * 请求方法：POST
- * URL简单直接，没有查询参数
- * Content-Type header为"application/json;
+ * URL没有查询参数
+ * 请求头显式设置了Content-Type为application/json
  * 请求参数放在请求体中，以json形式发送
+ * 没有签名机制
  */
 
 class NiuTranslation(private val apiKey: String) : TranslationTextAPI {
     private var currentTask: Thread? = null
-    private val API_HOST = "http://api.niutrans.com/NiuTransServer/translation"
+    private val API_HOST = "https://api.niutrans.com/NiuTransServer/translation"
     private val SOCKET_TIMEOUT = 10L // 10秒
     private val JSON = "application/json; charset=utf-8".toMediaType()
 

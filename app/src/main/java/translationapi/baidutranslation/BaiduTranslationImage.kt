@@ -26,6 +26,14 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.concurrent.TimeUnit
 
+/**
+ * 百度翻译的图片翻译
+ * 请求方法：POST
+ * URL没有查询参数
+ * 请求头设置Content-Type为multipart/form-data
+ * 请求参数放在请求体中，包含图片文件数据，包含多个表单字段（有签名）
+ */
+
 class BaiduTranslationImage(
     private val appId: String,
     private val secretKey: String
