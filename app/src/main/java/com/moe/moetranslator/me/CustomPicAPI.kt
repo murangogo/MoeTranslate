@@ -134,6 +134,8 @@ class CustomPicAPI : Fragment() {
 
     private fun saveConfiguration() {
         try {
+            val normalizedUrl = UrlUtils.normalizeUrl(binding.editBaseUrl.text.toString())
+
             val contentType = if (isPostMethod) {
                 if (isJsonContentType) "application/json" else "multipart/form-data"
             } else null
@@ -141,7 +143,7 @@ class CustomPicAPI : Fragment() {
             val config = CustomPicAPIConfig(
                 method = if (isPostMethod) "POST" else "GET",
                 contentType = contentType,
-                baseUrl = binding.editBaseUrl.text.toString(),
+                baseUrl = normalizedUrl,
                 queryParams = collectKeyValuePairs(binding.containerGetParams),
                 headers = collectKeyValuePairs(binding.containerHeaders),
                 body = collectKeyValuePairs(binding.containerBody),
