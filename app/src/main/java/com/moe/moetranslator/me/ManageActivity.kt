@@ -20,9 +20,9 @@ class ManageActivity : AppCompatActivity() {
         const val TYPE_FRAGMENT_MANAGE_TENCENT_API = 6
         const val TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API = 7
         const val TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API = 8
+        const val CODE_CUSTOM_0 = 0
         const val CODE_CUSTOM_1 = 1
         const val CODE_CUSTOM_2 = 2
-        const val CODE_CUSTOM_3 = 3
     }
 
     private lateinit var binding: ActivityManageBinding
@@ -89,7 +89,7 @@ class ManageActivity : AppCompatActivity() {
             TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API->{
                 val fragment = CustomTextAPI()
                 val args = Bundle().apply {
-                    putInt("custom_code", intent.getIntExtra(EXTRA_CUSTOM_CODE,0))
+                    putInt(EXTRA_CUSTOM_CODE, intent.getIntExtra(EXTRA_CUSTOM_CODE,0))
                 }
                 fragment.arguments = args
                 supportFragmentManager.beginTransaction()
@@ -99,7 +99,7 @@ class ManageActivity : AppCompatActivity() {
             TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API->{
                 val fragment = CustomPicAPI()
                 val args = Bundle().apply {
-                    putInt("custom_code", intent.getIntExtra(EXTRA_CUSTOM_CODE,0))
+                    putInt(EXTRA_CUSTOM_CODE, intent.getIntExtra(EXTRA_CUSTOM_CODE,0))
                 }
                 fragment.arguments = args
                 supportFragmentManager.beginTransaction()

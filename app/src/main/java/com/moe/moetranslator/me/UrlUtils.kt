@@ -1,5 +1,8 @@
 package com.moe.moetranslator.me
 
+import android.content.Context
+import com.moe.moetranslator.R
+
 object UrlUtils {
     private const val HTTP_SCHEME = "http://"
     private const val HTTPS_SCHEME = "https://"
@@ -10,12 +13,12 @@ object UrlUtils {
      * 2. 移除多余的斜杠
      * 3. 处理基本的URL格式问题
      */
-    fun normalizeUrl(url: String): String {
+    fun normalizeUrl(ctx: Context, url: String): String {
         var normalizedUrl = url.trim()
 
         // 如果URL为空，抛出异常
-        if (normalizedUrl.isEmpty()) {
-            throw IllegalArgumentException("URL cannot be empty")
+        if (normalizedUrl.isBlank()) {
+            throw IllegalArgumentException(ctx.getString(R.string.url_blank))
         }
 
         // 添加scheme如果缺少
@@ -44,9 +47,9 @@ object UrlUtils {
     /**
      * 验证URL是否有效
      */
-    fun validateUrl(url: String): Boolean {
+    fun validateUrl(ctx: Context, url: String): Boolean {
         return try {
-            normalizeUrl(url)
+            normalizeUrl(ctx, url)
             true
         } catch (e: Exception) {
             false

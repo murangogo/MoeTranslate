@@ -10,6 +10,32 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- 查看提示 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/introduce"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="16sp"
+                    android:text="@string/dont_konw_custom">
+                </TextView>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- 请求方法选择 -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -27,7 +53,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Request Method"
+                    android:text="@string/request_method"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -56,7 +82,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Content Type"
+                    android:text="Content-Type"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -64,14 +90,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:id="@+id/txtBodyHint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Image data format hint will appear here"
-                    android:textColor="?android:textColorSecondary" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -92,13 +110,12 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Base URL">
+                    android:hint="@string/base_url">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editBaseUrl"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textUri" />
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -121,7 +138,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Query Parameters"
+                    android:text="@string/query_parameters"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -130,12 +147,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/use_img_base64"
+                    android:textColor="?android:textColorSecondary" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddGetParam"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Add Query Parameter" />
+                    android:text="@string/add_query_parameter" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -156,7 +180,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Headers"
+                    android:text="@string/headers"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -170,7 +194,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Add Header" />
+                    android:text="@string/add_header" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -192,7 +216,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Request Body"
+                    android:text="@string/request_body"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -201,12 +225,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
+                <TextView
+                    android:id="@+id/txtBodyHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="?android:textColorSecondary" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddBodyField"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Add Body Field" />
+                    android:text="@string/add_body_field" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -227,7 +258,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="JSON Response Path">
+                    android:hint="@string/json_response_path">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editJsonPath"
@@ -243,7 +274,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Save Configuration" />
+            android:text="@string/save_configuration" />
 
     </LinearLayout>
 </ScrollView>

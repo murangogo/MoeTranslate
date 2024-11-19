@@ -18,6 +18,8 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.moe.moetranslator.MainActivity
 import com.moe.moetranslator.R
+import com.moe.moetranslator.me.ConfigurationStorage.loadPicConfig
+import com.moe.moetranslator.me.ConfigurationStorage.loadTextConfig
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.KeystoreManager
 import kotlinx.coroutines.Dispatchers
@@ -144,19 +146,33 @@ class FloatingBallService : LifecycleService() {
                     2 -> translatorText = NiuTranslation(KeystoreManager.retrieveKey(this, "Niutrans")!!)
                     3 -> translatorText = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
                     4 -> translatorText = TencentTranslationText(KeystoreManager.retrieveKey(this, "Tencent_Cloud_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Tencent_Cloud_SECRETKEY")!!)
-                    5 -> translatorText = CustomTranslationText()
+                    5 -> {
+                        val config = loadTextConfig(prefs, prefs.getInt("Custom_Text_API",0))
+                        if (config == null) {
+                            showToast("No Custom Text API Config Found.")
+                        }else{
+                            translatorText = CustomTranslationText(config)
+                        }
+                    }
                     else -> { showToast("Unknown Translator.") }
                 }
             }else{
                 when (prefs.getInt("Pic_API", 0)){
                     0 -> translatorPic = BaiduTranslationImage(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
                     1 -> translatorPic = TencentTranslationImage(KeystoreManager.retrieveKey(this, "Tencent_Cloud_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Tencent_Cloud_SECRETKEY")!!)
-                    2 -> translatorPic = CustomTranslationImage()
+                    2 -> {
+                        val config = loadPicConfig(prefs, prefs.getInt("Custom_Pic_API",0))
+                        if (config == null) {
+                            showToast("No Custom Pic API Config Found.")
+                        }else{
+                            translatorPic = CustomTranslationImage(config)
+                        }
+                    }
                     else -> { showToast("Unknown Translator.") }
                 }
             }
         } catch (e: Exception){
-            showToast("Initialize Error: $e")
+            showToast("Initialize Error: ${e.message}")
         }
 
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager

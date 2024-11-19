@@ -1,5 +1,6 @@
 package com.moe.moetranslator.me
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +57,29 @@ class CustomPicAPI : Fragment() {
         if (config != null) {
             loadConfig()
         }
+
+        binding.introduce.setOnClickListener{
+            showIntroduce()
+        }
+
+        if(!prefs.getBoolean("Read_Custom_Pic_Introduce", false)){
+            showIntroduce()
+        }
+    }
+
+    private fun showIntroduce(){
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.introduce_custom_pic_api_title)
+            .setMessage(R.string.introduce_custom_pic_api_content)
+            .setCancelable(false)
+            .setPositiveButton(R.string.user_known, null)
+            .setNeutralButton(R.string.introduce_not_show_again){
+                _, _ ->
+                prefs.setBoolean("Read_Custom_Pic_Introduce", true)
+            }
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
     private fun setupMethodSpinner() {
@@ -107,9 +131,9 @@ class CustomPicAPI : Fragment() {
         // 根据Content-Type更新提示文本
         if (isPostMethod) {
             binding.txtBodyHint.text = if (isJsonContentType) {
-                "Use 'useimgbase64' for image data"
+                getString(R.string.use_img_base64)
             } else {
-                "Use 'useimgfile' for image file"
+                getString(R.string.use_img_file)
             }
         }
     }
@@ -134,7 +158,11 @@ class CustomPicAPI : Fragment() {
 
     private fun saveConfiguration() {
         try {
-            val normalizedUrl = UrlUtils.normalizeUrl(binding.editBaseUrl.text.toString())
+            val normalizedUrl = UrlUtils.normalizeUrl(requireContext(), binding.editBaseUrl.text.toString())
+
+            if(binding.editJsonPath.text.toString().trim().isBlank()){
+                throw Exception(getString(R.string.response_json_blank))
+            }
 
             val contentType = if (isPostMethod) {
                 if (isJsonContentType) "application/json" else "multipart/form-data"
@@ -144,18 +172,19 @@ class CustomPicAPI : Fragment() {
                 method = if (isPostMethod) "POST" else "GET",
                 contentType = contentType,
                 baseUrl = normalizedUrl,
-                queryParams = collectKeyValuePairs(binding.containerGetParams),
+                queryParams = if (isPostMethod) mutableListOf<KeyValuePair>() else collectKeyValuePairs(binding.containerGetParams),
                 headers = collectKeyValuePairs(binding.containerHeaders),
-                body = collectKeyValuePairs(binding.containerBody),
-                jsonResponsePath = binding.editJsonPath.text.toString()
+                body = if (isPostMethod) collectKeyValuePairs(binding.containerBody) else mutableListOf<KeyValuePair>(),
+                jsonResponsePath = binding.editJsonPath.text.toString().trim()
             )
 
             lifecycleScope.launch {
                 savePicConfig(prefs, config, apiCode!!)
-                showToast("Configuration saved successfully")
+                showToast(getString(R.string.save_successfully))
+                requireActivity().finish()
             }
         } catch (e: Exception) {
-            showToast("Error saving configuration: ${e.message}")
+            showToast(getString(R.string.failed_save_config, e.message))
         }
     }
 
@@ -224,7 +253,7 @@ class CustomPicAPI : Fragment() {
             if (key.isNotBlank() && value.isNotBlank()) {
                 pairs.add(KeyValuePair(key, value))
             } else {
-                throw Exception("Key or value is blank")
+                throw Exception(getString(R.string.key_value_blank))
             }
         }
 

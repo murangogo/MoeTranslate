@@ -8,6 +8,11 @@ class CustomPreference private constructor(context: Context) {
 
     //KeyList
 
+    //----杂项----
+    //Is_First_Run(Boolean)：是否是第一次运行
+    //Read_Custom_Text_Introduce(Boolean)：是否阅读自定义文本翻译API的介绍
+    //Read_Custom_Pic_Introduce(Boolean)：是否阅读自定义图片翻译API的介绍
+
     //----翻译选项----
     //Translate_Mode(Int)：0为本地OCR后进行文本翻译；1为上传截图后进行图片翻译
     //OCR_API(Int)：0为使用本地大模型；1为使用火山引擎；2为使用小牛翻译；3为使用百度翻译；4为使用腾讯云；5为使用自定义API
@@ -50,13 +55,13 @@ class CustomPreference private constructor(context: Context) {
     //Tencent_Cloud_SECRETKEY_EncryptedKey(Str)：KeyStore参数，存储腾讯云API（SecretKey）
     //Tencent_Cloud_SECRETKEY_IV(Str)：KeyStore参数，存储腾讯云API（SecretKey）
 
+    //Custom_Text_API_0(Str)：用户自定义的文本翻译API0
     //Custom_Text_API_1(Str)：用户自定义的文本翻译API1
     //Custom_Text_API_2(Str)：用户自定义的文本翻译API2
-    //Custom_Text_API_3(Str)：用户自定义的文本翻译API3
 
+    //Custom_Pic_API_0(Str)：用户自定义的图片翻译API0
     //Custom_Pic_API_1(Str)：用户自定义的图片翻译API1
     //Custom_Pic_API_2(Str)：用户自定义的图片翻译API2
-    //Custom_Pic_API_3(Str)：用户自定义的图片翻译API3
 
     //----个性化选项----
     //Custom_Result_Font(Str)：用户自定义的翻译结果字体

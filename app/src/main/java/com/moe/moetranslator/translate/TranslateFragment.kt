@@ -86,7 +86,10 @@ class TranslateFragment : Fragment() {
             }
         }
 
-        if(((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 5)) || ((prefs.getInt("Translate_Mode",0) == 1) && (prefs.getInt("Pic_API",0) == 2))){
+        if((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 5)){
+            binding.SourceLanguageName.text = CustomLocale.getInstance(prefs.getString("Source_Language","ja")).getDisplayName()
+            binding.TargetLanguageName.text = getString(R.string.custom_api_select_language)
+        }else if ((prefs.getInt("Translate_Mode",0) == 1) && (prefs.getInt("Pic_API",0) == 2)){
             binding.SourceLanguageName.text = getString(R.string.custom_api_select_language)
             binding.TargetLanguageName.text = getString(R.string.custom_api_select_language)
         }else{
@@ -275,13 +278,17 @@ class TranslateFragment : Fragment() {
                 else -> {
                     when (customTextApi) {
                         0 -> {
-                            if((prefs.getString("Custom_Text_API_1","") == "") || (prefs.getString("Custom_Text_JSON_Parse_1","") == "")){
+                            if((prefs.getString("Custom_Text_API_0","") == "")){
                                 val dialog = AlertDialog.Builder(requireContext())
                                     .setTitle(R.string.api_not_config_title)
                                     .setMessage(R.string.custom_api_not_config_content)
                                     .setCancelable(false)
                                     .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                        // TODO：跳转到API设置页面
+                                        val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                            putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API)
+                                            putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_0)
+                                        }
+                                        startActivity(intent)
                                     }
                                     .setNegativeButton(R.string.user_cancel, null)
                                     .create()
@@ -293,13 +300,17 @@ class TranslateFragment : Fragment() {
                             }
                         }
                         1 -> {
-                            if((prefs.getString("Custom_Text_API_2","") == "") || (prefs.getString("Custom_Text_JSON_Parse_2","") == "")){
+                            if((prefs.getString("Custom_Text_API_1","") == "")){
                                 val dialog = AlertDialog.Builder(requireContext())
                                     .setTitle(R.string.api_not_config_title)
                                     .setMessage(R.string.custom_api_not_config_content)
                                     .setCancelable(false)
                                     .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                        // TODO：跳转到API设置页面
+                                        val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                            putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API)
+                                            putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_1)
+                                        }
+                                        startActivity(intent)
                                     }
                                     .setNegativeButton(R.string.user_cancel, null)
                                     .create()
@@ -311,13 +322,17 @@ class TranslateFragment : Fragment() {
                             }
                         }
                         else -> {
-                            if((prefs.getString("Custom_Text_API_3","") == "") || (prefs.getString("Custom_Text_JSON_Parse_3","") == "")){
+                            if((prefs.getString("Custom_Text_API_2","") == "")){
                                 val dialog = AlertDialog.Builder(requireContext())
                                     .setTitle(R.string.api_not_config_title)
                                     .setMessage(R.string.custom_api_not_config_content)
                                     .setCancelable(false)
                                     .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                        // TODO：跳转到API设置页面
+                                        val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                            putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API)
+                                            putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_2)
+                                        }
+                                        startActivity(intent)
                                     }
                                     .setNegativeButton(R.string.user_cancel, null)
                                     .create()
@@ -377,13 +392,17 @@ class TranslateFragment : Fragment() {
                 else -> {
                     when (customPicApi) {
                         0 -> {
-                            if((prefs.getString("Custom_Pic_API_1","") == "") || (prefs.getString("Custom_Pic_JSON_Parse_1","") == "")){
+                            if((prefs.getString("Custom_Pic_API_0","") == "")){
                                 val dialog = AlertDialog.Builder(requireContext())
                                     .setTitle(R.string.api_not_config_title)
                                     .setMessage(R.string.custom_api_not_config_content)
                                     .setCancelable(false)
                                     .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                        // TODO：跳转到API设置页面
+                                        val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                            putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API)
+                                            putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_0)
+                                        }
+                                        startActivity(intent)
                                     }
                                     .setNegativeButton(R.string.user_cancel, null)
                                     .create()
@@ -395,13 +414,17 @@ class TranslateFragment : Fragment() {
                             }
                         }
                         1 -> {
-                            if((prefs.getString("Custom_Pic_API_2","") == "") || (prefs.getString("Custom_Pic_JSON_Parse_2","") == "")){
+                            if((prefs.getString("Custom_Pic_API_1","") == "")){
                                 val dialog = AlertDialog.Builder(requireContext())
                                     .setTitle(R.string.api_not_config_title)
                                     .setMessage(R.string.custom_api_not_config_content)
                                     .setCancelable(false)
                                     .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                        // TODO：跳转到API设置页面
+                                        val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                            putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API)
+                                            putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_1)
+                                        }
+                                        startActivity(intent)
                                     }
                                     .setNegativeButton(R.string.user_cancel, null)
                                     .create()
@@ -413,13 +436,17 @@ class TranslateFragment : Fragment() {
                             }
                         }
                         else -> {
-                            if((prefs.getString("Custom_Pic_API_3","") == "") || (prefs.getString("Custom_Pic_JSON_Parse_3","") == "")){
+                            if((prefs.getString("Custom_Pic_API_2","") == "")){
                                 val dialog = AlertDialog.Builder(requireContext())
                                     .setTitle(R.string.api_not_config_title)
                                     .setMessage(R.string.custom_api_not_config_content)
                                     .setCancelable(false)
                                     .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                        // TODO：跳转到API设置页面
+                                        val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                                            putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API)
+                                            putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_2)
+                                        }
+                                        startActivity(intent)
                                     }
                                     .setNegativeButton(R.string.user_cancel, null)
                                     .create()
@@ -562,7 +589,7 @@ class TranslateFragment : Fragment() {
     }
 
     private fun showLanguageListDialog(type: Int) {
-        if(((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 5)) || ((prefs.getInt("Translate_Mode",0) == 1) && (prefs.getInt("Pic_API",0) == 2))){
+        if(((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 5) && (type == 2)) || ((prefs.getInt("Translate_Mode",0) == 1) && (prefs.getInt("Pic_API",0) == 2))){
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(R.string.custom_api_select_language_title)
                 .setMessage(R.string.custom_api_select_language_content)

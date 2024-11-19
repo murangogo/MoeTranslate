@@ -103,7 +103,7 @@ class APIConfig : PreferenceFragmentCompat() {
             findPreference<Preference>("ui_manage_custom_api_1_text")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API)
-                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_1)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_0)
                 }
                 startActivity(intent)
                 true
@@ -112,7 +112,7 @@ class APIConfig : PreferenceFragmentCompat() {
             findPreference<Preference>("ui_manage_custom_api_2_text")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API)
-                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_2)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_1)
                 }
                 startActivity(intent)
                 true
@@ -121,7 +121,7 @@ class APIConfig : PreferenceFragmentCompat() {
             findPreference<Preference>("ui_manage_custom_api_3_text")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API)
-                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_3)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_2)
                 }
                 startActivity(intent)
                 true
@@ -146,7 +146,7 @@ class APIConfig : PreferenceFragmentCompat() {
             findPreference<Preference>("ui_manage_custom_api_1_pic")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API)
-                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_1)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_0)
                 }
                 startActivity(intent)
                 true
@@ -155,7 +155,7 @@ class APIConfig : PreferenceFragmentCompat() {
             findPreference<Preference>("ui_manage_custom_api_2_pic")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API)
-                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_2)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_1)
                 }
                 startActivity(intent)
                 true
@@ -164,7 +164,7 @@ class APIConfig : PreferenceFragmentCompat() {
             findPreference<Preference>("ui_manage_custom_api_3_pic")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API)
-                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_3)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_2)
                 }
                 startActivity(intent)
                 true
@@ -230,31 +230,43 @@ class APIConfig : PreferenceFragmentCompat() {
             "ui_custom_api_1_text" -> {
                 prefs.setInt("OCR_API", 5)
                 prefs.setInt("Custom_Text_API", 0)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR custom 1")
             }
             "ui_custom_api_1_pic" -> {
                 prefs.setInt("Pic_API", 2)
                 prefs.setInt("Custom_Pic_API", 0)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "pic custom 1")
             }
             "ui_custom_api_2_text" -> {
                 prefs.setInt("OCR_API", 5)
                 prefs.setInt("Custom_Text_API", 1)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR custom 2")
             }
             "ui_custom_api_2_pic" -> {
                 prefs.setInt("Pic_API", 2)
                 prefs.setInt("Custom_Pic_API", 1)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "pic custom 2")
             }
             "ui_custom_api_3_text" -> {
                 prefs.setInt("OCR_API", 5)
                 prefs.setInt("Custom_Text_API", 2)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR custom 3")
             }
             "ui_custom_api_3_pic" -> {
                 prefs.setInt("Pic_API", 2)
                 prefs.setInt("Custom_Pic_API", 2)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "pic custom 3")
             }
         }
