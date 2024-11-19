@@ -102,9 +102,11 @@ class CustomTextAPI :Fragment() {
 
     private fun saveConfiguration() {
         try{
+            val normalizedUrl = UrlUtils.normalizeUrl(binding.editBaseUrl.text.toString())
+
             val config = CustomTextAPIConfig(
                 method = if (isPostMethod) "POST" else "GET",
-                baseUrl = binding.editBaseUrl.text.toString(),
+                baseUrl = normalizedUrl,
                 queryParams = collectKeyValuePairs(binding.containerGetParams),
                 headers = collectKeyValuePairs(binding.containerHeaders),
                 jsonBody = collectKeyValuePairs(binding.containerJsonBody),
