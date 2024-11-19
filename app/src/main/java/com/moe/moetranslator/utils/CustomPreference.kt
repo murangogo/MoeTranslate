@@ -51,18 +51,12 @@ class CustomPreference private constructor(context: Context) {
     //Tencent_Cloud_SECRETKEY_IV(Str)：KeyStore参数，存储腾讯云API（SecretKey）
 
     //Custom_Text_API_1(Str)：用户自定义的文本翻译API1
-    //Custom_Text_JSON_Parse_1(Str)：用户自定义的文本翻译API1对应的JSON解析方法
     //Custom_Text_API_2(Str)：用户自定义的文本翻译API2
-    //Custom_Text_JSON_Parse_2(Str)：用户自定义的文本翻译API2对应的JSON解析方法
     //Custom_Text_API_3(Str)：用户自定义的文本翻译API3
-    //Custom_Text_JSON_Parse_3(Str)：用户自定义的文本翻译API3对应的JSON解析方法
 
     //Custom_Pic_API_1(Str)：用户自定义的图片翻译API1
-    //Custom_Pic_JSON_Parse_1(Str)：用户自定义的图片翻译API1对应的JSON解析方法
-    //Custom_Pic_API_2：用户自定义的图片翻译API2
-    //Custom_Pic_JSON_Parse_2(Str)：用户自定义的图片翻译API2对应的JSON解析方法
-    //Custom_Pic_API_3：用户自定义的图片翻译API3
-    //Custom_Pic_JSON_Parse_3(Str)：用户自定义的图片翻译API3对应的JSON解析方法
+    //Custom_Pic_API_2(Str)：用户自定义的图片翻译API2
+    //Custom_Pic_API_3(Str)：用户自定义的图片翻译API3
 
     //----个性化选项----
     //Custom_Result_Font(Str)：用户自定义的翻译结果字体

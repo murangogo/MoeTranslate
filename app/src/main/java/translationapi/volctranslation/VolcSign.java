@@ -106,7 +106,7 @@ public class VolcSign {
                 signHeader + "\n" +
                 xContentSha256;
 
-        System.out.println(canonicalStringBuilder);
+        // System.out.println(canonicalStringBuilder);
 
         String hashcanonicalString = hashSHA256(canonicalStringBuilder.getBytes());
         String credentialScope = shortXDate + "/" + region + "/" + service + "/request";

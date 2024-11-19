@@ -11,14 +11,18 @@ class ManageActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_FRAGMENT_TYPE = "fragment_type"
+        const val EXTRA_CUSTOM_CODE = "custom_code"
         const val TYPE_FRAGMENT_MANAGE_MLKIT = 1
         const val TYPE_FRAGMENT_MANAGE_NLLB = 2
         const val TYPE_FRAGMENT_MANAGE_VOLC_API = 3
         const val TYPE_FRAGMENT_MANAGE_NIU_API = 4
         const val TYPE_FRAGMENT_MANAGE_BAIDU_API = 5
         const val TYPE_FRAGMENT_MANAGE_TENCENT_API = 6
-        const val TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API = 5
-        const val TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API = 6
+        const val TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API = 7
+        const val TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API = 8
+        const val CODE_CUSTOM_1 = 1
+        const val CODE_CUSTOM_2 = 2
+        const val CODE_CUSTOM_3 = 3
     }
 
     private lateinit var binding: ActivityManageBinding
@@ -82,12 +86,26 @@ class ManageActivity : AppCompatActivity() {
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()
             }
-//            TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
-//                //TODO CUSTOM
-//            ).commit()
-//            TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API->supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id,
-//                //TODO CUSTOM
-//            ).commit()
+            TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API->{
+                val fragment = CustomTextAPI()
+                val args = Bundle().apply {
+                    putInt("custom_code", intent.getIntExtra(EXTRA_CUSTOM_CODE,0))
+                }
+                fragment.arguments = args
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
+            TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API->{
+                val fragment = CustomPicAPI()
+                val args = Bundle().apply {
+                    putInt("custom_code", intent.getIntExtra(EXTRA_CUSTOM_CODE,0))
+                }
+                fragment.arguments = args
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
             else-> Toast.makeText(applicationContext,"Unknown Error.", Toast.LENGTH_LONG).show()
         }
     }

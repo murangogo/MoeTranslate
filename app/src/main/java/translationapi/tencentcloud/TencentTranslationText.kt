@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit
 /**
  * 腾讯云的文本翻译
  * 请求方法：POST
- * URL简单直接，没有查询参数
- * 腾讯云API需要特殊的认证头信息，通过TencentSign.getSignature生成
+ * URL没有查询参数
+ * 腾讯云API需要特殊的认证头信息，通过TencentSign.getSignature生成，显式设置Content-Type为application/json
  * 请求参数放在请求体中，以json形式发送
  */
 

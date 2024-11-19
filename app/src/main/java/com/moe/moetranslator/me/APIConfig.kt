@@ -99,6 +99,33 @@ class APIConfig : PreferenceFragmentCompat() {
                 startActivity(intent)
                 true
             }
+
+            findPreference<Preference>("ui_manage_custom_api_1_text")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_1)
+                }
+                startActivity(intent)
+                true
+            }
+
+            findPreference<Preference>("ui_manage_custom_api_2_text")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_2)
+                }
+                startActivity(intent)
+                true
+            }
+
+            findPreference<Preference>("ui_manage_custom_api_3_text")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_3)
+                }
+                startActivity(intent)
+                true
+            }
         }else{
             findPreference<Preference>("ui_manage_baidu_api_pic")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
@@ -111,6 +138,33 @@ class APIConfig : PreferenceFragmentCompat() {
             findPreference<Preference>("ui_manage_tencent_api_pic")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_TENCENT_API)
+                }
+                startActivity(intent)
+                true
+            }
+
+            findPreference<Preference>("ui_manage_custom_api_1_pic")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_1)
+                }
+                startActivity(intent)
+                true
+            }
+
+            findPreference<Preference>("ui_manage_custom_api_2_pic")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_2)
+                }
+                startActivity(intent)
+                true
+            }
+
+            findPreference<Preference>("ui_manage_custom_api_3_pic")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API)
+                    putExtra(ManageActivity.EXTRA_CUSTOM_CODE, ManageActivity.CODE_CUSTOM_3)
                 }
                 startActivity(intent)
                 true

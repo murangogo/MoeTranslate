@@ -34,4 +34,14 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+
+    <string-array name="request_methods">
+        <item>GET</item>
+        <item>POST</item>
+    </string-array>
+
+    <string-array name="content_types">
+        <item>application/json</item>
+        <item>multipart/form-data</item>
+    </string-array>
 </resources>
