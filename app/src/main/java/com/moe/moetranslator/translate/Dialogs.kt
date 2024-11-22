@@ -67,42 +67,53 @@ object Dialogs {
     fun fontSizeDialog(context: Context, view: TextView?, onSizeSet: ((Float) -> Unit)?): AlertDialog {
         val prefs = CustomPreference.getInstance(context)
 
-        val editText = EditText(context).apply {
+        // 代码方式
+//        val editText = EditText(context).apply {
+//            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+//            filters = arrayOf(DecimalDigitsInputFilter())
+//            hint = context.getString(R.string.font_size_hint, prefs.getFloat("Custom_Result_Font_Size", 16f).toString())
+//
+//            // 设置输入框的布局参数
+//            val padding = TypedValue.applyDimension(
+//                TypedValue.COMPLEX_UNIT_DIP,
+//                16f,
+//                resources.displayMetrics
+//            ).toInt()
+//
+//            setPadding(padding, padding, padding, padding)
+//        }
+//
+//        // 创建包含说明文字和输入框的布局
+//        val layout = LinearLayout(context).apply {
+//            orientation = LinearLayout.VERTICAL
+//
+//            // 设置线性布局的布局参数
+//            val padding = TypedValue.applyDimension(
+//                TypedValue.COMPLEX_UNIT_DIP,
+//                16f,
+//                resources.displayMetrics
+//            ).toInt()
+//
+//            setPadding(padding, padding, padding, 0)
+//
+//            // 添加说明文字
+//            addView(TextView(context).apply {
+//                text = context.getString(R.string.font_size_float)
+//                setPadding(padding, 0, padding, padding)
+//            })
+//
+//            // 添加输入框
+//            addView(editText)
+//        }
+        // 布局文件方式
+        val layout = LayoutInflater.from(context).inflate(R.layout.dialog_message_edittext, null)
+        layout.findViewById<TextView>(R.id.dialog_top_message).apply {
+            text = context.getString(R.string.font_size_float)
+        }
+        val editText = layout.findViewById<EditText>(R.id.dialog_bottom_edittext).apply {
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
             filters = arrayOf(DecimalDigitsInputFilter())
             hint = context.getString(R.string.font_size_hint, prefs.getFloat("Custom_Result_Font_Size", 16f).toString())
-
-            // 设置输入框的布局参数
-            val padding = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                16f,
-                resources.displayMetrics
-            ).toInt()
-
-            setPadding(padding, padding, padding, padding)
-        }
-
-        // 创建包含说明文字和输入框的布局
-        val layout = LinearLayout(context).apply {
-            orientation = LinearLayout.VERTICAL
-
-            // 设置输入框的布局参数
-            val padding = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                16f,
-                resources.displayMetrics
-            ).toInt()
-
-            setPadding(padding, padding, padding, 0)
-
-            // 添加说明文字
-            addView(TextView(context).apply {
-                text = context.getString(R.string.font_size_float)
-                setPadding(padding, 0, padding, padding)
-            })
-
-            // 添加输入框
-            addView(editText)
         }
 
         val res = AlertDialog.Builder(context)

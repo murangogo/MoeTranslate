@@ -13,48 +13,49 @@
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/head_tools"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/setting_claude"
+                android:id="@+id/setting_gemini"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/claude_settings"
+                android:src="@drawable/gemini_settings"
                 android:clickable="true"
-                android:background="?attr/selectableItemBackground"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.044"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.022" />
+                app:layout_constraintHorizontal_bias="0.02"
+                app:layout_constraintVertical_bias="0.5" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:textSize="20sp"
+                android:text="Gemini"
                 android:textColor="#8EA4CA"
-                android:text="Gemini"/>
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <ImageView
-                android:id="@+id/clean_claude"
+                android:id="@+id/clean_gemini"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/clean_claude"
+                android:src="@drawable/bin_clean"
                 android:clickable="true"
-                android:background="?attr/selectableItemBackground"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.956"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.022" />
+                app:layout_constraintHorizontal_bias="0.98"
+                app:layout_constraintVertical_bias="0.5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -63,12 +64,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:scrollbars="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/claude_chat_box"
-                app:layout_constraintTop_toBottomOf="@+id/clean_claude" />
+                android:scrollbars="vertical" />
 
             <LinearLayout
-                android:id="@+id/claude_chat_box"
+                android:id="@+id/chat_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -78,7 +77,7 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <EditText
-                    android:id="@+id/claude_input_box"
+                    android:id="@+id/input_box"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -88,7 +87,7 @@
                     android:padding="10dp" />
 
                 <Button
-                    android:id="@+id/button_Send"
+                    android:id="@+id/button_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"

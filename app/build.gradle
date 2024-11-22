@@ -54,6 +54,11 @@ dependencies {
     // 核心依赖
     implementation 'androidx.core:core-ktx:1.15.0'
     implementation 'androidx.appcompat:appcompat:1.7.0'
+    /*
+    待解决：
+    com.google.android.material:material
+    1.5.0正常波纹效果，更新至1.12.0消失，且首页字体加粗。
+    */
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'

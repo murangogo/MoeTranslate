@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.ListPreference
@@ -152,22 +154,31 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
     }
 
     private fun showPressDialog() {
-        val input = EditText(requireContext()).apply {
-            hint = getString(R.string.current_judgment_time, prefs.getLong("Custom_Long_Press_Delay", 500L).toString())
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+//        val input = EditText(requireContext()).apply {
+//            hint = getString(R.string.current_judgment_time, prefs.getLong("Custom_Long_Press_Delay", 500L).toString())
+//            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+//
+//            // 设置padding
+//            val padding = TypedValue.applyDimension(
+//                TypedValue.COMPLEX_UNIT_DIP,
+//                16f,
+//                resources.displayMetrics
+//            ).toInt()
+//            setPadding(padding, padding, padding, padding)
+//        }
 
-            // 设置padding
-            val padding = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                16f,
-                resources.displayMetrics
-            ).toInt()
-            setPadding(padding, padding, padding, padding)
+        val customView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_message_edittext, null)
+        customView.findViewById<TextView>(R.id.dialog_top_message).apply {
+            text = getString(R.string.int_only)
+        }
+        val input = customView.findViewById<EditText>(R.id.dialog_bottom_edittext).apply {
+            hint = getString(R.string.current_judgment_time, prefs.getLong("Custom_Long_Press_Delay", 500L).toString())
         }
 
         val dialog = AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.int_only))
-            .setView(input)
+            .setTitle(R.string.set_floating_ball_press)
+            .setView(customView)
             .setPositiveButton(R.string.save) { _, _ ->
                 try {
                     val value = input.text.toString().toLong()
