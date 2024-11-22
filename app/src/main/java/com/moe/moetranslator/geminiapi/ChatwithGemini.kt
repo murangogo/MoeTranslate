@@ -50,7 +50,7 @@ class ChatwithGemini : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        repository = MySharedPreferenceData(context!!)
+        repository = MySharedPreferenceData(requireContext())
     }
 
     override fun onCreateView(
@@ -66,7 +66,7 @@ class ChatwithGemini : Fragment() {
 
         geminimodelfactory = GeminiModelFactory()
         recyclerView = binding.messageList
-        messageViewmodelfactory = MessageViewModelFactory(activity!!.application)
+        messageViewmodelfactory = MessageViewModelFactory(requireActivity().application)
         messageViewModel = ViewModelProvider(this,messageViewmodelfactory).get(MessageViewModel::class.java)
         viewManager = LinearLayoutManager(context)
         viewAdapter = MessageAdapter(emptyList())

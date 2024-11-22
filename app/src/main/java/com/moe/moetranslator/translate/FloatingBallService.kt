@@ -522,7 +522,7 @@ class FloatingBallService : LifecycleService() {
                 translateByText(txt)
             }else{
                 // 上传图片翻译，注意要创建bitmap副本并交给图片翻译API处理
-                val bitmapCopy = bitmap.copy(bitmap.config, true)
+                val bitmapCopy = bitmap.copy(bitmap.config!!, true)
                 translateByPic(bitmapCopy)  // 副本的生命周期由翻译API管理
             }
         }catch (e: Exception){
