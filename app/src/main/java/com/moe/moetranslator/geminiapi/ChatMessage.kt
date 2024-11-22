@@ -1,12 +1,24 @@
 package com.moe.moetranslator.geminiapi
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * 定义消息实体(Entity)
+ */
+
 @Entity(tableName = "chat_message_table")
 data class ChatMessage(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    @ColumnInfo(name = "content")
     val content: String,
+
+    @ColumnInfo(name = "timestamp")
     val timestamp: Long,
-    val sender: Int // 1 for robot, 2 for user
+
+    @ColumnInfo(name = "sender")
+    val sender: Int  // 1表示AI，2表示用户
 )

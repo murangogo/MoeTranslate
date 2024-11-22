@@ -33,6 +33,10 @@ class CustomPreference private constructor(context: Context) {
     //Ignore_Version(Long)：记录用户忽略的版本号
     //Read_Notice(Long)：记录用户已读的通知号
 
+    //----Gemini相关----
+    //Gemini_EncryptedKey(Str)：KeyStore参数，Gemini的API
+    //Gemini_IV(Str)：KeyStore参数，Gemini的API
+
     //----API列表----
     //Volc_ACCOUNT_EncryptedKey(Str)：KeyStore参数，存储火山引擎API（APPID）
     //Volc_ACCOUNT_IV(Str)：KeyStore参数，存储火山引擎API（APPID）
