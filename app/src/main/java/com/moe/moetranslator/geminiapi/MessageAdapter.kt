@@ -71,7 +71,7 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
                 else -> { // 用户消息
                     userAvatar.apply {
                         visibility = View.VISIBLE
-                        setImageResource(R.drawable.userimg)
+                        setImageResource(R.drawable.floating_ball_icon)
                     }
                     aiAvatar.visibility = View.GONE
 
