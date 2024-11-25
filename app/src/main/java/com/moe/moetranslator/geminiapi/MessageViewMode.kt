@@ -47,6 +47,14 @@ class MessageViewModel(application: Application) : ViewModel() {
         repository.deleteAll()
     }
 
+    suspend fun getMessageById(messageId: Long): ChatMessage? {
+        return repository.getMessageById(messageId)
+    }
+
+    fun updateMessageContent(messageId: Long, content: String) = viewModelScope.launch {
+        repository.updateMessageContent(messageId, content)
+    }
+
     fun appendContentById(messageId: Long, additionalContent: String) = viewModelScope.launch {
         repository.appendContentById(messageId, additionalContent)
     }

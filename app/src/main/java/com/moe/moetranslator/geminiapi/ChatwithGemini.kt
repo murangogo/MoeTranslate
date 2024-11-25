@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -111,7 +112,9 @@ class ChatwithGemini : Fragment() {
         val textView = customView.findViewById<TextView>(R.id.dialog_top_message)
         val apiEdit = customView.findViewById<EditText>(R.id.dialog_bottom_edittext)
 
-        textView.text =  getString(R.string.gemini_intro)
+        // 使用getText保证HTML标签有效
+        textView.text = getText(R.string.gemini_intro)
+
         apiEdit.hint = if(prefs.getString("Gemini_EncryptedKey", "") != ""){
             getString(R.string.api_saved)
         }else{
@@ -232,6 +235,15 @@ class ChatwithGemini : Fragment() {
                         }
                         // 追加新的内容
                         messageViewModel.appendContentById(aiMessageId, chunk.text!!)
+                    }
+                }
+
+                // 处理消息，去除前后换行
+                messageViewModel.getMessageById(aiMessageId)?.let { message ->
+                    val trimmedContent = message.content.trim() // 去除前后的空白和换行
+                    if (trimmedContent != message.content) {
+                        // 只有当内容确实发生变化时才更新
+                        messageViewModel.updateMessageContent(aiMessageId, trimmedContent)
                     }
                 }
 

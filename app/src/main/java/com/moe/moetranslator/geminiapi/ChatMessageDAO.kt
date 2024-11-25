@@ -30,6 +30,14 @@ interface ChatMessageDao {
     @Query("DELETE FROM chat_messages_table")
     suspend fun deleteAll()
 
+    // 根据id获取消息
+    @Query("SELECT * FROM chat_messages_table WHERE id = :messageId")
+    suspend fun getMessageById(messageId: Long): ChatMessage?
+
+    // 更新整条消息
+    @Query("UPDATE chat_messages_table SET content = :content WHERE id = :messageId")
+    suspend fun updateMessageContent(messageId: Long, content: String)
+
     @Query("UPDATE chat_messages_table SET content = content || :additionalContent WHERE id = :messageId")
     suspend fun appendContentById(messageId: Long, additionalContent: String)
 
