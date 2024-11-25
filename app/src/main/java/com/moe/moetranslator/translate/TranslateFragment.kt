@@ -536,7 +536,7 @@ class TranslateFragment : Fragment() {
         return ret
     }
 
-    fun checkRAM(){
+    private fun checkRAM(){
         val activityManager = requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val memoryInfo = ActivityManager.MemoryInfo()
         activityManager.getMemoryInfo(memoryInfo)

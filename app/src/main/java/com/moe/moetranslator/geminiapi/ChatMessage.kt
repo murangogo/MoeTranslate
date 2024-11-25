@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey
  * 定义消息实体(Entity)
  */
 
-@Entity(tableName = "chat_message_table")
+@Entity(tableName = "chat_messages_table")
 data class ChatMessage(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
 
     @ColumnInfo(name = "content")
     val content: String,

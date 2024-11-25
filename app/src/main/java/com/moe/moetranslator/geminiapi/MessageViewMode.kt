@@ -29,15 +29,29 @@ class MessageViewModel(application: Application) : ViewModel() {
         }
     }
 
-    fun insert(chatMessage: ChatMessage) = viewModelScope.launch {
-        repository.insert(chatMessage)
+    // 获取全部消息的List
+    suspend fun getAllMessagesList(): List<ChatMessage> {
+        return repository.getAllMessagesList()
+    }
+
+    // 获取特定数量的最近聊天记录
+    suspend fun getRecentMessages(limit: Int = 10): List<ChatMessage> {
+        return repository.getRecentMessages(limit)
+    }
+
+    suspend fun insert(chatMessage: ChatMessage): Long {
+        return repository.insert(chatMessage)
     }
 
     fun deleteAll() = viewModelScope.launch {
         repository.deleteAll()
     }
 
-    fun appendContentByTimestamp(timestamp: Long, additionalContent: String) = viewModelScope.launch {
-        repository.appendContentByTimestamp(timestamp, additionalContent)
+    fun appendContentById(messageId: Long, additionalContent: String) = viewModelScope.launch {
+        repository.appendContentById(messageId, additionalContent)
+    }
+
+    fun clearMessageById(messageId: Long) = viewModelScope.launch {
+        repository.clearContentById(messageId)
     }
 }
