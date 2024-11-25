@@ -25,6 +25,6 @@
         app:layout_constraintBottom_toTopOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/iconxp" />
+        app:srcCompat="@drawable/launch_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

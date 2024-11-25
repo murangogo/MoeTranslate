@@ -108,7 +108,7 @@
     <string name="mlkit_not_download_title">未下载ML Kit模型文件</string>
     <string name="mlkit_not_download_content">看起来您选择了ML Kit作为翻译模型，但似乎还没有下载ML Kit模型文件，因此无法进行翻译。点击去下载即可进入下载页面，<font color="#E25A5C">首次运行时需下载约100MB的模型文件</font>，因此推荐在WIFI环境中下载。后续则无需网络，即点即用。</string>
     <string name="startup_success">启动成功</string>
-    <string name="startup_failure">启动失败：</string>
+    <string name="startup_failure">启动失败：%s</string>
     <string name="accessibility_recycle">无障碍权限被系统回收，可在主页右上角教程处重新授予相关权限</string>
     <string name="floating_ball_menu_2">你好鸭～</string>
     <string name="floating_ball_menu_3">要来杯果汁吗？</string>
@@ -243,6 +243,17 @@
     <string name="error_occurred">发生错误：%s</string>
     <string name="send">发送</string>
     <string name="say_something">说点什么...</string>
+    <string name="ocr">OCR</string>
+    <string name="pic">图片</string>
+    <string name="custom">自定义</string>
+    <string name="welcome_home_title">准备开始翻译</string>
+    <string name="welcome_home_subtitle">请配置以下选项来开始你的翻译之旅</string>
+    <string name="welcome_home_title_2">翻译已启动！</string>
+    <string name="welcome_home_subtitle_2">您可以随时改变“源/目标“语言或停止翻译</string>
+    <string name="start_ball">开始吧！</string>
+    <string name="stop_ball">我要停！</string>
+    <string name="stop_success">停止成功</string>
+    <string name="stop_failed">停止失败：%s</string>
 
 
 </resources>
