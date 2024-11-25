@@ -1,10 +1,10 @@
 package com.moe.moetranslator.geminiapi
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,22 +12,22 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.ai.client.generativeai.Chat
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.Content
-import com.google.ai.client.generativeai.type.ServerException
 import com.google.ai.client.generativeai.type.content
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FragmentChatwithgeminiBinding
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.KeystoreManager
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ChatwithGemini : Fragment() {
@@ -35,17 +35,11 @@ class ChatwithGemini : Fragment() {
     private lateinit var binding: FragmentChatwithgeminiBinding
     private lateinit var prefs: CustomPreference
     private lateinit var messageViewModel: MessageViewModel
+    private lateinit var adapter: MessageAdapter
 
-    private lateinit var geminiModelFactory:GeminiModelFactory
-    private lateinit var geminiModel: GenerativeModel
-    private lateinit var geminiChat: Chat
-
-
-
-    private lateinit var viewAdapter: MessageAdapter
-
-
-
+    private var geminiApiKey = ""
+    private var geminiModel: GenerativeModel? = null
+    private var geminiChat: Chat? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,24 +62,46 @@ class ChatwithGemini : Fragment() {
 
         setupRecyclerView()
         setupClickListeners()
-
-//        messageViewModel.allMessages.observe(viewLifecycleOwner, Observer { messages ->
-//            // Update the cached copy of the messages in the adapter.
-//            messages?.let { viewAdapter.setMessages(it) }
-//        })
-
+        observeMessages()
     }
 
     private fun setupRecyclerView() {
+        adapter = MessageAdapter()
         binding.messageList.apply {
-            adapter = MessageAdapter(emptyList())
-            layoutManager = LinearLayoutManager(context)
+            this.adapter = this@ChatwithGemini.adapter
+            layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
     private fun setupClickListeners(){
         binding.settingGemini.setOnClickListener {
             showGeminiAPIDialog()
+        }
+
+        binding.cleanGemini.setOnClickListener {
+            showDeleteConfirmationDialog()
+        }
+
+        binding.buttonSend.setOnClickListener {
+            val content = binding.inputBox.text.toString().trim()
+            if (content.isNotEmpty()) {
+                sendMessage(content)
+                binding.inputBox.text.clear()
+            }
+        }
+    }
+
+    private fun observeMessages() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                messageViewModel.allMessages.collect { messages ->
+                    adapter.submitList(messages)
+                    // 滚动到最新消息
+                    if (messages.isNotEmpty()) {
+                        binding.messageList.scrollToPosition(messages.size - 1)
+                    }
+                }
+            }
         }
     }
 
@@ -107,12 +123,16 @@ class ChatwithGemini : Fragment() {
             .setView(customView)
             .setCancelable(false)
             .setPositiveButton(R.string.save) {_,_->
-                KeystoreManager.storeKey(
-                    requireContext(),
-                    apiEdit.text.toString().trim(),
-                    "Gemini"
-                )
-                showToast(getString(R.string.gemini_save))
+                if(apiEdit.text.isBlank()){
+                    showToast(getString(R.string.fill_blank))
+                } else {
+                    KeystoreManager.storeKey(
+                        requireContext(),
+                        apiEdit.text.toString().trim(),
+                        "Gemini"
+                    )
+                    showToast(getString(R.string.save_successfully))
+                }
             }
             .setNeutralButton(R.string.view_tutorial){_,_->
                 val url = "https://blog.csdn.net/qq_45487246/article/details/135536624"
@@ -126,107 +146,105 @@ class ChatwithGemini : Fragment() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
-    @SuppressLint("MissingInflatedId", "CutPasteId")
-    override fun onStart() {
-        super.onStart()
+    private fun showDeleteConfirmationDialog(){
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.delete_history_title)
+            .setMessage(R.string.delete_history_content)
+            .setCancelable(false)
+            .setPositiveButton(R.string.confirm){ _,_ ->
+                messageViewModel.deleteAll()
+                showToast(getString(R.string.delete_finish))
+            }
+            .setNegativeButton(R.string.user_cancel, null)
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+    }
 
-        binding.buttonSend.setOnClickListener {
-            val messageText = binding.inputBox.text.toString()
-            if (messageText.isNotEmpty()) {
-                val userMessage = ChatMessage(content = messageText, timestamp = System.currentTimeMillis(), sender = 2)
-                messageViewModel.insert(userMessage)
-                binding.inputBox.setText("")
-                if(prefs.getString("Gemini_EncryptedKey", "") == ""){
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val response = "您还未配置Gemini API，请点击左上角齿轮按钮进行配置，也可在其中查看教程，配置完成后请先清除聊天记录再发送消息。"
-                        val botMessage = ChatMessage(content = response, timestamp = System.currentTimeMillis(), sender = 1)
-                        messageViewModel.insert(botMessage)
-                    }
-                }else{
-                    if(!(::geminiModel.isInitialized)){
-                        try {
-                            // TODO: MODEL
-                            geminiModel = geminiModelFactory.createGeminiModel("","")
-                            val messages = messageViewModel.allMessages.value
-                            // 将每条消息转换为 Content 对象
-                            val chatHistory = mutableListOf<Content>()
-                            messages?.forEach { message ->
-                                val role = if (message.sender == 1) "model" else "user"
-                                chatHistory.add(content(role) { text(message.content) })
-                            }
-                            geminiChat = geminiModel.startChat(
-                                history = chatHistory
-                            )
-                        }catch (e: Exception){
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                val response = "模型初始化失败，请检查Gemini API是否配置正确后重试。"
-                                val botMessage = ChatMessage(content = response, timestamp = System.currentTimeMillis(), sender = 1)
-                                messageViewModel.insert(botMessage)
-                            }
-                        }
-                    }
-                    binding.buttonSend.text = "请等待"
-                    binding.buttonSend.isClickable = false
-                    // launch a coroutine to send the message and receive the response
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val response = ""
-                        val currenttime = System.currentTimeMillis()
-                        val botMessage = ChatMessage(content = response, timestamp = currenttime, sender = 1)
-                        messageViewModel.insert(botMessage)
-                        try {
-                            geminiChat.sendMessageStream(messageText).collect { chunk ->
-                                run {
-                                    try {
-                                        messageViewModel.appendContentByTimestamp(
-                                            currenttime,
-                                            chunk.text!!
-                                        )
-                                    } catch (e: Exception) {
-                                        messageViewModel.appendContentByTimestamp(
-                                            currenttime,
-                                            e.toString()
-                                        )
-                                    }
-                                }
-                            }
-                        } catch (e: ServerException){
-                            messageViewModel.appendContentByTimestamp(
-                                currenttime,
-                                "服务器返回信息："+e.message.toString()+"\n开发者备注：若提示地区不可用，请更换科学上网地区为国外节点。"
-                            )
-                        } catch (e: Exception){
-                            messageViewModel.appendContentByTimestamp(
-                                currenttime,
-                                "其他类型错误："+e.message.toString()
-                            )
-                        }
-                        MainScope().launch {
-                            binding.buttonSend.text = "发送"
-                            binding.buttonSend.isClickable = true
-                        }
+    private fun sendMessage(userContent: String){
+        viewLifecycleOwner.lifecycleScope.launch {
+
+            withContext(Dispatchers.Main){
+                binding.buttonSend.isClickable = false
+                binding.buttonSend.text = getString(R.string.please_wait)
+            }
+
+            // 保存用户消息
+            val userMessage = ChatMessage(
+                content = userContent,
+                timestamp = System.currentTimeMillis(),
+                sender = 2 // 用户
+            )
+            messageViewModel.insert(userMessage)
+
+            var aiMessageId = 0L
+
+            // 调用Gemini API
+            try {
+                if (geminiApiKey.isEmpty()) {
+                    if (prefs.getString("Gemini_EncryptedKey", "") == "") {
+                        showToast(getString(R.string.gemini_api_empty))
+                        val emptyAPIMessage = ChatMessage(
+                            content = getString(R.string.gemini_set_api),
+                            timestamp = System.currentTimeMillis(),
+                            sender = 1 // AI
+                        )
+                        messageViewModel.insert(emptyAPIMessage)
+                        return@launch
+                    } else {
+                        geminiApiKey = KeystoreManager.retrieveKey(requireContext(), "Gemini")!!
+                        Log.d("GEMINI",geminiApiKey)
                     }
                 }
-            }
-        }
 
-        binding.cleanGemini.setOnClickListener {
-//            val customView:View = LayoutInflater.from(context).inflate(R.layout.gemini_clean, null,false)
-//            var textcon = customView.findViewById<TextView>(R.id.gemini_cleaninto)
-//            val dialogBuilder = AlertDialog.Builder(context).setView(customView).setCancelable(false).setNegativeButton("取消"){_,_->}
-//            dialogBuilder.setTitle("清除聊天记录")
-//            textcon.text = "    确认清除聊天记录吗？这也会清除AI的记忆。"
-//            dialogBuilder.setPositiveButton("确认") {_,_->
-//                messageViewModel.deleteAll()
-//                Toast.makeText(context,"清除成功", Toast.LENGTH_LONG).show()
-//                geminimodel = geminimodelfactory.createGeminiModel(repository.GeminiModel,repository.GeminiApi)
-//                geminichat = geminimodel.startChat(
-//                    history = listOf()
-//                )
-//            }
-//            val myDialog = dialogBuilder.create()
-//            myDialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-//            myDialog.show()
-//            myDialog.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                // 创建AI回复消息
+                val aiMessage = ChatMessage(
+                    content = getString(R.string.gemini_thinking),
+                    timestamp = System.currentTimeMillis(),
+                    sender = 1 // AI
+                )
+                aiMessageId = messageViewModel.insert(aiMessage)
+                Log.d("GEMINI","aimessageid:${aiMessageId}")
+
+                if (geminiModel == null){
+                    geminiModel = GeminiModelFactory.createGeminiModel("gemini-1.5-flash", geminiApiKey)
+                }
+
+                // 创建历史记录实现多轮聊天
+                val messages = messageViewModel.getAllMessagesList()
+                val chatHistory = mutableListOf<Content>()
+
+                // 将历史消息转换为Gemini API格式
+                messages.forEach { message ->
+                    val role = if (message.sender == 1) "model" else "user"
+                    chatHistory.add( content( role ){ text( message.content ) } )
+                }
+
+                geminiChat = geminiModel!!.startChat(history = chatHistory)
+
+                var isFirstChunk = true
+                geminiChat!!.sendMessageStream(userContent).collect { chunk ->
+                    withContext(Dispatchers.IO) {
+                        if (isFirstChunk) {
+                            // 第一个chunk到达时，清空"思考中"的提示
+                            messageViewModel.clearMessageById(aiMessageId)
+                            isFirstChunk = false
+                        }
+                        // 追加新的内容
+                        messageViewModel.appendContentById(aiMessageId, chunk.text!!)
+                    }
+                }
+
+            } catch (e: Exception) {
+                // 创建错误消息提醒
+                messageViewModel.clearMessageById(aiMessageId)
+                messageViewModel.appendContentById(aiMessageId, getString(R.string.error_occurred, e.toString()))
+            } finally {
+                withContext(Dispatchers.Main) {
+                    binding.buttonSend.isClickable = true
+                    binding.buttonSend.text = getString(R.string.send)
+                }
+            }
         }
     }
 

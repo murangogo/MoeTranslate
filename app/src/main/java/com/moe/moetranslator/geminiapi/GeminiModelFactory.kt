@@ -5,8 +5,8 @@ import com.google.ai.client.generativeai.type.BlockThreshold
 import com.google.ai.client.generativeai.type.HarmCategory
 import com.google.ai.client.generativeai.type.SafetySetting
 
-class GeminiModelFactory {
-    fun createGeminiModel(ModelName: String?, apiKey: String?): GenerativeModel {
+object GeminiModelFactory {
+    fun createGeminiModel(modelName: String, apiKey: String): GenerativeModel {
         val safetySettings: List<SafetySetting> = listOf(
             SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.NONE),
             SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.NONE),
@@ -15,9 +15,9 @@ class GeminiModelFactory {
         )
         return GenerativeModel(
             // For text-only input, use the gemini-pro model
-            modelName = ModelName!!,
+            modelName = modelName,
             // Access your API key as a Build Configuration variable (see "Set up your API key" above)
-            apiKey = apiKey!!,
+            apiKey = apiKey,
             null,
             safetySettings
         )

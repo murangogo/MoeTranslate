@@ -230,9 +230,18 @@
     <string name="response_json_blank">JSON Response Path cannot be blank</string>
     <string name="gemini_intro">Gemini is Google\'s latest generative AI, and its configuration is very simple, but if you are in China, you need a VPN to use it. Click \"View Tutorial\" to see how to get Gemini\'s API.</string>
     <string name="gemini_key">Your Gemini API Key</string>
-    <string name="gemini_save">Saved successfully, please click on the upper right corner to clear the chat history before starting the conversation</string>
     <string name="gemini_title">Configure Gemini API</string>
     <string name="set_floating_ball_press">Set long press judgment time</string>
+    <string name="delete_history_content">Are you sure you want to delete all your chats? This will also erase Gemini\'s memory.</string>
+    <string name="delete_history_title">Delete chat history</string>
+    <string name="confirm">Yes</string>
+    <string name="delete_finish">The chat history has been cleared</string>
+    <string name="gemini_api_empty">Gemini API has not been set up yet</string>
+    <string name="gemini_thinking">🤔Thinking...</string>
+    <string name="gemini_set_api">If you haven\'t configured the Gemini API yet, click the gear button in the upper left corner to do so, where you can also view the tutorial.</string>
+    <string name="error_occurred">An error occurred：%s</string>
+    <string name="send">Send</string>
+    <string name="say_something">Say something...</string>
 
 
 </resources>

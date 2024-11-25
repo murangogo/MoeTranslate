@@ -231,9 +231,18 @@
     <string name="response_json_blank">JSON响应路径不能为空</string>
     <string name="gemini_intro">Gemini是Google最新推出的生成式AI，其配置非常简单，但如果在国内，则需要借助VPN才可使用。点击“查看教程”即可查看如何获取Gemini的API。</string>
     <string name="gemini_key">您的Gemini API 密钥</string>
-    <string name="gemini_save">保存成功，请点击右上角清除聊天记录后再开始对话</string>
     <string name="gemini_title">配置Gemini API</string>
     <string name="set_floating_ball_press">设置长按判定时间</string>
+    <string name="delete_history_content">确定要删除全部聊天记录吗？这也会清除Gemini的记忆。</string>
+    <string name="delete_history_title">删除聊天记录</string>
+    <string name="confirm">确定</string>
+    <string name="delete_finish">聊天记录已清除</string>
+    <string name="gemini_api_empty">还未设置Gemini的API</string>
+    <string name="gemini_thinking">🤔思考中......</string>
+    <string name="gemini_set_api">您还未配置Gemini API，请点击左上角齿轮按钮进行配置，也可在其中查看教程。</string>
+    <string name="error_occurred">发生错误：%s</string>
+    <string name="send">发送</string>
+    <string name="say_something">说点什么...</string>
 
 
 </resources>
