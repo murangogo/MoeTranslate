@@ -228,7 +228,7 @@
     <string name="key_value_blank">Key or value is blank</string>
     <string name="url_blank">URL cannot be blank</string>
     <string name="response_json_blank">JSON Response Path cannot be blank</string>
-    <string name="gemini_intro">Gemini is Google\'s latest generative AI, and its configuration is very simple, but if you are in China, you need a VPN to use it. Click \"View Tutorial\" to see how to get Gemini\'s API.</string>
+    <string name="gemini_intro">Gemini is Google\'s latest generative AI, and it\'s very easy to configure, but <font color="#E25A5C">if you\'re in China, you\'ll probably need a VPN to use it</font>. Click \"View Tutorial\" to see how to get Gemini\'s API.</string>
     <string name="gemini_key">Your Gemini API Key</string>
     <string name="gemini_title">Configure Gemini API</string>
     <string name="set_floating_ball_press">Set long press judgment time</string>

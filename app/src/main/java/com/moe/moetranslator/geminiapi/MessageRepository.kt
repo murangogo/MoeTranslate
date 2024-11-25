@@ -27,6 +27,15 @@ class MessageRepository(private val chatMessageDao: ChatMessageDao) {
         chatMessageDao.deleteAll()
     }
 
+
+    suspend fun getMessageById(messageId: Long): ChatMessage? {
+        return chatMessageDao.getMessageById(messageId)
+    }
+
+    suspend fun updateMessageContent(messageId: Long, content: String) {
+        chatMessageDao.updateMessageContent(messageId, content)
+    }
+
     suspend fun appendContentById(messageId: Long, additionalContent: String) {
         chatMessageDao.appendContentById(messageId, additionalContent)
     }

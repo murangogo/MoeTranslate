@@ -88,7 +88,7 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
         }
 
         private fun formatTime(timestamp: Long): String {
-            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             return sdf.format(Date(timestamp))
         }
     }
@@ -97,8 +97,8 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
 // DiffUtil用于高效更新列表
 private class MessageDiffCallback : DiffUtil.ItemCallback<ChatMessage>() {
     override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
-        // 使用timestamp作为唯一标识
-        return oldItem.timestamp == newItem.timestamp
+        // 使用id作为唯一标识
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {

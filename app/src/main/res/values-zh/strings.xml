@@ -229,7 +229,7 @@
     <string name="key_value_blank">存在空的Key或Value</string>
     <string name="url_blank">URL不能为空</string>
     <string name="response_json_blank">JSON响应路径不能为空</string>
-    <string name="gemini_intro">Gemini是Google最新推出的生成式AI，其配置非常简单，但如果在国内，则需要借助VPN才可使用。点击“查看教程”即可查看如何获取Gemini的API。</string>
+    <string name="gemini_intro">Gemini是Google最新推出的生成式AI，其配置非常简单，但<font color="#E25A5C">如果您在国内，则大概率需要借助VPN才可使用</font>。点击“查看教程”即可查看如何获取Gemini的API。</string>
     <string name="gemini_key">您的Gemini API 密钥</string>
     <string name="gemini_title">配置Gemini API</string>
     <string name="set_floating_ball_press">设置长按判定时间</string>
