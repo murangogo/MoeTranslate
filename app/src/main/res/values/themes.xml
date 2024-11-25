@@ -14,7 +14,7 @@
 
     <style name="maintheme" parent="Base.Theme.MT">
         <item name="colorPrimaryDark">#F7F3EB</item>
-        <item name="android:navigationBarColor">#F0F0FD</item>
+        <item name="android:navigationBarColor">@color/white</item>
     </style>
 
     <style name="settheme" parent="Theme.MaterialComponents.Light.NoActionBar">
