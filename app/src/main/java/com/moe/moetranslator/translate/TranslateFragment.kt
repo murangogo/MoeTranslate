@@ -4,8 +4,12 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.ActivityManager
 import android.app.AlertDialog
 import android.app.NotificationManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,8 +20,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityManager
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.moe.moetranslator.launch.FirstLaunchPage
 import com.moe.moetranslator.utils.UpdateChecker
 import com.moe.moetranslator.R
@@ -27,9 +33,7 @@ import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.NotificationChecker
 import com.moe.moetranslator.utils.NotificationResult
 import com.moe.moetranslator.utils.UpdateResult
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
 val TAG = "TranslateFragment"
@@ -39,9 +43,19 @@ class TranslateFragment : Fragment() {
     private lateinit var updateChecker: UpdateChecker
     private lateinit var notificationChecker: NotificationChecker
     private lateinit var prefs: CustomPreference
+    private lateinit var serviceStopReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 初始化广播接收器
+        serviceStopReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == BroadcastAction.ACTION_FLOATING_BALL_SERVICE_STOPPED) {
+                    setTitleAndButton(false)
+                }
+            }
+        }
 
         // 创建文件夹
         val modelDir = File(requireContext().getExternalFilesDir(null), "models")
@@ -54,6 +68,15 @@ class TranslateFragment : Fragment() {
         notificationChecker = NotificationChecker(requireContext())
     }
 
+    override fun onStart() {
+        super.onStart()
+        // 注册广播接收器
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+            serviceStopReceiver,
+            IntentFilter(BroadcastAction.ACTION_FLOATING_BALL_SERVICE_STOPPED)
+        )
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTranslateBinding.inflate(inflater,container,false)
         return binding.root
@@ -63,6 +86,8 @@ class TranslateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         checkForUpdate()
         checkNotification()
+        showAPIName()
+        setTitleAndButton(isServiceRunning(FloatingBallService::class.java))
 
         val helpIntent = Intent(requireContext(), FirstLaunchPage::class.java)
         binding.help.setOnClickListener {
@@ -70,19 +95,20 @@ class TranslateFragment : Fragment() {
         }
 
         binding.notice.setOnClickListener {
-                showToast(getString(R.string.getting_notification))
-                checkNotification(true)
+            showToast(getString(R.string.getting_notification))
+            checkNotification(true)
         }
 
-        // 未生效
-        binding.floatball.setBackgroundResource(R.drawable.translatebutton_shape)
-
-        binding.floatball.setOnClickListener {
-            if(checkAndroidSDK() && checkAccessibilityService() && checkFloatingBall() && checkNotify() && checkTranslateAPI()){
-                if((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 0) && (prefs.getInt("OCR_AI",0) == 1)){
-                    checkRAM()
+        binding.startButton.setOnClickListener {
+            if (!isServiceRunning(FloatingBallService::class.java)){
+                if(checkAndroidSDK() && checkAccessibilityService() && checkFloatingBall() && checkNotify() && checkTranslateAPI()){
+                    if((prefs.getInt("Translate_Mode",0) == 0) && (prefs.getInt("OCR_API",0) == 0) && (prefs.getInt("OCR_AI",0) == 1)){
+                        checkRAM()
+                    }
+                    launchFloatingBallService()
                 }
-                launchFloatingBallService()
+            } else {
+                stopFloatingBallService()
             }
         }
 
@@ -124,6 +150,89 @@ class TranslateFragment : Fragment() {
         }
     }
 
+    private fun showAPIName() {
+        val translateMode = prefs.getInt("Translate_Mode", 0)
+        val ocrApi = prefs.getInt("OCR_API", 0)
+        val ocrAi = prefs.getInt("OCR_AI", 0)
+        val picApi = prefs.getInt("Pic_API", 0)
+        val customTextApi = prefs.getInt("Custom_Text_API", 0)
+        val customPicApi = prefs.getInt("Custom_Pic_API", 0)
+
+        Log.d(TAG, "translatemode$translateMode，ocrapi:$ocrApi，ocrAI:$ocrAi，picapi:$picApi，customtextapi:$customTextApi，custompicapi:$customPicApi")
+
+        when {
+            translateMode == 0 -> when (ocrApi) {
+                0 ->{
+                    if (ocrAi == 0){
+                        binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.mlkit_name)) + "（${getString(R.string.ocr)}）"
+                    } else {
+                        binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.nllb_name)) + "（${getString(R.string.ocr)}）"
+                    }
+                }
+                1 -> {
+                    binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.volcapi_name)) + "（${getString(R.string.ocr)}）"
+                }
+                2 -> {
+                    binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.niuapi_name)) + "（${getString(R.string.ocr)}）"
+                }
+                3 -> {
+                    binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.baiduapi_name)) + "（${getString(R.string.ocr)}）"
+                }
+                4 -> {
+                    binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.tencentapi_name)) + "（${getString(R.string.ocr)}）"
+                }
+                else -> {
+                    when (customTextApi) {
+                        0 -> {
+                            binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.custom)) +  "1（${getString(R.string.ocr)}）"
+                        }
+                        1 -> {
+                            binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.custom)) +  "2（${getString(R.string.ocr)}）"
+                        }
+                        else -> {
+                            binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.custom)) +  "3（${getString(R.string.ocr)}）"
+                        }
+                    }
+                }
+            }
+            else -> when (picApi) {
+                0 -> {
+                    binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.baiduapi_name)) +  "（${getString(R.string.pic)}）"
+                }
+                1 -> {
+                    binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.tencentapi_name)) +  "（${getString(R.string.pic)}）"
+                }
+                else -> {
+                    when (customPicApi) {
+                        0 -> {
+                            binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.custom)) +  "1（${getString(R.string.pic)}）"
+                        }
+                        1 -> {
+                            binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.custom)) +  "2（${getString(R.string.pic)}）"
+                        }
+                        else -> {
+                            binding.selectedAPI.text = getString(R.string.api_name, getString(R.string.custom)) +  "3（${getString(R.string.pic)}）"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setTitleAndButton(isRunning: Boolean){
+        if (!isRunning){
+            binding.welcomeTitle.text = getString(R.string.welcome_home_title)
+            binding.welcomeSubtitle.text = getString(R.string.welcome_home_subtitle)
+            binding.startButton.text = getString(R.string.start_ball)
+            binding.startButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.primary))
+        }else{
+            binding.welcomeTitle.text = getString(R.string.welcome_home_title_2)
+            binding.welcomeSubtitle.text = getString(R.string.welcome_home_subtitle_2)
+            binding.startButton.text = getString(R.string.stop_ball)
+            binding.startButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.red))
+        }
+    }
+
     private fun checkAndroidSDK(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             val dialog = AlertDialog.Builder(requireContext())
@@ -147,8 +256,6 @@ class TranslateFragment : Fragment() {
         val picApi = prefs.getInt("Pic_API", 0)
         val customTextApi = prefs.getInt("Custom_Text_API", 0)
         val customPicApi = prefs.getInt("Custom_Pic_API", 0)
-
-        Log.d(TAG, "translatemode$translateMode，ocrapi:$ocrApi，ocrAI:$ocrAi，picapi:$picApi，customtextapi:$customTextApi，custompicapi:$customPicApi")
 
         val ret: Boolean = when {
             translateMode == 0 -> when (ocrApi) {
@@ -620,30 +727,41 @@ class TranslateFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
+
+        // 注销广播接收器
+        LocalBroadcastManager.getInstance(requireContext())
+            .unregisterReceiver(serviceStopReceiver)
     }
 
     override fun onResume() {
         super.onResume()
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     // 实际启动服务的方法
     private fun launchFloatingBallService() {
         try {
-            val context = requireContext()
             // 检查服务是否已经在运行
             if (!isServiceRunning(FloatingBallService::class.java)) {
                 val serviceIntent = Intent(requireContext(), FloatingBallService::class.java)
                 requireContext().startService(serviceIntent)
                 showToast(getString(R.string.startup_success), true)
+                setTitleAndButton(true)
             } else {
                 showToast("already running")
             }
         } catch (e: Exception) {
-            showToast(getString(R.string.startup_failure)+e.toString())
+            showToast(getString(R.string.startup_failure, e.toString()))
+        }
+    }
+
+    private fun stopFloatingBallService() {
+        try {
+            val intent = Intent(requireContext(), FloatingBallService::class.java)
+            requireContext().stopService(intent)
+            showToast(getString(R.string.stop_success), true)
+            setTitleAndButton(false)
+        } catch (e: Exception) {
+            showToast(getString(R.string.stop_failed, e.toString()))
         }
     }
 

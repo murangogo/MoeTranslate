@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#212121</color>
     <color name="white">#fafafa</color>
+    <color name="red">#FA3B55</color>
 
     <!-- 文字颜色 -->
     <color name="primary">#55AEEA</color>

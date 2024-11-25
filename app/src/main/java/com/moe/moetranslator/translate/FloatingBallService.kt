@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.moe.moetranslator.MainActivity
 import com.moe.moetranslator.R
 import com.moe.moetranslator.me.ConfigurationStorage.loadPicConfig
@@ -38,6 +39,11 @@ import translationapi.volctranslation.VolcTranslation
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
+
+// 发送服务停止广播
+object BroadcastAction {
+    const val ACTION_FLOATING_BALL_SERVICE_STOPPED = "action_floating_ball_service_stopped"
+}
 
 // 悬浮球配置
 data class FloatingBallConfig(
@@ -615,6 +621,11 @@ class FloatingBallService : LifecycleService() {
             translatorPic?.release()
             handler.removeCallbacks(longPressRunnable)
             lifecycleScope.cancel()
+
+            // 发送服务停止的广播
+            LocalBroadcastManager.getInstance(this).sendBroadcast(
+                Intent(BroadcastAction.ACTION_FLOATING_BALL_SERVICE_STOPPED)
+            )
 
             // 停止服务
             stopSelf()
