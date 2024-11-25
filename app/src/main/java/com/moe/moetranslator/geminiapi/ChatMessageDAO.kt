@@ -12,16 +12,16 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChatMessageDao {
-    // 全部消息的Flow
-    @Query("SELECT * FROM chat_messages_table ORDER BY timestamp ASC")
+    // 全部消息的Flow，按时间和id正序
+    @Query("SELECT * FROM chat_messages_table ORDER BY timestamp ASC, id ASC")
     fun getMessages(): Flow<List<ChatMessage>>
 
-    // 全部消息的List
-    @Query("SELECT * FROM chat_messages_table ORDER BY timestamp ASC")
+    // 全部消息的List，按时间和id正序
+    @Query("SELECT * FROM chat_messages_table ORDER BY timestamp ASC, id ASC")
     suspend fun getAllMessagesList(): List<ChatMessage>
 
-    // 获取最近的n条消息
-    @Query("SELECT * FROM chat_messages_table ORDER BY timestamp DESC LIMIT :limit")
+    // 获取最近的n条消息，按时间和id倒序
+    @Query("SELECT * FROM chat_messages_table ORDER BY timestamp DESC, id DESC LIMIT :limit")
     suspend fun getRecentMessages(limit: Int): List<ChatMessage>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -38,9 +38,11 @@ interface ChatMessageDao {
     @Query("UPDATE chat_messages_table SET content = :content WHERE id = :messageId")
     suspend fun updateMessageContent(messageId: Long, content: String)
 
+    // 根据id追加消息内容
     @Query("UPDATE chat_messages_table SET content = content || :additionalContent WHERE id = :messageId")
     suspend fun appendContentById(messageId: Long, additionalContent: String)
 
+    // 根据id清除消息内容
     @Query("UPDATE chat_messages_table SET content = '' WHERE id = :messageId")
     suspend fun clearContentById(messageId: Long)
 }
