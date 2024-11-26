@@ -20,7 +20,7 @@ class PreferenceWithPreview : Preference {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
-        layoutResource = R.layout.preference_with_preview
+        layoutResource = R.layout.item_preference_with_preview
         prefs = CustomPreference.getInstance(context)
     }
 

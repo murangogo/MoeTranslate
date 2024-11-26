@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">MoeTranslator</string>
+    <string name="app_name">MoeTranslate</string>
     <string name="floating_ball_menu_1">Floating Ball Menu</string>
     <string name="accessibility_service_label">MoeTranslator Translate Service</string>
     <string name="accessibility_service_description">[Function Description] \nEnable accessibility permissions to take screenshots for translation.\nWhen granting permissions, a warning will pop up. Please rest assured that Mengyi will not collect any of your information.</string>
     <string name="translate_page">Translate</string>
-    <string name="claude_page">Gemini</string>
-    <string name="fun_with_madoka">Madoka</string>
-    <string name="about_me">Settings</string>
+    <string name="gemini_page">Gemini</string>
+    <string name="madoka_page">Madoka</string>
+    <string name="me_page">Settings</string>
     <string name="api_name">API：%s</string>
     <string name="tencent_cloud">Tencent Cloud</string>
     <string name="baidu_translate">Baidu Translate</string>
@@ -106,8 +106,8 @@
     <string name="manage_mlkit_models">Manage ML Kit Model Files</string>
     <string name="mlkit_not_download_title">ML Kit model file not downloaded</string>
     <string name="mlkit_not_download_content">It looks like you have selected ML Kit as the translation model, but it seems that the ML Kit model file has not been downloaded yet, so translation cannot be performed. Click Go to Download to enter the download page. <font color="#E25A5C">The first run requires downloading a model file of about 100MB</font>, so it is recommended to download in a WIFI environment. After the download is complete, there is no need for a network, and it can be used immediately.</string>
-    <string name="startup_success">Startup Success</string>
-    <string name="startup_failure">Startup Failed：%s</string>
+    <string name="startup_success">Startup successfully</string>
+    <string name="startup_failure">Startup failed：%s</string>
     <string name="accessibility_recycle">The accessibility permission has been reclaimed by the system. You can re-grant the relevant permission in the tutorial in the upper right corner of the homepage.</string>
     <string name="floating_ball_menu_2">Floating Ball Menu</string>
     <string name="floating_ball_menu_3">Floating Ball Menu</string>
@@ -154,7 +154,7 @@
     <string name="font_default">Follow the system</string>
     <string name="font_setting">Font settings</string>
     <string name="font_choose">Select font（ttf）</string>
-    <string name="set_success">Setup successful</string>
+    <string name="set_success">Setup successfully</string>
     <string name="font_failed">Font setting failed：%s</string>
     <string name="font_size_float">You can enter decimals</string>
     <string name="font_size_setting">Set font size</string>
@@ -189,7 +189,7 @@
     <string name="volc_hint_account">Access Key ID</string>
     <string name="volc_hint_secret_key">Secret Access Key</string>
     <string name="whats_api_title">What is %s API</string>
-    <string name="whats_api_content">MoeTranslate can use the APIs of different platforms to provide translation services, which means that you need to apply for APIs from the corresponding platform. The API platform you have chosen now seems to be %1$s, click \"Go Now\" to start applying for %1$s API. For a detailed tutorial on how to apply for %1$s API, please click \"View Tutorial\". Please note that these APIs are free to apply for, and there are quite a few free calls per month.\n\nOf course, if you think that the steps of applying for an API are too cumbersome, MoeTranslate also provides point-and-click translation options, such as ML Kit and NLLB translation, which also have good translation results.</string>
+    <string name="whats_api_content">MoeTranslate can use the APIs of different platforms to provide translation services, which means that you need to apply for APIs from the corresponding platform. The API platform you have now selected seems to be %1$s, click \"Go Now\" to start applying for %1$s API. For more information on how to apply for %1$s API, please click \"View Tutorial\". Please note that these APIs are free to apply for, and there are quite a few free calls per month.\n\nCompared with ML Kit and NLLB and other local model translations, the translation effect of using cloud APIs is undoubtedly better, so it is recommended that you use cloud APIs for translation when the network is good.</string>
     <string name="niu_hint_secret_key">API-KEY</string>
     <string name="niu_noneed">No need to fill in</string>
     <string name="floating_ball">Floating ball</string>
@@ -251,8 +251,15 @@
     <string name="welcome_home_subtitle_2">You can change the \"source/target\" language or stop the translation at any time</string>
     <string name="start_ball">Let’s get started！</string>
     <string name="stop_ball">I want to stop！</string>
-    <string name="stop_success">Stop Successfully</string>
-    <string name="stop_failed">Stop Failed：%s</string>
+    <string name="stop_success">Stop successfully</string>
+    <string name="stop_failed">Stop failed：%s</string>
+    <string name="textview_tip">The translation result will be displayed here, please be careful not to coincide with the position of the original text, so as not to affect the translation of the screenshot.</string>
+    <string name="cache_content">MoeTranslate caches up to the last 200 screenshots when it is translated, and it will be overwritten when the screenshots are greater than 200, and these screenshots are saved in the Android/data/com.moe.moetranslator/cache/screenshots folder, which you can view in the file management at any time. Generally speaking, these screenshots won\'t take up much space, and of course, you can also choose to clear these cache data now.</string>
+    <string name="clear_cache_success">Clear successfully</string>
+    <string name="clear_cache_failed">Clear failed</string>
+    <string name="keep_cache">Reserved for now</string>
+    <string name="still_running">The Translation Floatingball seems to be still running, so please turn it off before adjusting the settings</string>
+    <string name="invalid_combination">The source language and the target language are the same, which is a meaningless translation combination</string>
 
 
 </resources>

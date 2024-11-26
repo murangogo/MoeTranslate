@@ -66,6 +66,8 @@ object FloatingTextView {
             setShadowLayer(2f, 1f, 1f, Color.BLACK)
         }
 
+        textView.text = ctx.getString(R.string.textview_tip)
+
         return textView
     }
 }

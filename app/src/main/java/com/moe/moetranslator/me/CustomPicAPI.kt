@@ -14,14 +14,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.moe.moetranslator.R
-import com.moe.moetranslator.databinding.CustomPicApiBinding
+import com.moe.moetranslator.databinding.FragmentCustomPicApiBinding
 import com.moe.moetranslator.me.ConfigurationStorage.loadPicConfig
 import com.moe.moetranslator.me.ConfigurationStorage.savePicConfig
 import com.moe.moetranslator.utils.CustomPreference
 import kotlinx.coroutines.launch
 
 class CustomPicAPI : Fragment() {
-    private lateinit var binding: CustomPicApiBinding
+    private lateinit var binding: FragmentCustomPicApiBinding
     private var isPostMethod = false
     private var isJsonContentType = true  // 当POST时，是否使用JSON格式
     private var apiCode: Int? = null
@@ -41,7 +41,7 @@ class CustomPicAPI : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = CustomPicApiBinding.inflate(inflater, container, false)
+        binding = FragmentCustomPicApiBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -146,7 +146,7 @@ class CustomPicAPI : Fragment() {
     }
 
     private fun addKeyValuePair(container: LinearLayout): View {
-        val pairView = layoutInflater.inflate(R.layout.layout_key_value_pair, container, false)
+        val pairView = layoutInflater.inflate(R.layout.item_key_value_pair, container, false)
 
         pairView.findViewById<ImageButton>(R.id.btnRemove).setOnClickListener {
             container.removeView(pairView)

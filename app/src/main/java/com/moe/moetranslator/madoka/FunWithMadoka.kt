@@ -19,7 +19,7 @@ import com.moe.moetranslator.utils.ConstDatas
 import com.moe.moetranslator.FragmentTouchListener
 import com.moe.moetranslator.MainActivity
 import com.moe.moetranslator.R
-import com.moe.moetranslator.databinding.FunWithMadokaFragmentBinding
+import com.moe.moetranslator.databinding.FragmentMadokaBinding
 import live2dsdk.madoka.ClothPlay
 import live2dsdk.madoka.GLRenderer
 import live2dsdk.madoka.LAppDelegate
@@ -38,7 +38,7 @@ class FunWithMadoka : Fragment() {
         arrayOf("under construction...")
     )
     private val mRightMenu = arrayOf("见泷原校服", "魔法少女", "睡衣", "情人节2018", "晴着ver", "泳装2018", "泳装ver","便服","女仆服（Scene0）")
-    private lateinit var binding:FunWithMadokaFragmentBinding
+    private lateinit var binding: FragmentMadokaBinding
     private lateinit var glRenderer : GLRenderer //自定义渲染器，该渲染器实现GLSurfaceView.Renderer接口
     private lateinit var dialogs: TextView
     private lateinit var DisplayText: String
@@ -56,7 +56,7 @@ class FunWithMadoka : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         (activity as MainActivity?)!!.registerFragmentTouchListener(fragmentTouchListener) //注册监听器
-        binding = FunWithMadokaFragmentBinding.inflate(inflater,container,false)
+        binding = FragmentMadokaBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -66,15 +66,15 @@ class FunWithMadoka : Fragment() {
             LAppDelegate.getInstance().setIsStart(true)
             dialogs = TextView(activity)
             dialogs.setBackgroundResource(R.drawable.textview_shape)
-            val font = Typeface.createFromAsset(context!!.assets, "talk.ttf")
+            val font = Typeface.createFromAsset(requireContext().assets, "talk.ttf")
             dialogs.typeface = font
             binding.listviewleft.adapter = ArrayAdapter(
-                this.context!!, R.layout.edge_menu,
+                this.requireContext(), R.layout.item_edge_menu,
                 mLeftMenu[0]
             )
             binding.listviewright.adapter = ArrayAdapter(
-                this.context!!,
-                R.layout.edge_menu,
+                this.requireContext(),
+                R.layout.item_edge_menu,
                 mRightMenu
             )
             binding.MadokaView.setEGLContextClientVersion(2) // 启用OpenGL ES 2.0
@@ -133,7 +133,7 @@ class FunWithMadoka : Fragment() {
                 if ((thread == null || !thread!!.isAlive) && (ClothPlay.doEandM == null || !ClothPlay.doEandM.isAlive)) {
                     binding.listviewleft.adapter =
                         ArrayAdapter<String>(
-                            context!!, R.layout.edge_menu,
+                            requireContext(), R.layout.item_edge_menu,
                             mLeftMenu[position]
                         )
                     LAppDelegate.getInstance().view.setChangedModel(true, position)

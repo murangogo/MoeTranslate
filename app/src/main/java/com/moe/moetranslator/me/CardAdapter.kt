@@ -3,7 +3,6 @@ package com.moe.moetranslator.me
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -26,10 +25,10 @@ class CardAdapter(private val cards: List<CustomCard>) : RecyclerView.Adapter<Re
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == COLLAPSED_VIEW_TYPE) {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.card_item_collapsed, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card_collapsed, parent, false)
             CollapsedViewHolder(view)
         } else {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.card_item_expanded, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card_expanded, parent, false)
             ExpandedViewHolder(view)
         }
     }

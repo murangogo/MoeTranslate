@@ -14,14 +14,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.moe.moetranslator.R
-import com.moe.moetranslator.databinding.CustomTextApiBinding
+import com.moe.moetranslator.databinding.FragmentCustomTextApiBinding
 import com.moe.moetranslator.me.ConfigurationStorage.loadTextConfig
 import com.moe.moetranslator.me.ConfigurationStorage.saveTextConfig
 import com.moe.moetranslator.utils.CustomPreference
 import kotlinx.coroutines.launch
 
 class CustomTextAPI :Fragment() {
-    private lateinit var binding: CustomTextApiBinding
+    private lateinit var binding: FragmentCustomTextApiBinding
     private var isPostMethod = false
     private var apiCode: Int? = null
     private var config: CustomTextAPIConfig? = null
@@ -40,7 +40,7 @@ class CustomTextAPI :Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = CustomTextApiBinding.inflate(inflater, container, false)
+        binding = FragmentCustomTextApiBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -113,7 +113,7 @@ class CustomTextAPI :Fragment() {
     }
 
     private fun addKeyValuePair(container: LinearLayout): View {
-        val pairView = layoutInflater.inflate(R.layout.layout_key_value_pair, container, false)
+        val pairView = layoutInflater.inflate(R.layout.item_key_value_pair, container, false)
 
         // 设置删除按钮点击事件
         pairView.findViewById<ImageButton>(R.id.btnRemove).setOnClickListener {

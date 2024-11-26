@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
-import com.moe.moetranslator.utils.MySharedPreferenceData
 
 const val RECT_MIN_WIDTH = 50f//框选的最小宽度px
 const val RECT_MIN_HEIGHT = 50f//框选的最小高度px
