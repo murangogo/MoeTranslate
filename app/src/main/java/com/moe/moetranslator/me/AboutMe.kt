@@ -1,6 +1,8 @@
 package com.moe.moetranslator.me
 
+import android.app.ActivityManager
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,9 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import com.moe.moetranslator.utils.ConstDatas
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FragmentAboutMeBinding
+import com.moe.moetranslator.translate.FloatingBallService
 import com.moe.moetranslator.utils.UpdateChecker
 import com.moe.moetranslator.utils.UpdateResult
 import kotlinx.coroutines.launch
@@ -37,32 +39,37 @@ class AboutMe : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fun sizecalculator() {
-            val size:Long = getFolderSize(File(requireContext().externalCacheDir.toString()))
-            Log.d("DIR",requireContext().externalCacheDirs.toString())
-            val sizedo:Double = size/1024.0
-            if(sizedo<1024.0){
-                binding.cachesize.text = String.format("%.2f",sizedo)+"KB"
-            }else{
-                binding.cachesize.text = String.format("%.2f",sizedo/1024.0)+"MB"
+        binding.cachesize.text = getCacheSize()
+        setupButton()
+    }
+
+    private fun setupButton(){
+        binding.translateModeBtn.setOnClickListener{
+            if (isServiceRunning(FloatingBallService::class.java)){
+                showToast(getString(R.string.still_running))
+            } else {
+                val intent = Intent(requireContext(), SettingPageActivity::class.java)
+                intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_TRANSLATE_MODE)
+                startActivity(intent)
             }
         }
-
-        sizecalculator()
-        binding.translateModeBtn.setOnClickListener{
-            val intent = Intent(requireContext(), SettingPageActivity::class.java)
-            intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_TRANSLATE_MODE)
-            startActivity(intent)
-        }
         binding.apiConfigBtn.setOnClickListener {
-            val intent = Intent(requireContext(), SettingPageActivity::class.java)
-            intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_API_CONFIG)
-            startActivity(intent)
+            if (isServiceRunning(FloatingBallService::class.java)){
+                showToast(getString(R.string.still_running))
+            } else {
+                val intent = Intent(requireContext(), SettingPageActivity::class.java)
+                intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_API_CONFIG)
+                startActivity(intent)
+            }
         }
         binding.personalizationBtn.setOnClickListener {
-            val intent = Intent(requireContext(), SettingPageActivity::class.java)
-            intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_PERSONALIZATION)
-            startActivity(intent)
+            if (isServiceRunning(FloatingBallService::class.java)){
+                showToast(getString(R.string.still_running))
+            } else {
+                val intent = Intent(requireContext(), SettingPageActivity::class.java)
+                intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_PERSONALIZATION)
+                startActivity(intent)
+            }
         }
         binding.readBtn.setOnClickListener {
             val intent = Intent(requireContext(), SettingPageActivity::class.java)
@@ -80,27 +87,11 @@ class AboutMe : Fragment() {
             startActivity(intent)
         }
         binding.updateBtn.setOnClickListener{
-            makeToast(getString(R.string.getting_update))
+            showToast(getString(R.string.getting_update))
             checkForUpdate()
         }
         binding.cleanBtn.setOnClickListener {
-            val dialogperapi = AlertDialog.Builder(activity)
-                .setTitle("清除缓存")
-                .setMessage("萌译最多缓存最近200张翻译时的截图，截图大于200张时会进行覆盖，这些截图保存在Android/data/com.moe.moetranslator/cache文件夹中。您可以随时在文件管理中查看。一般来说，这些截图不会占用太多空间，当然，您也可以选择现在清除这些缓存数据。")
-                .setCancelable(false)
-                .setPositiveButton("清除缓存") { _, _ ->
-                    val success = deleteDir(File(ConstDatas.FilePath))
-                    if(success){
-                        Toast.makeText(context,"清除成功", Toast.LENGTH_LONG).show()
-                    }else{
-                        Toast.makeText(context,"清除失败", Toast.LENGTH_LONG).show()
-                    }
-                    sizecalculator()
-                }
-                .setNegativeButton("暂时保留") { _, _ ->}
-                .create()
-            dialogperapi.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-            dialogperapi.show()
+            showClearCacheDialog()
         }
         binding.developerBtn.setOnClickListener {
             val intent = Intent(requireContext(), SettingPageActivity::class.java)
@@ -109,50 +100,32 @@ class AboutMe : Fragment() {
         }
     }
 
-    fun getFolderSize(dir: File): Long {
-        var size: Long = 0
-        for (file in dir.listFiles()!!) {
-            size += if (file.isFile) {
-                file.length()
-            } else {
-                getFolderSize(file)
-            }
-        }
-        return size
-    }
-
-    fun deleteDir(dir: File?) : Boolean {
-        if (dir != null && dir.isDirectory) {
-            val children = dir.list()
-            for (i in children.indices) {
-                var success = deleteFile(File(dir, children[i]))
-                if(!success){
-                    return false
+    private fun showClearCacheDialog(){
+        val dialog = AlertDialog.Builder(activity)
+            .setTitle(R.string.clear_cache)
+            .setMessage(R.string.cache_content)
+            .setCancelable(false)
+            .setPositiveButton(R.string.clear_cache) { _, _ ->
+                val success = clearCache()
+                if(success){
+                    showToast(getString(R.string.clear_cache_success))
+                }else{
+                    showToast(getString(R.string.clear_cache_failed))
                 }
+                binding.cachesize.text = getCacheSize()
             }
-        }
-        return true
-    }
-
-    fun deleteFile(dir: File?):Boolean{
-        if (dir != null && dir.isDirectory) {
-            val children = dir.list()
-            for (i in children.indices) {
-                val success = deleteFile(File(dir, children[i]))
-                if (!success) {
-                    return false
-                }
-            }
-        }
-        return dir?.delete() ?: false
+            .setNegativeButton(R.string.keep_cache) { _, _ ->}
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
     private fun checkForUpdate() {
         viewLifecycleOwner.lifecycleScope.launch {
             when (val result = updateChecker.checkForUpdate()) {
                 is UpdateResult.UpdateAvailable -> { showUpdateDialog(result) }
-                is UpdateResult.NoUpdate -> { makeToast(getString(R.string.no_update)) }
-                else -> { makeToast(getString(R.string.internet_error)) }
+                is UpdateResult.NoUpdate -> { showToast(getString(R.string.no_update)) }
+                else -> { showToast(getString(R.string.internet_error)) }
             }
         }
     }
@@ -174,16 +147,57 @@ class AboutMe : Fragment() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
-    fun makeToast(str: String){
-        Toast.makeText(requireContext(), str, Toast.LENGTH_LONG).show()
+    private fun getCacheSize(): String {
+        val cacheDir = File(requireContext().externalCacheDir, "screenshots")
+
+        if (!cacheDir.exists()) {
+            cacheDir.mkdirs()
+            return "0.00KB"
+        }
+
+        var size = 0L
+        cacheDir.listFiles()?.forEach { file ->
+            if (file.isFile) {
+                size += file.length()
+            }
+        }
+
+        return when {
+            size < 1024 * 1024 -> String.format("%.2fKB", size / 1024.0)
+            else -> String.format("%.2fMB", size / (1024.0 * 1024.0))
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun clearCache(): Boolean {
+        val cacheDir = File(requireContext().externalCacheDir, "screenshots")
+
+        if (!cacheDir.exists()) {
+            return true
+        }
+
+        var success = true
+        cacheDir.listFiles()?.forEach { file ->
+            if (file.isFile && !file.delete()) {
+                success = false
+            }
+        }
+
+        return success
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    // 检查服务是否正在运行
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        Log.d("SERVICE",manager.getRunningServices(Int.MAX_VALUE).toString())
+        return manager.getRunningServices(Int.MAX_VALUE)
+            .any { it.service.className == serviceClass.name }
     }
 
+    private fun showToast(str: String, isShort: Boolean = false){
+        if (isShort) {
+            Toast.makeText(requireContext(), str, Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), str, Toast.LENGTH_LONG).show()
+        }
+    }
 }

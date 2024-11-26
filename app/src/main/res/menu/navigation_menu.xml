@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/me_fragment"
-        android:title="@string/about_me"
-        android:icon="@drawable/setting_icon"
-        android:orderInCategory="4"/>
-
-    <item
-        android:id="@+id/claude_fragment"
-        android:title="@string/claude_page"
-        android:icon="@drawable/claude_chat"
-        android:orderInCategory="2"/>
-
-    <item
-        android:id="@+id/fun_fragment"
-        android:title="@string/fun_with_madoka"
-        android:icon="@drawable/madoka_icon"
-        android:orderInCategory="3"/>
-
 
     <item
         android:id="@+id/translate_fragment"
         android:title="@string/translate_page"
         android:icon="@drawable/translate_icon"
         android:orderInCategory="1"/>
+
+    <item
+        android:id="@+id/gemini_fragment"
+        android:title="@string/gemini_page"
+        android:icon="@drawable/gemini_chat"
+        android:orderInCategory="2"/>
+
+    <item
+        android:id="@+id/madoka_fragment"
+        android:title="@string/madoka_page"
+        android:icon="@drawable/madoka_icon"
+        android:orderInCategory="3"/>
+
+    <item
+        android:id="@+id/me_fragment"
+        android:title="@string/me_page"
+        android:icon="@drawable/setting_icon"
+        android:orderInCategory="4"/>
+
 </menu>

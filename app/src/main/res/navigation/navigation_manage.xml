@@ -10,35 +10,26 @@
         android:name="com.moe.moetranslator.translate.TranslateFragment"
         android:label="fragment_translate"
         tools:layout="@layout/fragment_translate" >
-        <action
-            android:id="@+id/action_translate_fragment_to_chatwithclaude"
-            app:destination="@id/claude_fragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/fun_fragment"
+        android:id="@+id/madoka_fragment"
         android:name="com.moe.moetranslator.madoka.FunWithMadoka"
-        android:label="fun_with_madoka_fragment"
-        tools:layout="@layout/fun_with_madoka_fragment" >
-        <action
-            android:id="@+id/action_funWithMadoka_to_aboutMe"
-            app:destination="@id/me_fragment" />
+        android:label="fragment_madoka"
+        tools:layout="@layout/fragment_madoka" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/gemini_fragment"
+        android:name="com.moe.moetranslator.geminiapi.ChatwithGemini"
+        android:label="fragment_chatwithgemini"
+        tools:layout="@layout/fragment_chatwithgemini" >
     </fragment>
 
     <fragment
         android:id="@+id/me_fragment"
         android:name="com.moe.moetranslator.me.AboutMe"
-        android:label="about_me_fragment"
+        android:label="fragment_about_me"
         tools:layout="@layout/fragment_about_me" />
-
-    <fragment
-        android:id="@+id/claude_fragment"
-        android:name="com.moe.moetranslator.geminiapi.ChatwithGemini"
-        android:label="fragment_chatwithclaude"
-        tools:layout="@layout/fragment_chatwithgemini" >
-        <action
-            android:id="@+id/action_chatwithclaude_to_fun_fragment"
-            app:destination="@id/fun_fragment" />
-    </fragment>
 
 </navigation>

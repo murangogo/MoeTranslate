@@ -5,29 +5,29 @@ import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.moe.moetranslator.MainActivity
-import com.moe.moetranslator.utils.MySharedPreferenceData
 import com.moe.moetranslator.R
+import com.moe.moetranslator.utils.CustomPreference
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LaunchActivity : AppCompatActivity() {
-    private lateinit var repository: MySharedPreferenceData
+    private lateinit var prefs: CustomPreference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) //锁定竖屏
+        prefs = CustomPreference.getInstance(this)
         setContentView(R.layout.activity_launch)
-        repository = MySharedPreferenceData(this)
         MainScope().launch{
             delay(1500)
             finish()
-            if(repository.IsFirstRun){
-                var myintent1 = Intent(this@LaunchActivity, FirstLaunchPage::class.java)
-                repository.saveFirstRun()
-                startActivity(myintent1)
+            if(prefs.getBoolean("Is_First_Run",true)){
+                val intent = Intent(this@LaunchActivity, FirstLaunchPage::class.java)
+                prefs.setBoolean("Is_First_Run", false)
+                startActivity(intent)
             }else{
-                var myintent2 = Intent(this@LaunchActivity, MainActivity::class.java)
-                startActivity(myintent2)
+                val intent = Intent(this@LaunchActivity, MainActivity::class.java)
+                startActivity(intent)
             }
         }
     }

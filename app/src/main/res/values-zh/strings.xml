@@ -5,9 +5,9 @@
     <string name="accessibility_service_label">萌译翻译服务</string>
     <string name="accessibility_service_description">【功能描述】\n启用无障碍权限以获取屏幕截图，从而进行翻译。\n在给予权限时，会弹出警告，请放心，萌译不会收集您的任何信息。</string>
     <string name="translate_page">翻译</string>
-    <string name="claude_page">Gemini</string>
-    <string name="fun_with_madoka">Madoka</string>
-    <string name="about_me">设置</string>
+    <string name="gemini_page">Gemini</string>
+    <string name="madoka_page">Madoka</string>
+    <string name="me_page">设置</string>
     <string name="api_name">API：%s</string>
     <string name="tencent_cloud">腾讯云</string>
     <string name="baidu_translate">百度翻译</string>
@@ -190,7 +190,7 @@
     <string name="volc_hint_account">Access Key ID</string>
     <string name="volc_hint_secret_key">Secret Access Key</string>
     <string name="whats_api_title">什么是%sAPI</string>
-    <string name="whats_api_content">萌译可以使用不同平台的API来提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为%1$s，点击“现在就去”即可开始申请%1$sAPI。申请%1$sAPI的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有相当多的免费调用次数。\n\n当然，如果您认为申请API的步骤过于繁琐，萌译也提供即点即用的翻译选项，如ML Kit和NLLB翻译等，它们也有不错的翻译效果。</string>
+    <string name="whats_api_content">萌译可以使用不同平台的API来提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为%1$s，点击“现在就去”即可开始申请%1$sAPI。申请%1$sAPI的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有相当多的免费调用次数。\n\n比起ML Kit和NLLB这些本地模型翻译，使用云端API的翻译效果无疑会更好，因此在网络良好的情况下更推荐您使用云端API进行翻译。</string>
     <string name="niu_hint_secret_key">API-KEY</string>
     <string name="niu_noneed">无需填写</string>
     <string name="floating_ball">悬浮球</string>
@@ -254,6 +254,13 @@
     <string name="stop_ball">我要停！</string>
     <string name="stop_success">停止成功</string>
     <string name="stop_failed">停止失败：%s</string>
+    <string name="textview_tip">这里将会显示翻译结果，请注意不要和原文的位置重合，以免影响截图翻译。</string>
+    <string name="cache_content">萌译最多缓存最近200张翻译时的截图，截图大于200张时会进行覆盖，这些截图保存在Android/data/com.moe.moetranslator/cache/screenshots文件夹中，您可以随时在文件管理中查看。一般来说，这些截图不会占用太多空间，当然，您也可以选择现在清除这些缓存数据。</string>
+    <string name="clear_cache_success">清除成功</string>
+    <string name="clear_cache_failed">清除失败</string>
+    <string name="keep_cache">暂时保留</string>
+    <string name="still_running">翻译悬浮球好像还在运行，请先关闭它再调整设置吧</string>
+    <string name="invalid_combination">源语言和目标语言相同，这是无意义的翻译组合哦</string>
 
 
 </resources>

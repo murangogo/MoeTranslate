@@ -6,13 +6,9 @@ import android.content.Context
 import android.text.InputFilter
 import android.text.InputType
 import android.text.Spanned
-import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
@@ -40,7 +36,7 @@ object Dialogs {
             R.drawable.close_floatingball,
             R.drawable.back_moe
         )
-        val view = LayoutInflater.from(ctx).inflate(R.layout.floating_menu_dialog, null,false)
+        val view = LayoutInflater.from(ctx).inflate(R.layout.dialog_floating_menu, null,false)
         val img = view.findViewById<ImageView>(R.id.TitleIcon)
         val welcome = view.findViewById<TextView>(R.id.welcome)
         val lv = view.findViewById<ListView>(R.id.menu_list)
