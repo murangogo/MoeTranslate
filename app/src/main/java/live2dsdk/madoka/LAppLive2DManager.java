@@ -9,9 +9,12 @@ package live2dsdk.madoka;
 
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
+import com.live2d.sdk.cubism.framework.motion.IBeganMotionCallback;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static live2dsdk.basic.LAppDefine.*;
@@ -23,12 +26,17 @@ import android.util.Log;
  * モデル生成と破棄、タップイベントの処理、モデル切り替えを行う。
  */
 public class LAppLive2DManager {
-    private final List<LAppModel> models = new ArrayList<LAppModel>();
+    private final List<LAppModel> models = new ArrayList<>();
 
     /**
      * 表示するシーンのインデックス値
      */
     private ModelDir currentModel;
+
+    /**
+     * モデルディレクトリ名
+     */
+    private final List<String> modelDir = new ArrayList<>();
 
     // onUpdateメソッドで使用されるキャッシュ変数
     private final CubismMatrix44 viewMatrix = CubismMatrix44.create();
@@ -79,7 +87,7 @@ public class LAppLive2DManager {
 
             // 必要があればここで乗算する-如果有必要，在这里相乘
             if (viewMatrix != null) {
-                projection.multiplyByMatrix(viewMatrix);
+                viewMatrix.multiplyByMatrix(projection);
             }
 
             // モデル1体描画前コール-模型1体描绘前调用
@@ -126,15 +134,15 @@ public class LAppLive2DManager {
                 if (DEBUG_LOG_ENABLE) {     //打印日志
                     LAppPal.printLog("hit area: " + HitAreaName.HEAD.getId());
                 }
-                model.HeadRandom();        //点到头部就做乱表情
+                model.setRandomExpression();        //点到头部就做乱表情
             }
             // 体をタップした場合ランダムモーションを開始する-当你点击身体时，开始随机运动
             else if (model.hitTest(HitAreaName.BODY.getId(), x, y)) {   //判断是否为身体，但打印日志依然是头部？？？
                 if (DEBUG_LOG_ENABLE) {
-                    LAppPal.printLog("hit area: " + HitAreaName.BODY.getId());
+                    LAppPal.printLog("hit area: " + HitAreaName.HEAD.getId());
                 }
 
-                model.startRandomMotion(MotionGroup.TAP_BODY.getId(), Priority.NORMAL.getPriority(), finishedMotion);   //开始随机运动
+                model.startRandomMotion(MotionGroup.TAP_BODY.getId(), Priority.NORMAL.getPriority(), finishedMotion, beganMotion);   //开始随机运动
             }
         }
     }
@@ -196,7 +204,7 @@ public class LAppLive2DManager {
         LAppDelegate.getInstance().getView().switchRenderingTarget(useRenderingTarget);
 
         // 別レンダリング先を選択した際の背景クリア色-选择其他渲染目标时的背景透明色
-        float[] clearColor = {1.0f, 1.0f, 1.0f};
+        float[] clearColor = {0.0f, 0.0f, 0.0f};
         LAppDelegate.getInstance().getView().setRenderingTargetClearColor(clearColor[0], clearColor[1], clearColor[2]);
     }
 
@@ -234,6 +242,18 @@ public class LAppLive2DManager {
         }
         return models.size();
     }
+
+    /**
+     * モーション再生時に実行されるコールバック関数
+     */
+    private static class BeganMotion implements IBeganMotionCallback {
+        @Override
+        public void execute(ACubismMotion motion) {
+            LAppPal.printLog("Motion Began: " + motion);
+        }
+    }
+
+    private static final BeganMotion beganMotion = new BeganMotion();
 
     /**
      * モーション終了時に実行されるコールバック関数

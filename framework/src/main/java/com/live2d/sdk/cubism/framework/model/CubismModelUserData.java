@@ -37,8 +37,8 @@ public class CubismModelUserData {
             if (value == null) {
                 throw new IllegalArgumentException("value is null.");
             }
-            this.targetType = new CubismId(targetType);
-            this.targetId = new CubismId(targetId);
+            this.targetType = CubismFramework.getIdManager().getId(targetType);
+            this.targetId = CubismFramework.getIdManager().getId(targetId);
             this.value = value;
         }
 

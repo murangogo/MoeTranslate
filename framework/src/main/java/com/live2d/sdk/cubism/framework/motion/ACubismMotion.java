@@ -10,6 +10,7 @@ package com.live2d.sdk.cubism.framework.motion;
 import com.live2d.sdk.cubism.framework.id.CubismId;
 import com.live2d.sdk.cubism.framework.math.CubismMath;
 import com.live2d.sdk.cubism.framework.model.CubismModel;
+import com.live2d.sdk.cubism.framework.utils.CubismDebug;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,51 +37,85 @@ public abstract class ACubismMotion {
             return;
         }
 
-        if (!motionQueueEntry.isStarted()) {
-            motionQueueEntry.isStarted(true);
+        setupMotionQueueEntry(motionQueueEntry, userTimeSeconds);
 
-            // Record the start time of the motion.
-            motionQueueEntry.setStartTime(userTimeSeconds - offsetSeconds);
-            // Record the start time of fade-in
-            motionQueueEntry.setFadeInStartTime(userTimeSeconds);
+        float fadeWeight = updateFadeWeight(motionQueueEntry, userTimeSeconds);
 
-            final float duration = getDuration();
+        //---- 全てのパラメータIDをループする ----
+        doUpdateParameters(model, userTimeSeconds, fadeWeight, motionQueueEntry);
 
-            // Deal with the case where the status is set "end" before it has started.
-            if (motionQueueEntry.getEndTime() < 0) {
-                // If duration == -1, loop motion.
-                float endTime = (duration <= 0)
-                                ? -1
-                                : motionQueueEntry.getStartTime() + duration;
-                motionQueueEntry.setEndTime(endTime);
-            }
+        // 後処理
+        // 終了時刻を過ぎたら終了フラグを立てる（CubismMotionQueueManager）
+        if (motionQueueEntry.getEndTime() > 0.0f && motionQueueEntry.getEndTime() < userTimeSeconds) {
+            motionQueueEntry.isFinished(true);      // 終了
+        }
+    }
+
+    /**
+     * モーションの再生を開始するためのセットアップを行う。
+     *
+     * @param motionQueueEntry CubismMotionQueueManagerによって管理されるモーション
+     * @param userTimeSeconds 総再生時間（秒）
+     */
+    public void setupMotionQueueEntry(
+        CubismMotionQueueEntry motionQueueEntry,
+        final float userTimeSeconds
+    ) {
+        if (!motionQueueEntry.isAvailable() || motionQueueEntry.isFinished()) {
+            return;
         }
 
-        //---- Fade in/out processing. ----
-        // Easing with a simple sin function.
+        if (motionQueueEntry.isStarted()) {
+            return;
+        }
+
+        motionQueueEntry.isStarted(true);
+
+        // Record the start time of the motion.
+        motionQueueEntry.setStartTime(userTimeSeconds - offsetSeconds);
+        // Record the start time of fade-in
+        motionQueueEntry.setFadeInStartTime(userTimeSeconds);
+
+        final float duration = getDuration();
+
+        // Deal with the case where the status is set "end" before it has started.
+        if (motionQueueEntry.getEndTime() < 0) {
+            // If duration == -1, loop motion.
+            float endTime = (duration <= 0)
+                ? -1
+                : motionQueueEntry.getStartTime() + duration;
+            motionQueueEntry.setEndTime(endTime);
+        }
+    }
+
+    /**
+     * モーションフェードのウェイト値を更新する。
+     *
+     * @param motionQueueEntry CubismMotionQueueManagerで管理されているモーション
+     * @param userTimeSeconds デルタ時間の積算値[秒]
+     * @return 更新されたウェイト値
+     */
+    public float updateFadeWeight(CubismMotionQueueEntry motionQueueEntry, float userTimeSeconds) {
+        if(motionQueueEntry == null) {
+            CubismDebug.cubismLogError("motionQueueEntry is null.");
+        }
+
+        float fadeWeight = weight;      // 現在の値と掛け合わせる割合
+
+        // ---- フェードイン・アウトの処理 ----
+        // 単純なサイン関数でイージングする。
         final float fadeIn = fadeInSeconds == 0.0f
-                             ? 1.0f
-                             : CubismMath.getEasingSine((userTimeSeconds - motionQueueEntry.getFadeInStartTime()) / fadeInSeconds);
-
+            ? 1.0f
+            : CubismMath.getEasingSine((userTimeSeconds - motionQueueEntry.getFadeInStartTime()) / fadeInSeconds);
         final float fadeOut = (fadeOutSeconds == 0.0f || motionQueueEntry.getEndTime() < 0.0f)
-                              ? 1.0f
-                              : CubismMath.getEasingSine((motionQueueEntry.getEndTime() - userTimeSeconds) / fadeOutSeconds);
-
-        // Percentage to be multiplied by the current value.
-        float fadeWeight = weight * fadeIn * fadeOut;
+            ? 1.0f
+            : CubismMath.getEasingSine((motionQueueEntry.getEndTime() - userTimeSeconds) / fadeOutSeconds);
+        fadeWeight = fadeWeight * fadeIn * fadeOut;
         motionQueueEntry.setState(userTimeSeconds, fadeWeight);
 
         assert (0.0f <= fadeWeight && fadeWeight <= 1.0f);
 
-        //---- Loop through all parameter IDs. ----
-        doUpdateParameters(model, userTimeSeconds, fadeWeight, motionQueueEntry);
-
-        // Post-processing.
-        // Set the end flag when the end time has passed (CubismMotionQueueManager).
-        final float endTime = motionQueueEntry.getEndTime();
-        if ((endTime > 0) && (endTime < userTimeSeconds)) {
-            motionQueueEntry.isFinished(true);      // Termination
-        }
+        return fadeWeight;
     }
 
 
@@ -181,11 +216,28 @@ public abstract class ACubismMotion {
      * @return list of events that have fired
      */
     public List<String> getFiredEvent(float beforeCheckTimeSeconds, float motionTimeSeconds) {
-        if (areFiredEventValuesChanged) {
-            cachedImmutableFiredEventValues = Collections.unmodifiableList(firedEventValues);
-            areFiredEventValuesChanged = false;
-        }
-        return cachedImmutableFiredEventValues;
+        return Collections.unmodifiableList(firedEventValues);
+    }
+
+    /**
+     * Registers a motion playback start callback.
+     * It is not called in the following states:
+     * 1. when the currently playing motion is set as "loop"
+     * 2. when null is registered in the callback
+     *
+     * @param onBeganMotionHandler start-of-motion playback callback function
+     */
+    public void setBeganMotionHandler(IBeganMotionCallback onBeganMotionHandler) {
+        onBeganMotion = onBeganMotionHandler;
+    }
+
+    /**
+     * Get the start-of-motion playback callback function.
+     *
+     * @return registered start-of-motion playback callback function; if null, no function is registered
+     */
+    public IBeganMotionCallback getBeganMotionCallback() {
+        return onBeganMotion;
     }
 
     /**
@@ -284,9 +336,10 @@ public abstract class ACubismMotion {
      */
     protected List<String> firedEventValues = new ArrayList<String>();
 
-    protected boolean areFiredEventValuesChanged = true;
-
-    protected List<String> cachedImmutableFiredEventValues;
+    /**
+     * Start-of-motion playback callback function
+     */
+    protected IBeganMotionCallback onBeganMotion;
 
     /**
      * End-of-motion playback callback function

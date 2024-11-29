@@ -267,8 +267,8 @@ public class CubismModel {
      * @return パーツのID
      */
     public CubismId getPartId(int partIndex){
-        String partId = model.getPartViews()[partIndex].getId();
-        return CubismFramework.getIdManager().getId(partId);
+        assert (0 <= partIndex && partIndex < partIds.size());
+        return partIds.get(partIndex);
     }
 
     /**
@@ -386,6 +386,17 @@ public class CubismModel {
         System.arraycopy(tmp, 0, notExistParameterValues, 0, notExistParameterIndices.size());
 
         return parameterIndex;
+    }
+
+    /**
+     * パラメータのIDを取得する。
+     *
+     * @param parameterIndex パラメータのインデックス
+     * @return パラメータのID
+     */
+    public CubismId getParameterId(int parameterIndex) {
+        assert (0 <= parameterIndex && parameterIndex < parameterIds.size());
+        return parameterIds.get(parameterIndex);
     }
 
     /**
@@ -659,8 +670,8 @@ public class CubismModel {
      * @return Drawable ID
      */
     public CubismId getDrawableId(int drawableIndex) {
-        final String drawableId = model.getDrawableViews()[drawableIndex].getId();
-        return CubismFramework.getIdManager().getId(drawableId);
+        assert (0 <= drawableIndex && drawableIndex < drawableIds.size());
+        return drawableIds.get(drawableIndex);
     }
 
     /**
@@ -1563,9 +1574,9 @@ public class CubismModel {
      */
     private float modelOpacity = 1.0f;
 
-    private List<CubismId> parameterIds = new ArrayList<CubismId>();
-    private List<CubismId> partIds = new ArrayList<CubismId>();
-    private List<CubismId> drawableIds = new ArrayList<CubismId>();
+    private final List<CubismId> parameterIds = new ArrayList<>();
+    private final List<CubismId> partIds = new ArrayList<>();
+    private final List<CubismId> drawableIds = new ArrayList<>();
 
     /**
      * Drawableの乗算色のリスト

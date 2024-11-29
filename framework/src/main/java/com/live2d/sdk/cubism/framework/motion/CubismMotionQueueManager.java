@@ -21,12 +21,49 @@ import java.util.Set;
  */
 public class CubismMotionQueueManager {
     /**
+     * 引数で指定したモーションを再生する。同じタイプのモーションが既にある場合は、既存のモーションに終了フラグを立て、フェードアウトを開始する。
+     *
+     * @param motion 開始するモーション
+     * @return 開始したモーションの識別番号を返す。個別のモーションが終了したか否かを判定するisFinished()の引数として使用する。開始できない場合は「-1」を返す。
+     */
+    public int startMotion(ACubismMotion motion) {
+        if (motion == null) {
+            return -1;
+        }
+
+        // 既にモーションがあれば終了フラグを立てる。
+        for (int i = 0; i < motions.size(); i++) {
+            CubismMotionQueueEntry entry = motions.get(i);
+
+            if (entry == null) {
+                continue;
+            }
+            entry.setFadeOut(entry.getMotion().getFadeOutTime());
+        }
+
+        CubismMotionQueueEntry motionQueueEntry = new CubismMotionQueueEntry();
+        motionQueueEntry.setMotion(motion);
+
+        motions.add(motionQueueEntry);
+
+        if (motion.onBeganMotion != null) {
+            motion.onBeganMotion.execute(motion);
+        }
+
+        return System.identityHashCode(motionQueueEntry);
+    }
+
+    /**
      * Start the specified motion. If there is already a motion of the same type, set the end flag for the existing motion and start fading out.
      *
      * @param motion motion to start
      * @param userTimeSeconds total user time[s]
      * @return Returns the identification number(OptionalInt) of the motion that has started. Used as an argument for isFinished(), which judges whether an individual motion has been completed. When it cannot be started, it returns an empty OptionalInt.
+     *
+     * @deprecated 第2引数userTimeSecondsを関数内で使用していないため非推奨。startMotion(ACubismMotion motion)を使用してください。
+     * @see #startMotion(ACubismMotion)
      */
+    @Deprecated
     public int startMotion(ACubismMotion motion, float userTimeSeconds) {
         if (motion == null) {
             return -1;
@@ -123,6 +160,15 @@ public class CubismMotionQueueManager {
             }
         }
         return null;
+    }
+
+    /**
+     * CubismMotionQueueEntryのリストを取得する。
+     *
+     * @return CubismMotionQueueEntryのリスト
+     */
+    public List<CubismMotionQueueEntry> getCubismMotionQueueEntries() {
+        return motions;
     }
 
     /**

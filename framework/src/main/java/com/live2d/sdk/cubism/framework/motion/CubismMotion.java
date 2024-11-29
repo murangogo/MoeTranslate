@@ -27,16 +27,18 @@ public final class CubismMotion extends ACubismMotion {
      * Create an instance.
      *
      * @param buffer buffer where motion3.json is loaded
-     * @param callback callback function called at the end of motion playback, not called if null.
+     * @param finishedMotionCallBack callback function called at the end of motion playback, not called if null.
+     * @param beganMotionCallBack callback function called at the start of motion playback, not called if null.
      * @return instance of CubismMotion
      */
-    public static CubismMotion create(byte[] buffer, IFinishedMotionCallback callback) {
+    public static CubismMotion create(byte[] buffer, IFinishedMotionCallback finishedMotionCallBack, IBeganMotionCallback beganMotionCallBack) {
         CubismMotion motion = new CubismMotion();
         motion.parse(buffer);
 
         motion.sourceFrameRate = motion.motionData.fps;
         motion.loopDurationSeconds = motion.motionData.duration;
-        motion.onFinishedMotion = callback;
+        motion.onFinishedMotion = finishedMotionCallBack;
+        motion.onBeganMotion = beganMotionCallBack;
 
         // NOTE: Exporting motion with loop is not supported in Editor.
         return motion;
@@ -50,7 +52,7 @@ public final class CubismMotion extends ACubismMotion {
      * @return instance of CubismMotion
      */
     public static CubismMotion create(byte[] buffer) {
-        return create(buffer, null);
+        return create(buffer, null, null);
     }
 
     /**
@@ -185,21 +187,16 @@ public final class CubismMotion extends ACubismMotion {
 
     @Override
     public List<String> getFiredEvent(float beforeCheckTimeSeconds, float motionTimeSeconds) {
-        if (areFiredEventValuesChanged) {
-            firedEventValues.clear();
+        firedEventValues.clear();
 
-            for (int i = 0; i < motionData.events.size(); i++) {
-                CubismMotionEvent event = motionData.events.get(i);
+        for (int i = 0; i < motionData.events.size(); i++) {
+            CubismMotionEvent event = motionData.events.get(i);
 
-                if ((event.fireTime > beforeCheckTimeSeconds)
-                    && (event.fireTime <= motionTimeSeconds)) {
-                    firedEventValues.add(event.value);
-                }
+            if ((event.fireTime > beforeCheckTimeSeconds) && (event.fireTime <= motionTimeSeconds)) {
+                firedEventValues.add(event.value);
             }
-            cachedImmutableFiredEventValues = Collections.unmodifiableList(firedEventValues);
-            areFiredEventValuesChanged = false;
         }
-        return cachedImmutableFiredEventValues;
+        return Collections.unmodifiableList(firedEventValues);
     }
 
     @Override
@@ -865,8 +862,6 @@ public final class CubismMotion extends ACubismMotion {
             motionData.events.get(userdatacount).fireTime = json.getEventTime(userdatacount);
             motionData.events.get(userdatacount).value = json.getEventValue(userdatacount);
         }
-
-        areFiredEventValuesChanged = true;
     }
 
     private float getLerpPointsValue(

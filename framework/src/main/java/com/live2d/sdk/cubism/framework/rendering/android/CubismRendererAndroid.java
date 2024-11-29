@@ -8,12 +8,12 @@
 package com.live2d.sdk.cubism.framework.rendering.android;
 
 import android.opengl.GLES11Ext;
+
 import com.live2d.sdk.cubism.framework.math.CubismVector2;
 import com.live2d.sdk.cubism.framework.model.CubismModel;
 import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
 import com.live2d.sdk.cubism.framework.utils.CubismDebug;
 
-import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ public class CubismRendererAndroid extends CubismRenderer {
      * Tegra processor support.
      * Enable/Disable drawing by extension method.
      *
-     * @param extMode Whether to draw using the extended method
+     * @param extMode   Whether to draw using the extended method
      * @param extPAMode Whether to enable the PA setting for the extended method
      */
     public static void setExtShaderMode(boolean extMode, boolean extPAMode) {
@@ -82,19 +82,18 @@ public class CubismRendererAndroid extends CubismRenderer {
             // Initialize clipping mask and buffer preprocessing method
             clippingManager = new CubismClippingManagerAndroid();
             clippingManager.initialize(
-                model.getDrawableCount(),
-                model.getDrawableMasks(),
-                model.getDrawableMaskCounts(),
+                RendererType.ANDROID,
+                model,
                 maskBufferCount
             );
 
-            offscreenFrameBuffers = new CubismOffscreenSurfaceAndroid[maskBufferCount];
+            offscreenSurfaces = new CubismOffscreenSurfaceAndroid[maskBufferCount];
 
             for (int i = 0; i < maskBufferCount; i++) {
                 CubismOffscreenSurfaceAndroid offscreenSurface = new CubismOffscreenSurfaceAndroid();
-                offscreenSurface.createOffscreenFrame(clippingManager.getClippingMaskBufferSize(), null);
+                offscreenSurface.createOffscreenSurface(clippingManager.getClippingMaskBufferSize(), null);
 
-                offscreenFrameBuffers[i] = offscreenSurface;
+                offscreenSurfaces[i] = offscreenSurface;
             }
         }
 
@@ -110,10 +109,10 @@ public class CubismRendererAndroid extends CubismRenderer {
             clippingManager.close();
         }
 
-        if (offscreenFrameBuffers != null) {
-            for (int i = 0; i < offscreenFrameBuffers.length; i++) {
-                if (offscreenFrameBuffers[i].isValid()) {
-                    offscreenFrameBuffers[i].destroyOffscreenFrame();
+        if (offscreenSurfaces != null) {
+            for (int i = 0; i < offscreenSurfaces.length; i++) {
+                if (offscreenSurfaces[i].isValid()) {
+                    offscreenSurfaces[i].destroyOffscreenSurface();
                 }
             }
         }
@@ -124,11 +123,11 @@ public class CubismRendererAndroid extends CubismRenderer {
     /**
      * Bind processing of OpenGL textures.
      *
-     * @param modelTextureNo number of the model texture to set
-     * @param glTextureNo number of the OpenGL texture to bind
+     * @param modelTextureIndex number of the model texture to set
+     * @param glTextureIndex    number of the OpenGL texture to bind
      */
-    public void bindTexture(int modelTextureNo, int glTextureNo) {
-        textures.put(modelTextureNo, glTextureNo);
+    public void bindTexture(int modelTextureIndex, int glTextureIndex) {
+        textures.put(modelTextureIndex, glTextureIndex);
         areTexturesChanged = true;
     }
 
@@ -156,9 +155,9 @@ public class CubismRendererAndroid extends CubismRenderer {
 
     /**
      * Set the size of clipping mask buffer.
-     * This method's processing cost is high because the FrameBuffer for the mask is destroyed and recreated.
+     * This method's processing cost is high because the MaskBuffer for the mask is destroyed and recreated.
      *
-     * @param width width of MaskBufferSize
+     * @param width  width of MaskBufferSize
      * @param height height of MaskBufferSize
      */
     public void setClippingMaskBufferSize(final float width, final float height) {
@@ -169,15 +168,14 @@ public class CubismRendererAndroid extends CubismRenderer {
         // インスタンス破棄前にレンダーテクスチャの数を保存
         final int renderTextureCount = this.clippingManager.getRenderTextureCount();
 
-        // Destroy and recreate instances to change the size of FrameBuffer
+        // Destroy and recreate instances to change the size of MaskBuffer
         clippingManager = new CubismClippingManagerAndroid();
         clippingManager.setClippingMaskBufferSize(width, height);
 
         CubismModel model = getModel();
         clippingManager.initialize(
-            model.getDrawableCount(),
-            model.getDrawableMasks(),
-            model.getDrawableMaskCounts(),
+            RendererType.ANDROID,
+            model,
             renderTextureCount
         );
     }
@@ -191,39 +189,20 @@ public class CubismRendererAndroid extends CubismRenderer {
         return clippingManager.getRenderTextureCount();
     }
 
-
     /**
      * Draw the drawing objects (ArtMesh). <br>
      * Both polygon mesh and the texture number is given to this method.
      *
-     * @param textureNo number of the drawed texture
-     * @param indexCount index of the drawing object
-     * @param vertexCount number of the polygon mesh vertices
-     * @param indexArray index array of the polygon mesh
-     * @param vertexArrayBuffer vertex array of the polygon mesh
-     * @param uvArrayBuffer uv array
-     * @param multiplyColor multiply color
-     * @param screenColor screen color
-     * @param opacity opacity
-     * @param colorBlendMode color blending mode
-     * @param invertedMask Inverted use of masks when masks are used
+     * @param model number of the drawed texture
+     * @param index index of the drawing object
      */
     protected void drawMeshAndroid(
-        int textureNo,
-        int indexCount,
-        int vertexCount,
-        ShortBuffer indexArray,
-        FloatBuffer vertexArrayBuffer,
-        FloatBuffer uvArrayBuffer,
-        CubismTextureColor multiplyColor,
-        CubismTextureColor screenColor,
-        float opacity,
-        CubismBlendMode colorBlendMode,
-        boolean invertedMask
+        final CubismModel model,
+        final int index
     ) {
         if (!CSM_DEBUG) {
             // If the texture referenced by the model is not bound, skip drawing.
-            if (textures.get(textureNo) == null) {
+            if (textures.get(model.getDrawableTextureIndex(index)) == null) {
                 return;
             }
         }
@@ -238,56 +217,24 @@ public class CubismRendererAndroid extends CubismRenderer {
         // In Cubism3 OpenGL, CCW becomes surface for both masks and art meshes.
         glFrontFace(GL_CCW);
 
-        CubismTextureColor tmp = getModelColor();
-        modelColorRGBA.r = tmp.r;
-        modelColorRGBA.g = tmp.g;
-        modelColorRGBA.b = tmp.b;
-        modelColorRGBA.a = tmp.a;
-
-
-        // Except at generating mask
-        if (getClippingContextBufferForMask() == null) {
-            modelColorRGBA.a *= opacity;
-            if (isPremultipliedAlpha()) {
-                modelColorRGBA.r *= modelColorRGBA.a;
-                modelColorRGBA.g *= modelColorRGBA.a;
-                modelColorRGBA.b *= modelColorRGBA.a;
-            }
-        }
-
-        // Texture ID given to the shader
-        int drawTextureId;
-
-        // Get the bound texture ID from the texture map.
-        // If the ID has not bound, set the dummy texture ID.
-        if (textures.get(textureNo) != null) {
-            drawTextureId = textures.get(textureNo);
+        // マスク生成時
+        if (isGeneratingMask()) {
+            CubismShaderAndroid.getInstance().setupShaderProgramForMask(this, model, index);
         } else {
-            drawTextureId = -1;
+            CubismShaderAndroid.getInstance().setupShaderProgramForDraw(this, model, index);
         }
-
-        CubismShaderAndroid.getInstance().setupShaderProgram(
-            this,
-            drawTextureId,
-            vertexCount,
-            vertexArrayBuffer,
-            uvArrayBuffer,
-            opacity,
-            colorBlendMode,
-            modelColorRGBA,
-            multiplyColor,
-            screenColor,
-            isPremultipliedAlpha(),
-            getMvpMatrix(),
-            invertedMask
-        );
 
         // Draw the prygon mesh
+        final int indexCount = model.getDrawableVertexIndexCount(index);
+        final ShortBuffer indexArrayBuffer = drawableInfoCachesHolder.setUpIndexArray(
+            index,
+            model.getDrawableVertexIndices(index)
+        );
         glDrawElements(
             GL_TRIANGLES,
             indexCount,
             GL_UNSIGNED_SHORT,
-            indexArray
+            indexArrayBuffer
         );
 
         // post-processing
@@ -310,14 +257,23 @@ public class CubismRendererAndroid extends CubismRenderer {
 
             // If offscreen frame buffer size is different from clipping mask buffer size, recreate it.
             for (int i = 0; i < clippingManager.getRenderTextureCount(); i++) {
-                CubismOffscreenSurfaceAndroid offscreenFrameBuffer = offscreenFrameBuffers[i];
+                CubismOffscreenSurfaceAndroid offscreenSurface = offscreenSurfaces[i];
 
-                if (!offscreenFrameBuffer.isSameSize(clippingManager.getClippingMaskBufferSize())) {
-                    offscreenFrameBuffer.createOffscreenFrame(clippingManager.getClippingMaskBufferSize(), null);
+                if (!offscreenSurface.isSameSize(clippingManager.getClippingMaskBufferSize())) {
+                    offscreenSurface.createOffscreenSurface(clippingManager.getClippingMaskBufferSize(), null);
                 }
             }
 
-            clippingManager.setupClippingContext(model, this, rendererProfile.lastFBO, rendererProfile.lastViewport);
+            if (isUsingHighPrecisionMask()) {
+                clippingManager.setupMatrixForHighPrecision(getModel(), false);
+            } else {
+                clippingManager.setupClippingContext(
+                    getModel(),
+                    this,
+                    rendererProfile.lastFBO,
+                    rendererProfile.lastViewport
+                );
+            }
         }
 
         // preDraw() method is called twice.
@@ -342,7 +298,7 @@ public class CubismRendererAndroid extends CubismRenderer {
             }
 
             // Set clipping mask
-            CubismClippingContext clipContext = (clippingManager != null)
+            CubismClippingContextAndroid clipContext = (clippingManager != null)
                 ? clippingManager.getClippingContextListForDraw().get(drawableIndex)
                 : null;
 
@@ -350,7 +306,7 @@ public class CubismRendererAndroid extends CubismRenderer {
             if (clipContext != null && isUsingHighPrecisionMask()) {
                 // 描くことになっていた
                 if (clipContext.isUsing) {
-                    // 生成したFrameBufferと同じサイズでビューポートを設定
+                    // 生成したOffscreenSurfaceと同じサイズでビューポートを設定
                     glViewport(0, 0, (int) clippingManager.getClippingMaskBufferSize().x, (int) clippingManager.getClippingMaskBufferSize().y);
 
                     // バッファをクリアする
@@ -381,39 +337,11 @@ public class CubismRendererAndroid extends CubismRenderer {
                     // チャンネルも切り替える必要がある（A,R,G,B）
                     setClippingContextBufferForMask(clipContext);
 
-                    // vertex array
-                    FloatBuffer vertexArrayBuffer = drawableInfoCachesHolder.setUpVertexArray(
-                        clipDrawIndex,
-                        model.getDrawableVertices(clipDrawIndex)
-                    );
-                    // uv array
-                    FloatBuffer uvArrayBuffer = drawableInfoCachesHolder.setUpUvArray(
-                        clipDrawIndex,
-                        model.getDrawableVertexUvs(clipDrawIndex)
-                    );
-                    // index array
-                    ShortBuffer indexArrayBuffer = drawableInfoCachesHolder.setUpIndexArray(
-                        clipDrawIndex,
-                        model.getDrawableVertexIndices(clipDrawIndex)
-                    );
-
-                    drawMeshAndroid(
-                        model.getDrawableTextureIndex(clipDrawIndex),
-                        model.getDrawableVertexIndexCount(clipDrawIndex),
-                        model.getDrawableVertexCount(clipDrawIndex),
-                        indexArrayBuffer,
-                        vertexArrayBuffer,
-                        uvArrayBuffer,
-                        model.getMultiplyColor(clipDrawIndex),
-                        model.getScreenColor(clipDrawIndex),
-                        model.getDrawableOpacity(clipDrawIndex),
-                        CubismBlendMode.NORMAL, // クリッピングは通常描画を強制
-                        false   // マスク生成時はクリッピングの反転使用は全く関係がない
-                    );
+                    drawMeshAndroid(model, clipDrawIndex);
                 }
                 // --- 後処理 ---
                 for (int j = 0; j < clippingManager.getRenderTextureCount(); j++) {
-                    offscreenFrameBuffers[j].endDraw();
+                    offscreenSurfaces[j].endDraw();
                     setClippingContextBufferForMask(null);
                     glViewport(
                         rendererProfile.lastViewport[0],
@@ -428,58 +356,9 @@ public class CubismRendererAndroid extends CubismRenderer {
 
             isCulling(model.getDrawableCulling(drawableIndex));
 
-            // vertex array
-            FloatBuffer vertexArrayBuffer = drawableInfoCachesHolder.setUpVertexArray(
-                drawableIndex,
-                model.getDrawableVertices(drawableIndex)
-            );
-
-            // uv array
-            FloatBuffer uvArrayBuffer = drawableInfoCachesHolder.setUpUvArray(
-                drawableIndex,
-                model.getDrawableVertexUvs(drawableIndex)
-            );
-
-            // index array
-            ShortBuffer indexArrayBuffer = drawableInfoCachesHolder.setUpIndexArray(
-                drawableIndex,
-                model.getDrawableVertexIndices(drawableIndex)
-            );
-
-            drawMeshAndroid(
-                model.getDrawableTextureIndex(drawableIndex),
-                model.getDrawableVertexIndexCount(drawableIndex),
-                model.getDrawableVertexCount(drawableIndex),
-                indexArrayBuffer,
-                vertexArrayBuffer,
-                uvArrayBuffer,
-                model.getMultiplyColor(drawableIndex),
-                model.getScreenColor(drawableIndex),
-                model.getDrawableOpacity(drawableIndex),
-                model.getDrawableBlendMode(drawableIndex),
-                model.getDrawableInvertedMask(drawableIndex)    // Whether the mask is used inverted
-            );
+            drawMeshAndroid(model, drawableIndex);
         }
         postDraw();
-    }
-
-    @Override
-    protected void drawMesh(CubismModel model, int drawableIndex) {
-        drawMesh(model,
-            drawableIndex,
-            model.getDrawableBlendMode(drawableIndex),
-            model.getDrawableInvertedMask(drawableIndex));
-    }
-
-    @Override
-    protected void drawMesh(
-        final CubismModel model,
-        final int drawableIndex,
-        final CubismBlendMode blendMode,
-        final boolean isInverted
-    ) {
-        CubismDebug.cubismLogWarning("Use 'drawMeshAndroid' function");
-        assert false;
     }
 
     @Override
@@ -504,7 +383,7 @@ public class CubismRendererAndroid extends CubismRenderer {
      *
      * @return the clipping context to draw to the mask texture
      */
-    CubismClippingContext getClippingContextBufferForMask() {
+    CubismClippingContextAndroid getClippingContextBufferForMask() {
         return clippingContextBufferForMask;
     }
 
@@ -513,7 +392,7 @@ public class CubismRendererAndroid extends CubismRenderer {
      *
      * @param clip clipping context to draw to the mask texture
      */
-    void setClippingContextBufferForMask(CubismClippingContext clip) {
+    void setClippingContextBufferForMask(CubismClippingContextAndroid clip) {
         clippingContextBufferForMask = clip;
     }
 
@@ -522,7 +401,7 @@ public class CubismRendererAndroid extends CubismRenderer {
      *
      * @return the clipping context to draw on display
      */
-    CubismClippingContext getClippingContextBufferForDraw() {
+    CubismClippingContextAndroid getClippingContextBufferForDraw() {
         return clippingContextBufferForDraw;
     }
 
@@ -531,7 +410,7 @@ public class CubismRendererAndroid extends CubismRenderer {
      *
      * @param clip the clipping context to draw on display
      */
-    void setClippingContextBufferForDraw(CubismClippingContext clip) {
+    void setClippingContextBufferForDraw(CubismClippingContextAndroid clip) {
         clippingContextBufferForDraw = clip;
     }
 
@@ -541,7 +420,7 @@ public class CubismRendererAndroid extends CubismRenderer {
      * @return the offscreen frame buffer
      */
     CubismOffscreenSurfaceAndroid getMaskBuffer(int index) {
-        return offscreenFrameBuffers[index];
+        return offscreenSurfaces[index];
     }
 
     CubismDrawableInfoCachesHolder getDrawableInfoCachesHolder() {
@@ -565,7 +444,7 @@ public class CubismRendererAndroid extends CubismRenderer {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         // Anisotropic filtering. If it is not supported, do not set it
-        if (getAnisotropy() > 0.0f) {
+        if (getAnisotropy() >= 1.0f) {
             for (Map.Entry<Integer, Integer> entry : textures.entrySet()) {
                 glBindTexture(GL_TEXTURE_2D, entry.getValue());
                 glTexParameterf(GL_TEXTURE_2D, GLES11Ext.GL_TEXTURE_MAX_ANISOTROPY_EXT, getAnisotropy());
@@ -576,12 +455,34 @@ public class CubismRendererAndroid extends CubismRenderer {
     /**
      * Additinal processing after drawing is completed.
      */
-    void postDraw() {}
+    void postDraw() {
+    }
+
+    /**
+     * テクスチャマップにバインドされたテクスチャIDを取得する。
+     * バインドされていなければダミーとして-1を返します。
+     *
+     * @param textureId テクスチャID
+     * @return バインドされたテクスチャID
+     */
+    int getBoundTextureId(int textureId) {
+        Integer boundTextureId = textures.get(textureId);
+        return boundTextureId == null ? -1 : boundTextureId;
+    }
 
     /**
      * Frame buffer for drawing mask
      */
-    CubismOffscreenSurfaceAndroid[] offscreenFrameBuffers;
+    CubismOffscreenSurfaceAndroid[] offscreenSurfaces;
+
+    /**
+     * マスク生成時かどうかを判定する。
+     *
+     * @return マスク生成時かどうか。生成時ならtrue。
+     */
+    private boolean isGeneratingMask() {
+        return getClippingContextBufferForMask() != null;
+    }
 
     /**
      * Map between the textures referenced by the model and the textures bound by the renderer
@@ -606,11 +507,11 @@ public class CubismRendererAndroid extends CubismRenderer {
     /**
      * Clippping context for drawing on mask texture
      */
-    private CubismClippingContext clippingContextBufferForMask;
+    private CubismClippingContextAndroid clippingContextBufferForMask;
     /**
      * Clipping context for drawing on the screen
      */
-    private CubismClippingContext clippingContextBufferForDraw;
+    private CubismClippingContextAndroid clippingContextBufferForDraw;
 
     /**
      * Drawable情報のキャッシュ変数

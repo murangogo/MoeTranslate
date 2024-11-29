@@ -125,7 +125,7 @@
     <string name="not_added_remove">没有添加翻译结果视图，无需移除</string>
     <string name="orientation_changed">检测到屏幕方向更改，请重新选取截屏区域</string>
     <string name="download_tips">在本页面中，您可以下载NLLB模型文件。为了保持下载过程不被打断，请您在<font color="#E25A5C">进行下载时不要离开本页面</font>。由于文件托管在Cloudflare R2中，视网络状况可能会出现无法下载等情况；请您灵活切换WLAN与数据流量，以及开启或关闭VPN。</string>
-    <string name="download_manually">若无论如何文件都无法下载成功，请<font color="#30d3f3">点击这里</font>查看手动下载的方法。</string>
+    <string name="download_manually">若无论如何文件都无法下载成功，请<font color="#2474b5">点击这里</font>查看手动下载的方法。</string>
     <string name="start_download">开始下载</string>
     <string name="delete_models">删除模型</string>
     <string name="stop_download">停止下载</string>

@@ -11,6 +11,8 @@ package com.live2d.sdk.cubism.framework;
 import com.live2d.sdk.cubism.framework.utils.jsonparser.ACubismJsonValue;
 import com.live2d.sdk.cubism.framework.utils.jsonparser.CubismJson;
 
+import java.util.List;
+
 /**
  * This class handles cdi.json data.
  */
@@ -144,12 +146,36 @@ public class CubismCdiJson {
         return json.getRoot().get(JsonKey.PARTS.key).get(index).get(JsonKey.NAME.key).getString();
     }
 
+    // ----- Combined Parameters -----//
+    /**
+     * Returns the number of combined parameters.
+     *
+     * @return number of combined parameters
+     */
+    public int getCombinedParametersCount() {
+        if (!existsCombinedParameters()) {
+            return 0;
+        }
+        return json.getRoot().get(JsonKey.COMBINED_PARAMETERS.key).size();
+    }
+
+    /**
+     * Returns the pair list of the combined parameter.
+     *
+     * @param index index to the desired combined parameters.
+     * @return pair list of the combined parameter
+     */
+    public List<ACubismJsonValue> getCombinedParameter(int index) {
+        return json.getRoot().get(JsonKey.COMBINED_PARAMETERS.key).get(index).getList();
+    }
+
     // JSON keys
     private enum JsonKey {
         VERSION("Version"),
         PARAMETERS("Parameters"),
         PARAMETER_GROUPS("ParameterGroups"),
         PARTS("Parts"),
+        COMBINED_PARAMETERS("CombinedParameters"),
         ID("Id"),
         GROUP_ID("GroupId"),
         NAME("Name");
@@ -192,6 +218,16 @@ public class CubismCdiJson {
      */
     private boolean existsParts() {
         ACubismJsonValue node = json.getRoot().get(JsonKey.PARTS.key);
+        return !node.isNull() && !node.isError();
+    }
+
+    /**
+     * Returns whether the combined parameters exist in the Display Information File(cdi3.json).
+     *
+     * @return If true, the key exists.
+     */
+    private boolean existsCombinedParameters() {
+        ACubismJsonValue node = json.getRoot().get(JsonKey.COMBINED_PARAMETERS.key);
         return !node.isNull() && !node.isError();
     }
 

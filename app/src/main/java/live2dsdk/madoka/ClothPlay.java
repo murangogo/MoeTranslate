@@ -123,7 +123,7 @@ public class ClothPlay {
                public void run() {
                    Log.d("播放第一个","");
                    LAppLive2DManager.getInstance().getModel(0).setExpression("mtn_ex_" + emotion1[i][j] + ".exp3.json");
-                   LAppLive2DManager.getInstance().getModel(0).startMotion("Motion", Integer.parseInt(motion1[i][j]), LAppDefine.Priority.FORCE.getPriority(),null);
+                   LAppLive2DManager.getInstance().getModel(0).startMotion("Motion", Integer.parseInt(motion1[i][j]), LAppDefine.Priority.FORCE.getPriority(),null,null);
                    if(isContinue[i][j]){
                        Log.d("有第二个","");
                        try {
@@ -134,7 +134,7 @@ public class ClothPlay {
                        try {
                        Log.d("播放第二个","");
                        LAppLive2DManager.getInstance().getModel(0).setExpression("mtn_ex_" + emotion2[i][j] + ".exp3.json");
-                       LAppLive2DManager.getInstance().getModel(0).startMotion("Motion", Integer.parseInt(motion2[i][j]), LAppDefine.Priority.FORCE.getPriority(),null);
+                       LAppLive2DManager.getInstance().getModel(0).startMotion("Motion", Integer.parseInt(motion2[i][j]), LAppDefine.Priority.FORCE.getPriority(),null,null);
                        Thread.sleep(1500);
                        } catch (Throwable e) {
                            makeToast(activity);

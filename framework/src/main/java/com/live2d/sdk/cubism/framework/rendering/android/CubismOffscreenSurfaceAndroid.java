@@ -26,16 +26,16 @@ public class CubismOffscreenSurfaceAndroid {
     /**
      * Copy constructor
      *
-     * @param offscreenFrame offscreen frame buffer
+     * @param offscreenSurface offscreen surface buffer
      */
-    public CubismOffscreenSurfaceAndroid(CubismOffscreenSurfaceAndroid offscreenFrame) {
-        renderTexture = Arrays.copyOf(offscreenFrame.renderTexture, offscreenFrame.renderTexture.length);
-        colorBuffer = Arrays.copyOf(offscreenFrame.colorBuffer, offscreenFrame.colorBuffer.length);
-        oldFBO = Arrays.copyOf(offscreenFrame.oldFBO, offscreenFrame.oldFBO.length);
+    public CubismOffscreenSurfaceAndroid(CubismOffscreenSurfaceAndroid offscreenSurface) {
+        renderTexture = Arrays.copyOf(offscreenSurface.renderTexture, offscreenSurface.renderTexture.length);
+        colorBuffer = Arrays.copyOf(offscreenSurface.colorBuffer, offscreenSurface.colorBuffer.length);
+        oldFBO = Arrays.copyOf(offscreenSurface.oldFBO, offscreenSurface.oldFBO.length);
 
-        bufferWidth = offscreenFrame.bufferWidth;
-        bufferHeight = offscreenFrame.bufferHeight;
-        isColorBufferInherited = offscreenFrame.isColorBufferInherited;
+        bufferWidth = offscreenSurface.bufferWidth;
+        bufferHeight = offscreenSurface.bufferHeight;
+        isColorBufferInherited = offscreenSurface.isColorBufferInherited;
     }
 
     /**
@@ -96,29 +96,29 @@ public class CubismOffscreenSurfaceAndroid {
     }
 
     /**
-     * Create CubismOffscreenFrame.
+     * Create CubismOffscreenSurface.
      * <p>
      * This method reproduces default argument of C++. The users can use this method instead of specifying null as colorBuffer(2rd) argument.
      * </p>
      *
      * @param displayBufferSize buffer size(Vector type)
      */
-    public void createOffscreenFrame(CubismVector2 displayBufferSize) {
-        createOffscreenFrame((int) displayBufferSize.x, (int) displayBufferSize.y, null);
+    public void createOffscreenSurface(CubismVector2 displayBufferSize) {
+        createOffscreenSurface((int) displayBufferSize.x, (int) displayBufferSize.y, null);
     }
 
     /**
-     * Create CubismOffscreenFrame.
+     * Create CubismOffscreenSurface.
      *
      * @param displayBufferSize buffer size
      * @param colorBuffer if non-zero, use colorBuffer as pixel storage area.
      */
-    public void createOffscreenFrame(final CubismVector2 displayBufferSize, final int[] colorBuffer) {
-        createOffscreenFrame((int) displayBufferSize.x, (int) displayBufferSize.y, colorBuffer);
+    public void createOffscreenSurface(final CubismVector2 displayBufferSize, final int[] colorBuffer) {
+        createOffscreenSurface((int) displayBufferSize.x, (int) displayBufferSize.y, colorBuffer);
     }
 
     /**
-     * Create CubismOffscreenFrame.
+     * Create CubismOffscreenSurface.
      * <p>
      * This method reproduces default argument of C++. The users can use this method instead of specifying null as colorBuffer(3rd) argument.
      * </p>
@@ -126,20 +126,20 @@ public class CubismOffscreenSurfaceAndroid {
      * @param displayBufferWidth buffer width
      * @param displayBufferHeight buffer height
      */
-    public void createOffscreenFrame(int displayBufferWidth, int displayBufferHeight) {
-        createOffscreenFrame(displayBufferWidth, displayBufferHeight, null);
+    public void createOffscreenSurface(int displayBufferWidth, int displayBufferHeight) {
+        createOffscreenSurface(displayBufferWidth, displayBufferHeight, null);
     }
 
     /**
-     * Create CubismOffscreenFrame.
+     * Create CubismOffscreenSurface.
      *
      * @param displayBufferWidth buffer width
      * @param displayBufferHeight buffer height
      * @param colorBuffer if non-zero, use colorBuffer as pixel storage area.
      */
-    public void createOffscreenFrame(final int displayBufferWidth, final int displayBufferHeight, final int[] colorBuffer) {
+    public void createOffscreenSurface(final int displayBufferWidth, final int displayBufferHeight, final int[] colorBuffer) {
         // いったん削除
-        destroyOffscreenFrame();
+        destroyOffscreenSurface();
 
         int[] ret = new int[1];
 
@@ -189,9 +189,9 @@ public class CubismOffscreenSurfaceAndroid {
     }
 
     /**
-     * Destroy CubismOffscreenFrame
+     * Destroy CubismOffscreenSurface
      */
-    public void destroyOffscreenFrame() {
+    public void destroyOffscreenSurface() {
         if (!isColorBufferInherited && (colorBuffer != null)) {
             glDeleteTextures(1, colorBuffer, 0);
             colorBuffer = null;

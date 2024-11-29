@@ -147,7 +147,7 @@ public class CubismPose {
         final CubismId parameterId = CubismFramework.getIdManager().getId(partInfo.get(JsonTag.ID.tag).getString());
 
         final PartData partData = new PartData();
-        partData.partId = new CubismId(parameterId);
+        partData.partId = CubismFramework.getIdManager().getId(parameterId);
 
         ACubismJsonValue link = partInfo.get(JsonTag.LINK.tag);
         if (link != null) {
@@ -273,6 +273,7 @@ public class CubismPose {
                 }
 
                 newOpacity = calculateOpacity(model, i, deltaTimeSeconds);
+
                 visiblePartIndex = i;
             }
         }
@@ -305,9 +306,13 @@ public class CubismPose {
      * @param model target model
      * @param index part index
      * @param deltaTime delta time[s]
-     * @return new calculated opacity
+     * @return new calculated opacity. If fade time is 0.0[s], return 1.0f.
      */
     private float calculateOpacity(CubismModel model, int index, float deltaTime) {
+        if (fadeTimeSeconds == 0) {
+            return 1.0f;
+        }
+
         final int partIndex = partGroups.get(index).partIndex;
         float opacity = model.getPartOpacity(partIndex);
 

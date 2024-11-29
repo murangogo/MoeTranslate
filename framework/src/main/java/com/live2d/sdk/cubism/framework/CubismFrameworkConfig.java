@@ -48,7 +48,7 @@ public class CubismFrameworkConfig {
     /**
      * Cubism SDKにおけるデバッグ機能の有効状態。trueなら有効。
      */
-    public static final boolean CSM_DEBUG = true;
+    public static final boolean CSM_DEBUG = false;
 
     /**
      * ログ出力設定。<br>

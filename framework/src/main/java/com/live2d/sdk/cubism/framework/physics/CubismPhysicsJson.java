@@ -15,7 +15,7 @@ import com.live2d.sdk.cubism.framework.utils.jsonparser.CubismJson;
 /**
  * A manager of physics3.json.
  */
-class CubismPhysicsJson {
+public class CubismPhysicsJson {
     /**
      * Constructor
      *

@@ -80,6 +80,10 @@ class NLLBDownloadFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if(prefs.getBoolean("Download_NLLB",false)){
+            binding.progressBar.progress = 100
+            binding.progressText.text = "100%"
+            binding.sizeText.text = ""
+            binding.speedText.text = ""
             binding.statusText.text = getString(R.string.nllb_status_download)
         }else{
             binding.statusText.text = getString(R.string.nllb_status_not_download)
@@ -225,13 +229,11 @@ class NLLBDownloadFragment : Fragment() {
                 // 总共的文件数
                 val totalFiles = fileInfoList.size
 
-                // 从上次的位置继续下载
+                // 开始下载
                 for (i in currentProgress.currentFileIndex until fileInfoList.size) {
 
                     // 检测到停止下载
                     if (!isDownloading.get()) {
-                        // 保存当前进度
-                        saveDownloadProgress()
                         // 抛出异常，取消下载
                         throw CancellationException("Download cancelled")
                     }
@@ -250,9 +252,6 @@ class NLLBDownloadFragment : Fragment() {
                     // 开始下载文件
                     downloadFile(fileInfo, i + 1, totalFiles)
                 }
-
-                // 下载完成，清除进度文件
-                clearDownloadProgress()
 
                 // 在主线程中更新UI
                 withContext(Dispatchers.Main) {
@@ -287,53 +286,8 @@ class NLLBDownloadFragment : Fragment() {
         isDownloading.set(false)
         // 更新状态条
         binding.statusText.text = getString(R.string.download_pause)
-        // 保存已下载的进度
-        saveDownloadProgress()
         // 更新按钮
         updateUI(false)
-    }
-
-    private fun saveDownloadProgress() {
-        try {
-
-            // 先获取文件路径
-            val modelDir = File(requireContext().getExternalFilesDir(null), "models")
-            if (!modelDir.exists()) {
-                modelDir.mkdirs()
-            }
-
-            // 创建进度保存文件
-            val progressFile = File(modelDir, "download_progress.json")
-            // 保存已下载的文件索引，以及已下载的字节数
-            val progressJson = JSONObject().apply {
-                put("currentFileIndex", currentProgress.currentFileIndex)
-                put("downloadedBytes", currentProgress.downloadedBytes)
-            }
-
-            // 写出文件
-            progressFile.writeText(progressJson.toString())
-        } catch (e: Exception) {
-            // 保存进度失败的处理
-            e.printStackTrace()
-            clearDownloadProgress()
-            showToast("保存进度失败：${e.message}")
-        }
-    }
-
-    private fun clearDownloadProgress() {
-        try {
-            val modelDir = File(requireContext().getExternalFilesDir(null), "models")
-            val progressFile = File(modelDir, "download_progress.json")
-            if (progressFile.exists()) {
-                progressFile.delete()
-            }
-            currentProgress = DownloadProgress()
-        } catch (e: Exception) {
-            // 清除进度失败的处理
-            e.printStackTrace()
-            clearDownloadProgress()
-            showToast("清除进度失败：${e.message}")
-        }
     }
 
     // 获取需下载的文件信息
@@ -365,6 +319,14 @@ class NLLBDownloadFragment : Fragment() {
     // 下载文件的函数
     @SuppressLint("SetTextI18n")
     private suspend fun downloadFile(fileInfo: FileInfo, currentFile: Int, totalFiles: Int) {
+
+        // 初始化UI的下载进度
+        withContext(Dispatchers.Main) {
+            binding.progressBar.progress = 0
+            binding.progressText.text = "0%"
+            binding.sizeText.text = ""
+            binding.speedText.text = ""
+        }
 
         // 创建文件夹
         val modelDir = File(requireContext().getExternalFilesDir(null), "models")
@@ -466,6 +428,11 @@ class NLLBDownloadFragment : Fragment() {
     private fun verifyCompletedFile(fileInfo: FileInfo, file: File, expectedMd5: String): Boolean {
         return try {
             lifecycleScope.launch(Dispatchers.Main) {
+                // 更新UI
+                binding.progressBar.progress = 100
+                binding.progressText.text = "100%"
+                binding.sizeText.text = ""
+                binding.speedText.text = ""
                 binding.statusText.text = getString(R.string.verify_file, fileInfo.fileName)
             }
             Log.d("MD5", calculateMD5(file) + " except " + expectedMd5)
@@ -495,7 +462,6 @@ class NLLBDownloadFragment : Fragment() {
                 if (modelDir.exists()) {
                     modelDir.listFiles()?.forEach { it.delete() }
                 }
-                clearDownloadProgress()
                 currentProgress = DownloadProgress()
 
                 withContext(Dispatchers.Main) {

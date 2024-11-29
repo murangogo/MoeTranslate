@@ -7,6 +7,8 @@
 
 package com.live2d.sdk.cubism.framework.math;
 
+import com.live2d.sdk.cubism.framework.utils.CubismDebug;
+
 /**
  * Utility class used for numerical calculations, etc.
  */
@@ -254,6 +256,27 @@ public class CubismMath {
         float v1 = (float) Math.cbrt(sd + q2);
         float root1 = u1 - v1 - ba / 3.0f;
         return rangeF(root1, 0.0f, 1.0f);
+    }
+
+    /**
+     * 浮動小数点の余りを求める。
+     *
+     * @param dividend 被除数（割られる値）
+     * @param divisor  除数（割る値）
+     * @return 余り
+     */
+    public static float modF(float dividend, float divisor) {
+        if (
+            Float.isInfinite(dividend)
+                || Float.compare(divisor, 0.0f) == 0
+                || Float.isNaN(dividend)
+                || Float.isNaN(divisor)
+        ) {
+            CubismDebug.cubismLogWarning("dividend: %f, divisor: %f ModF() returns 'NaN'.", dividend, divisor);
+            return Float.NaN;
+        }
+
+        return dividend % divisor;
     }
 
     /**
