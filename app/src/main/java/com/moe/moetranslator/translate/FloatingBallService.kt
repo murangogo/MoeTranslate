@@ -26,8 +26,10 @@ import com.moe.moetranslator.utils.KeystoreManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import translationapi.azuretranslation.AzureTranslation
 import translationapi.baidutranslation.BaiduTranslationImage
 import translationapi.baidutranslation.BaiduTranslationText
+import translationapi.bingtranslation.BingTranslation
 import translationapi.customtranslation.CustomTranslationImage
 import translationapi.customtranslation.CustomTranslationText
 import translationapi.mlkittranslation.MLKitTranslation
@@ -142,17 +144,19 @@ class FloatingBallService : LifecycleService() {
         // 初始化翻译API
         try {
             if (prefs.getInt("Translate_Mode", 0) == 0){
-                when (prefs.getInt("OCR_API", 0)) {
+                when (prefs.getInt("OCR_API", 1)) {
                     0 -> when (prefs.getInt("OCR_AI", 0)){
                         0 -> translatorText = MLKitTranslation()
                         1 -> translatorText = NLLBTranslation(this)
                         else -> { showToast("Unknown Translator.") }
                     }
-                    1 -> translatorText = VolcTranslation(KeystoreManager.retrieveKey(this, "Volc_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Volc_SECRETKEY")!!)
+                    1 -> translatorText = BingTranslation()
                     2 -> translatorText = NiuTranslation(KeystoreManager.retrieveKey(this, "Niutrans")!!)
-                    3 -> translatorText = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
-                    4 -> translatorText = TencentTranslationText(KeystoreManager.retrieveKey(this, "Tencent_Cloud_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Tencent_Cloud_SECRETKEY")!!)
-                    5 -> {
+                    3 -> translatorText = VolcTranslation(KeystoreManager.retrieveKey(this, "Volc_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Volc_SECRETKEY")!!)
+                    4 -> translatorText = AzureTranslation(KeystoreManager.retrieveKey(this, "Azure")!!)
+                    5 -> translatorText = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
+                    6 -> translatorText = TencentTranslationText(KeystoreManager.retrieveKey(this, "Tencent_Cloud_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Tencent_Cloud_SECRETKEY")!!)
+                    7 -> {
                         val config = loadTextConfig(prefs, prefs.getInt("Custom_Text_API",0))
                         if (config == null) {
                             showToast("No Custom Text API Config Found.")

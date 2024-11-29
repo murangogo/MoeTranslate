@@ -15,7 +15,7 @@ class CustomPreference private constructor(context: Context) {
 
     //----翻译选项----
     //Translate_Mode(Int)：0为本地OCR后进行文本翻译；1为上传截图后进行图片翻译
-    //OCR_API(Int)：0为使用本地大模型；1为使用火山引擎；2为使用小牛翻译；3为使用百度翻译；4为使用腾讯云；5为使用自定义API
+    //OCR_API(Int)：0为使用本地大模型；1为使用必应翻译；2为使用小牛翻译；3为使用火山引擎；4为使用Azure AI翻译；5为使用百度翻译；6为使用腾讯云；7为使用自定义API
     //OCR_AI(Int)：0为使用MLKit套件；1为使用NLLB模型
     //Pic_API(Int)：0为使用百度翻译；1为使用腾讯云；2为使用自定义API
     //Custom_Text_API(Int)：用户选择的自定义的文本翻译API，用户最多可添加三个自定义的文本翻译API（0，1，2）
@@ -38,14 +38,17 @@ class CustomPreference private constructor(context: Context) {
     //Gemini_IV(Str)：KeyStore参数，Gemini的API
 
     //----API列表----
+    //Niutrans_EncryptedKey(Str)：KeyStore参数，存储小牛翻译API（Key）
+    //Niutrans_IV(Str)：KeyStore参数，存储小牛翻译API（Key）
+
     //Volc_ACCOUNT_EncryptedKey(Str)：KeyStore参数，存储火山引擎API（APPID）
     //Volc_ACCOUNT_IV(Str)：KeyStore参数，存储火山引擎API（APPID）
 
     //Volc_SECRETKEY_EncryptedKey(Str)：KeyStore参数，存储火山引擎API（SecretKey）
     //Volc_SECRETKEY_IV(Str)：KeyStore参数，存储火山引擎API（SecretKey）
 
-    //Niutrans_EncryptedKey(Str)：KeyStore参数，存储小牛翻译API（Key）
-    //Niutrans_IV(Str)：KeyStore参数，存储小牛翻译API（Key）
+    //Azure_EncryptedKey(Str)：KeyStore参数，存储Azure API（Key）
+    //Azure_IV(Str)：KeyStore参数，存储Azure翻译API（Key）
 
     //Baidu_Translate_ACCOUNT_EncryptedKey(Str)：KeyStore参数，存储百度翻译API（APPID）
     //Baidu_Translate_ACCOUNT_IV(Str)：KeyStore参数，存储百度翻译API（APPID）

@@ -41,14 +41,10 @@
         app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
-            app:key="ui_volc_translation_text"
-            app:title="@string/volcapi_name"
-            app:icon="@drawable/volc_engine"
-            app:summary="@string/volcapi_description"/>
-
-        <Preference
-            app:key="ui_manage_volc_api_text"
-            app:title="@string/manage_volc_api" />
+            app:key="ui_bing_translation_text"
+            app:title="@string/bingapi_name"
+            app:icon="@drawable/bing"
+            app:summary="@string/bingapi_description"/>
 
         <SwitchPreferenceCompat
             app:key="ui_niu_translation_text"
@@ -59,6 +55,26 @@
         <Preference
             app:key="ui_manage_niu_api_text"
             app:title="@string/manage_niu_api" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_volc_translation_text"
+            app:title="@string/volcapi_name"
+            app:icon="@drawable/volc_engine"
+            app:summary="@string/volcapi_description"/>
+
+        <Preference
+            app:key="ui_manage_volc_api_text"
+            app:title="@string/manage_volc_api" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_azure_translation_text"
+            app:title="@string/azureapi_name"
+            app:icon="@drawable/azure"
+            app:summary="@string/azureapi_description"/>
+
+        <Preference
+            app:key="ui_manage_azure_api_text"
+            app:title="@string/manage_azure_api" />
 
         <SwitchPreferenceCompat
             app:key="ui_baidu_translation_text"

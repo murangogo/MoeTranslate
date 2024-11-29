@@ -111,7 +111,7 @@ class TranslateFragment : Fragment() {
                 if (checkAndroidSDK() && checkAccessibilityService() && checkFloatingBall() && checkNotify() && checkTranslateAPI() && checkCombination()) {
                     if ((prefs.getInt("Translate_Mode", 0) == 0) && (prefs.getInt(
                             "OCR_API",
-                            0
+                            1
                         ) == 0) && (prefs.getInt("OCR_AI", 0) == 1)
                     ) {
                         checkRAM()
@@ -123,7 +123,7 @@ class TranslateFragment : Fragment() {
             }
         }
 
-        if ((prefs.getInt("Translate_Mode", 0) == 0) && (prefs.getInt("OCR_API", 0) == 5)) {
+        if ((prefs.getInt("Translate_Mode", 0) == 0) && (prefs.getInt("OCR_API", 1) == 7)) {
             binding.SourceLanguageName.text =
                 CustomLocale.getInstance(prefs.getString("Source_Language", "ja")).getDisplayName()
             binding.TargetLanguageName.text = getString(R.string.custom_api_select_language)
@@ -190,7 +190,7 @@ class TranslateFragment : Fragment() {
 
     private fun showAPIName() {
         val translateMode = prefs.getInt("Translate_Mode", 0)
-        val ocrApi = prefs.getInt("OCR_API", 0)
+        val ocrApi = prefs.getInt("OCR_API", 1)
         val ocrAi = prefs.getInt("OCR_AI", 0)
         val picApi = prefs.getInt("Pic_API", 0)
         val customTextApi = prefs.getInt("Custom_Text_API", 0)
@@ -220,7 +220,7 @@ class TranslateFragment : Fragment() {
                 1 -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
-                        getString(R.string.volcapi_name)
+                        getString(R.string.bingapi_name)
                     ) + "（${getString(R.string.ocr)}）"
                 }
 
@@ -234,11 +234,25 @@ class TranslateFragment : Fragment() {
                 3 -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
-                        getString(R.string.baiduapi_name)
+                        getString(R.string.volcapi_name)
                     ) + "（${getString(R.string.ocr)}）"
                 }
 
                 4 -> {
+                    binding.selectedAPI.text = getString(
+                        R.string.api_name,
+                        getString(R.string.azureapi_name)
+                    ) + "（${getString(R.string.ocr)}）"
+                }
+
+                5 -> {
+                    binding.selectedAPI.text = getString(
+                        R.string.api_name,
+                        getString(R.string.baiduapi_name)
+                    ) + "（${getString(R.string.ocr)}）"
+                }
+
+                6 -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
                         getString(R.string.tencentapi_name)
@@ -348,7 +362,7 @@ class TranslateFragment : Fragment() {
 
     private fun checkTranslateAPI(): Boolean {
         val translateMode = prefs.getInt("Translate_Mode", 0)
-        val ocrApi = prefs.getInt("OCR_API", 0)
+        val ocrApi = prefs.getInt("OCR_API", 1)
         val ocrAi = prefs.getInt("OCR_AI", 0)
         val picApi = prefs.getInt("Pic_API", 0)
         val customTextApi = prefs.getInt("Custom_Text_API", 0)
@@ -411,34 +425,7 @@ class TranslateFragment : Fragment() {
                 }
 
                 1 -> {
-                    if (prefs.getString("Volc_ACCOUNT_EncryptedKey", "") == "") {
-                        val dialog = AlertDialog.Builder(requireContext())
-                            .setTitle(R.string.api_not_config_title)
-                            .setMessage(
-                                getString(
-                                    R.string.api_not_config_content,
-                                    getString(R.string.volcapi_name)
-                                )
-                            )
-                            .setCancelable(false)
-                            .setPositiveButton(R.string.go_to_config) { _, _ ->
-                                val intent =
-                                    Intent(requireContext(), ManageActivity::class.java).apply {
-                                        putExtra(
-                                            ManageActivity.EXTRA_FRAGMENT_TYPE,
-                                            ManageActivity.TYPE_FRAGMENT_MANAGE_VOLC_API
-                                        )
-                                    }
-                                startActivity(intent)
-                            }
-                            .setNegativeButton(R.string.user_cancel, null)
-                            .create()
-                        dialog.show()
-                        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-                        false
-                    } else {
-                        true
-                    }
+                    true
                 }
 
                 2 -> {
@@ -473,6 +460,68 @@ class TranslateFragment : Fragment() {
                 }
 
                 3 -> {
+                    if (prefs.getString("Volc_ACCOUNT_EncryptedKey", "") == "") {
+                        val dialog = AlertDialog.Builder(requireContext())
+                            .setTitle(R.string.api_not_config_title)
+                            .setMessage(
+                                getString(
+                                    R.string.api_not_config_content,
+                                    getString(R.string.volcapi_name)
+                                )
+                            )
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.go_to_config) { _, _ ->
+                                val intent =
+                                    Intent(requireContext(), ManageActivity::class.java).apply {
+                                        putExtra(
+                                            ManageActivity.EXTRA_FRAGMENT_TYPE,
+                                            ManageActivity.TYPE_FRAGMENT_MANAGE_VOLC_API
+                                        )
+                                    }
+                                startActivity(intent)
+                            }
+                            .setNegativeButton(R.string.user_cancel, null)
+                            .create()
+                        dialog.show()
+                        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                        false
+                    } else {
+                        true
+                    }
+                }
+
+                4 -> {
+                    if (prefs.getString("Azure_EncryptedKey", "") == "") {
+                        val dialog = AlertDialog.Builder(requireContext())
+                            .setTitle(R.string.api_not_config_title)
+                            .setMessage(
+                                getString(
+                                    R.string.api_not_config_content,
+                                    getString(R.string.azureapi_name)
+                                )
+                            )
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.go_to_config) { _, _ ->
+                                val intent =
+                                    Intent(requireContext(), ManageActivity::class.java).apply {
+                                        putExtra(
+                                            ManageActivity.EXTRA_FRAGMENT_TYPE,
+                                            ManageActivity.TYPE_FRAGMENT_MANAGE_AZURE_API
+                                        )
+                                    }
+                                startActivity(intent)
+                            }
+                            .setNegativeButton(R.string.user_cancel, null)
+                            .create()
+                        dialog.show()
+                        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                        false
+                    } else {
+                        true
+                    }
+                }
+
+                5 -> {
                     if (prefs.getString("Baidu_Translate_ACCOUNT_EncryptedKey", "") == "") {
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
@@ -503,7 +552,7 @@ class TranslateFragment : Fragment() {
                     }
                 }
 
-                4 -> {
+                6 -> {
                     if (prefs.getString("Tencent_Cloud_ACCOUNT_EncryptedKey", "") == "") {
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
@@ -938,8 +987,8 @@ class TranslateFragment : Fragment() {
     private fun showLanguageListDialog(type: Int) {
         if (((prefs.getInt("Translate_Mode", 0) == 0) && (prefs.getInt(
                 "OCR_API",
-                0
-            ) == 5) && (type == 2)) || ((prefs.getInt(
+                1
+            ) == 7) && (type == 2)) || ((prefs.getInt(
                 "Translate_Mode",
                 0
             ) == 1) && (prefs.getInt("Pic_API", 0) == 2))
