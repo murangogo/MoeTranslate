@@ -12,7 +12,7 @@ object TranslateTools {
         // 获取当前设置
         val prefs = CustomPreference.getInstance(context)
         val translateMode = prefs.getInt("Translate_Mode", 0)
-        val ocrApi = prefs.getInt("OCR_API", 0)
+        val ocrApi = prefs.getInt("OCR_API", 1)
         val ocrAi = prefs.getInt("OCR_AI", 0)
         val picApi = prefs.getInt("Pic_API", 0)
 

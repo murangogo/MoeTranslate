@@ -249,7 +249,7 @@
     <string name="welcome_home_title">准备开始翻译</string>
     <string name="welcome_home_subtitle">请配置以下选项来开始你的翻译之旅</string>
     <string name="welcome_home_title_2">翻译已启动！</string>
-    <string name="welcome_home_subtitle_2">您可以随时改变“源/目标“语言或停止翻译</string>
+    <string name="welcome_home_subtitle_2">您可以随时改变“源/目标”语言或停止翻译</string>
     <string name="start_ball">开始吧！</string>
     <string name="stop_ball">我要停！</string>
     <string name="stop_success">停止成功</string>
@@ -261,6 +261,12 @@
     <string name="keep_cache">暂时保留</string>
     <string name="still_running">翻译悬浮球好像还在运行，请先关闭它再调整设置吧</string>
     <string name="invalid_combination">源语言和目标语言相同，这是无意义的翻译组合哦</string>
+    <string name="bingapi_name">必应翻译</string>
+    <string name="bingapi_description">不需要配置密钥即可使用的翻译API，实现原理是模拟浏览器访问必应翻译网页版。<font color="#E25A5C">该方法依赖网页结构和token提取，稳定性较差且可能受到访问限制，还请您更多地使用其他的翻译API</font>。</string>
+    <string name="azureapi_name">Azure AI 翻译</string>
+    <string name="azureapi_description">微软Azure AI 翻译的API，点击下方的“管理Azure API”即可设置API，还可以在其中查看API的申请教程（每月有200万字符的免费调用额度）。</string>
+    <string name="manage_azure_api">管理Azure API</string>
+    <string name="azure_hint_secret_key">密钥（1或2均可）</string>
 
 
 </resources>

@@ -23,7 +23,8 @@ class APIConfig : PreferenceFragmentCompat() {
             setPreferencesFromResource(R.xml.preferences_ocr, rootKey)
             allTranslationKeys = listOf(
                 "mlkit_translation", "nllb_translation",
-                "ui_volc_translation_text", "ui_niu_translation_text",
+                "ui_bing_translation_text", "ui_niu_translation_text",
+                "ui_volc_translation_text", "ui_azure_translation_text",
                 "ui_baidu_translation_text", "ui_tencent_translation_text",
                 "ui_custom_api_1_text", "ui_custom_api_2_text", "ui_custom_api_3_text"
             )
@@ -68,6 +69,14 @@ class APIConfig : PreferenceFragmentCompat() {
                 true
             }
 
+            findPreference<Preference>("ui_manage_niu_api_text")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_NIU_API)
+                }
+                startActivity(intent)
+                true
+            }
+
             findPreference<Preference>("ui_manage_volc_api_text")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_VOLC_API)
@@ -76,9 +85,9 @@ class APIConfig : PreferenceFragmentCompat() {
                 true
             }
 
-            findPreference<Preference>("ui_manage_niu_api_text")?.setOnPreferenceClickListener {
+            findPreference<Preference>("ui_manage_azure_api_text")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
-                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_NIU_API)
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_AZURE_API)
                 }
                 startActivity(intent)
                 true
@@ -191,20 +200,32 @@ class APIConfig : PreferenceFragmentCompat() {
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "nllb_translation")
             }
-            "ui_volc_translation_text"->{
+            "ui_bing_translation_text"->{
                 prefs.setInt("OCR_API", 1)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
-                Log.d("APIConfig", "OCR baidu")
+                Log.d("APIConfig", "OCR bing")
             }
             "ui_niu_translation_text"->{
                 prefs.setInt("OCR_API", 2)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
-                Log.d("APIConfig", "OCR baidu")
+                Log.d("APIConfig", "OCR niu")
+            }
+            "ui_volc_translation_text"->{
+                prefs.setInt("OCR_API", 3)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
+                Log.d("APIConfig", "OCR volc")
+            }
+            "ui_azure_translation_text"->{
+                prefs.setInt("OCR_API", 4)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
+                Log.d("APIConfig", "OCR azure")
             }
             "ui_baidu_translation_text"->{
-                prefs.setInt("OCR_API", 3)
+                prefs.setInt("OCR_API", 5)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR baidu")
@@ -216,7 +237,7 @@ class APIConfig : PreferenceFragmentCompat() {
                 Log.d("APIConfig", "pic baidu")
             }
             "ui_tencent_translation_text" -> {
-                prefs.setInt("OCR_API", 4)
+                prefs.setInt("OCR_API", 6)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR tencent")
@@ -228,7 +249,7 @@ class APIConfig : PreferenceFragmentCompat() {
                 Log.d("APIConfig", "pic tencent")
             }
             "ui_custom_api_1_text" -> {
-                prefs.setInt("OCR_API", 5)
+                prefs.setInt("OCR_API", 7)
                 prefs.setInt("Custom_Text_API", 0)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
@@ -242,7 +263,7 @@ class APIConfig : PreferenceFragmentCompat() {
                 Log.d("APIConfig", "pic custom 1")
             }
             "ui_custom_api_2_text" -> {
-                prefs.setInt("OCR_API", 5)
+                prefs.setInt("OCR_API", 7)
                 prefs.setInt("Custom_Text_API", 1)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
@@ -256,7 +277,7 @@ class APIConfig : PreferenceFragmentCompat() {
                 Log.d("APIConfig", "pic custom 2")
             }
             "ui_custom_api_3_text" -> {
-                prefs.setInt("OCR_API", 5)
+                prefs.setInt("OCR_API", 7)
                 prefs.setInt("Custom_Text_API", 2)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
@@ -275,11 +296,11 @@ class APIConfig : PreferenceFragmentCompat() {
     private fun loadSettingsFromSharedPreferences() {
         // 获取当前设置
         val translateMode = prefs.getInt("Translate_Mode", 0)
-        val ocrApi = prefs.getInt("OCR_API", 0)
+        val ocrApi = prefs.getInt("OCR_API", 1)
         val ocrAi = prefs.getInt("OCR_AI", 0)
         val picApi = prefs.getInt("Pic_API", 0)
 
-        // 获取与设置相匹配的语言列表
+        // 加载设置到UI上
         when {
             translateMode == 0 -> when (ocrApi) {
                 0 -> {
@@ -294,7 +315,7 @@ class APIConfig : PreferenceFragmentCompat() {
                     }
                 }
                 1 -> {
-                    val key = "ui_volc_translation_text"
+                    val key = "ui_bing_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
                 }
@@ -304,11 +325,21 @@ class APIConfig : PreferenceFragmentCompat() {
                     setKey(key)
                 }
                 3 -> {
-                    val key = "ui_baidu_translation_text"
+                    val key = "ui_volc_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
                 }
                 4 -> {
+                    val key = "ui_azure_translation_text"
+                    findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
+                    setKey(key)
+                }
+                5 -> {
+                    val key = "ui_baidu_translation_text"
+                    findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
+                    setKey(key)
+                }
+                6 -> {
                     val key = "ui_tencent_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)

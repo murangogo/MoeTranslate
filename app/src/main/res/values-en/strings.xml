@@ -261,6 +261,12 @@
     <string name="keep_cache">Reserved for now</string>
     <string name="still_running">The Translation Floatingball seems to be still running, so please turn it off before adjusting the settings</string>
     <string name="invalid_combination">The source language and the target language are the same, which is a meaningless translation combination</string>
+    <string name="bingapi_name">Bing Translate</string>
+    <string name="bingapi_description">The translation API can be used without configuring a key, and is implemented by simulating a browser accessing Bing Translate for the web. <font color="#E25A5C">This method relies on the structure of the web page and the extraction of tokens, which is less stable and may be subject to access restrictions, so please use other translation APIs more</font>.</string>
+    <string name="azureapi_name">Azure AI Translate</string>
+    <string name="azureapi_description">Microsoft Azure AI Translator API, click \"Manage Azure API\" below to set up the API, and you can also view the API application tutorial (there is a free call quota of 2 million characters per month).</string>
+    <string name="manage_azure_api">Manage Azure API</string>
+    <string name="azure_hint_secret_key">KEY（1 or 2 is acceptable）</string>
 
 
 </resources>

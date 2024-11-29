@@ -40,11 +40,61 @@ class OnlineAPI : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         when (apiType){
-            "volc" -> prepareVolc()
             "niu" -> prepareNiu()
+            "volc" -> prepareVolc()
+            "azure" -> prepareAzure()
             "baidu" -> prepareBaidu()
             "tencent" -> prepareTencent()
             else -> Toast.makeText(context, "Unknow Error.", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun prepareNiu(){
+        binding.tvApiType.text = getString(R.string.api_name, getString(R.string.niuapi_name))
+        binding.account.hint = getString(R.string.niu_noneed)
+        binding.account.isFocusable = false
+        binding.account.isClickable = false
+        binding.account.isCursorVisible = false
+        binding.account.isLongClickable = false
+        if (prefs.getString("Niutrans_EncryptedKey","") != ""){
+            binding.secretKey.hint = getString(R.string.api_saved)
+        }else{
+            binding.secretKey.hint = getString(R.string.niu_hint_secret_key)
+        }
+        binding.whatsThis.setOnClickListener {
+            val dialog = AlertDialog.Builder(activity)
+                .setTitle(getString(R.string.whats_api_title, getString(R.string.niuapi_name)))
+                .setMessage(getString(R.string.whats_api_content, getString(R.string.niuapi_name)))
+                .setCancelable(false)
+                .setNeutralButton(R.string.view_tutorial){_,_->
+                    val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(urlt)
+                    startActivity(intent)
+                }
+                .setPositiveButton(R.string.go_now) { _, _ ->
+                    val url = "https://fanyi-api.baidu.com/"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                }
+                .setNegativeButton(R.string.user_cancel) { _, _ ->}
+                .create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+        }
+        binding.saveOnlineApiButton.setOnClickListener {
+            if (binding.secretKey.text.isBlank()) {
+                Toast.makeText(context, getString(R.string.fill_blank), Toast.LENGTH_LONG).show()
+            } else {
+                KeystoreManager.storeKey(
+                    requireContext(),
+                    binding.secretKey.text.toString().trim(),
+                    "Niutrans"
+                )
+                Toast.makeText(context, getString(R.string.save_successfully), Toast.LENGTH_LONG).show()
+                requireActivity().finish()
+            }
         }
     }
 
@@ -99,22 +149,22 @@ class OnlineAPI : Fragment() {
         }
     }
 
-    private fun prepareNiu(){
-        binding.tvApiType.text = getString(R.string.api_name, getString(R.string.niuapi_name))
+    private fun prepareAzure(){
+        binding.tvApiType.text = getString(R.string.api_name, getString(R.string.azureapi_name))
         binding.account.hint = getString(R.string.niu_noneed)
         binding.account.isFocusable = false
         binding.account.isClickable = false
         binding.account.isCursorVisible = false
         binding.account.isLongClickable = false
-        if (prefs.getString("Niutrans_EncryptedKey","") != ""){
+        if (prefs.getString("Azure_EncryptedKey","") != ""){
             binding.secretKey.hint = getString(R.string.api_saved)
         }else{
-            binding.secretKey.hint = getString(R.string.niu_hint_secret_key)
+            binding.secretKey.hint = getString(R.string.azure_hint_secret_key)
         }
         binding.whatsThis.setOnClickListener {
             val dialog = AlertDialog.Builder(activity)
-                .setTitle(getString(R.string.whats_api_title, getString(R.string.niuapi_name)))
-                .setMessage(getString(R.string.whats_api_content, getString(R.string.niuapi_name)))
+                .setTitle(getString(R.string.whats_api_title, getString(R.string.azureapi_name)))
+                .setMessage(getString(R.string.whats_api_content, getString(R.string.azureapi_name)))
                 .setCancelable(false)
                 .setNeutralButton(R.string.view_tutorial){_,_->
                     val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
@@ -140,7 +190,7 @@ class OnlineAPI : Fragment() {
                 KeystoreManager.storeKey(
                     requireContext(),
                     binding.secretKey.text.toString().trim(),
-                    "Niutrans"
+                    "Azure"
                 )
                 Toast.makeText(context, getString(R.string.save_successfully), Toast.LENGTH_LONG).show()
                 requireActivity().finish()

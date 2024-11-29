@@ -14,12 +14,13 @@ class ManageActivity : AppCompatActivity() {
         const val EXTRA_CUSTOM_CODE = "custom_code"
         const val TYPE_FRAGMENT_MANAGE_MLKIT = 1
         const val TYPE_FRAGMENT_MANAGE_NLLB = 2
-        const val TYPE_FRAGMENT_MANAGE_VOLC_API = 3
-        const val TYPE_FRAGMENT_MANAGE_NIU_API = 4
-        const val TYPE_FRAGMENT_MANAGE_BAIDU_API = 5
-        const val TYPE_FRAGMENT_MANAGE_TENCENT_API = 6
-        const val TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API = 7
-        const val TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API = 8
+        const val TYPE_FRAGMENT_MANAGE_NIU_API = 3
+        const val TYPE_FRAGMENT_MANAGE_VOLC_API = 4
+        const val TYPE_FRAGMENT_MANAGE_AZURE_API = 5
+        const val TYPE_FRAGMENT_MANAGE_BAIDU_API = 6
+        const val TYPE_FRAGMENT_MANAGE_TENCENT_API = 7
+        const val TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API = 8
+        const val TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API = 9
         const val CODE_CUSTOM_0 = 0
         const val CODE_CUSTOM_1 = 1
         const val CODE_CUSTOM_2 = 2
@@ -46,6 +47,16 @@ class ManageActivity : AppCompatActivity() {
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()
             }
+            TYPE_FRAGMENT_MANAGE_NIU_API->{
+                val fragment = OnlineAPI()
+                val args = Bundle().apply {
+                    putString("api_type", "niu")
+                }
+                fragment.arguments = args
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
             TYPE_FRAGMENT_MANAGE_VOLC_API->{
                 val fragment = OnlineAPI()
                 val args = Bundle().apply {
@@ -56,10 +67,10 @@ class ManageActivity : AppCompatActivity() {
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()
             }
-            TYPE_FRAGMENT_MANAGE_NIU_API->{
+            TYPE_FRAGMENT_MANAGE_AZURE_API->{
                 val fragment = OnlineAPI()
                 val args = Bundle().apply {
-                    putString("api_type", "niu")
+                    putString("api_type", "azure")
                 }
                 fragment.arguments = args
                 supportFragmentManager.beginTransaction()
