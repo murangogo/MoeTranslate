@@ -17,12 +17,12 @@ import static android.opengl.GLES20.*;
 
 public class LAppSprite {       //这个类主要是进行坐标转换
     public LAppSprite(
-        float x,
-        float y,
-        float width,
-        float height,
-        int textureId,
-        int programId
+            float x,
+            float y,
+            float width,
+            float height,
+            int textureId,
+            int programId
     ) {
         rect.left = x - width * 0.5f;
         rect.right = x + width * 0.5f;
@@ -42,10 +42,6 @@ public class LAppSprite {       //这个类主要是进行坐标转换
         spriteColor[2] = 1.0f;
         spriteColor[3] = 1.0f;
 
-        // this projection matrix is applied to object coordinates-该投影矩阵应用于对象坐标
-        // in the onDrawFrame() method
-        int windowWidth = LAppDelegate.getInstance().getWindowWidth();
-        int windowHeight = LAppDelegate.getInstance().getWindowHeight();
     }
 
     public void render() {
@@ -64,10 +60,6 @@ public class LAppSprite {       //这个类主要是进行坐标转换
         GLES20.glEnableVertexAttribArray(uvLocation);
 
         GLES20.glUniform1i(textureLocation, 0);
-
-        // 画面サイズを取得する
-        int maxWidth = LAppDelegate.getInstance().getWindowWidth();
-        int maxHeight = LAppDelegate.getInstance().getWindowHeight();
 
         // 頂点データ
         positionVertex[0] = (rect.right - maxWidth * 0.5f) / (maxWidth * 0.5f);
@@ -121,16 +113,12 @@ public class LAppSprite {       //这个类主要是进行坐标转换
         // uniform属性の登録
         GLES20.glUniform1i(textureLocation, 0);
 
-        // 画面サイズを取得する
-        int maxWidth = LAppDelegate.getInstance().getWindowWidth();
-        int maxHeight = LAppDelegate.getInstance().getWindowHeight();
-
         // 頂点データ
         float[] positionVertex = {
-            (rect.right - maxWidth * 0.5f) / (maxWidth * 0.5f), (rect.up - maxHeight * 0.5f) / (maxHeight * 0.5f),
-            (rect.left - maxWidth * 0.5f) / (maxWidth * 0.5f), (rect.up - maxHeight * 0.5f) / (maxHeight * 0.5f),
-            (rect.left - maxWidth * 0.5f) / (maxWidth * 0.5f), (rect.down - maxHeight * 0.5f) / (maxHeight * 0.5f),
-            (rect.right - maxWidth * 0.5f) / (maxWidth * 0.5f), (rect.down - maxHeight * 0.5f) / (maxHeight * 0.5f)
+                (rect.right - maxWidth * 0.5f) / (maxWidth * 0.5f), (rect.up - maxHeight * 0.5f) / (maxHeight * 0.5f),
+                (rect.left - maxWidth * 0.5f) / (maxWidth * 0.5f), (rect.up - maxHeight * 0.5f) / (maxHeight * 0.5f),
+                (rect.left - maxWidth * 0.5f) / (maxWidth * 0.5f), (rect.down - maxHeight * 0.5f) / (maxHeight * 0.5f),
+                (rect.right - maxWidth * 0.5f) / (maxWidth * 0.5f), (rect.down - maxHeight * 0.5f) / (maxHeight * 0.5f)
         };
 
         // attribute属性を登録
@@ -176,8 +164,6 @@ public class LAppSprite {       //这个类主要是进行坐标转换
      * @return 当たっていればtrue
      */
     public boolean isHit(float pointX, float pointY) {
-        // 画面高さを取得する
-        int maxHeight = LAppDelegate.getInstance().getWindowHeight();
 
         // y座標は変換する必要あり
         float y = maxHeight - pointY;
@@ -190,6 +176,17 @@ public class LAppSprite {       //这个类主要是进行坐标转换
         spriteColor[1] = g;
         spriteColor[2] = b;
         spriteColor[3] = a;
+    }
+
+    /**
+     * ウィンドウサイズを設定する。
+     *
+     * @param width 横幅
+     * @param height 高さ
+     */
+    public void setWindowSize(int width, int height) {
+        maxWidth = width;
+        maxHeight = height;
     }
 
     /**
@@ -224,10 +221,6 @@ public class LAppSprite {       //这个类主要是进行坐标转换
     private final int colorLocation;     // カラーアトリビュート
     private final float[] spriteColor = new float[4];   // 表示カラー
 
-    // vpMatrix is an abbreviation for "Model View Projection Matrix"
-    private final float[] mVPMatrix = new float[16];
-    private final float[] projectionMatrix = new float[16];
-    private final float[] viewMatrix = new float[16];
-
-    private int vPMatrixHandle;
+    private int maxWidth;   // ウィンドウ幅
+    private int maxHeight;  // ウィンドウ高さ
 }

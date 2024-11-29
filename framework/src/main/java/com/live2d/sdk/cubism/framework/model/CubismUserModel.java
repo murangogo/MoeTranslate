@@ -19,9 +19,11 @@ import com.live2d.sdk.cubism.framework.id.CubismId;
 import com.live2d.sdk.cubism.framework.math.CubismModelMatrix;
 import com.live2d.sdk.cubism.framework.math.CubismTargetPoint;
 import com.live2d.sdk.cubism.framework.motion.CubismExpressionMotion;
+import com.live2d.sdk.cubism.framework.motion.CubismExpressionMotionManager;
 import com.live2d.sdk.cubism.framework.motion.CubismMotion;
 import com.live2d.sdk.cubism.framework.motion.CubismMotionManager;
 import com.live2d.sdk.cubism.framework.motion.CubismMotionQueueManager;
+import com.live2d.sdk.cubism.framework.motion.IBeganMotionCallback;
 import com.live2d.sdk.cubism.framework.motion.ICubismMotionEventFunction;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
 import com.live2d.sdk.cubism.framework.physics.CubismPhysics;
@@ -248,7 +250,7 @@ public abstract class CubismUserModel {
      * @param <T> renderer type to use
      * @return renderer instance
      */
-    public <T> T getRenderer() {
+    public <T extends CubismRenderer> T getRenderer() {
         return (T) renderer;
     }
 
@@ -320,13 +322,20 @@ public abstract class CubismUserModel {
      *
      * @param buffer a buffer where motion3.json file is loaded.
      * @param onFinishedMotionHandler the callback method called at finishing motion play. If it is null, callbacking methods is not conducting.
+     * @param onBeganMotionHandler the callback method called at beginning motion play. If it is null, callbacking methods is not conducting.
      * @return motion class
      */
     protected CubismMotion loadMotion(
         byte[] buffer,
-        IFinishedMotionCallback onFinishedMotionHandler
+        IFinishedMotionCallback onFinishedMotionHandler,
+        IBeganMotionCallback onBeganMotionHandler
     ) {
-        return CubismMotion.create(buffer, onFinishedMotionHandler);
+        try {
+            return CubismMotion.create(buffer, onFinishedMotionHandler, onBeganMotionHandler);
+        } catch (Exception e) {
+            cubismLogError("Failed to loadMotion(). %s", e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -336,7 +345,7 @@ public abstract class CubismUserModel {
      * @return motion class
      */
     protected CubismMotion loadMotion(byte[] buffer) {
-        return CubismMotion.create(buffer, null);
+        return loadMotion(buffer, null, null);
     }
 
     /**
@@ -346,7 +355,12 @@ public abstract class CubismUserModel {
      * @return motion class
      */
     protected CubismExpressionMotion loadExpression(final byte[] buffer) {
-        return CubismExpressionMotion.create(buffer);
+        try {
+            return CubismExpressionMotion.create(buffer);
+        } catch (Exception e) {
+            cubismLogError("Failed to loadExpressionMotion(). %s", e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -355,7 +369,11 @@ public abstract class CubismUserModel {
      * @param buffer a buffer where pose3.json is loaded.
      */
     protected void loadPose(final byte[] buffer) {
-        pose = CubismPose.create(buffer);
+        try {
+            pose = CubismPose.create(buffer);
+        } catch (Exception e) {
+            cubismLogError("Failed to loadPose(). %s", e.getMessage());
+        }
     }
 
     /**
@@ -364,7 +382,11 @@ public abstract class CubismUserModel {
      * @param buffer a buffer where physics3.json is loaded.
      */
     protected void loadPhysics(final byte[] buffer) {
-        physics = CubismPhysics.create(buffer);
+        try {
+            physics = CubismPhysics.create(buffer);
+        } catch (Exception e) {
+            cubismLogError("Failed to loadPhysics(). %s", e.getMessage());
+        }
     }
 
     /**
@@ -373,7 +395,11 @@ public abstract class CubismUserModel {
      * @param buffer a buffer where userdata3.json is loaded.
      */
     protected void loadUserData(final byte[] buffer) {
-        modelUserData = CubismModelUserData.create(buffer);
+        try {
+            modelUserData = CubismModelUserData.create(buffer);
+        } catch (Exception e) {
+            cubismLogError("Failed to loadUserData(). %s", e.getMessage());
+        }
     }
 
     /**
@@ -392,7 +418,7 @@ public abstract class CubismUserModel {
     /**
      * A expression manager
      */
-    protected CubismMotionManager expressionManager = new CubismMotionManager();
+    protected CubismExpressionMotionManager expressionManager = new CubismExpressionMotionManager();
     /**
      * Auto eye-blink
      */

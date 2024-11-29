@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Internal data of CubismPhysics.
  */
-class CubismPhysicsInternal {
+public class CubismPhysicsInternal {
     /**
      * Types of physics operations to be applied.
      */

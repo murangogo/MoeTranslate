@@ -8,31 +8,9 @@
 package com.live2d.sdk.cubism.framework.id;
 
 /**
- * The name of parameters, parts and Drawaable is held in this class.
+ * The name of parameters, parts and Drawable is held in this class.
  */
 public class CubismId {
-    /**
-     * Consturctor
-     *
-     * @param id A ID name
-     * @throws IllegalArgumentException if an argument is null
-     */
-    public CubismId(String id) {
-        if (id == null) {
-            throw new IllegalArgumentException("id is null.");
-        }
-        this.id = id;
-    }
-
-    /**
-     * Copy constructor
-     *
-     * @param id the CubismId instance
-     */
-    public CubismId(CubismId id) {
-        this.id = id.getString();
-    }
-
     /**
      * Get ID name
      */
@@ -53,6 +31,28 @@ public class CubismId {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param id A ID name
+     * @throws IllegalArgumentException if an argument is null
+     */
+    CubismId(String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id is null.");
+        }
+        this.id = id;
+    }
+
+    /**
+     * Copy constructor
+     *
+     * @param id the CubismId instance
+     */
+    CubismId(CubismId id) {
+        this.id = id.getString();
     }
 
     /**

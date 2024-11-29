@@ -229,6 +229,15 @@ class CubismMotionQueueEntry {
     }
 
     /**
+     * ACubismMotionを継承したクラスのインスタンスを取得する。
+     *
+     * @return モーションのインスタンス
+     */
+    public ACubismMotion getCubismMotion() {
+        return motion;
+    }
+
+    /**
      * motion
      */
     private ACubismMotion motion;

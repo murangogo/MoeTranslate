@@ -124,7 +124,7 @@
     <string name="not_added_remove">The translation result view has not been added and does not need to be removed.</string>
     <string name="orientation_changed">Screen orientation change detected, please reselect the screenshot area</string>
     <string name="download_tips">In this page, you can download the NLLB model file. In order to keep the download process uninterrupted, please <font color="#E25A5C">do not leave this page while downloading</font>. Since the file is hosted in Cloudflare R2, it may not be available for download depending on network conditions. You can flexibly switch between Wi-Fi and data traffic, and enable or disable the VPN.\n</string>
-    <string name="download_manually">If the file cannot be downloaded in any case, please <font color="#30d3f3">click here</font> to see how to download it manually.</string>
+    <string name="download_manually">If the file cannot be downloaded in any case, please <font color="#2474b5">click here</font> to see how to download it manually.</string>
     <string name="start_download">Start Download</string>
     <string name="delete_models">Delete Models</string>
     <string name="stop_download">Stop Downloading</string>

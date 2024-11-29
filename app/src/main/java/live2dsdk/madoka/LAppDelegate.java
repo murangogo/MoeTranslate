@@ -57,7 +57,7 @@ public class LAppDelegate {     //代码的核心类
      * マウスのY座標
      */
     private float mouseY;
-    private boolean isStrat = false;
+
     public static LAppDelegate getInstance() {  //判断s_instance是否为空，是则创建一个LAppDelegate对象给s_instance
         if (s_instance == null) {
             s_instance = new LAppDelegate();
@@ -81,8 +81,6 @@ public class LAppDelegate {     //代码的核心类
         isActive = false;
     }       //禁用app，将isactive改为false
 
-
-
     public void onStart(Activity activity) {        //onStart函数，需要一个Activity类
         textureManager = new LAppTextureManager();      //创建一个纹理材质管理对象给textureManager变量
         view = new LAppView();      //创建一个LAppView对象
@@ -96,17 +94,11 @@ public class LAppDelegate {     //代码的核心类
         currentModel = LAppLive2DManager.getInstance().getCurrentModel();
     }   //得到当前模型
 
-    public boolean getIsStart(){
-        return isStrat;
-    }
-
-    public void setIsStart(boolean se){
-        isStrat = se;
-    }
     public void onStop() {      //停止
-        view = null;        //放空
+        if (view != null) {
+            view.close();   //放空
+        }
         textureManager = null;  //放空
-
         LAppLive2DManager.releaseInstance();    //删除模型
         CubismFramework.dispose();  //销毁框架
     }
@@ -126,9 +118,6 @@ public class LAppDelegate {     //代码的核心类
 
         // Initialize Cubism SDK framework
         CubismFramework.initialize();
-
-        // シェーダーの初期化-着色器的初始化
-        view.initializeShader();
     }
 
     public void onSurfaceChanged(int width, int height) {
@@ -164,10 +153,7 @@ public class LAppDelegate {     //代码的核心类
 
         // アプリケーションを非アクティブにする-取消激活应用程序
         if (!isActive) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {        //大于安卓5.0
-                activity.finishAndRemoveTask();
-            }
-            System.exit(0);
+            activity.finishAndRemoveTask();
         }
     }
 
@@ -199,51 +185,6 @@ public class LAppDelegate {     //代码的核心类
         if (isCaptured && view != null) {       //没有松开且有视图
             view.onTouchesMoved(mouseX, mouseY);
         }
-    }
-
-    // シェーダーを登録する
-    public int createShader() {
-        int vertexShaderId = glCreateShader(GLES20.GL_VERTEX_SHADER);
-        final String vertexShader =
-            "#version 100\n"
-                + "attribute vec3 position;"
-                + "attribute vec2 uv;"
-                + "varying vec2 vuv;"
-                + "void main(void){"
-                + "gl_Position = vec4(position, 1.0);"
-                + "vuv = uv;"
-                + "}";
-
-        GLES20.glShaderSource(vertexShaderId, vertexShader);
-        GLES20.glCompileShader(vertexShaderId);
-
-        // フラグメントシェーダのコンパイル
-        int fragmentShaderId = glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-        final String fragmentShader =
-            "#version 100\n"
-                + "precision mediump float;"
-                + "uniform sampler2D texture;"
-                + "varying vec2 vuv;"
-                + "uniform vec4 baseColor;"
-                + "void main(void){"
-                + "gl_FragColor = texture2D(texture, vuv) * baseColor;"
-                + "}";
-
-        GLES20.glShaderSource(fragmentShaderId, fragmentShader);
-        GLES20.glCompileShader(fragmentShaderId);
-
-        // プログラムオブジェクトの作成
-        int programId = GLES20.glCreateProgram();
-
-        // Programのシェーダーを設定
-        GLES20.glAttachShader(programId, vertexShaderId);
-        GLES20.glAttachShader(programId, fragmentShaderId);
-
-        GLES20.glLinkProgram(programId);
-
-        GLES20.glUseProgram(programId);
-
-        return programId;
     }
 
     // getter, setter群

@@ -17,12 +17,21 @@ import com.live2d.sdk.cubism.framework.model.CubismModel;
  */
 public abstract class CubismRenderer {
     /**
+     * レンダラーの種類
+     */
+    public enum RendererType {
+        ANDROID,
+        UNKNOWN     // 不明・未定義なレンダラー
+    }
+
+    /**
      * Color blending mode
      */
     public enum CubismBlendMode {
-        NORMAL,
-        ADDITIVE,
-        MULTIPLICATIVE
+        NORMAL,     // 通常
+        ADDITIVE,   // 加算
+        MULTIPLICATIVE,     // 乗算
+        MASK    // マスク
     }
 
     /**
@@ -196,6 +205,29 @@ public abstract class CubismRenderer {
     }
 
     /**
+     * 透明度を考慮したモデルの色を計算する。
+     *
+     * @param opacity 透明度
+     * @return RGBAのカラー情報
+     */
+    public CubismTextureColor getModelColorWithOpacity(float opacity) {
+        tmpModelColor.r = modelColor.r;
+        tmpModelColor.g = modelColor.g;
+        tmpModelColor.b = modelColor.b;
+        tmpModelColor.a = modelColor.a;
+
+        tmpModelColor.a *= opacity;
+
+        if (isPremultipliedAlpha()) {
+            tmpModelColor.r *= tmpModelColor.a;
+            tmpModelColor.g *= tmpModelColor.a;
+            tmpModelColor.b *= tmpModelColor.a;
+        }
+
+        return tmpModelColor;
+    }
+
+    /**
      * Get the validity or invalidity of multiplied alpha.
      *
      * @return If multiplied alpha is valid, return true.
@@ -295,31 +327,6 @@ public abstract class CubismRenderer {
     protected abstract void doDrawModel();
 
     /**
-     * Draw the drawing objects(Art Mesh).
-     * Both polygon mesh and the texture number is given to this method.
-     *
-     * @param model model instance
-     * @param drawableIndex drawable index
-     * @param blendMode blend type
-     * @param isInverted whether it is inverted
-     */
-    protected abstract void drawMesh(
-        CubismModel model,
-        int drawableIndex,
-        CubismBlendMode blendMode,
-        boolean isInverted
-    );
-
-    /**
-     * Draw the drawing objects(Art Mesh).
-     * Both polygon mesh and the texture number is given to this method.
-     *
-     * @param model model instance
-     * @param drawableIndex drawable index
-     */
-    protected abstract void drawMesh(CubismModel model, int drawableIndex);
-
-    /**
      * Save the state of the renderer just before drawing the model.
      */
     protected abstract void saveProfile();
@@ -370,4 +377,9 @@ public abstract class CubismRenderer {
      * If this is false, the masks are drawn together. If this is true, the masks are redrawn for each part drawing.
      */
     private boolean useHighPrecisionMask;
+
+    /**
+     * 計算用の色格納用インスタンス
+     */
+    private final CubismTextureColor tmpModelColor = new CubismTextureColor();
 }

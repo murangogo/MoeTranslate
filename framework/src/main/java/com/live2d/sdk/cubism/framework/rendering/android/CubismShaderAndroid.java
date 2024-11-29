@@ -8,6 +8,7 @@
 package com.live2d.sdk.cubism.framework.rendering.android;
 
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
+import com.live2d.sdk.cubism.framework.model.CubismModel;
 import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
 import com.live2d.sdk.cubism.framework.type.csmRectF;
 
@@ -27,7 +28,7 @@ class CubismShaderAndroid {
     /**
      * Tegra processor support. Enable/Disable drawing by extension method.
      *
-     * @param extMode Whether to draw using the extended method.
+     * @param extMode   Whether to draw using the extended method.
      * @param extPAMode Enables/disables the PA setting for the extension method.
      */
     public static void setExtShaderMode(boolean extMode, boolean extPAMode) {
@@ -59,32 +60,13 @@ class CubismShaderAndroid {
      * Setup shader program.
      *
      * @param renderer renderer instance
-     * @param textureId texture ID of GPU
-     * @param vertexCount number of vertices
-     * @param vertexArrayBuffer vertex array of polygon mesh
-     * @param uvArrayBuffer UV array
-     * @param blendMode mode of color blending
-     * @param baseColor base color
-     * @param multiplyColor multiply color
-     * @param screenColor screen color
-     * @param isPremultipliedAlpha whether it is premultiplied alpha
-     * @param matrix44 Model-View-Projection Matrix
-     * @param isInvertedMask whether mask is inverted
+     * @param model    rendered model
+     * @param index    target artmesh index
      */
-    public void setupShaderProgram(
+    public void setupShaderProgramForDraw(
         CubismRendererAndroid renderer,
-        int textureId,
-        int vertexCount,
-        FloatBuffer vertexArrayBuffer,
-        FloatBuffer uvArrayBuffer,
-        float opacity,
-        CubismRenderer.CubismBlendMode blendMode,
-        CubismRenderer.CubismTextureColor baseColor,
-        CubismRenderer.CubismTextureColor multiplyColor,
-        CubismRenderer.CubismTextureColor screenColor,
-        boolean isPremultipliedAlpha,
-        CubismMatrix44 matrix44,
-        boolean isInvertedMask
+        CubismModel model,
+        int index
     ) {
         if (shaderSets.isEmpty()) {
             generateShaders();
@@ -96,46 +78,100 @@ class CubismShaderAndroid {
         int srcAlpha;
         int dstAlpha;
 
-        // At generting mask
-        if (renderer.getClippingContextBufferForMask() != null) {
-            CubismShaderSet shaderSet = shaderSets.get(ShaderNames.SETUP_MASK.getId());
-            glUseProgram(shaderSet.shaderProgram);
+        // shaderSets用のオフセット計算
+        final boolean isMasked = renderer.getClippingContextBufferForDraw() != null;  // この描画オブジェクトはマスク対象か？
+        final boolean isInvertedMask = model.getDrawableInvertedMask(index);
+        final boolean isPremultipliedAlpha = renderer.isPremultipliedAlpha();
 
-            // texture setting
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, textureId);
-            glUniform1i(shaderSet.samplerTexture0Location, 0);
+        final int offset = (isMasked ? (isInvertedMask ? 2 : 1) : 0) + (isPremultipliedAlpha ? 3 : 0);
 
-            // setting of vertex array
-            glEnableVertexAttribArray(shaderSet.attributePositionLocation);
-            glVertexAttribPointer(
-                shaderSet.attributePositionLocation,
-                2,
-                GL_FLOAT,
+        // シェーダーセット
+        CubismShaderSet shaderSet;
+        switch (model.getDrawableBlendMode(index)) {
+            case NORMAL:
+            default:
+                shaderSet = this.shaderSets.get(ShaderNames.NORMAL.getId() + offset);
+                srcColor = GL_ONE;
+                dstColor = GL_ONE_MINUS_SRC_ALPHA;
+                srcAlpha = GL_ONE;
+                dstAlpha = GL_ONE_MINUS_SRC_ALPHA;
+                break;
+            case ADDITIVE:
+                shaderSet = shaderSets.get(ShaderNames.ADD.getId() + offset);
+                srcColor = GL_ONE;
+                dstColor = GL_ONE;
+                srcAlpha = GL_ZERO;
+                dstAlpha = GL_ONE;
+                break;
+            case MULTIPLICATIVE:
+                shaderSet = shaderSets.get(ShaderNames.MULT.getId() + offset);
+                srcColor = GL_DST_COLOR;
+                dstColor = GL_ONE_MINUS_SRC_ALPHA;
+                srcAlpha = GL_ZERO;
+                dstAlpha = GL_ONE;
+                break;
+        }
+
+        glUseProgram(shaderSet.shaderProgram);
+
+        // キャッシュされたバッファを取得し、実際のデータを格納する。
+        CubismDrawableInfoCachesHolder drawableInfoCachesHolder = renderer.getDrawableInfoCachesHolder();
+        // vertex array
+        FloatBuffer vertexArrayBuffer = drawableInfoCachesHolder.setUpVertexArray(
+            index,
+            model.getDrawableVertices(index)
+        );
+        // uv array
+        FloatBuffer uvArrayBuffer = drawableInfoCachesHolder.setUpUvArray(
+            index,
+            model.getDrawableVertexUvs(index)
+        );
+
+        // setting of vertex array
+        glEnableVertexAttribArray(shaderSet.attributePositionLocation);
+        glVertexAttribPointer(
+            shaderSet.attributePositionLocation,
+            2,
+            GL_FLOAT,
+            false,
+            Float.SIZE / Byte.SIZE * 2,
+            vertexArrayBuffer
+        );
+
+        // setting of texture vertex
+        glEnableVertexAttribArray(shaderSet.attributeTexCoordLocation);
+        glVertexAttribPointer(
+            shaderSet.attributeTexCoordLocation,
+            2,
+            GL_FLOAT,
+            false,
+            Float.SIZE / Byte.SIZE * 2,
+            uvArrayBuffer
+        );
+
+        if (isMasked) {
+            glActiveTexture(GL_TEXTURE1);
+
+            // OffscreenSurfaceに描かれたテクスチャ
+            int tex = renderer.getMaskBuffer(renderer.getClippingContextBufferForDraw().bufferIndex).getColorBuffer()[0];
+            glBindTexture(GL_TEXTURE_2D, tex);
+            glUniform1i(shaderSet.samplerTexture1Location, 1);
+
+            // set up a matrix to convert View-coordinates to ClippingContext coordinates
+            glUniformMatrix4fv(
+                shaderSet.uniformClipMatrixLocation,
+                1,
                 false,
-                Float.SIZE / Byte.SIZE * 2,
-                vertexArrayBuffer
+                renderer.getClippingContextBufferForDraw().matrixForDraw.getArray(),
+                0
             );
 
-            // setting of texture vertex
-            glEnableVertexAttribArray(shaderSet.attributeTexCoordLocation);
-            glVertexAttribPointer(
-                shaderSet.attributeTexCoordLocation,
-                2,
-                GL_FLOAT,
-                false,
-                Float.SIZE / Byte.SIZE * 2,
-                uvArrayBuffer
-            );
-
-            // channels
-            final int channelNumber =
-                renderer.getClippingContextBufferForMask()
-                        .layoutChannelNo;
-            CubismRenderer.CubismTextureColor colorChannel =
-                renderer.getClippingContextBufferForMask()
-                        .getClippingManager()
-                        .getChannelFlagAsColor(channelNumber);
+            // Set used color channel.
+            final int channelIndex = renderer.getClippingContextBufferForDraw().layoutChannelIndex;
+            CubismRenderer.CubismTextureColor colorChannel = renderer
+                .getClippingContextBufferForDraw()
+                .getClippingManager()
+                .getChannelFlagAsColor(channelIndex);
             glUniform4f(
                 shaderSet.uniformChannelFlagLocation,
                 colorChannel.r,
@@ -143,186 +179,170 @@ class CubismShaderAndroid {
                 colorChannel.b,
                 colorChannel.a
             );
-
-            glUniformMatrix4fv(
-                shaderSet.uniformClipMatrixLocation,
-                1,
-                false,
-                renderer.getClippingContextBufferForMask().matrixForMask.getArray(),
-                0
-            );
-
-            csmRectF rect =
-                renderer.getClippingContextBufferForMask()
-                        .layoutBounds;
-
-            glUniform4f(
-                shaderSet.uniformBaseColorLocation,
-                rect.getX() * 2.0f - 1.0f,
-                rect.getY() * 2.0f - 1.0f,
-                rect.getRight() * 2.0f - 1.0f,
-                rect.getBottom() * 2.0f - 1.0f
-            );
-            glUniform4f(
-                shaderSet.uniformMultiplyColorLocation,
-                multiplyColor.r,
-                multiplyColor.g,
-                multiplyColor.b,
-                multiplyColor.a
-            );
-            glUniform4f(
-                shaderSet.uniformScreenColorLocation,
-                screenColor.r,
-                screenColor.g,
-                screenColor.b,
-                screenColor.a
-            );
-
-            srcColor = GL_ZERO;
-            dstColor = GL_ONE_MINUS_SRC_COLOR;
-            srcAlpha = GL_ZERO;
-            dstAlpha = GL_ONE_MINUS_SRC_ALPHA;
         }
-        // except for mask generation
-        else {
-            // Whether this drawing object is to be masked.
-            final boolean isMasked = renderer.getClippingContextBufferForDraw() != null;
-            int offset;
-            if (isMasked) {
-                if (isInvertedMask) {
-                    offset = 2;
-                } else {
-                    offset = 1;
-                }
-            } else {
-                offset = 0;
-            }
-            if (isPremultipliedAlpha) {
-                offset += 3;
-            }
 
-            CubismShaderSet shaderSet;
+        // texture setting
+        int textureId = renderer.getBoundTextureId(
+            model.getDrawableTextureIndex(index)
+        );
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glUniform1i(shaderSet.samplerTexture0Location, 0);
 
-            switch (blendMode) {
-                case NORMAL:
-                default:
-                    shaderSet = shaderSets.get(ShaderNames.NORMAL.getId() + offset);
-                    srcColor = GL_ONE;
-                    dstColor = GL_ONE_MINUS_SRC_ALPHA;
-                    srcAlpha = GL_ONE;
-                    dstAlpha = GL_ONE_MINUS_SRC_ALPHA;
-                    break;
+        // coordinate transformation
+        CubismMatrix44 matrix44 = renderer.getMvpMatrix();
+        glUniformMatrix4fv(
+            shaderSet.uniformMatrixLocation,
+            1,
+            false,
+            matrix44.getArray(),
+            0
+        );
 
-                case ADDITIVE:
-                    shaderSet = shaderSets.get(ShaderNames.ADD.getId() + offset);
-                    srcColor = GL_ONE;
-                    dstColor = GL_ONE;
-                    srcAlpha = GL_ZERO;
-                    dstAlpha = GL_ONE;
-                    break;
+        // ベース色の取得
+        CubismRenderer.CubismTextureColor baseColor = renderer.getModelColorWithOpacity(
+            model.getDrawableOpacity(index)
+        );
+        CubismRenderer.CubismTextureColor multiplyColor = model.getMultiplyColor(index);
+        CubismRenderer.CubismTextureColor screenColor = model.getScreenColor(index);
+        glUniform4f(
+            shaderSet.uniformBaseColorLocation,
+            baseColor.r,
+            baseColor.g,
+            baseColor.b,
+            baseColor.a
+        );
+        glUniform4f(
+            shaderSet.uniformMultiplyColorLocation,
+            multiplyColor.r,
+            multiplyColor.g,
+            multiplyColor.b,
+            multiplyColor.a
+        );
+        glUniform4f(
+            shaderSet.uniformScreenColorLocation,
+            screenColor.r,
+            screenColor.g,
+            screenColor.b,
+            screenColor.a
+        );
 
-                case MULTIPLICATIVE:
-                    shaderSet = shaderSets.get(ShaderNames.MULT.getId() + offset);
-                    srcColor = GL_DST_COLOR;
-                    dstColor = GL_ONE_MINUS_SRC_ALPHA;
-                    srcAlpha = GL_ZERO;
-                    dstAlpha = GL_ONE;
-                    break;
-            }
+        glBlendFuncSeparate(srcColor, dstColor, srcAlpha, dstAlpha);
+    }
 
-            glUseProgram(shaderSet.shaderProgram);
-
-            // setting of vertex array
-            glEnableVertexAttribArray(shaderSet.attributePositionLocation);
-            glVertexAttribPointer(
-                shaderSet.attributePositionLocation,
-                2,
-                GL_FLOAT,
-                false,
-                Float.SIZE / Byte.SIZE * 2,
-                vertexArrayBuffer
-            );
-
-            // setting of texture vertex
-            glEnableVertexAttribArray(shaderSet.attributeTexCoordLocation);
-            glVertexAttribPointer(
-                shaderSet.attributeTexCoordLocation,
-                2,
-                GL_FLOAT,
-                false,
-                Float.SIZE / Byte.SIZE * 2,
-                uvArrayBuffer
-            );
-
-            if (isMasked) {
-                glActiveTexture(GL_TEXTURE1);
-                // Framebufferに描かれたテクスチャ
-                int tex = renderer.getMaskBuffer(renderer.getClippingContextBufferForDraw().bufferIndex).getColorBuffer()[0];
-                glBindTexture(GL_TEXTURE_2D, tex);
-                glUniform1i(shaderSet.samplerTexture1Location, 1);
-
-                // set up a matrix to convert View-coordinates to ClippingContext coordinates
-                glUniformMatrix4fv(
-                    shaderSet.uniformClipMatrixLocation,
-                    1,
-                    false,
-                    renderer.getClippingContextBufferForDraw().matrixForDraw.getArray(),
-                    0
-                );
-
-                // Set used color channel.
-                final int channelNumber =
-                    renderer.getClippingContextBufferForDraw()
-                            .layoutChannelNo;
-                CubismRenderer.CubismTextureColor colorChannel =
-                    renderer.getClippingContextBufferForDraw()
-                            .getClippingManager()
-                            .getChannelFlagAsColor(channelNumber);
-                glUniform4f(
-                    shaderSet.uniformChannelFlagLocation,
-                    colorChannel.r,
-                    colorChannel.g,
-                    colorChannel.b,
-                    colorChannel.a
-                );
-            }
-
-            // texture setting
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, textureId);
-            glUniform1i(shaderSet.samplerTexture0Location, 0);
-
-            // coordinate transformation
-            glUniformMatrix4fv(
-                shaderSet.uniformMatrixLocation,
-                1,
-                false,
-                matrix44.getArray(),
-                0
-            );
-
-            glUniform4f(
-                shaderSet.uniformBaseColorLocation,
-                baseColor.r,
-                baseColor.g,
-                baseColor.b,
-                baseColor.a
-            );
-            glUniform4f(
-                shaderSet.uniformMultiplyColorLocation,
-                multiplyColor.r,
-                multiplyColor.g,
-                multiplyColor.b,
-                multiplyColor.a
-            );
-            glUniform4f(
-                shaderSet.uniformScreenColorLocation,
-                screenColor.r,
-                screenColor.g,
-                screenColor.b,
-                screenColor.a
-            );
+    public void setupShaderProgramForMask(
+        CubismRendererAndroid renderer,
+        CubismModel model,
+        int index
+    ) {
+        if (shaderSets.isEmpty()) {
+            generateShaders();
         }
+
+        // Blending
+        int srcColor;
+        int dstColor;
+        int srcAlpha;
+        int dstAlpha;
+
+        CubismShaderSet shaderSet = shaderSets.get(ShaderNames.SETUP_MASK.id);
+        glUseProgram(shaderSet.shaderProgram);
+
+        // texture setting
+        int textureId = renderer.getBoundTextureId(model.getDrawableTextureIndex(index));
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glUniform1i(shaderSet.samplerTexture0Location, 0);
+
+        // キャッシュされたバッファを取得し、実際のデータを格納する。
+        CubismDrawableInfoCachesHolder drawableInfoCachesHolder = renderer.getDrawableInfoCachesHolder();
+        // vertex array
+        FloatBuffer vertexArrayBuffer = drawableInfoCachesHolder.setUpVertexArray(
+            index,
+            model.getDrawableVertices(index)
+        );
+        // uv array
+        FloatBuffer uvArrayBuffer = drawableInfoCachesHolder.setUpUvArray(
+            index,
+            model.getDrawableVertexUvs(index)
+        );
+
+        // setting of vertex array
+        glEnableVertexAttribArray(shaderSet.attributePositionLocation);
+        glVertexAttribPointer(
+            shaderSet.attributePositionLocation,
+            2,
+            GL_FLOAT,
+            false,
+            Float.SIZE / Byte.SIZE * 2,
+            vertexArrayBuffer
+        );
+
+        // setting of texture vertex
+        glEnableVertexAttribArray(shaderSet.attributeTexCoordLocation);
+        glVertexAttribPointer(
+            shaderSet.attributeTexCoordLocation,
+            2,
+            GL_FLOAT,
+            false,
+            Float.SIZE / Byte.SIZE * 2,
+            uvArrayBuffer
+        );
+
+        // channels
+        final int channelIndex = renderer.getClippingContextBufferForMask().layoutChannelIndex;
+        CubismRenderer.CubismTextureColor colorChannel = renderer
+            .getClippingContextBufferForMask()
+            .getClippingManager()
+            .getChannelFlagAsColor(channelIndex);
+
+        glUniform4f(
+            shaderSet.uniformChannelFlagLocation,
+            colorChannel.r,
+            colorChannel.g,
+            colorChannel.b,
+            colorChannel.a
+        );
+
+        glUniformMatrix4fv(
+            shaderSet.uniformClipMatrixLocation,
+            1,
+            false,
+            renderer.getClippingContextBufferForMask().matrixForMask.getArray(),
+            0
+        );
+
+        csmRectF rect = renderer.getClippingContextBufferForMask().layoutBounds;
+
+        glUniform4f(
+            shaderSet.uniformBaseColorLocation,
+            rect.getX() * 2.0f - 1.0f,
+            rect.getY() * 2.0f - 1.0f,
+            rect.getRight() * 2.0f - 1.0f,
+            rect.getBottom() * 2.0f - 1.0f
+        );
+
+        CubismRenderer.CubismTextureColor multiplyColor = model.getMultiplyColor(index);
+        CubismRenderer.CubismTextureColor screenColor = model.getScreenColor(index);
+        glUniform4f(
+            shaderSet.uniformMultiplyColorLocation,
+            multiplyColor.r,
+            multiplyColor.g,
+            multiplyColor.b,
+            multiplyColor.a
+        );
+        glUniform4f(
+            shaderSet.uniformScreenColorLocation,
+            screenColor.r,
+            screenColor.g,
+            screenColor.b,
+            screenColor.a
+        );
+
+        srcColor = GL_ZERO;
+        dstColor = GL_ONE_MINUS_SRC_COLOR;
+        srcAlpha = GL_ZERO;
+        dstAlpha = GL_ONE_MINUS_SRC_ALPHA;
 
         glBlendFuncSeparate(srcColor, dstColor, srcAlpha, dstAlpha);
     }
@@ -436,7 +456,8 @@ class CubismShaderAndroid {
     /**
      * private constructor.
      */
-    private CubismShaderAndroid() {}
+    private CubismShaderAndroid() {
+    }
 
     /**
      * Release shader programs.
@@ -475,7 +496,6 @@ class CubismShaderAndroid {
             shaderSets.get(6).shaderProgram = loadShaderProgram(VERT_SHADER_SRC_MASKED, FRAG_SHADER_SRC_MASK_INVERTED_PREMULTIPLIED_ALPHA);
         }
 
-        // TODO: javadoc
         // 加算も通常と同じシェーダーを利用する
         shaderSets.get(7).shaderProgram = shaderSets.get(1).shaderProgram;
         shaderSets.get(8).shaderProgram = shaderSets.get(2).shaderProgram;
@@ -778,8 +798,8 @@ class CubismShaderAndroid {
     /**
      * Compile shader program.
      *
-     * @param shader reference value to compiled shader program
-     * @param shaderType shader type(Vertex/Fragment)
+     * @param shader       reference value to compiled shader program
+     * @param shaderType   shader type(Vertex/Fragment)
      * @param shaderSource source of shader program
      * @return If compilling succeeds, return true
      */
@@ -850,7 +870,6 @@ class CubismShaderAndroid {
         glGetProgramiv(shaderProgram, GL_VALIDATE_STATUS, IntBuffer.wrap(status));
         return status[0] != GL_FALSE;
     }
-
 
     /**
      * Variable that holds the loaded shader program.

@@ -114,6 +114,10 @@ public class LAppDefine {       //该类主要定义一些常量
          */
         ROOT(""),
         /**
+         * Relative path of shader directory
+         */
+        SHADER_ROOT("Shaders"),
+        /**
          * Background image file
          */
         BACK_IMAGE("bg.png"),
@@ -124,7 +128,15 @@ public class LAppDefine {       //该类主要定义一些常量
         /**
          * Power button image file
          */
-        POWER_IMAGE("close.png");
+        POWER_IMAGE("close.png"),
+        /**
+         * Vertex shader file
+         */
+        VERT_SHADER("VertSprite.vert"),
+        /**
+         * Fragment shader file
+         */
+        FRAG_SHADER("FragSprite.frag");
 
         private final String path;
 
@@ -232,6 +244,11 @@ public class LAppDefine {       //该类主要定义一些常量
             return priority;
         }
     }
+
+    /**
+     * MOC3の整合性を検証するかどうか。有効ならtrue。
+     */
+    public static final boolean MOC_CONSISTENCY_VALIDATION_ENABLE = true;
 
     /**
      * Enable/Disable debug logging.

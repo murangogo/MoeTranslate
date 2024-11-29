@@ -14,7 +14,7 @@ import com.live2d.sdk.cubism.framework.utils.jsonparser.CubismJson;
 /**
  * Container for motion3.json.
  */
-class CubismMotionJson {
+public class CubismMotionJson {
     /**
      * Flag type of Bezier curve interpretation method
      */

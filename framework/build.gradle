@@ -3,11 +3,14 @@ plugins {
 }
 
 android {
-    compileSdkVersion 33
+    namespace = "com.live2d.sdk.cubism.framework"
+    compileSdk PROP_COMPILE_SDK_VERSION.toInteger()
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 33
+        minSdkVersion PROP_MIN_SDK_VERSION
+        targetSdkVersion PROP_TARGET_SDK_VERSION
+        versionCode 1
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -23,12 +26,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    namespace 'com.live2d.sdk.cubism.framework'
 }
 
 dependencies {
     compileOnly(fileTree(dir: '../app/libs', include: ['Live2DCubismCore.aar']))
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'commons-io:commons-io:2.11.0'
 }

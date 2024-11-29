@@ -62,8 +62,9 @@ class FunWithMadoka : Fragment() {
 
     override fun onStart(){
         super.onStart()
-        if (!LAppDelegate.getInstance().getIsStart()) {
-            LAppDelegate.getInstance().setIsStart(true)
+//        if (!LAppDelegate.getInstance().getIsStart()) {
+        if (true) {
+            //LAppDelegate.getInstance().setIsStart(true)
             dialogs = TextView(activity)
             dialogs.setBackgroundResource(R.drawable.textview_shape)
             val font = Typeface.createFromAsset(requireContext().assets, "talk.ttf")
@@ -136,7 +137,7 @@ class FunWithMadoka : Fragment() {
                             requireContext(), R.layout.item_edge_menu,
                             mLeftMenu[position]
                         )
-                    LAppDelegate.getInstance().view.setChangedModel(true, position)
+                    // LAppDelegate.getInstance().view.setChangedModel(true, position)
                     TalkSentences.clothes = position
                     if (ConstDatas.isTalking) {
                         DisplayText = ""

@@ -30,7 +30,7 @@ public class CubismMotionManager extends CubismMotionQueueManager {
         // Set priority of the motion during playback.
         currentPriority = priority;
 
-        return startMotion(motion, userTimeSeconds);
+        return startMotion(motion);
     }
 
     /**

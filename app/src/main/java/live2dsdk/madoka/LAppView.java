@@ -14,10 +14,9 @@ import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceA
 
 import static live2dsdk.basic.LAppDefine.*;
 
-public class LAppView {
+public class LAppView implements AutoCloseable {
     private final CubismMatrix44 deviceToScreen = CubismMatrix44.create(); // デバイス座標からスクリーン座標に変換するための行列
     private final CubismViewMatrix viewMatrix = new CubismViewMatrix();   // 画面表示の拡縮や移動の変換を行う行列
-    private int programId;
     private int windowWidth;
     private int windowHeight;
 
@@ -33,17 +32,22 @@ public class LAppView {
     private CubismOffscreenSurfaceAndroid renderingBuffer = new CubismOffscreenSurfaceAndroid();
 
     private LAppSprite backSprite;
-//    private LAppSprite gearSprite;
-//    private LAppSprite powerSprite;
+    private LAppSprite gearSprite;
+    private LAppSprite powerSprite;
     private LAppSprite renderingSprite;
 
     /**
      * モデルの切り替えフラグ
      */
-    private boolean isChangedModel = false;
-    private int whichModel = 0;
+    private boolean isChangedModel;
 
     private final TouchManager touchManager = new TouchManager();
+
+    /**
+     * シェーダー作成委譲クラス
+     */
+    private LAppSpriteShader spriteShader;
+
     /**
      * LAppModelのレンダリング先
      */
@@ -60,9 +64,9 @@ public class LAppView {
         clearColor[3] = 0.0f;
     }
 
-    // シェーダーを初期化する-初始化着色器
-    public void initializeShader() {
-        programId = LAppDelegate.getInstance().createShader();
+    @Override
+    public void close() {
+        spriteShader.close();
     }
 
     // ビューを初期化する
@@ -98,17 +102,15 @@ public class LAppView {
 
         // 表示できる最大範囲
         viewMatrix.setMaxScreenRect(
-            MaxLogicalView.LEFT.getValue(),
-            MaxLogicalView.RIGHT.getValue(),
-            MaxLogicalView.BOTTOM.getValue(),
-            MaxLogicalView.TOP.getValue()
+                MaxLogicalView.LEFT.getValue(),
+                MaxLogicalView.RIGHT.getValue(),
+                MaxLogicalView.BOTTOM.getValue(),
+                MaxLogicalView.TOP.getValue()
         );
+
+        spriteShader = new LAppSpriteShader();
     }
 
-    public void setChangedModel(boolean t,int k){
-            isChangedModel = t;
-            whichModel = k;
-    }
     // 画像を初期化する
     public void initializeSprite() {
         int windowWidth = LAppDelegate.getInstance().getWindowWidth();
@@ -124,9 +126,9 @@ public class LAppView {
         float x = windowWidth * 0.5f;
         float y = windowHeight * 0.5f;
         float fWidth = backgroundTexture.width * 2.0f;
-//        float fWidth = windowWidth * 1.0f;
-        float fHeight = backgroundTexture.height * 2.0f;
-//        float fHeight = windowHeight * 1.0f;
+        float fHeight = windowHeight * 0.95f;
+        int programId = spriteShader.getShaderId();
+
         if (backSprite == null) {
             backSprite = new LAppSprite(x, y, fWidth, fHeight, backgroundTexture.id, programId);
         } else {
@@ -175,6 +177,15 @@ public class LAppView {
 
     // 描画する
     public void render() {
+        // 画面サイズを取得する。
+        int maxWidth = LAppDelegate.getInstance().getWindowWidth();
+        int maxHeight = LAppDelegate.getInstance().getWindowHeight();
+
+        backSprite.setWindowSize(maxWidth, maxHeight);
+//        gearSprite.setWindowSize(maxWidth, maxHeight);
+//        powerSprite.setWindowSize(maxWidth, maxHeight);
+
+
         // UIと背景の描画-UI背景的呈现
         backSprite.render();        //背景
 //        gearSprite.render();        //齿轮
@@ -182,7 +193,8 @@ public class LAppView {
 
         if (isChangedModel) {       //替换模型
             isChangedModel = false;
-            LAppLive2DManager.getInstance().nextScene(whichModel);
+            // 哪一个模型
+            LAppLive2DManager.getInstance().nextScene(1);
         }
 
         // モデルの描画-模型的绘制
@@ -192,19 +204,20 @@ public class LAppView {
         // 各モデルが持つ描画ターゲットをテクスチャとする場合-将每个模型的绘制目标作为纹理
         if (renderingTarget == RenderingTarget.MODEL_FRAME_BUFFER && renderingSprite != null) {
             final float[] uvVertex = {
-                1.0f, 1.0f,
-                0.0f, 1.0f,
-                0.0f, 0.0f,
-                1.0f, 0.0f
+                    1.0f, 1.0f,
+                    0.0f, 1.0f,
+                    0.0f, 0.0f,
+                    1.0f, 0.0f
             };
 
             for (int i = 0; i < live2dManager.getModelNum(); i++) {
-                // サンプルとしてαに適当な差を付ける。-作为样本α适当的差别。
-                float alpha = getSpriteAlpha(i);
+                LAppModel model = live2dManager.getModel(i);
+                float alpha = i < 1 ? 1.0f : model.getOpacity();    // 片方のみ不透明度を取得できるようにする。
+
                 renderingSprite.setColor(1.0f, 1.0f, 1.0f, alpha);
 
-                LAppModel model = live2dManager.getModel(i);
                 if (model != null) {
+                    renderingSprite.setWindowSize(maxWidth, maxHeight);
                     renderingSprite.renderImmediate(model.getRenderingBuffer().getColorBuffer()[0], uvVertex);
                 }
             }
@@ -225,16 +238,16 @@ public class LAppView {
 
             // 使用するターゲット-使用的目标
             useTarget = (renderingTarget == RenderingTarget.VIEW_FRAME_BUFFER)
-                        ? renderingBuffer
-                        : refModel.getRenderingBuffer();
+                    ? renderingBuffer
+                    : refModel.getRenderingBuffer();
 
             // 描画ターゲット内部未作成の場合はここで作成-绘制目标内部未创建时在此处创建
             if (!useTarget.isValid()) {
                 int width = LAppDelegate.getInstance().getWindowWidth();
                 int height = LAppDelegate.getInstance().getWindowHeight();
 
-                // モデル描画キャンバス-模型绘图画布
-                useTarget.createOffscreenFrame((int) width, (int) height, null);
+                // モデル描画キャンバス
+                useTarget.createOffscreenSurface((int) width, (int) height, null);
             }
             // レンダリング開始-渲染开始
             useTarget.beginDraw(null);
@@ -254,8 +267,8 @@ public class LAppView {
         if (renderingTarget != RenderingTarget.NONE) {
             // 使用するターゲット-要使用的目标
             useTarget = (renderingTarget == RenderingTarget.VIEW_FRAME_BUFFER)
-                        ? renderingBuffer
-                        : refModel.getRenderingBuffer();
+                    ? renderingBuffer
+                    : refModel.getRenderingBuffer();
 
             // レンダリング終了-渲染结束
             useTarget.endDraw();
@@ -263,12 +276,17 @@ public class LAppView {
             // LAppViewの持つフレームバッファを使うなら、スプライトへの描画はこことなる-如果使用LAppView所具有的帧缓冲区，则在精灵中的描绘为这里
             if (renderingTarget == RenderingTarget.VIEW_FRAME_BUFFER && renderingSprite != null) {
                 final float[] uvVertex = {
-                    1.0f, 1.0f,
-                    0.0f, 1.0f,
-                    0.0f, 0.0f,
-                    1.0f, 0.0f
+                        1.0f, 1.0f,
+                        0.0f, 1.0f,
+                        0.0f, 0.0f,
+                        1.0f, 0.0f
                 };
                 renderingSprite.setColor(1.0f, 1.0f, 1.0f, getSpriteAlpha(0));
+                // 画面サイズを取得する。
+                int maxWidth = LAppDelegate.getInstance().getWindowWidth();
+                int maxHeight = LAppDelegate.getInstance().getWindowHeight();
+
+                renderingSprite.setWindowSize(maxWidth, maxHeight);
                 renderingSprite.renderImmediate(useTarget.getColorBuffer()[0], uvVertex);
             }
         }
@@ -337,10 +355,10 @@ public class LAppView {
 //        }
 
         // 電源ボタンにタップしたか-是否点击了电源键
- //       if (powerSprite.isHit(pointX, pointY)) {
- //           // アプリを終了する-关闭应用程序
- //           LAppDelegate.getInstance().deactivateApp();
- //       }
+        //       if (powerSprite.isHit(pointX, pointY)) {
+        //           // アプリを終了する-关闭应用程序
+        //           LAppDelegate.getInstance().deactivateApp();
+        //       }
 
     }
 
