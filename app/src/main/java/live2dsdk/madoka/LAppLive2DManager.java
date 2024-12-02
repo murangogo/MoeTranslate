@@ -11,6 +11,7 @@ import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
 import com.live2d.sdk.cubism.framework.motion.IBeganMotionCallback;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
+import com.moe.moetranslator.utils.AppPathManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class LAppLive2DManager {
     /**
      * 表示するシーンのインデックス値
      */
-    private ModelDir currentModel;
+    private int currentModel;
 
     /**
      * モデルディレクトリ名
@@ -161,20 +162,26 @@ public class LAppLive2DManager {
      * @param index 切り替えるシーンインデックス
      */
     public void changeScene(int index) {        //改变场景
-        currentModel = ModelDir.values()[index];        //得到当前模型
+        currentModel = index;        //得到当前模型
         if (DEBUG_LOG_ENABLE) {     //启用日志则打印日志
-            LAppPal.printLog("model index: " + currentModel.getOrder());
+            LAppPal.printLog("model index: " + index);
         }
 
-        String modelDirName = currentModel.getDirName();        //获取模型文件夹
-        String modelPath = ResourcePath.ROOT.getPath() + modelDirName + "/";        //获得模型路径
-        String modelJsonName = currentModel.getDirName() + ".model3.json";      //获取模型JSON文件
+        String modelDirName = "model_" + index;        //获取模型文件夹
+        String modelPath = AppPathManager.INSTANCE.getModelPath(modelDirName);        //获得模型路径
+        String modelJsonName = "model.model3.json";      //获取模型JSON文件
+
+        if (DEBUG_LOG_ENABLE) {     //启用日志则打印日志
+            LAppPal.printLog("modelDirName: " + modelDirName);
+            LAppPal.printLog("modelPath: " + modelPath);
+            LAppPal.printLog("modelJsonName: " + modelJsonName);
+        }
 
 
         releaseAllModel();      //释放所有模型
 
         models.add(new LAppModel());        //加入新模型
-        models.get(0).loadAssets(modelPath, modelJsonName);
+        models.get(0).loadModelFiles(modelPath, modelJsonName);
 
         /*
          * モデル半透明表示を行うサンプルを提示する。
@@ -196,7 +203,7 @@ public class LAppLive2DManager {
         if (USE_RENDER_TARGET || USE_MODEL_RENDER_TARGET) {
             // モデル個別にαを付けるサンプルとして、もう1体モデルを作成し少し位置をずらす。-每个模型α中描述的场景，使用以下步骤创建明细表，以便在概念设计中分析体量的体积。
             models.add(new LAppModel());
-            models.get(1).loadAssets(modelPath, modelJsonName);
+            models.get(1).loadModelFiles(modelPath, modelJsonName);
             models.get(1).getModelMatrix().translateX(0.2f);
         }
 
@@ -227,7 +234,7 @@ public class LAppLive2DManager {
      *
      * @return シーンインデックス
      */
-    public ModelDir getCurrentModel() {
+    public int getCurrentModel() {
         return currentModel;
     }
 
@@ -273,8 +280,8 @@ public class LAppLive2DManager {
     private static LAppLive2DManager s_instance;
 
     private LAppLive2DManager() {
-        currentModel = ModelDir.values()[0];        //默认为第一个对象
-        changeScene(currentModel.getOrder());       //返回模型编号
+        currentModel = 1;        //默认为第一个对象
+        changeScene(currentModel);       //返回模型编号
     }
 
 

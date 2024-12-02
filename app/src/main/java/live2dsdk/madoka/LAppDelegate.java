@@ -9,9 +9,7 @@ package live2dsdk.madoka;
 
 import android.app.Activity;
 import android.opengl.GLES20;
-import android.os.Build;
 import live2dsdk.basic.LAppDefine;
-import live2dsdk.basic.LAppDefine.ModelDir;
 import com.live2d.sdk.cubism.framework.CubismFramework;
 
 import static android.opengl.GLES20.*;
@@ -20,7 +18,7 @@ public class LAppDelegate {     //代码的核心类
     private static LAppDelegate s_instance;     //创建静态变量LAppDelegate s_instance
 
     private LAppDelegate() {        //构造函数，私有的，防止创建实例
-        currentModel = ModelDir.values()[0];    //通过枚举，获取当前模型
+        currentModel = 1;    //通过枚举，获取当前模型
 
         // Set up Cubism SDK framework.开启框架
         cubismOption.logFunction = new LAppPal.PrintLogFunction();      //打印日志
@@ -43,7 +41,7 @@ public class LAppDelegate {     //代码的核心类
     /**
      * モデルシーンインデックス
      */
-    private ModelDir currentModel;
+    private int currentModel;
 
     /**
      * クリックしているか
@@ -132,7 +130,7 @@ public class LAppDelegate {     //代码的核心类
 
         // load models
         if (LAppLive2DManager.getInstance().getCurrentModel() != currentModel) {
-            LAppLive2DManager.getInstance().changeScene(currentModel.getOrder());
+            LAppLive2DManager.getInstance().changeScene(currentModel);
         }
 
         isActive = true;

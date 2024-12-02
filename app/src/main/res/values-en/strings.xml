@@ -270,6 +270,8 @@
     <string name="other_setting">Other</string>
     <string name="adjust_not_tip">Do not display the adjustment completion prompt</string>
     <string name="adjust_not_tip_summary">When turned on, when the box selects the area to complete the translation or adjusts the position of the completed translation result, the prompt text will not pop up</string>
+    <string name="init_error">Initialization Failed：%s</string>
+    <string name="madoka_newyear">Madoka（New Year）</string>
 
 
 </resources>

@@ -7,10 +7,14 @@
 
 package live2dsdk.madoka;
 
+import static live2dsdk.basic.LAppDefine.DEBUG_LOG_ENABLE;
+
 import android.util.Log;
 import live2dsdk.basic.LAppDefine;
 import com.live2d.sdk.cubism.core.ICubismLogger;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -41,7 +45,11 @@ public class LAppPal {
     public static byte[] loadFileAsBytes(final String path) {       //按位加载文件
         InputStream fileData = null;        //清空输入流
         try {
-            fileData = LAppDelegate.getInstance().getActivity().getAssets().open(path);     //主活动打开路径
+            if (DEBUG_LOG_ENABLE) {     //启用日志则打印日志
+                LAppPal.printLog("loadFileAsBytes(final String path): " + path);
+            }
+
+            fileData = new FileInputStream(new File(path));     //主活动打开路径
 
             int fileSize = fileData.available();        //读取文件大小
             byte[] fileBuffer = new byte[fileSize];     //创建缓冲区
@@ -51,7 +59,7 @@ public class LAppPal {
         } catch (IOException e) {       //失败则打印错误信息
             e.printStackTrace();
 
-            if (LAppDefine.DEBUG_LOG_ENABLE) {
+            if (DEBUG_LOG_ENABLE) {
                 printLog("File open error.");
             }
 
@@ -64,7 +72,7 @@ public class LAppPal {
             } catch (IOException e) {       //失败则打印错误信息
                 e.printStackTrace();
 
-                if (LAppDefine.DEBUG_LOG_ENABLE) {
+                if (DEBUG_LOG_ENABLE) {
                     printLog("File open error.");
                 }
             }
@@ -94,7 +102,7 @@ public class LAppPal {
     private static double _lastNanoTime;
     private static double _deltaNanoTime;
 
-    private static final String TAG = "[APP]";
+    private static final String TAG = "[Madoka Live2D]";
 
     private LAppPal() {}        //防止实例化
 }

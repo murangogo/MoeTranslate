@@ -346,6 +346,7 @@ class FunWithMadoka : Fragment() {
     }
 
     private fun changeModel(n: Int){
+        Log.d("FunWithMadoka", "changeModel: $n")
         LAppLive2DManager.getInstance().nextScene(n)
     }
 

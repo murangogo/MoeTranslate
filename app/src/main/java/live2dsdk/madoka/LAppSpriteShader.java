@@ -1,9 +1,14 @@
 package live2dsdk.madoka;
 
+import static live2dsdk.basic.LAppDefine.DEBUG_LOG_ENABLE;
+
 import android.opengl.GLES20;
 
 import live2dsdk.basic.LAppDefine;
 import com.live2d.sdk.cubism.framework.utils.CubismDebug;
+import com.moe.moetranslator.utils.AppPathManager;
+
+import java.io.File;
 
 /**
  * スプライト用のシェーダー設定を保持するクラス
@@ -37,11 +42,11 @@ public class LAppSpriteShader implements AutoCloseable {
      */
     private int createShader() {
         // シェーダーのパスの作成
-        String vertShaderFile = LAppDefine.ResourcePath.SHADER_ROOT.getPath();
-        vertShaderFile += ("/" + LAppDefine.ResourcePath.VERT_SHADER.getPath());
+        String vertShaderFile = AppPathManager.INSTANCE.getLive2DPath();
+        vertShaderFile += (LAppDefine.ResourcePath.SHADER_ROOT.getPath() + File.separator + LAppDefine.ResourcePath.VERT_SHADER.getPath());
 
-        String fragShaderFile = LAppDefine.ResourcePath.SHADER_ROOT.getPath();
-        fragShaderFile += ("/" + LAppDefine.ResourcePath.FRAG_SHADER.getPath());
+        String fragShaderFile = AppPathManager.INSTANCE.getLive2DPath();
+        fragShaderFile += (LAppDefine.ResourcePath.SHADER_ROOT.getPath() + File.separator + LAppDefine.ResourcePath.FRAG_SHADER.getPath());
 
         // シェーダーのコンパイル
         int vertexShaderId = compileShader(vertShaderFile, GLES20.GL_VERTEX_SHADER);
@@ -105,6 +110,9 @@ public class LAppSpriteShader implements AutoCloseable {
      */
     private int compileShader(String fileName, int shaderType) {
         // ファイル読み込み
+        if (DEBUG_LOG_ENABLE) {     //启用日志则打印日志
+            LAppPal.printLog("compileShader(String fileName：" + fileName);
+        }
         byte[] shaderBuffer = LAppPal.loadFileAsBytes(fileName);
 
         // コンパイル
