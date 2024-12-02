@@ -107,6 +107,13 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
         showSource.summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
             getString(R.string.show_source_text_summary, showSource.entry)
         }
+
+        // 提示文本
+        findPreference<SwitchPreference>("adjust_tip")?.setOnPreferenceChangeListener { preference, newValue ->
+            prefs.setBoolean("Custom_Adjust_Not_Text", newValue as Boolean)
+            true
+        }
+
         ballIcon.refreshPreview()
         updateIconSummary()
         updatePressSummary()

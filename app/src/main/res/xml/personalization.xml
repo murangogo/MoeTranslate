@@ -81,4 +81,17 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/other_setting"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            app:iconSpaceReserved="false"
+            android:key="adjust_tip"
+            android:title="@string/adjust_not_tip"
+            android:summary="@string/adjust_not_tip_summary"
+            android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>

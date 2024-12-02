@@ -9,7 +9,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private var mFragmentTouchListeners:ArrayList<FragmentTouchListener> = ArrayList<FragmentTouchListener>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,29 +20,6 @@ class MainActivity : AppCompatActivity() {
         val navController = navHost.navController
         val bottomNavigation:BottomNavigationView=findViewById(R.id.bottomNavigation)
         bottomNavigation.setupWithNavController(navController)
-    }
-
-    fun registerFragmentTouchListener(listener:FragmentTouchListener) {
-        mFragmentTouchListeners.add(listener);
-    }
-
-    fun unRegisterFragmentTouchListener(listener:FragmentTouchListener) {
-        mFragmentTouchListeners.remove(listener);
-    }
-
-    override fun dispatchTouchEvent(event: MotionEvent):Boolean {
-        mFragmentTouchListeners.forEach {
-            it.onTouchEvent(event)
-        }
-        return super.dispatchTouchEvent(event);
-    }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
     }
 
 }
