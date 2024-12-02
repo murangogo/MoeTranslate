@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.moe.moetranslator.MainActivity
 import com.moe.moetranslator.R
+import com.moe.moetranslator.utils.AppPathManager
 import com.moe.moetranslator.utils.CustomPreference
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -13,11 +14,15 @@ import kotlinx.coroutines.launch
 
 class LaunchActivity : AppCompatActivity() {
     private lateinit var prefs: CustomPreference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) //锁定竖屏
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)  // 锁定竖屏
+        AppPathManager.init(this)  // 初始化路径管理类
         prefs = CustomPreference.getInstance(this)
         setContentView(R.layout.activity_launch)
+
         MainScope().launch{
             delay(1500)
             finish()

@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.flowOn
 class MessageRepository(private val chatMessageDao: ChatMessageDao) {
 
     val allMessages: Flow<List<ChatMessage>> = chatMessageDao.getMessages()
-        .flowOn(Dispatchers.IO)  // 指定在IO线程执行数据库操作
 
     // 获取全部消息的List
     suspend fun getAllMessagesList(): List<ChatMessage> {

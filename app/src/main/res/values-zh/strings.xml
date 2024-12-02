@@ -267,6 +267,9 @@
     <string name="azureapi_description">微软Azure AI 翻译的API，点击下方的“管理Azure API”即可设置API，还可以在其中查看API的申请教程（每月有200万字符的免费调用额度）。</string>
     <string name="manage_azure_api">管理Azure API</string>
     <string name="azure_hint_secret_key">密钥（1或2均可）</string>
+    <string name="other_setting">其他</string>
+    <string name="adjust_not_tip">不显示调整完成提示</string>
+    <string name="adjust_not_tip_summary">打开后，当框选完成翻译区域或调整完成翻译结果位置时，将不会弹出提示文本</string>
 
 
 </resources>

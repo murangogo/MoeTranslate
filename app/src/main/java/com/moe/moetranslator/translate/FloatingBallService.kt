@@ -481,12 +481,16 @@ class FloatingBallService : LifecycleService() {
             is BallStatus.Crop -> {
                 mRectF = cropView.mRect
                 windowManager.removeView(cropView)
-                showToast(getString(R.string.finish_crop), true)
+                if (!(prefs.getBoolean("Custom_Adjust_Not_Text", false))){
+                    showToast(getString(R.string.finish_crop), true)
+                }
                 currentBallStatus = BallStatus.Normal
             }
             is BallStatus.MovingText -> {
                 setFloatingTextViewTouchable(false)
-                showToast(getString(R.string.finish_textview), true)
+                if (!(prefs.getBoolean("Custom_Adjust_Not_Text", false))){
+                    showToast(getString(R.string.finish_textview), true)
+                }
                 currentBallStatus = BallStatus.Normal
             }
         }

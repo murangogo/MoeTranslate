@@ -80,6 +80,7 @@ class CustomPreference private constructor(context: Context) {
     //Custom_Show_Source_Mode(Int)：显示原文模式
     //Custom_Long_Press_Delay(Long)：长按判定时间
     //Custom_Floating_Pic(Str)：用户自定义的悬浮球图片
+    //Custom_Adjust_Not_Text(Boolean)：是否显示提示文本
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
