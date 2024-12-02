@@ -11,6 +11,7 @@ import live2dsdk.basic.TouchManager;
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.math.CubismViewMatrix;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
+import com.moe.moetranslator.utils.AppPathManager;
 
 import static live2dsdk.basic.LAppDefine.*;
 
@@ -39,7 +40,7 @@ public class LAppView implements AutoCloseable {
     /**
      * モデルの切り替えフラグ
      */
-    private boolean isChangedModel;
+    private boolean isChangedModel = false;
 
     private final TouchManager touchManager = new TouchManager();
 
@@ -119,14 +120,16 @@ public class LAppView implements AutoCloseable {
         LAppTextureManager textureManager = LAppDelegate.getInstance().getTextureManager();
 
 //        // 背景画像の読み込み
-        LAppTextureManager.TextureInfo backgroundTexture = textureManager.createTextureFromPngFile(ResourcePath.ROOT.getPath() + ResourcePath.BACK_IMAGE.getPath());
+        LAppTextureManager.TextureInfo backgroundTexture = textureManager.createTextureFromPngFile(AppPathManager.INSTANCE.getLive2DPath() + ResourcePath.BACK_IMAGE.getPath());
 
 
         // x,yは画像の中心座標
         float x = windowWidth * 0.5f;
         float y = windowHeight * 0.5f;
         float fWidth = backgroundTexture.width * 2.0f;
-        float fHeight = windowHeight * 0.95f;
+//        float fWidth = windowWidth * 1.0f;
+        float fHeight = backgroundTexture.height * 2.0f;
+//        float fHeight = windowHeight * 1.0f;
         int programId = spriteShader.getShaderId();
 
         if (backSprite == null) {

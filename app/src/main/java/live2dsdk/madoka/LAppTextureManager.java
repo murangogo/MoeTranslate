@@ -7,7 +7,8 @@
 
 package live2dsdk.madoka;
 
-import android.content.res.AssetManager;
+import static live2dsdk.basic.LAppDefine.DEBUG_LOG_ENABLE;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
@@ -15,6 +16,9 @@ import android.opengl.GLUtils;
 import live2dsdk.basic.LAppDefine;
 import com.live2d.sdk.cubism.framework.CubismFramework;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -40,14 +44,22 @@ public class LAppTextureManager {
             }
         }
 
-        // assetsフォルダの画像からビットマップを作成する，从assets文件夹的图像创建位图
-        AssetManager assetManager = LAppDelegate.getInstance().getActivity().getAssets();       //表明这个assetmanager是对于此activity的
-        InputStream stream = null;      //清空输入流
-        try {
-            stream = assetManager.open(filePath);       //尝试打开材质文件
-        } catch (IOException e) {
-            e.printStackTrace();        //失败返回错误信息
+        if (DEBUG_LOG_ENABLE) {     //启用日志则打印日志
+            LAppPal.printLog("createTextureFromPngFile: " + filePath );
         }
+
+        InputStream stream = null;      // 清空输入流
+        try {
+            File file = new File(filePath);
+            if (file.exists() && file.canRead()) {
+                stream = new FileInputStream(file);
+            } else {
+                throw new FileNotFoundException("Cannot read file: " + filePath);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();        // 失败返回错误信息
+        }
+
         // decodeStreamは乗算済みアルファとして画像を読み込むようである
         Bitmap bitmap = BitmapFactory.decodeStream(stream);     //处理位图
 

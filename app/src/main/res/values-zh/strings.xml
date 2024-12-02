@@ -270,6 +270,8 @@
     <string name="other_setting">其他</string>
     <string name="adjust_not_tip">不显示调整完成提示</string>
     <string name="adjust_not_tip_summary">打开后，当框选完成翻译区域或调整完成翻译结果位置时，将不会弹出提示文本</string>
+    <string name="init_error">初始化失败：%s</string>
+    <string name="madoka_newyear">鹿目圆（晴着）</string>
 
 
 </resources>

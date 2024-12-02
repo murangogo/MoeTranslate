@@ -16,6 +16,10 @@ object AppPathManager {
         return baseExternalPath ?: throw IllegalStateException("AppPathManager is not initialized")
     }
 
+    fun getLive2DPath(): String {
+        return File(getBaseExternalPath(), "live2d").absolutePath + File.separator
+    }
+
     fun getModelPath(modelId: String): String {
         return File(File(getBaseExternalPath(), "live2d"), modelId).absolutePath + File.separator
     }

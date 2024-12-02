@@ -51,7 +51,7 @@ public class LAppModel extends CubismUserModel {
         idParamEyeBallY = idManager.getId(ParameterId.EYE_BALL_Y.getId());
     }
 
-    public void loadAssets(final String dir, final String fileName) {       //加载Assets模型
+    public void loadModelFiles(final String dir, final String fileName) {       //加载模型
         if (LAppDefine.DEBUG_LOG_ENABLE) {     //打印日志
             LAppPal.printLog("load model setting: " + fileName);
         }
