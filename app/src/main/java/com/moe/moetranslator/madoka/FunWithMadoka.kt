@@ -28,6 +28,7 @@ import com.moe.moetranslator.databinding.FragmentMadokaBinding
 import kotlinx.coroutines.launch
 import live2dsdk.madoka.GLRenderer
 import live2dsdk.madoka.LAppDelegate
+import live2dsdk.madoka.LAppLive2DManager
 
 class FunWithMadoka : Fragment() {
     private lateinit var binding: FragmentMadokaBinding
@@ -166,7 +167,7 @@ class FunWithMadoka : Fragment() {
 
         expressionAdapter = Live2DExpressionAdapter(
             onExpressionClick = { fileName ->
-                // 调用Live2D SDK的displayExpression
+                displayExpression(fileName)
                 binding.drawerLayout.closeDrawers()
             },
             onExpressionLongClick = { expression ->
@@ -180,7 +181,7 @@ class FunWithMadoka : Fragment() {
 
         motionAdapter = Live2DMotionAdapter(
             onMotionClick = { fileName ->
-                // 调用Live2D SDK的displayMotion
+                displayMotion(fileName)
                 binding.drawerLayout.closeDrawers()
             },
             onMotionLongClick = { motion ->
@@ -350,12 +351,14 @@ class FunWithMadoka : Fragment() {
         LAppDelegate.getInstance().view.setChangeModel(n)
     }
 
-    private fun displayExpression(){
-
+    private fun displayExpression(s: String){
+        Log.d("FunWithMadoka", "Expression: $s")
+        LAppLive2DManager.getInstance().getModel(0).setExpression(s)
     }
 
-    private fun displayMotion(){
-
+    private fun displayMotion(s: String){
+        Log.d("FunWithMadoka", "Motion: $s")
+        LAppLive2DManager.getInstance().getModel(0).startMotionCustom(s, null, null)
     }
 
     companion object {
