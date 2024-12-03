@@ -41,6 +41,7 @@ public class LAppView implements AutoCloseable {
      * モデルの切り替えフラグ
      */
     private boolean isChangedModel = false;
+    private int changeModelId = 0;
 
     private final TouchManager touchManager = new TouchManager();
 
@@ -63,6 +64,11 @@ public class LAppView implements AutoCloseable {
         clearColor[1] = 1.0f;
         clearColor[2] = 1.0f;
         clearColor[3] = 0.0f;
+    }
+
+    public void setChangeModel(int n) {
+        isChangedModel = true;
+        changeModelId = n;
     }
 
     @Override
@@ -197,7 +203,7 @@ public class LAppView implements AutoCloseable {
         if (isChangedModel) {       //替换模型
             isChangedModel = false;
             // 哪一个模型
-            LAppLive2DManager.getInstance().nextScene(1);
+            LAppLive2DManager.getInstance().nextScene(changeModelId);
         }
 
         // モデルの描画-模型的绘制
