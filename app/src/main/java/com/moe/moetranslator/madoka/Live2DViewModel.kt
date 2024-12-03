@@ -46,12 +46,30 @@ class Live2DViewModel(
 
             // 扫描并保存表情信息
             val expressions = fileUtil.scanExpressions(modelId)
+
+            Log.d("Live2DViewModel", "Found ${expressions.size} expressions for model $modelId")
+            expressions.forEach { expression ->
+                Log.d("Live2DViewModel", "Expression: id=${expression.id}, " +
+                        "modelId=${expression.modelId}, " +
+                        "fileName=${expression.fileName}, " +
+                        "displayName=${expression.displayName}")
+            }
+
             if (expressions.isNotEmpty()) {
                 repository.insertExpressions(expressions)
             }
 
             // 扫描并保存动作信息
             val motions = fileUtil.scanMotions(modelId)
+
+            Log.d("Live2DViewModel", "Found ${motions.size} motions for model $modelId")
+            motions.forEach { motion ->
+                Log.d("Live2DViewModel", "Motion: id=${motion.id}, " +
+                        "modelId=${motion.modelId}, " +
+                        "fileName=${motion.fileName}, " +
+                        "displayName=${motion.displayName}")
+            }
+
             if (motions.isNotEmpty()) {
                 repository.insertMotions(motions)
             }

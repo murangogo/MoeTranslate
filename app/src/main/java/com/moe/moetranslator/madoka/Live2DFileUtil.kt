@@ -108,28 +108,89 @@ class Live2DFileUtil(private val context: Context) {
     }
 
     fun scanExpressions(modelId: String): List<Live2DExpression> {
-        val expDir = File(File(getModelBaseDir(), modelId), "exp")
-        return expDir.listFiles()
-            ?.filter { it.extension == "json" }
-            ?.map {
-                Live2DExpression(
-                    modelId = modelId,
-                    fileName = it.name,
-                    displayName = it.nameWithoutExtension
-                )
-            } ?: emptyList()
+        // 获取model3.json文件
+        val modelConfigFile = File(File(getModelBaseDir(), modelId), "model.model3.json")
+        if (!modelConfigFile.exists()) {
+            throw IllegalStateException("Model config file not found for model: $modelId")
+        }
+
+        // 读取并解析JSON
+        val jsonString = try {
+            modelConfigFile.readText()
+        } catch (e: Exception) {
+            throw IllegalStateException("Failed to read model config file for model: $modelId", e)
+        }
+
+        val jsonObject = try {
+            org.json.JSONObject(jsonString)
+        } catch (e: Exception) {
+            throw IllegalStateException("Invalid JSON format in model config file: $modelId", e)
+        }
+
+        // 获取FileReferences对象
+        val fileReferences = jsonObject.optJSONObject("FileReferences")
+            ?: throw IllegalStateException("Missing FileReferences in model config: $modelId")
+
+        // 获取Expressions数组
+        val expressions = fileReferences.optJSONArray("Expressions")
+            ?: throw IllegalStateException("Missing Expressions in FileReferences: $modelId")
+
+        // 转换为Live2DExpression列表
+        return (0 until expressions.length()).map { index ->
+            val expression = expressions.getJSONObject(index)
+            val name = expression.optString("Name")
+                ?: throw IllegalStateException("Missing Name in Expression at index $index: $modelId")
+
+            Live2DExpression(
+                modelId = modelId,
+                fileName = name,
+                displayName = name
+            )
+        }
     }
 
     fun scanMotions(modelId: String): List<Live2DMotion> {
-        val mtnDir = File(File(getModelBaseDir(), modelId), "mtn")
-        return mtnDir.listFiles()
-            ?.filter { it.extension == "json" }
-            ?.map {
+        // 获取model3.json文件
+        val modelConfigFile = File(File(getModelBaseDir(), modelId), "model.model3.json")
+        if (!modelConfigFile.exists()) {
+            throw IllegalStateException("Model config file not found for model: $modelId")
+        }
+
+        // 读取并解析JSON
+        val jsonString = try {
+            modelConfigFile.readText()
+        } catch (e: Exception) {
+            throw IllegalStateException("Failed to read model config file for model: $modelId", e)
+        }
+
+        val jsonObject = try {
+            org.json.JSONObject(jsonString)
+        } catch (e: Exception) {
+            throw IllegalStateException("Invalid JSON format in model config file: $modelId", e)
+        }
+
+        // 获取FileReferences对象
+        val fileReferences = jsonObject.optJSONObject("FileReferences")
+            ?: throw IllegalStateException("Missing FileReferences in model config: $modelId")
+
+        // 获取Motions对象
+        val motions = fileReferences.optJSONObject("Motions")
+            ?: throw IllegalStateException("Missing Motions in FileReferences: $modelId")
+
+        // 获取所有motion组并展平为单个列表
+        return motions.keys().asSequence().flatMap { groupName ->
+            val motionGroup = motions.getJSONArray(groupName)
+            (0 until motionGroup.length()).map { index ->
+                val motion = motionGroup.getJSONObject(index)
+                val file = motion.optString("File")
+                    ?: throw IllegalStateException("Missing File in Motion at index $index of group $groupName: $modelId")
+
                 Live2DMotion(
                     modelId = modelId,
-                    fileName = it.name,
-                    displayName = it.nameWithoutExtension
+                    fileName = file,
+                    displayName = file
                 )
-            } ?: emptyList()
+            }
+        }.toList()
     }
 }

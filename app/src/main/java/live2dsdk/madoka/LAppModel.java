@@ -211,7 +211,19 @@ public class LAppModel extends CubismUserModel {
         // ex) idle_0
         String name = group + "_" + number;
 
+        if (debugMode) {
+            LAppPal.printLog("String name = " + name);
+        }
+
         CubismMotion motion = (CubismMotion) motions.get(name);
+
+        if (debugMode) {
+            // 打印所有可用的动作
+            LAppPal.printLog("Available motions:");
+            for (Map.Entry<String, ACubismMotion> entry : motions.entrySet()) {
+                LAppPal.printLog("  " + entry.getKey() + " -> " + entry.getValue());
+            }
+        }
 
         if (motion == null) {
             String fileName = modelSetting.getMotionFileName(group, number);
@@ -256,6 +268,41 @@ public class LAppModel extends CubismUserModel {
             LAppPal.printLog("start motion: " + group + "_" + number);
         }
         return motionManager.startMotionPriority(motion, priority);
+    }
+
+    public int startMotionCustom(final String motionName,
+                           IFinishedMotionCallback onFinishedMotionHandler,
+                           IBeganMotionCallback onBeganMotionHandler
+    ) throws Exception {
+        // 优先级最高
+        motionManager.setReservationPriority(LAppDefine.Priority.FORCE.getPriority());
+
+        if (debugMode) {
+            LAppPal.printLog("Motion name = " + motionName);
+        }
+
+        CubismMotion motion = (CubismMotion) motions.get(motionName);
+
+        if (debugMode) {
+            // 打印所有可用的动作
+            LAppPal.printLog("Available motions:");
+            for (Map.Entry<String, ACubismMotion> entry : motions.entrySet()) {
+                LAppPal.printLog("  " + entry.getKey() + " -> " + entry.getValue());
+            }
+        }
+
+        if (motion == null){
+            throw new Exception("Null Motion File.");
+        }
+        motion.setBeganMotionHandler(onBeganMotionHandler);
+        motion.setFinishedMotionHandler(onFinishedMotionHandler);
+
+
+        if (debugMode) {
+            LAppPal.printLog("start motion: " + motionName);
+        }
+
+        return motionManager.startMotionPriority(motion, LAppDefine.Priority.FORCE.getPriority());
     }
 
     /**
@@ -342,6 +389,12 @@ public class LAppModel extends CubismUserModel {
 
         if (debugMode) {        //打印日志
             LAppPal.printLog("expression: " + expressionID);
+
+            // 打印所有可用的表情
+            LAppPal.printLog("Available expressions:");
+            for (Map.Entry<String, ACubismMotion> entry : expressions.entrySet()) {
+                LAppPal.printLog("  " + entry.getKey() + " -> " + entry.getValue());
+            }
         }
 
         if (motion != null) {       //有该表情，直接播放
@@ -443,6 +496,10 @@ public class LAppModel extends CubismUserModel {
 
                     byte[] buffer = createBuffer(path);
                     CubismExpressionMotion motion = loadExpression(buffer);
+
+                    if (debugMode) {
+                        LAppPal.printLog("load expression: " + path + "==>[" + name + "]");
+                    }
 
                     if (motion != null) {
                         expressions.put(name, motion);
@@ -550,7 +607,9 @@ public class LAppModel extends CubismUserModel {
 
         for (int i = 0; i < count; i++) {
             // ex) idle_0
-            String name = group + "_" + i;
+            // 修改name为motion的File
+//            String name = group + "_" + i;
+            String name = modelSetting.getMotionFileName(group, i);
 
             String path = modelSetting.getMotionFileName(group, i);
             if (!path.equals("")) {

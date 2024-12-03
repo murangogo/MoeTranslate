@@ -135,7 +135,8 @@ public class LAppLive2DManager {
                 if (DEBUG_LOG_ENABLE) {     //打印日志
                     LAppPal.printLog("hit **area**: " + HitAreaName.HEAD.getId());
                 }
-                model.setRandomExpression();        //点到头部就做乱表情
+                // 取消胡乱做表情
+                // model.setRandomExpression();        //点到头部就做乱表情
             }
             // 体をタップした場合ランダムモーションを開始する-当你点击身体时，开始随机运动
             else if (model.hitTest(HitAreaName.BODY.getId(), x, y)) {   //判断是否为身体，但打印日志依然是头部？？？
@@ -143,7 +144,8 @@ public class LAppLive2DManager {
                     LAppPal.printLog("hit **area**: " + HitAreaName.BODY.getId());
                 }
 
-                model.startRandomMotion(MotionGroup.TAP_BODY.getId(), Priority.NORMAL.getPriority(), finishedMotion, beganMotion);   //开始随机运动
+                // 取消胡乱做动作（因修改文件，已无法做）
+                // model.startRandomMotion(MotionGroup.IDLE.getId(), Priority.NORMAL.getPriority(), finishedMotion, beganMotion);   //开始随机运动
             }
         }
     }
