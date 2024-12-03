@@ -28,7 +28,6 @@ import com.moe.moetranslator.databinding.FragmentMadokaBinding
 import kotlinx.coroutines.launch
 import live2dsdk.madoka.GLRenderer
 import live2dsdk.madoka.LAppDelegate
-import live2dsdk.madoka.LAppLive2DManager
 
 class FunWithMadoka : Fragment() {
     private lateinit var binding: FragmentMadokaBinding
@@ -151,6 +150,7 @@ class FunWithMadoka : Fragment() {
         modelAdapter = Live2DModelAdapter(
             onModelClick = { modelId ->
                 val modelNumber = modelId.replace("model_", "").toInt()
+                // TODO: 加载弹窗
                 changeModel(modelNumber)
                 viewModel.setCurrentModel(modelId)
                 binding.drawerLayout.closeDrawers()
@@ -347,7 +347,7 @@ class FunWithMadoka : Fragment() {
 
     private fun changeModel(n: Int){
         Log.d("FunWithMadoka", "changeModel: $n")
-        LAppLive2DManager.getInstance().nextScene(n)
+        LAppDelegate.getInstance().view.setChangeModel(n)
     }
 
     private fun displayExpression(){

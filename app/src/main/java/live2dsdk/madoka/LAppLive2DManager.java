@@ -133,14 +133,14 @@ public class LAppLive2DManager {
             // 頭をタップした場合表情をランダムで再生する-当你点击头部时，随机播放表情
             if (model.hitTest(HitAreaName.HEAD.getId(), x, y)) {    //判断是否在头部：注：该函数似乎无效？？
                 if (DEBUG_LOG_ENABLE) {     //打印日志
-                    LAppPal.printLog("hit area: " + HitAreaName.HEAD.getId());
+                    LAppPal.printLog("hit **area**: " + HitAreaName.HEAD.getId());
                 }
                 model.setRandomExpression();        //点到头部就做乱表情
             }
             // 体をタップした場合ランダムモーションを開始する-当你点击身体时，开始随机运动
             else if (model.hitTest(HitAreaName.BODY.getId(), x, y)) {   //判断是否为身体，但打印日志依然是头部？？？
                 if (DEBUG_LOG_ENABLE) {
-                    LAppPal.printLog("hit area: " + HitAreaName.HEAD.getId());
+                    LAppPal.printLog("hit **area**: " + HitAreaName.BODY.getId());
                 }
 
                 model.startRandomMotion(MotionGroup.TAP_BODY.getId(), Priority.NORMAL.getPriority(), finishedMotion, beganMotion);   //开始随机运动
