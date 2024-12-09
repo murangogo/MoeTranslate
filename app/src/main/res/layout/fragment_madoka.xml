@@ -31,16 +31,18 @@
                 android:id="@+id/btn_expressions"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/change_icon"/>
+                android:src="@drawable/expression_btn"/>
 
             <ImageButton
                 android:id="@+id/btn_motions"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
+                android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/chat_icon"/>
+                android:src="@drawable/motion_btn"/>
         </LinearLayout>
 
         <!-- Right buttons -->
@@ -52,21 +54,22 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
+            <ImageButton
+                android:id="@+id/btn_import_model"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerInside"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/add_model"/>
 
             <ImageButton
                 android:id="@+id/btn_model_list"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/change_icon"/>
-
-            <ImageButton
-                android:id="@+id/btn_import_model"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
                 android:layout_marginTop="8dp"
+                android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/chat_icon"/>
+                android:src="@drawable/model_manage"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
