@@ -605,6 +605,10 @@ public class LAppModel extends CubismUserModel {
     private void preLoadMotionGroup(final String group) {
         final int count = modelSetting.getMotionCount(group);
 
+        if (debugMode) {
+            LAppPal.printLog("COUNT motion: " + count);
+        }
+
         for (int i = 0; i < count; i++) {
             // ex) idle_0
             // 修改name为motion的File

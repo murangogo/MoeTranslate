@@ -74,20 +74,38 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Left drawer for expressions -->
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_expressions_and_motions"
-        android:layout_width="wrap_content"
+    <!-- Left drawer for expressions/motions -->
+    <FrameLayout
+        android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"/>
+        android:background="@android:color/white">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/expressions_motions_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginHorizontal="1dp"/>
+    </FrameLayout>
 
     <!-- Right drawer for model list -->
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_models"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:fitsSystemWindows="true"/>
+        android:background="@android:color/white">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/models_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginHorizontal="1dp"/>
+    </FrameLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

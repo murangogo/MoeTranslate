@@ -3,34 +3,58 @@ package com.moe.moetranslator.madoka
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.moe.moetranslator.R
 
 class Live2DModelAdapter(
     private val onModelClick: (String) -> Unit,
     private val onModelLongClick: (Live2DModel) -> Unit
 ) : ListAdapter<Live2DModel, Live2DModelAdapter.ViewHolder>(ModelDiffCallback()) {
 
+
+    private var selectedModelId: String? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
+            .inflate(R.layout.item_drawer_model, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val model = getItem(position)
-        holder.bind(model)
+        holder.bind(model, model.modelId == selectedModelId)
+    }
+
+    fun setSelectedModel(modelId: String) {
+        val oldSelection = selectedModelId
+        selectedModelId = modelId
+
+        oldSelection?.let { old ->
+            val oldPosition = currentList.indexOfFirst { it.modelId == old }
+            if (oldPosition != -1) notifyItemChanged(oldPosition)
+        }
+
+        val newPosition = currentList.indexOfFirst { it.modelId == modelId }
+        if (newPosition != -1) notifyItemChanged(newPosition)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val textView: TextView = itemView.findViewById(android.R.id.text1)
+        private val textName: TextView = itemView.findViewById(R.id.text_name)
+        private val imageCheck: ImageView = itemView.findViewById(R.id.image_check)
 
-        fun bind(model: Live2DModel) {
-            textView.text = model.displayName
+        fun bind(model: Live2DModel, isSelected: Boolean) {
+            textName.text = model.displayName
+            imageCheck.visibility = if (isSelected) View.VISIBLE else View.GONE
+            itemView.isSelected = isSelected  // 添加这行来控制背景
 
-            itemView.setOnClickListener { onModelClick(model.modelId) }
+            itemView.setOnClickListener {
+                onModelClick(model.modelId)
+                setSelectedModel(model.modelId)
+            }
             itemView.setOnLongClickListener {
                 onModelLongClick(model)
                 true
@@ -53,7 +77,7 @@ class Live2DExpressionAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
+            .inflate(R.layout.item_drawer_exp_mtn, parent, false)
         return ViewHolder(view)
     }
 
@@ -63,7 +87,7 @@ class Live2DExpressionAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val textView: TextView = itemView.findViewById(android.R.id.text1)
+        private val textView: TextView = itemView.findViewById(R.id.text_name)
 
         fun bind(expression: Live2DExpression) {
             textView.text = expression.displayName
@@ -94,7 +118,7 @@ class Live2DMotionAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
+            .inflate(R.layout.item_drawer_exp_mtn, parent, false)
         return ViewHolder(view)
     }
 
@@ -104,7 +128,7 @@ class Live2DMotionAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val textView: TextView = itemView.findViewById(android.R.id.text1)
+        private val textView: TextView = itemView.findViewById(R.id.text_name)
 
         fun bind(motion: Live2DMotion) {
             textView.text = motion.displayName

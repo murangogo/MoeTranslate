@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -20,8 +21,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FragmentMadokaBinding
@@ -154,14 +155,11 @@ class FunWithMadoka : Fragment() {
                 // TODO: 加载弹窗
                 changeModel(modelNumber)
                 viewModel.setCurrentModel(modelId)
+                modelAdapter.setSelectedModel(modelId)
                 binding.drawerLayout.closeDrawers()
             },
             onModelLongClick = { model ->
-                showRenameDialog(model.modelId, model.displayName) { newName ->
-                    lifecycleScope.launch {
-                        viewModel.updateModelName(model.modelId, newName)
-                    }
-                }
+                showModelOptionsDialog(model)
             }
         )
 
@@ -195,19 +193,26 @@ class FunWithMadoka : Fragment() {
     }
 
     private fun setupDrawers() {
-        // 为抽屉设置自定义布局
-        binding.navModels.inflateHeaderView(R.layout.item_drawer_content).apply {
-            findViewById<RecyclerView>(R.id.recycler_view)?.apply {
-                adapter = modelAdapter
-                layoutManager = LinearLayoutManager(context)
-            }
+        // 创建分割线
+        val dividerItemDecoration = DividerItemDecoration(
+            requireContext(),
+            LinearLayoutManager.VERTICAL
+        ).apply {
+            setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.list_divider)!!)
         }
 
-        binding.navExpressionsAndMotions.inflateHeaderView(R.layout.item_drawer_content).apply {
-            findViewById<RecyclerView>(R.id.recycler_view)?.apply {
-                adapter = expressionAdapter
-                layoutManager = LinearLayoutManager(context)
-            }
+        // 为模型列表设置
+        binding.modelsList.apply {
+            adapter = modelAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(dividerItemDecoration)
+        }
+
+        // 为表情/动作列表设置
+        binding.expressionsMotionsList.apply {
+            adapter = expressionAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(dividerItemDecoration)
         }
     }
 
@@ -221,22 +226,20 @@ class FunWithMadoka : Fragment() {
                 showImportModelDialog()
             }
 
-            // 修改表情按钮的点击处理
             btnExpressions.setOnClickListener {
                 // 打开左侧抽屉
                 drawerLayout.openDrawer(GravityCompat.START)
                 // 切换到表情列表
-                navExpressionsAndMotions.getHeaderView(0)?.findViewById<RecyclerView>(R.id.recycler_view)?.apply {
+                expressionsMotionsList.apply {
                     adapter = expressionAdapter
                 }
             }
 
-            // 修改动作按钮的点击处理
             btnMotions.setOnClickListener {
                 // 打开左侧抽屉
                 drawerLayout.openDrawer(GravityCompat.START)
                 // 切换到动作列表
-                navExpressionsAndMotions.getHeaderView(0)?.findViewById<RecyclerView>(R.id.recycler_view)?.apply {
+                expressionsMotionsList.apply {
                     adapter = motionAdapter
                 }
             }
@@ -265,6 +268,55 @@ class FunWithMadoka : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showModelOptionsDialog(model: Live2DModel) {
+        val options = arrayOf("重命名", "删除模型")
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(model.displayName)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> showRenameDialog(model.modelId, model.displayName) { newName ->
+                        lifecycleScope.launch {
+                            viewModel.updateModelName(model.modelId, newName)
+                        }
+                    }
+                    1 -> showDeleteConfirmDialog(model)
+                }
+            }
+            .show()
+    }
+
+    private fun showDeleteConfirmDialog(model: Live2DModel) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("确认删除")
+            .setMessage("确定要删除模型${model.displayName}吗？此操作不可恢复。")
+            .setPositiveButton("删除") { _, _ ->
+            // 显示进度对话框
+            val progressDialog = MaterialAlertDialogBuilder(requireContext())
+                .setTitle("删除中")
+                .setMessage("正在删除模型...")
+                .setCancelable(false)
+                .create()
+
+            progressDialog.show()
+
+            lifecycleScope.launch {
+                try {
+                    val success = viewModel.deleteModel(model.modelId)
+                    progressDialog.dismiss()
+
+                    val message = if (success) "删除成功" else "删除失败"
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    progressDialog.dismiss()
+                    Toast.makeText(requireContext(), "删除失败", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+            .setNegativeButton("取消", null)
+            .show()
     }
 
     private fun showRenameDialog(id: String, currentName: String, onConfirm: (String) -> Unit) {

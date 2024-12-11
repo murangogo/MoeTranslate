@@ -45,10 +45,6 @@ class Live2DFileUtil(private val context: Context) {
             // 创建目标文件夹
             if (!destinationDir.exists()) destinationDir.mkdirs()
 
-            // 确保exp和mtn文件夹存在
-            File(destinationDir, "exp").mkdirs()
-            File(destinationDir, "mtn").mkdirs()
-
             // 复制文件夹内容
             copyDocumentFolder(sourceDir, destinationDir)
 
@@ -87,6 +83,19 @@ class Live2DFileUtil(private val context: Context) {
                 // 如果是文件，直接复制
                 copyDocumentFile(sourceFile, destinationDir)
             }
+        }
+    }
+
+    suspend fun deleteModelFolder(modelId: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val modelDir = File(getModelBaseDir(), modelId)
+            if (modelDir.exists()) {
+                modelDir.deleteRecursively()
+            }
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
     }
 
@@ -129,11 +138,11 @@ class Live2DFileUtil(private val context: Context) {
 
         // 获取FileReferences对象
         val fileReferences = jsonObject.optJSONObject("FileReferences")
-            ?: throw IllegalStateException("Missing FileReferences in model config: $modelId")
+            ?: return emptyList()
 
         // 获取Expressions数组
         val expressions = fileReferences.optJSONArray("Expressions")
-            ?: throw IllegalStateException("Missing Expressions in FileReferences: $modelId")
+            ?: return emptyList()
 
         // 转换为Live2DExpression列表
         return (0 until expressions.length()).map { index ->
@@ -171,11 +180,11 @@ class Live2DFileUtil(private val context: Context) {
 
         // 获取FileReferences对象
         val fileReferences = jsonObject.optJSONObject("FileReferences")
-            ?: throw IllegalStateException("Missing FileReferences in model config: $modelId")
+            ?: return emptyList()
 
         // 获取Motions对象
         val motions = fileReferences.optJSONObject("Motions")
-            ?: throw IllegalStateException("Missing Motions in FileReferences: $modelId")
+            ?: return emptyList()
 
         // 获取所有motion组并展平为单个列表
         return motions.keys().asSequence().flatMap { groupName ->
