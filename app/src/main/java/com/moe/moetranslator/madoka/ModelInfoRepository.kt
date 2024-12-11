@@ -7,6 +7,10 @@ class ModelInfoRepository(private val modelInfoDAO: ModelInfoDAO) {
 
     fun getMotionsForModel(modelId: String) = modelInfoDAO.getMotionsForModel(modelId)
 
+    suspend fun deleteModel(modelId: String) {
+        modelInfoDAO.deleteModel(modelId)
+    }
+
     suspend fun insertModel(model: Live2DModel) {
         modelInfoDAO.insertModel(model)
     }

@@ -81,6 +81,27 @@ class Live2DViewModel(
         }
     }
 
+    suspend fun deleteModel(modelId: String): Boolean {
+        return try {
+            // 首先删除文件夹
+            val fileDeleted = fileUtil.deleteModelFolder(modelId)
+            if (fileDeleted) {
+                // 然后删除数据库记录
+                repository.deleteModel(modelId)
+                // 如果当前选中的就是被删除的模型，清除当前选中状态
+                if (_currentModelId.value == modelId) {
+                    _currentModelId.value = null
+                }
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
     suspend fun updateModelName(modelId: String, newName: String) {
         repository.updateModelName(modelId, newName)
     }

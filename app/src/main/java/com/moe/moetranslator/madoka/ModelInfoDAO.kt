@@ -16,6 +16,9 @@ interface ModelInfoDAO {
     @Query("SELECT * FROM live2d_motions WHERE modelId = :modelId")
     fun getMotionsForModel(modelId: String): Flow<List<Live2DMotion>>
 
+    @Query("DELETE FROM live2d_models WHERE modelId = :modelId")
+    suspend fun deleteModel(modelId: String)
+
     @Insert
     suspend fun insertModel(model: Live2DModel)
 
