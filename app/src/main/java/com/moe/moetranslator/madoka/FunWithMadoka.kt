@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -26,10 +27,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FragmentMadokaBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live2dsdk.madoka.GLRenderer
 import live2dsdk.madoka.LAppDelegate
 import live2dsdk.madoka.LAppLive2DManager
+import live2dsdk.madoka.Live2DCallbackCustom
 
 class FunWithMadoka : Fragment() {
     private lateinit var binding: FragmentMadokaBinding
@@ -57,15 +60,6 @@ class FunWithMadoka : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 显示进度对话框
-        val progressDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Loading")
-            .setMessage("Loading")
-            .setCancelable(false)
-            .create()
-
-        progressDialog.show()
-
         setupGLSurfaceView()
         setupViewModel()
         setupAdapters()
@@ -73,33 +67,52 @@ class FunWithMadoka : Fragment() {
         setupClickListeners()
         observeData()
 
-        progressDialog.dismiss()
     }
 
     override fun onStart() {
         super.onStart()
-        LAppDelegate.getInstance().onStart(requireActivity())
+        try {
+            LAppDelegate.getInstance().onStart(requireActivity())
+        } catch (e: Exception){
+            showToast(getString(R.string.error_occurred, e.toString()))
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        binding.live2dContainer.onResume()
+        try {
+            binding.live2dContainer.onResume()
+        } catch (e: Exception){
+            showToast(getString(R.string.error_occurred, e.toString()))
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        binding.live2dContainer.onPause()
-        LAppDelegate.getInstance().onPause()
+        try {
+            binding.live2dContainer.onPause()
+            LAppDelegate.getInstance().onPause()
+        } catch (e: Exception){
+            showToast(getString(R.string.error_occurred, e.toString()))
+        }
     }
 
     override fun onStop() {
         super.onStop()
-        LAppDelegate.getInstance().onStop()
+        try {
+            LAppDelegate.getInstance().onStop()
+        } catch (e: Exception){
+            showToast(getString(R.string.error_occurred, e.toString()))
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        LAppDelegate.getInstance().onDestroy()
+        try {
+            LAppDelegate.getInstance().onDestroy()
+        } catch (e: Exception){
+            showToast(getString(R.string.error_occurred, e.toString()))
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -152,7 +165,6 @@ class FunWithMadoka : Fragment() {
         modelAdapter = Live2DModelAdapter(
             onModelClick = { modelId ->
                 val modelNumber = modelId.replace("model_", "").toInt()
-                // TODO: 加载弹窗
                 changeModel(modelNumber)
                 viewModel.setCurrentModel(modelId)
                 modelAdapter.setSelectedModel(modelId)
@@ -271,7 +283,12 @@ class FunWithMadoka : Fragment() {
     }
 
     private fun showModelOptionsDialog(model: Live2DModel) {
-        val options = arrayOf("重命名", "删除模型")
+
+        val options = if (model.modelId == "model_1") {
+            arrayOf(getString(R.string.rename))
+        } else {
+            arrayOf(getString(R.string.rename), getString(R.string.delete_models))
+        }
 
         AlertDialog.Builder(requireContext())
             .setTitle(model.displayName)
@@ -286,57 +303,65 @@ class FunWithMadoka : Fragment() {
                 }
             }
             .show()
+            .window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+    }
+
+    private fun showRenameDialog(id: String, currentName: String, onConfirm: (String) -> Unit) {
+        val customView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_message_edittext, null)
+        customView.findViewById<TextView>(R.id.dialog_top_message).apply {
+            text = getString(R.string.rename_tip)
+        }
+        val input = customView.findViewById<EditText>(R.id.dialog_bottom_edittext).apply {
+            setText(currentName)
+        }
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.rename)
+            .setView(customView)
+            .setPositiveButton(R.string.save) { _, _ ->
+                val newName = input.text.toString().trim()
+                if (newName.isNotBlank()) {
+                    onConfirm(newName)
+                }
+            }
+            .setNegativeButton(R.string.user_cancel, null)
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
     private fun showDeleteConfirmDialog(model: Live2DModel) {
         AlertDialog.Builder(requireContext())
-            .setTitle("确认删除")
-            .setMessage("确定要删除模型${model.displayName}吗？此操作不可恢复。")
-            .setPositiveButton("删除") { _, _ ->
-            // 显示进度对话框
-            val progressDialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle("删除中")
-                .setMessage("正在删除模型...")
-                .setCancelable(false)
-                .create()
+            .setTitle(R.string.confirm_deletion)
+            .setMessage(getString(R.string.delete_description, model.displayName))
+            .setPositiveButton(R.string.confirm) { _, _ ->
+                // 显示进度对话框
+                val progressDialog = AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.waiting)
+                    .setMessage(R.string.deleteing)
+                    .setCancelable(false)
+                    .create()
 
-            progressDialog.show()
+                progressDialog.show()
+                progressDialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
 
-            lifecycleScope.launch {
-                try {
-                    val success = viewModel.deleteModel(model.modelId)
-                    progressDialog.dismiss()
+                lifecycleScope.launch {
+                    try {
+                        val success = viewModel.deleteModel(model.modelId)
+                        progressDialog.dismiss()
 
-                    val message = if (success) "删除成功" else "删除失败"
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                } catch (e: Exception) {
-                    progressDialog.dismiss()
-                    Toast.makeText(requireContext(), "删除失败", Toast.LENGTH_SHORT).show()
+                        if (success) {
+                            showToast(getString(R.string.delete_success))
+                        } else {
+                            throw Exception("Delete Failed Exception.")
+                        }
+                    } catch (e: Exception) {
+                        progressDialog.dismiss()
+                        showToast(getString(R.string.delete_failed, e.message))
+                    }
                 }
             }
-        }
-            .setNegativeButton("取消", null)
-            .show()
-    }
-
-    private fun showRenameDialog(id: String, currentName: String, onConfirm: (String) -> Unit) {
-        val context = context ?: return
-        val editText = EditText(context).apply {
-            setText(currentName)
-            setSingleLine()
-        }
-
-        AlertDialog.Builder(context)
-//            .setTitle(R.string.rename_dialog_title)
-            .setTitle("R.string.rename_dialog_title")
-            .setView(editText)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val newName = editText.text.toString().trim()
-                if (newName.isNotEmpty()) {
-                    onConfirm(newName)
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(R.string.user_cancel, null)
             .show()
     }
 
@@ -377,6 +402,7 @@ class FunWithMadoka : Fragment() {
             .create()
 
         progressDialog.show()
+        progressDialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
 
         lifecycleScope.launch {
             try {
@@ -399,8 +425,29 @@ class FunWithMadoka : Fragment() {
     }
 
     private fun changeModel(n: Int){
-        Log.d("FunWithMadoka", "changeModel: $n")
-        LAppDelegate.getInstance().view.setChangeModel(n)
+        val progressDialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.loading_model)
+            .setMessage(R.string.waiting)
+            .setCancelable(false)
+            .create()
+
+        progressDialog.show()
+        progressDialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+
+        LAppDelegate.getInstance().view.setChangeModel(n, object : Live2DCallbackCustom {
+            override fun onSuccess() {
+                lifecycleScope.launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                }
+            }
+
+            override fun onFailure(errorMessage: String?) {
+                lifecycleScope.launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    showToast(getString(R.string.model_load_failed, errorMessage),true)
+                }
+            }
+        })
     }
 
     private fun displayExpression(s: String){
@@ -413,7 +460,11 @@ class FunWithMadoka : Fragment() {
         LAppLive2DManager.getInstance().getModel(0).startMotionCustom(s, null, null)
     }
 
-    companion object {
-        fun newInstance() = FunWithMadoka()
+    private fun showToast(str: String, isShort: Boolean = false) {
+        if (isShort) {
+            Toast.makeText(requireContext(), str, Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), str, Toast.LENGTH_LONG).show()
+        }
     }
 }

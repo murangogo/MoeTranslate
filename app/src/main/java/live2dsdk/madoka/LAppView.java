@@ -16,6 +16,8 @@ import com.moe.moetranslator.utils.AppPathManager;
 import static live2dsdk.basic.LAppDefine.*;
 
 public class LAppView implements AutoCloseable {
+    private Live2DCallbackCustom modelChangeCallback;  // 回调变量
+
     private final CubismMatrix44 deviceToScreen = CubismMatrix44.create(); // デバイス座標からスクリーン座標に変換するための行列
     private final CubismViewMatrix viewMatrix = new CubismViewMatrix();   // 画面表示の拡縮や移動の変換を行う行列
     private int windowWidth;
@@ -66,7 +68,8 @@ public class LAppView implements AutoCloseable {
         clearColor[3] = 0.0f;
     }
 
-    public void setChangeModel(int n) {
+    public void setChangeModel(int n, Live2DCallbackCustom callback) {
+        modelChangeCallback = callback;  // 保存回调
         isChangedModel = true;
         changeModelId = n;
     }
@@ -203,7 +206,7 @@ public class LAppView implements AutoCloseable {
         if (isChangedModel) {       //替换模型
             isChangedModel = false;
             // 哪一个模型
-            LAppLive2DManager.getInstance().nextScene(changeModelId);
+            LAppLive2DManager.getInstance().nextScene(changeModelId, modelChangeCallback);
         }
 
         // モデルの描画-模型的绘制

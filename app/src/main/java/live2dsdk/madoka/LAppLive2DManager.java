@@ -11,6 +11,7 @@ import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
 import com.live2d.sdk.cubism.framework.motion.IBeganMotionCallback;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
+import com.moe.moetranslator.madoka.DialogManager;
 import com.moe.moetranslator.utils.AppPathManager;
 
 import java.io.IOException;
@@ -154,8 +155,8 @@ public class LAppLive2DManager {
      * 次のシーンに切り替える
      * サンプルアプリケーションではモデルセットの切り替えを行う
      */
-    public void nextScene(int k) {
-        changeScene(k);        //改变场景
+    public void nextScene(int k, Live2DCallbackCustom callback) {
+        changeScene(k, callback);        //改变场景
     }
 
     /**
@@ -163,58 +164,77 @@ public class LAppLive2DManager {
      *
      * @param index 切り替えるシーンインデックス
      */
-    public void changeScene(int index) {        //改变场景
-        currentModel = index;        //得到当前模型
-        if (DEBUG_LOG_ENABLE) {     //启用日志则打印日志
-            LAppPal.printLog("model index: " + index);
+    public void changeScene(int index, Live2DCallbackCustom callback) {        //改变场景
+        try{
+            if (callback == null){
+                DialogManager.Companion.showDialog(null, null);
+            }
+
+            currentModel = index;        //得到当前模型
+            if (DEBUG_LOG_ENABLE) {     //启用日志则打印日志
+                LAppPal.printLog("model index: " + index);
+            }
+
+            String modelDirName = "model_" + index;        //获取模型文件夹
+            String modelPath = AppPathManager.INSTANCE.getModelPath(modelDirName);        //获得模型路径
+            String modelJsonName = "model.model3.json";      //获取模型JSON文件
+
+            if (DEBUG_LOG_ENABLE) {     //启用日志则打印日志
+                LAppPal.printLog("modelDirName: " + modelDirName);
+                LAppPal.printLog("modelPath: " + modelPath);
+                LAppPal.printLog("modelJsonName: " + modelJsonName);
+            }
+
+
+            releaseAllModel();      //释放所有模型
+
+            models.add(new LAppModel());        //加入新模型
+            models.get(0).loadModelFiles(modelPath, modelJsonName);
+
+            /*
+             * モデル半透明表示を行うサンプルを提示する。
+             * ここでUSE_RENDER_TARGET、USE_MODEL_RENDER_TARGETが定義されている場合
+             * 別のレンダリングターゲットにモデルを描画し、描画結果をテクスチャとして別のスプライトに張り付ける。
+             */
+            LAppView.RenderingTarget useRenderingTarget;
+            if (USE_RENDER_TARGET) {
+                // LAppViewの持つターゲットに描画を行う場合こちらを選択-选择此选项可在LAppView目标上绘制
+                useRenderingTarget = LAppView.RenderingTarget.VIEW_FRAME_BUFFER;
+            } else if (USE_MODEL_RENDER_TARGET) {
+                // 各LAppModelの持つターゲットに描画を行う場合こちらを選択-选择此选项可在每个LAppModel的目标上绘制
+                useRenderingTarget = LAppView.RenderingTarget.MODEL_FRAME_BUFFER;
+            } else {
+                // デフォルトのメインフレームバッファへレンダリングする(通常)-渲染到默认大型机缓冲区（正常）
+                useRenderingTarget = LAppView.RenderingTarget.NONE;
+            }
+
+            if (USE_RENDER_TARGET || USE_MODEL_RENDER_TARGET) {
+                // モデル個別にαを付けるサンプルとして、もう1体モデルを作成し少し位置をずらす。-每个模型α中描述的场景，使用以下步骤创建明细表，以便在概念设计中分析体量的体积。
+                models.add(new LAppModel());
+                models.get(1).loadModelFiles(modelPath, modelJsonName);
+                models.get(1).getModelMatrix().translateX(0.2f);
+            }
+
+            // レンダリングターゲットを切り替える-切换渲染目标
+            LAppDelegate.getInstance().getView().switchRenderingTarget(useRenderingTarget);
+
+            // 別レンダリング先を選択した際の背景クリア色-选择其他渲染目标时的背景透明色
+            float[] clearColor = {0.0f, 0.0f, 0.0f};
+            LAppDelegate.getInstance().getView().setRenderingTargetClearColor(clearColor[0], clearColor[1], clearColor[2]);
+            if (callback != null) {
+                callback.onSuccess();
+            } else {
+                DialogManager.Companion.dismissDialog();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (callback != null) {
+                callback.onFailure(e.getMessage());
+            } else {
+                DialogManager.Companion.dismissDialog();
+            }
+            throw e;
         }
-
-        String modelDirName = "model_" + index;        //获取模型文件夹
-        String modelPath = AppPathManager.INSTANCE.getModelPath(modelDirName);        //获得模型路径
-        String modelJsonName = "model.model3.json";      //获取模型JSON文件
-
-        if (DEBUG_LOG_ENABLE) {     //启用日志则打印日志
-            LAppPal.printLog("modelDirName: " + modelDirName);
-            LAppPal.printLog("modelPath: " + modelPath);
-            LAppPal.printLog("modelJsonName: " + modelJsonName);
-        }
-
-
-        releaseAllModel();      //释放所有模型
-
-        models.add(new LAppModel());        //加入新模型
-        models.get(0).loadModelFiles(modelPath, modelJsonName);
-
-        /*
-         * モデル半透明表示を行うサンプルを提示する。
-         * ここでUSE_RENDER_TARGET、USE_MODEL_RENDER_TARGETが定義されている場合
-         * 別のレンダリングターゲットにモデルを描画し、描画結果をテクスチャとして別のスプライトに張り付ける。
-         */
-        LAppView.RenderingTarget useRenderingTarget;
-        if (USE_RENDER_TARGET) {
-            // LAppViewの持つターゲットに描画を行う場合こちらを選択-选择此选项可在LAppView目标上绘制
-            useRenderingTarget = LAppView.RenderingTarget.VIEW_FRAME_BUFFER;
-        } else if (USE_MODEL_RENDER_TARGET) {
-            // 各LAppModelの持つターゲットに描画を行う場合こちらを選択-选择此选项可在每个LAppModel的目标上绘制
-            useRenderingTarget = LAppView.RenderingTarget.MODEL_FRAME_BUFFER;
-        } else {
-            // デフォルトのメインフレームバッファへレンダリングする(通常)-渲染到默认大型机缓冲区（正常）
-            useRenderingTarget = LAppView.RenderingTarget.NONE;
-        }
-
-        if (USE_RENDER_TARGET || USE_MODEL_RENDER_TARGET) {
-            // モデル個別にαを付けるサンプルとして、もう1体モデルを作成し少し位置をずらす。-每个模型α中描述的场景，使用以下步骤创建明细表，以便在概念设计中分析体量的体积。
-            models.add(new LAppModel());
-            models.get(1).loadModelFiles(modelPath, modelJsonName);
-            models.get(1).getModelMatrix().translateX(0.2f);
-        }
-
-        // レンダリングターゲットを切り替える-切换渲染目标
-        LAppDelegate.getInstance().getView().switchRenderingTarget(useRenderingTarget);
-
-        // 別レンダリング先を選択した際の背景クリア色-选择其他渲染目标时的背景透明色
-        float[] clearColor = {0.0f, 0.0f, 0.0f};
-        LAppDelegate.getInstance().getView().setRenderingTargetClearColor(clearColor[0], clearColor[1], clearColor[2]);
     }
 
     /**
@@ -283,7 +303,7 @@ public class LAppLive2DManager {
 
     private LAppLive2DManager() {
         currentModel = 1;        //默认为第一个对象
-        changeScene(currentModel);       //返回模型编号
+        changeScene(currentModel, null);       //返回模型编号
     }
 
 

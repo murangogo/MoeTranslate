@@ -17,18 +17,30 @@ public class GLRenderer implements GLSurfaceView.Renderer {
     // Called at initialization (when the drawing context is lost and recreated).-在初始化时调用（当图形上下文丢失并重新创建时）。
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-        LAppDelegate.getInstance().onSurfaceCreated();
+        try{
+            LAppDelegate.getInstance().onSurfaceCreated();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Mainly called when switching between landscape and portrait.-主要在横向和纵向之间切换时调用。
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
-        LAppDelegate.getInstance().onSurfaceChanged(width, height);
+        try{
+            LAppDelegate.getInstance().onSurfaceChanged(width, height);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Called repeatedly for drawing.-反复调用绘图
     @Override
     public void onDrawFrame(GL10 unused) {
-        LAppDelegate.getInstance().run();
+        try{
+            LAppDelegate.getInstance().run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

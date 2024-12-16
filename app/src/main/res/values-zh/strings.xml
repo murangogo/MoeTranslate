@@ -190,7 +190,7 @@
     <string name="volc_hint_account">Access Key ID</string>
     <string name="volc_hint_secret_key">Secret Access Key</string>
     <string name="whats_api_title">什么是%sAPI</string>
-    <string name="whats_api_content">萌译可以使用不同平台的API来提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为%1$s，点击“现在就去”即可开始申请%1$sAPI。申请%1$sAPI的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有相当多的免费调用次数。\n\n比起ML Kit和NLLB这些本地模型翻译，使用云端API的翻译效果无疑会更好，因此在网络良好的情况下更推荐您使用云端API进行翻译。</string>
+    <string name="whats_api_content">萌译可以使用不同平台的API来提供翻译服务，这意味着您需要从对应的平台申请API。您现在选择的API平台似乎为%1$s，点击“现在就去”即可开始申请%1$sAPI。申请%1$sAPI的详细教程可点击“查看教程”。请注意，这些API的申请都是免费的，而且每月都有相当多的免费调用次数。  比起ML Kit和NLLB这些本地模型翻译，使用云端API的翻译效果无疑会更好，因此在网络良好的情况下更推荐您使用云端API进行翻译。</string>
     <string name="niu_hint_secret_key">API-KEY</string>
     <string name="niu_noneed">无需填写</string>
     <string name="floating_ball">悬浮球</string>
@@ -272,6 +272,17 @@
     <string name="adjust_not_tip_summary">打开后，当框选完成翻译区域或调整完成翻译结果位置时，将不会弹出提示文本</string>
     <string name="init_error">初始化失败：%s</string>
     <string name="madoka_newyear">鹿目圆（晴着）</string>
+    <string name="loading">加载中...</string>
+    <string name="waiting">请等待</string>
+    <string name="loading_model">加载模型</string>
+    <string name="model_load_failed">模型加载失败：%s</string>
+    <string name="rename">重命名</string>
+    <string name="confirm_deletion">确认删除</string>
+    <string name="delete_description">确定要删除模型%1$s吗？此操作不可恢复。</string>
+    <string name="deleteing">正在删除......</string>
+    <string name="delete_failed">删除失败：%s</string>
+    <string name="delete_success">删除成功</string>
+    <string name="rename_tip">还请不要起过于奇怪的名字</string>
 
 
 </resources>

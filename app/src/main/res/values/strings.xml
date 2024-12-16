@@ -271,6 +271,17 @@
     <string name="adjust_not_tip_summary">When turned on, when the box selects the area to complete the translation or adjusts the position of the completed translation result, the prompt text will not pop up</string>
     <string name="init_error">Initialization Failed：%s</string>
     <string name="madoka_newyear">Madoka（New Year）</string>
+    <string name="loading">Loading...</string>
+    <string name="waiting">Please wait</string>
+    <string name="loading_model">Load model</string>
+    <string name="model_load_failed">Model load failed：%s</string>
+    <string name="rename">Rename</string>
+    <string name="confirm_deletion">Confirm Deletion</string>
+    <string name="delete_description">Are you sure you want to delete model %1$s? This operation is irreversible.</string>
+    <string name="deleteing">Deleting...</string>
+    <string name="delete_failed">Delete failed：%s</string>
+    <string name="delete_success">Delete successfully</string>
+    <string name="rename_tip">Please don’t give too weird names.</string>
 
 
 </resources>

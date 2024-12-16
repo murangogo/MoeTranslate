@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.moe.moetranslator.MainActivity
 import com.moe.moetranslator.R
+import com.moe.moetranslator.madoka.DialogManager
 import com.moe.moetranslator.madoka.Live2DFileUtil
 import com.moe.moetranslator.madoka.Live2DModel
 import com.moe.moetranslator.madoka.ModelInfoRepository
@@ -39,6 +40,8 @@ class LaunchActivity : AppCompatActivity() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         // 初始化路径管理类
         AppPathManager.init(this)
+        // 初始化弹窗管理类
+        DialogManager.init(this)
         prefs = CustomPreference.getInstance(this)
         database = ModelInfoRoomDatabase.getDatabase(this)
         repository = ModelInfoRepository(database.ModelInfoDAO())

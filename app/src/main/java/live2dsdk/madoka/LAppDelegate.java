@@ -130,7 +130,7 @@ public class LAppDelegate {     //代码的核心类
 
         // load models
         if (LAppLive2DManager.getInstance().getCurrentModel() != currentModel) {
-            LAppLive2DManager.getInstance().changeScene(currentModel);
+            LAppLive2DManager.getInstance().changeScene(currentModel, null);
         }
 
         isActive = true;
