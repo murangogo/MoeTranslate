@@ -286,6 +286,7 @@
     <string name="model_name">Enter a model name...</string>
     <string name="import_success">Import successful</string>
     <string name="import_failed">Import failed：%s</string>
+    <string name="model3_not_found">No files ending in .model3.json were found, please check if the selected folder is correct</string>
 
 
 </resources>
