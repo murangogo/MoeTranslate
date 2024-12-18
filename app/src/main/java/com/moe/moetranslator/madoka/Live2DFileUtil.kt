@@ -34,25 +34,37 @@ class Live2DFileUtil(private val context: Context) {
         return "model_$counter"
     }
 
-    suspend fun copyModelFolder(folderUri: Uri, modelId: String): Boolean = withContext(Dispatchers.IO) {
+    suspend fun checkModelJson(folderUri: Uri): Boolean = withContext(Dispatchers.IO) {
         try {
             // 确保有持久的权限
             ensurePermission(folderUri)
 
+            // 获取文件夹 DocumentFile
             val sourceDir = DocumentFile.fromTreeUri(context, folderUri) ?: return@withContext false
-            val destinationDir = File(getModelBaseDir(), modelId)
 
-            // 创建目标文件夹
-            if (!destinationDir.exists()) destinationDir.mkdirs()
-
-            // 复制文件夹内容
-            copyDocumentFolder(sourceDir, destinationDir)
-
-            true
+            // 检查文件夹中的文件
+            sourceDir.listFiles().any { file ->
+                file.name?.endsWith(".model3.json") == true
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             false
         }
+    }
+
+    suspend fun copyModelFolder(folderUri: Uri, modelId: String) = withContext(Dispatchers.IO) {
+
+        // 确保有持久的权限
+        ensurePermission(folderUri)
+
+        val sourceDir = DocumentFile.fromTreeUri(context, folderUri) ?: return@withContext false
+        val destinationDir = File(getModelBaseDir(), modelId)
+
+        // 创建目标文件夹
+        if (!destinationDir.exists()) destinationDir.mkdirs()
+
+        // 复制文件夹内容
+        copyDocumentFolder(sourceDir, destinationDir)
     }
 
     private fun ensurePermission(uri: Uri) {
@@ -86,22 +98,17 @@ class Live2DFileUtil(private val context: Context) {
         }
     }
 
-    suspend fun deleteModelFolder(modelId: String): Boolean = withContext(Dispatchers.IO) {
-        try {
-            val modelDir = File(getModelBaseDir(), modelId)
-            if (modelDir.exists()) {
-                modelDir.deleteRecursively()
-            }
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
-    }
-
     private suspend fun copyDocumentFile(sourceFile: DocumentFile, destinationDir: File) {
         val fileName = sourceFile.name ?: return
-        val destFile = File(destinationDir, fileName)
+
+        // 确定目标文件名
+        val destFileName = if (fileName.endsWith(".model3.json")) {
+            "model.model3.json"  // 统一命名为 model.model3.json
+        } else {
+            fileName
+        }
+
+        val destFile = File(destinationDir, destFileName)
 
         withContext(Dispatchers.IO) {
             try {
@@ -113,6 +120,13 @@ class Live2DFileUtil(private val context: Context) {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    suspend fun deleteModelFolder(modelId: String) = withContext(Dispatchers.IO) {
+        val modelDir = File(getModelBaseDir(), modelId)
+        if (modelDir.exists()) {
+            modelDir.deleteRecursively()
         }
     }
 

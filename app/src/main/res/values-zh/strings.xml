@@ -287,6 +287,7 @@
     <string name="model_name">输入模型名称...</string>
     <string name="import_success">导入成功</string>
     <string name="import_failed">导入失败：%s</string>
+    <string name="model3_not_found">没有发现以.model3.json结尾的文件，请检查选择的文件夹是否正确</string>
 
 
 </resources>

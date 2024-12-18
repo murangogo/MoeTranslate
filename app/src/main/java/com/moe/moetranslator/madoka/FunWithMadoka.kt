@@ -352,14 +352,9 @@ class FunWithMadoka : Fragment() {
 
                 lifecycleScope.launch {
                     try {
-                        val success = viewModel.deleteModel(model.modelId)
+                        viewModel.deleteModel(model.modelId)
                         progressDialog.dismiss()
-
-                        if (success) {
-                            showToast(getString(R.string.delete_success), true)
-                        } else {
-                            throw Exception("Delete Failed Exception.")
-                        }
+                        showToast(getString(R.string.delete_success), true)
                     } catch (e: Exception) {
                         progressDialog.dismiss()
                         showToast(getString(R.string.delete_failed, e.message))
@@ -418,14 +413,11 @@ class FunWithMadoka : Fragment() {
         lifecycleScope.launch {
             try {
                 Log.d("FunWithMadoka", "uri:$uri \nImporting model with name: $modelName")
-                val success = viewModel.importModel(uri, modelName)
+                viewModel.importModel(uri, modelName)
                 progressDialog.dismiss()
-
-                if (success) {
-                    showToast(getString(R.string.import_success), true)
-                } else {
-                    throw Exception("Import Failed Exception.")
-                }
+                showToast(getString(R.string.import_success), true)
+            } catch (e: ModelJsonNotFoundException){
+                showToast(getString(R.string.import_failed, getString(R.string.model3_not_found)))
             } catch (e: Exception) {
                 e.printStackTrace()
                 progressDialog.dismiss()
