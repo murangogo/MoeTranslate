@@ -2,6 +2,7 @@ package com.moe.moetranslator.madoka
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Intent
 import android.net.Uri
 import android.opengl.GLSurfaceView
 import android.os.Bundle
@@ -67,6 +68,8 @@ class FunWithMadoka : Fragment() {
         setupClickListeners()
         observeData()
 
+        viewModel.setCurrentModel("model_1")
+        modelAdapter.setSelectedModel("model_1")
     }
 
     override fun onStart() {
@@ -366,26 +369,37 @@ class FunWithMadoka : Fragment() {
     }
 
     private fun showImportModelDialog() {
-        val context = context ?: return
-        val editText = EditText(context).apply {
-            setSingleLine()
-//            hint = getString(R.string.model_name_hint)
-            hint = "getString(R.string.model_name_hint)"
+
+        val customView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_message_edittext, null)
+        customView.findViewById<TextView>(R.id.dialog_top_message).apply {
+            text = getText(R.string.import_model_folder_message)
+        }
+        val input = customView.findViewById<EditText>(R.id.dialog_bottom_edittext).apply {
+            hint = getString(R.string.model_name)
         }
 
-        MaterialAlertDialogBuilder(context)
-            .setTitle("R.string.import_model_dialog_title")
-            .setMessage("R.string.import_model_folder_message")  // 添加说明文字
-            .setView(editText)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.import_model_dialog_title)
+            .setView(customView)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                val modelName = editText.text.toString().trim()
-                if (modelName.isNotEmpty()) {
+                val modelName = input.text.toString().trim()
+                if (modelName.isNotBlank()) {
                     pendingModelName = modelName
                     pickFolderLauncher.launch(null)
                 }
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .show()
+            .setNeutralButton(R.string.view_tutorial){_,_->
+                val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(urlt)
+                startActivity(intent)
+            }
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
     private var pendingModelName: String? = null

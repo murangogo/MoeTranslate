@@ -7,12 +7,17 @@ import android.view.MotionEvent
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.moe.moetranslator.madoka.DialogManager
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) //锁定竖屏
+
+        // 初始化弹窗管理类
+        DialogManager.init(this)
+
         setContentView(R.layout.activity_main)
 
         //关联NavController与BottonNavigationView

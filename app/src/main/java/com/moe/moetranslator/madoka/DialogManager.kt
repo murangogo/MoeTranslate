@@ -12,11 +12,11 @@ import com.moe.moetranslator.R
 // DialogManager.kt
 class DialogManager private constructor() {
     companion object {
-        private var applicationContext: Context? = null
+        private var MainContext: Context? = null
         private var progressDialog: AlertDialog? = null
 
         fun init(context: Context) {
-            applicationContext = context.applicationContext
+            MainContext = context
         }
 
         fun showDialog(dialogTitle: String? = null, dialogMessage: String? = null) {
@@ -32,10 +32,8 @@ class DialogManager private constructor() {
                     .setMessage(message)
                     .setCancelable(false)
                     .create()
-                progressDialog?.window?.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY)
                 progressDialog?.show()
                 progressDialog?.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-                progressDialog?.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         }
 
@@ -59,7 +57,7 @@ class DialogManager private constructor() {
         }
 
         private fun getApplicationContext(): Context {
-            return applicationContext ?: throw IllegalStateException(
+            return MainContext ?: throw IllegalStateException(
                 "DialogManager Not Initialized"
             )
         }
