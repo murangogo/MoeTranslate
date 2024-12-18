@@ -62,7 +62,7 @@ class OnlineAPI : Fragment() {
             binding.secretKey.hint = getString(R.string.niu_hint_secret_key)
         }
         binding.whatsThis.setOnClickListener {
-            val dialog = AlertDialog.Builder(activity)
+            val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.whats_api_title, getString(R.string.niuapi_name)))
                 .setMessage(getString(R.string.whats_api_content, getString(R.string.niuapi_name)))
                 .setCancelable(false)
@@ -108,7 +108,7 @@ class OnlineAPI : Fragment() {
             binding.secretKey.hint = getString(R.string.volc_hint_secret_key)
         }
         binding.whatsThis.setOnClickListener {
-            val dialog = AlertDialog.Builder(activity)
+            val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.whats_api_title, getString(R.string.volcapi_name)))
                 .setMessage(getString(R.string.whats_api_content, getString(R.string.volcapi_name)))
                 .setCancelable(false)
@@ -162,7 +162,7 @@ class OnlineAPI : Fragment() {
             binding.secretKey.hint = getString(R.string.azure_hint_secret_key)
         }
         binding.whatsThis.setOnClickListener {
-            val dialog = AlertDialog.Builder(activity)
+            val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.whats_api_title, getString(R.string.azureapi_name)))
                 .setMessage(getString(R.string.whats_api_content, getString(R.string.azureapi_name)))
                 .setCancelable(false)
@@ -208,7 +208,7 @@ class OnlineAPI : Fragment() {
             binding.secretKey.hint = getString(R.string.baidu_hint_secret_key)
         }
         binding.whatsThis.setOnClickListener {
-            val dialog = AlertDialog.Builder(activity)
+            val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.whats_api_title, getString(R.string.baiduapi_name)))
                 .setMessage(getString(R.string.whats_api_content, getString(R.string.baiduapi_name)))
                 .setCancelable(false)
@@ -259,7 +259,7 @@ class OnlineAPI : Fragment() {
             binding.secretKey.hint = getString(R.string.tencent_hint_secret_key)
         }
         binding.whatsThis.setOnClickListener {
-            val dialog = AlertDialog.Builder(activity)
+            val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.whats_api_title, getString(R.string.tencentapi_name)))
                 .setMessage(getString(R.string.whats_api_content, getString(R.string.tencentapi_name)))
                 .setCancelable(false)

@@ -282,6 +282,9 @@
     <string name="delete_failed">Delete failed：%s</string>
     <string name="delete_success">Delete successfully</string>
     <string name="rename_tip">Please don’t give too weird names.</string>
+    <string name="import_model_dialog_title">Import model</string>
+    <string name="import_model_folder_message">Fill in the name of the model you want to import below, then <font color="#E25A5C">go to the folder containing the \".model3.json\" file for the model</font> in the file manager and click the \"Use this folder\" button at the bottom of the screen.\n\nYou can click the \"View Tutorial\" button below for more detailed information (such as the infrastructure of Live2D model files, and the issue that some models cannot be played after importing emoticons and actions, etc.).</string>
+    <string name="model_name">Enter a model name...</string>
 
 
 </resources>

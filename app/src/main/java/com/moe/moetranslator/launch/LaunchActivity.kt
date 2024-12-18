@@ -40,8 +40,6 @@ class LaunchActivity : AppCompatActivity() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         // 初始化路径管理类
         AppPathManager.init(this)
-        // 初始化弹窗管理类
-        DialogManager.init(this)
         prefs = CustomPreference.getInstance(this)
         database = ModelInfoRoomDatabase.getDatabase(this)
         repository = ModelInfoRepository(database.ModelInfoDAO())
