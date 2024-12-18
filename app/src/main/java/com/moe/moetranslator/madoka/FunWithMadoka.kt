@@ -43,6 +43,8 @@ class FunWithMadoka : Fragment() {
     private lateinit var expressionAdapter: Live2DExpressionAdapter
     private lateinit var motionAdapter: Live2DMotionAdapter
 
+    private var pendingModelName: String? = null
+
     private val pickFolderLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocumentTree()
     ) { uri ->
@@ -340,7 +342,7 @@ class FunWithMadoka : Fragment() {
             .setPositiveButton(R.string.confirm) { _, _ ->
                 // 显示进度对话框
                 val progressDialog = AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.waiting)
+                    .setTitle(R.string.please_wait)
                     .setMessage(R.string.deleteing)
                     .setCancelable(false)
                     .create()
@@ -354,7 +356,7 @@ class FunWithMadoka : Fragment() {
                         progressDialog.dismiss()
 
                         if (success) {
-                            showToast(getString(R.string.delete_success))
+                            showToast(getString(R.string.delete_success), true)
                         } else {
                             throw Exception("Delete Failed Exception.")
                         }
@@ -369,7 +371,6 @@ class FunWithMadoka : Fragment() {
     }
 
     private fun showImportModelDialog() {
-
         val customView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_message_edittext, null)
         customView.findViewById<TextView>(R.id.dialog_top_message).apply {
@@ -378,7 +379,6 @@ class FunWithMadoka : Fragment() {
         val input = customView.findViewById<EditText>(R.id.dialog_bottom_edittext).apply {
             hint = getString(R.string.model_name)
         }
-
 
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.import_model_dialog_title)
@@ -402,19 +402,16 @@ class FunWithMadoka : Fragment() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
-    private var pendingModelName: String? = null
-
     private fun handleFolderSelection(uri: Uri) {
         val modelName = pendingModelName ?: return
         pendingModelName = null
 
         // 显示进度对话框
         val progressDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("R.string.importing_model_title")
-            .setMessage("R.string.importing_model_message")
+            .setTitle(R.string.import_model_dialog_title)
+            .setMessage(R.string.please_wait)
             .setCancelable(false)
             .create()
-
         progressDialog.show()
         progressDialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
 
@@ -424,16 +421,15 @@ class FunWithMadoka : Fragment() {
                 val success = viewModel.importModel(uri, modelName)
                 progressDialog.dismiss()
 
-                val messageResId = if (success) {
-                    "R.string.import_model_success"
+                if (success) {
+                    showToast(getString(R.string.import_success), true)
                 } else {
-                    "R.string.import_model_failed"
+                    throw Exception("Import Failed Exception.")
                 }
-                Toast.makeText(context, messageResId, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
                 progressDialog.dismiss()
-                Toast.makeText(context, "R.string.import_model_failed", Toast.LENGTH_SHORT).show()
+                showToast(getString(R.string.import_failed, e.message))
             }
         }
     }
@@ -441,7 +437,7 @@ class FunWithMadoka : Fragment() {
     private fun changeModel(n: Int){
         val progressDialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.loading_model)
-            .setMessage(R.string.waiting)
+            .setMessage(R.string.please_wait)
             .setCancelable(false)
             .create()
 
