@@ -417,6 +417,7 @@ class FunWithMadoka : Fragment() {
                 progressDialog.dismiss()
                 showToast(getString(R.string.import_success), true)
             } catch (e: ModelJsonNotFoundException){
+                progressDialog.dismiss()
                 showToast(getString(R.string.import_failed, getString(R.string.model3_not_found)))
             } catch (e: Exception) {
                 e.printStackTrace()
