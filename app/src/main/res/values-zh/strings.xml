@@ -273,7 +273,6 @@
     <string name="init_error">初始化失败：%s</string>
     <string name="madoka_newyear">鹿目圆（晴着）</string>
     <string name="loading">加载中...</string>
-    <string name="waiting">请等待</string>
     <string name="loading_model">加载模型</string>
     <string name="model_load_failed">模型加载失败：%s</string>
     <string name="rename">重命名</string>
@@ -286,6 +285,8 @@
     <string name="import_model_dialog_title">导入模型</string>
     <string name="import_model_folder_message">在下方填入要导入的模型的名称，然后在文件管理器中<font color="#E25A5C">进入包含该模型的“.model3.json”文件的文件夹</font>，并点击屏幕下方的“使用此文件夹”按钮。\n\n您可以点击下方的“查看教程”按钮获取更详细的信息（如Live2D模型文件的基础结构、解决某些模型导入后无法播放表情和动作的问题等）。</string>
     <string name="model_name">输入模型名称...</string>
+    <string name="import_success">导入成功</string>
+    <string name="import_failed">导入失败：%s</string>
 
 
 </resources>
