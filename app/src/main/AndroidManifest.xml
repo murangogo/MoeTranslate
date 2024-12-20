@@ -32,7 +32,7 @@
         <activity
             android:name=".me.ManageActivity"
             android:exported="false"
-            android:theme="@style/tutorialtheme" />
+            android:theme="@style/Base.Theme.MT" />
         <activity
             android:name=".me.SettingPageActivity"
             android:exported="false"
@@ -40,16 +40,16 @@
         <activity
             android:name=".launch.FirstLaunchPage"
             android:exported="false"
-            android:theme="@style/tutorialtheme" />
+            android:theme="@style/Base.Theme.MT" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/maintheme" />
+            android:theme="@style/Base.Theme.MT" />
         <activity
             android:name=".launch.LaunchActivity"
             android:exported="true"
-            android:theme="@style/splashtheme">
+            android:theme="@style/Base.Theme.MT">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
