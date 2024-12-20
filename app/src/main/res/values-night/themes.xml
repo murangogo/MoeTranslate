@@ -1,31 +1,20 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
     <style name="Base.Theme.MT" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">#55AEEA</item>
-    </style>
-
-    <style name="Theme.MT" parent="Base.Theme.MT" />
-
-    <style name="tutorialtheme" parent="Base.Theme.MT">
-        <item name="colorPrimaryDark">#F7F3EB</item>
-        <item name="android:navigationBarColor">#F7F3EB</item>
-    </style>
-
-    <style name="maintheme" parent="Base.Theme.MT">
-        <item name="colorPrimaryDark">#F7F3EB</item>
-        <item name="android:navigationBarColor">#F1F4FD</item>
+        <item name="android:navigationBarColor">
+            @android:color/transparent
+        </item>
+        <item name= "android:enforceNavigationBarContrast">false</item>
+        <item name= "android:enforceStatusBarContrast">false</item>
     </style>
 
     <style name="settheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">#F7F3EB</item>
         <item name="android:navigationBarColor">#F7F3EB</item>
         <item name="colorAccent">@color/accent</item>
-    </style>
-
-    <style name="splashtheme" parent="Base.Theme.MT">
-        <item name="colorPrimaryDark">#FAC7B7</item>
-        <item name="android:navigationBarColor">#FAC7B7</item>
     </style>
 
 </resources>

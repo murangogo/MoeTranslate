@@ -9,12 +9,12 @@ import androidx.core.view.WindowInsetsCompat
 
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 启用 Edge-to-Edge，一定要在super.onCreate之前调用
+        enableEdgeToEdge()
+
         super.onCreate(savedInstanceState)
 
         window.isNavigationBarContrastEnforced = false
-
-        // 启用 Edge-to-Edge
-        enableEdgeToEdge()
     }
 
     /**
