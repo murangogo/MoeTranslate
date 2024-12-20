@@ -2,14 +2,13 @@ package com.moe.moetranslator.launch
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import com.moe.moetranslator.BaseActivity
 import com.moe.moetranslator.MainActivity
 import com.moe.moetranslator.R
-import com.moe.moetranslator.madoka.DialogManager
 import com.moe.moetranslator.madoka.Live2DFileUtil
 import com.moe.moetranslator.madoka.Live2DModel
 import com.moe.moetranslator.madoka.ModelInfoRepository
@@ -22,7 +21,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class LaunchActivity : AppCompatActivity() {
+class LaunchActivity : BaseActivity() {
     private lateinit var prefs: CustomPreference
     private lateinit var database: ModelInfoRoomDatabase
     private lateinit var repository: ModelInfoRepository
@@ -46,6 +45,8 @@ class LaunchActivity : AppCompatActivity() {
         fileUtil = Live2DFileUtil(this)
 
         setContentView(R.layout.activity_launch)
+
+        applySystemBarsPadding(findViewById(R.id.launch_layout), true, true)
 
         activityScope.launch {
             try {

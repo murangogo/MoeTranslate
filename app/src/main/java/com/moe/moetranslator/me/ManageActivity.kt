@@ -5,9 +5,10 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.moe.moetranslator.BaseActivity
 import com.moe.moetranslator.databinding.ActivityManageBinding
 
-class ManageActivity : AppCompatActivity() {
+class ManageActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_FRAGMENT_TYPE = "fragment_type"
@@ -33,6 +34,8 @@ class ManageActivity : AppCompatActivity() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) //锁定竖屏
         binding = ActivityManageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        applySystemBarsPadding(binding.manageFragmentContainer, true, true)
 
         when(intent.getIntExtra(EXTRA_FRAGMENT_TYPE,0)){
             TYPE_FRAGMENT_MANAGE_MLKIT-> {

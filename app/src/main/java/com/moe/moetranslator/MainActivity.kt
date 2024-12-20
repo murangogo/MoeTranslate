@@ -9,7 +9,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.moe.moetranslator.madoka.DialogManager
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
         DialogManager.init(this)
 
         setContentView(R.layout.activity_main)
+
+        applySystemBarsPadding(findViewById(R.id.fragment_view), true, false)
 
         //关联NavController与BottonNavigationView
         val navHost = supportFragmentManager.findFragmentById(R.id.fragment_view) as NavHostFragment
