@@ -5,8 +5,6 @@
         <item name="colorPrimary">#55AEEA</item>
     </style>
 
-    <style name="Theme.MT" parent="Base.Theme.MT" />
-
     <style name="tutorialtheme" parent="Base.Theme.MT">
         <item name="colorPrimaryDark">#F7F3EB</item>
         <item name="android:navigationBarColor">#F7F3EB</item>
