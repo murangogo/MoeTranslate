@@ -43,7 +43,7 @@ class TutorialFragment(val position:Int) : Fragment() {
             shapes = listOf(Shape.Square, Shape.Circle),
             timeToLive = 5000L,
             fadeOutEnabled = true,
-            position = Position.Relative(0.0,0.5),
+            position = Position.Relative(0.0,0.6),
             emitter = Emitter(duration = 5000, TimeUnit.MILLISECONDS).max(600)
         )
         val party2 = Party(
@@ -56,7 +56,7 @@ class TutorialFragment(val position:Int) : Fragment() {
             shapes = listOf(Shape.Square, Shape.Circle),
             timeToLive = 5000L,
             fadeOutEnabled = true,
-            position = Position.Relative(1.0,0.5),
+            position = Position.Relative(1.0,0.6),
             emitter = Emitter(duration = 5000, TimeUnit.MILLISECONDS).max(600)
         )
         when(position) {
@@ -106,8 +106,8 @@ class TutorialFragment(val position:Int) : Fragment() {
                 }
                 gotoset.setOnClickListener {
                     intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS";
-                    intent.data = Uri.fromParts("package", context!!.packageName, null)
-                    context!!.startActivity(intent)
+                    intent.data = Uri.fromParts("package", requireContext().packageName, null)
+                    requireContext().startActivity(intent)
                 }
             }
             3,4,5,6,7->{
@@ -140,7 +140,7 @@ class TutorialFragment(val position:Int) : Fragment() {
                 next.setOnClickListener{
                     var startintent = Intent(context, MainActivity::class.java)
                     startActivity(startintent)
-                    activity!!.finish()
+                    requireActivity().finish()
                 }
             }
         }

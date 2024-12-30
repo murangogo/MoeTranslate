@@ -31,7 +31,7 @@ class Developer : Fragment() {
         shapes = listOf(Shape.Square, Shape.Circle),
         timeToLive = 5000L,
         fadeOutEnabled = true,
-        position = Position.Relative(0.0,0.5),
+        position = Position.Relative(0.0,0.6),
         emitter = Emitter(duration = 5000, TimeUnit.MILLISECONDS).max(600)
     )
     private val party2 = Party(
@@ -44,7 +44,7 @@ class Developer : Fragment() {
         shapes = listOf(Shape.Square, Shape.Circle),
         timeToLive = 5000L,
         fadeOutEnabled = true,
-        position = Position.Relative(1.0,0.5),
+        position = Position.Relative(1.0,0.6),
         emitter = Emitter(duration = 5000, TimeUnit.MILLISECONDS).max(600)
     )
 
@@ -63,7 +63,7 @@ class Developer : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var celebra = binding.konfettiViewd
+        val celebra = binding.konfettiViewd
         celebra.start(party)
         celebra.start(party2)
         binding.officialwebsite.setOnClickListener {
