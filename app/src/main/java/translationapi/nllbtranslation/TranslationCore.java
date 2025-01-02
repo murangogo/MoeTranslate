@@ -1,3 +1,28 @@
+/*
+ * Copyright 2016 Luca Martino.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copyFile of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Modified by murangogo in 2024
+ * This file is derived from nie.translator.rtranslator project.
+ * Modifications:
+ * - Simplified the original implementation by removing unused features
+ * - Retained only core translation functionality
+ * Original source: https://github.com/niedev/RTranslator
+ */
+
 package translationapi.nllbtranslation;
 
 import android.content.Context;
@@ -19,6 +44,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -347,6 +373,24 @@ public class TranslationCore {
 
                 android.util.Log.i("result", "部分"+partialResult);
                 j++;
+                //early stop if the decoder is generating in loop
+                if(input.getInputIDs().length > 30){  //if the input is long
+                    if(j > 3*input.getInputIDs().length) {
+                        break;
+                    }
+                }else if(input.getInputIDs().length > 20){  //if the input is medium length
+                    if(j > 4*input.getInputIDs().length){
+                        break;
+                    }
+                }else if(input.getInputIDs().length > 10){  //if the input is short
+                    if(j > 5*input.getInputIDs().length){
+                        break;
+                    }
+                }else if(input.getInputIDs().length > 5){  //if the input is very short
+                    if(j > 8*input.getInputIDs().length){
+                        break;
+                    }
+                }
             }
             if(result != null) {
                 result.close();
@@ -418,12 +462,14 @@ public class TranslationCore {
             long time = System.currentTimeMillis();
             TokenizerResult input = null;
 
+            String correctedSubText = correctText(textSplit.get(i), inputLanguage.getLocale());
+
             // NLLB模型的分词处理
             android.util.Log.i("result","mode == NLLB_CACHE");
             input = tokenizer.tokenize(
                     getNllbLanguageCode(inputLanguage.getCode()),
                     getNllbLanguageCode(outputLanguage.getCode()),
-                    textSplit.get(i)
+                    correctedSubText
             );
 
 
@@ -458,7 +504,7 @@ public class TranslationCore {
                     String outputText;
                     if(joinedStringOutput[0].equals("")){
                         outputText = joinedStringOutput[0] + text;
-                    }else {
+                    } else {
                         outputText = joinedStringOutput[0] + " " + text;
                     }
 
@@ -474,6 +520,7 @@ public class TranslationCore {
 
                 @Override
                 public void onFailure(Exception e) {
+                    //we do not return the partial results and notify an error
                     e.printStackTrace();
                     Log.e("preformTextTranslation", "翻译失败");
                 }
@@ -516,5 +563,39 @@ public class TranslationCore {
         return finalResult;
     }
 
+    private String correctText(String text, Locale locale){
+        String correctedText = text;
+        String language = locale.getLanguage();
+        //we add an eventual period if missing (or in general a terminator symbol)
+        if(!language.equals("th")) {
+            correctedText = correctedText.trim();   //we remove eventual white space from both ends of the text
+            if(correctedText.length() >= 2) {
+                if (!Character.isLetterOrDigit(correctedText.charAt(correctedText.length() - 1))) {
+                    return correctedText;
+                }
+                return correctedText + getSentenceTerminator(locale);
+            }
+        }
+        return text;
+    }
+
+    private static String getSentenceTerminator(Locale locale) {
+        // Assuming most languages use a period (.)
+        // Add custom cases for specific languages as needed
+        String language = locale.getLanguage();
+        switch (language) {
+            case "zh": // Chinese
+            case "ja": // Japanese
+            case "ko": // Korean
+                return "。"; // Ideographic full stop
+            case "hi": // Hindi
+                return "।";
+            case "my": // Burmese
+                return "။"; // Burmese full stop
+            // Add other cases as needed for more languages
+            default:
+                return ".";
+        }
+    }
 
 }

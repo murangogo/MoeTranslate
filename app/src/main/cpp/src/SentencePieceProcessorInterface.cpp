@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
+/*
+ * Modified by murangogo in 2024
+ * This file is derived from nie.translator.rtranslator project.
+ * Modifications:
+ * - Changed package name from nie.translator.rtranslator to translationapi.nllbtranslation
+ * - Updated JNI function names to match new package structure
+ * Original source: https://github.com/niedev/RTranslator
+ */
+
 #include <jni.h>
 #include <stdio.h>
 #include <string>
