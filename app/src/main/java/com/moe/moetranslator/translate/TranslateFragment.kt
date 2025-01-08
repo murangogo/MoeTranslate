@@ -29,6 +29,7 @@ import com.moe.moetranslator.utils.UpdateChecker
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FragmentTranslateBinding
 import com.moe.moetranslator.me.ManageActivity
+import com.moe.moetranslator.utils.Constants
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.NotificationChecker
 import com.moe.moetranslator.utils.NotificationResult
@@ -109,10 +110,10 @@ class TranslateFragment : Fragment() {
         binding.startButton.setOnClickListener {
             if (!isServiceRunning(FloatingBallService::class.java)) {
                 if (checkAndroidSDK() && checkAccessibilityService() && checkFloatingBall() && checkNotify() && checkTranslateAPI() && checkCombination()) {
-                    if ((prefs.getInt("Translate_Mode", 0) == 0) && (prefs.getInt(
-                            "OCR_API",
-                            1
-                        ) == 0) && (prefs.getInt("OCR_AI", 0) == 1)
+                    if ((prefs.getInt("Translate_Mode", Constants.TranslateMode.TEXT.id) == Constants.TranslateMode.TEXT.id) && (prefs.getInt(
+                            "Text_API",
+                            Constants.TextApi.BING.id
+                        ) == Constants.TextApi.AI.id) && (prefs.getInt("Text_AI", Constants.TextAI.MLKIT.id) == Constants.TextAI.NLLB.id)
                     ) {
                         checkRAM()
                     }
@@ -123,11 +124,11 @@ class TranslateFragment : Fragment() {
             }
         }
 
-        if ((prefs.getInt("Translate_Mode", 0) == 0) && (prefs.getInt("OCR_API", 1) == 7)) {
+        if ((prefs.getInt("Translate_Mode", Constants.TranslateMode.TEXT.id) == Constants.TranslateMode.TEXT.id) && (prefs.getInt("Text_API", Constants.TextApi.BING.id) == Constants.TextApi.CUSTOM_TEXT.id)) {
             binding.SourceLanguageName.text =
                 CustomLocale.getInstance(prefs.getString("Source_Language", "ja")).getDisplayName()
             binding.TargetLanguageName.text = getString(R.string.custom_api_select_language)
-        } else if ((prefs.getInt("Translate_Mode", 0) == 1) && (prefs.getInt("Pic_API", 0) == 2)) {
+        } else if ((prefs.getInt("Translate_Mode", Constants.TranslateMode.TEXT.id) == Constants.TranslateMode.PIC.id) && (prefs.getInt("Pic_API", Constants.PicApi.BAIDU.id) == Constants.PicApi.CUSTOM_PIC.id)) {
             binding.SourceLanguageName.text = getString(R.string.custom_api_select_language)
             binding.TargetLanguageName.text = getString(R.string.custom_api_select_language)
         } else {
@@ -189,22 +190,22 @@ class TranslateFragment : Fragment() {
         }
 
     private fun showAPIName() {
-        val translateMode = prefs.getInt("Translate_Mode", 0)
-        val ocrApi = prefs.getInt("OCR_API", 1)
-        val ocrAi = prefs.getInt("OCR_AI", 0)
-        val picApi = prefs.getInt("Pic_API", 0)
+        val translateMode = prefs.getInt("Translate_Mode", Constants.TranslateMode.TEXT.id)
+        val textApi = prefs.getInt("Text_API", Constants.TextApi.BING.id)
+        val textAi = prefs.getInt("Text_AI", Constants.TextAI.MLKIT.id)
+        val picApi = prefs.getInt("Pic_API", Constants.PicApi.BAIDU.id)
         val customTextApi = prefs.getInt("Custom_Text_API", 0)
         val customPicApi = prefs.getInt("Custom_Pic_API", 0)
 
         Log.d(
             TAG,
-            "translatemode$translateMode，ocrapi:$ocrApi，ocrAI:$ocrAi，picapi:$picApi，customtextapi:$customTextApi，custompicapi:$customPicApi"
+            "translatemode$translateMode，textapi:$textApi，textAI:$textAi，picapi:$picApi，customtextapi:$customTextApi，custompicapi:$customPicApi"
         )
 
         when {
-            translateMode == 0 -> when (ocrApi) {
-                0 -> {
-                    if (ocrAi == 0) {
+            translateMode == Constants.TranslateMode.TEXT.id -> when (textApi) {
+                Constants.TextApi.AI.id -> {
+                    if (textAi == Constants.TextAI.MLKIT.id) {
                         binding.selectedAPI.text = getString(
                             R.string.api_name,
                             getString(R.string.mlkit_name)
@@ -217,42 +218,42 @@ class TranslateFragment : Fragment() {
                     }
                 }
 
-                1 -> {
+                Constants.TextApi.BING.id -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
                         getString(R.string.bingapi_name)
                     ) + "（${getString(R.string.ocr)}）"
                 }
 
-                2 -> {
+                Constants.TextApi.NIUTRANS.id -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
                         getString(R.string.niuapi_name)
                     ) + "（${getString(R.string.ocr)}）"
                 }
 
-                3 -> {
+                Constants.TextApi.VOLC.id -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
                         getString(R.string.volcapi_name)
                     ) + "（${getString(R.string.ocr)}）"
                 }
 
-                4 -> {
+                Constants.TextApi.AZURE.id -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
                         getString(R.string.azureapi_name)
                     ) + "（${getString(R.string.ocr)}）"
                 }
 
-                5 -> {
+                Constants.TextApi.BAIDU.id -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
                         getString(R.string.baiduapi_name)
                     ) + "（${getString(R.string.ocr)}）"
                 }
 
-                6 -> {
+                Constants.TextApi.TENCENT.id -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
                         getString(R.string.tencentapi_name)
@@ -286,14 +287,14 @@ class TranslateFragment : Fragment() {
             }
 
             else -> when (picApi) {
-                0 -> {
+                Constants.PicApi.BAIDU.id -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
                         getString(R.string.baiduapi_name)
                     ) + "（${getString(R.string.pic)}）"
                 }
 
-                1 -> {
+                Constants.PicApi.TENCENT.id -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
                         getString(R.string.tencentapi_name)
@@ -361,17 +362,17 @@ class TranslateFragment : Fragment() {
     }
 
     private fun checkTranslateAPI(): Boolean {
-        val translateMode = prefs.getInt("Translate_Mode", 0)
-        val ocrApi = prefs.getInt("OCR_API", 1)
-        val ocrAi = prefs.getInt("OCR_AI", 0)
-        val picApi = prefs.getInt("Pic_API", 0)
+        val translateMode = prefs.getInt("Translate_Mode", Constants.TranslateMode.TEXT.id)
+        val textApi = prefs.getInt("Text_API", Constants.TextApi.BING.id)
+        val textAi = prefs.getInt("Text_AI", Constants.TextAI.MLKIT.id)
+        val picApi = prefs.getInt("Pic_API", Constants.PicApi.BAIDU.id)
         val customTextApi = prefs.getInt("Custom_Text_API", 0)
         val customPicApi = prefs.getInt("Custom_Pic_API", 0)
 
         val ret: Boolean = when {
-            translateMode == 0 -> when (ocrApi) {
-                0 -> {
-                    if ((ocrAi == 0) && (!(prefs.getBoolean("Download_MLKit", false)))) {
+            translateMode == Constants.TranslateMode.TEXT.id -> when (textApi) {
+                Constants.TextApi.AI.id -> {
+                    if ((textAi == Constants.TextAI.MLKIT.id) && (!(prefs.getBoolean("Download_MLKit", false)))) {
                         Log.d(
                             TAG,
                             "Download_MLKit" + prefs.getBoolean("Download_MLKit", false).toString()
@@ -395,7 +396,7 @@ class TranslateFragment : Fragment() {
                         dialog.show()
                         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
                         false
-                    } else if ((ocrAi == 1) && (!(prefs.getBoolean("Download_NLLB", false)))) {
+                    } else if ((textAi == Constants.TextAI.NLLB.id) && (!(prefs.getBoolean("Download_NLLB", false)))) {
                         Log.d(
                             TAG,
                             "Download_NLLB" + prefs.getBoolean("Download_NLLB", false).toString()
@@ -424,11 +425,11 @@ class TranslateFragment : Fragment() {
                     }
                 }
 
-                1 -> {
+                Constants.TextApi.BING.id -> {
                     true
                 }
 
-                2 -> {
+                Constants.TextApi.NIUTRANS.id -> {
                     if (prefs.getString("Niutrans_EncryptedKey", "") == "") {
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
@@ -459,7 +460,7 @@ class TranslateFragment : Fragment() {
                     }
                 }
 
-                3 -> {
+                Constants.TextApi.VOLC.id -> {
                     if (prefs.getString("Volc_ACCOUNT_EncryptedKey", "") == "") {
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
@@ -490,7 +491,7 @@ class TranslateFragment : Fragment() {
                     }
                 }
 
-                4 -> {
+                Constants.TextApi.AZURE.id -> {
                     if (prefs.getString("Azure_EncryptedKey", "") == "") {
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
@@ -521,7 +522,7 @@ class TranslateFragment : Fragment() {
                     }
                 }
 
-                5 -> {
+                Constants.TextApi.BAIDU.id -> {
                     if (prefs.getString("Baidu_Translate_ACCOUNT_EncryptedKey", "") == "") {
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
@@ -552,7 +553,7 @@ class TranslateFragment : Fragment() {
                     }
                 }
 
-                6 -> {
+                Constants.TextApi.TENCENT.id -> {
                     if (prefs.getString("Tencent_Cloud_ACCOUNT_EncryptedKey", "") == "") {
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
@@ -685,7 +686,7 @@ class TranslateFragment : Fragment() {
             }
 
             else -> when (picApi) {
-                0 -> {
+                Constants.PicApi.BAIDU.id -> {
                     if (prefs.getString("Baidu_Translate_ACCOUNT_EncryptedKey", "") == "") {
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
@@ -716,7 +717,7 @@ class TranslateFragment : Fragment() {
                     }
                 }
 
-                1 -> {
+                Constants.PicApi.TENCENT.id -> {
                     if (prefs.getString("Tencent_Cloud_ACCOUNT_EncryptedKey", "") == "") {
                         val dialog = AlertDialog.Builder(requireContext())
                             .setTitle(R.string.api_not_config_title)
@@ -985,13 +986,13 @@ class TranslateFragment : Fragment() {
     }
 
     private fun showLanguageListDialog(type: Int) {
-        if (((prefs.getInt("Translate_Mode", 0) == 0) && (prefs.getInt(
-                "OCR_API",
-                1
-            ) == 7) && (type == 2)) || ((prefs.getInt(
+        if (((prefs.getInt("Translate_Mode", Constants.TranslateMode.TEXT.id) == Constants.TranslateMode.TEXT.id) && (prefs.getInt(
+                "Text_API",
+                Constants.TextApi.BING.id
+            ) == Constants.TextApi.CUSTOM_TEXT.id) && (type == 2)) || ((prefs.getInt(
                 "Translate_Mode",
-                0
-            ) == 1) && (prefs.getInt("Pic_API", 0) == 2))
+                Constants.TranslateMode.TEXT.id
+            ) == Constants.TranslateMode.PIC.id) && (prefs.getInt("Pic_API", Constants.PicApi.BAIDU.id) == Constants.PicApi.CUSTOM_PIC.id))
         ) {
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(R.string.custom_api_select_language_title)

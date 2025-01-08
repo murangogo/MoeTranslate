@@ -15,8 +15,8 @@ class CustomPreference private constructor(context: Context) {
 
     //----翻译选项----
     //Translate_Mode(Int)：0为本地OCR后进行文本翻译；1为上传截图后进行图片翻译
-    //OCR_API(Int)：0为使用本地大模型；1为使用必应翻译；2为使用小牛翻译；3为使用火山引擎；4为使用Azure AI翻译；5为使用百度翻译；6为使用腾讯云；7为使用自定义API
-    //OCR_AI(Int)：0为使用MLKit套件；1为使用NLLB模型
+    //Text_API(Int)：0为使用本地大模型；1为使用必应翻译；2为使用小牛翻译；3为使用火山引擎；4为使用Azure AI翻译；5为使用百度翻译；6为使用腾讯云；7为使用自定义API
+    //Text_AI(Int)：0为使用MLKit套件；1为使用NLLB模型
     //Pic_API(Int)：0为使用百度翻译；1为使用腾讯云；2为使用自定义API
     //Custom_Text_API(Int)：用户选择的自定义的文本翻译API，用户最多可添加三个自定义的文本翻译API（0，1，2）
     //Custom_Pic_API(Int)：用户选择的自定义的图片翻译API，用户最多可添加三个自定义的图片翻译API（0，1，2）

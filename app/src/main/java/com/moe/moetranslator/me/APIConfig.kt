@@ -10,6 +10,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.moe.moetranslator.R
+import com.moe.moetranslator.utils.Constants
 import com.moe.moetranslator.utils.CustomPreference
 
 
@@ -187,104 +188,104 @@ class APIConfig : PreferenceFragmentCompat() {
     private fun changeCustomPreferences(key: String) {
         when (key){
             "mlkit_translation" -> {
-                prefs.setInt("OCR_API", 0)
-                prefs.setInt("OCR_AI", 0)
+                prefs.setInt("Text_API", Constants.TextApi.AI.id)
+                prefs.setInt("Text_AI", Constants.TextAI.MLKIT.id)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "mlkit_translation")
             }
             "nllb_translation" -> {
-                prefs.setInt("OCR_API", 0)
-                prefs.setInt("OCR_AI", 1)
+                prefs.setInt("Text_API", Constants.TextApi.AI.id)
+                prefs.setInt("Text_AI", Constants.TextAI.NLLB.id)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "nllb_translation")
             }
             "ui_bing_translation_text"->{
-                prefs.setInt("OCR_API", 1)
+                prefs.setInt("Text_API", Constants.TextApi.BING.id)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR bing")
             }
             "ui_niu_translation_text"->{
-                prefs.setInt("OCR_API", 2)
+                prefs.setInt("Text_API", Constants.TextApi.NIUTRANS.id)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR niu")
             }
             "ui_volc_translation_text"->{
-                prefs.setInt("OCR_API", 3)
+                prefs.setInt("Text_API", Constants.TextApi.VOLC.id)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR volc")
             }
             "ui_azure_translation_text"->{
-                prefs.setInt("OCR_API", 4)
+                prefs.setInt("Text_API", Constants.TextApi.AZURE.id)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR azure")
             }
             "ui_baidu_translation_text"->{
-                prefs.setInt("OCR_API", 5)
+                prefs.setInt("Text_API", Constants.TextApi.BAIDU.id)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR baidu")
             }
             "ui_baidu_translation_pic"->{
-                prefs.setInt("Pic_API", 0)
+                prefs.setInt("Pic_API", Constants.PicApi.BAIDU.id)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "pic baidu")
             }
             "ui_tencent_translation_text" -> {
-                prefs.setInt("OCR_API", 6)
+                prefs.setInt("Text_API", Constants.TextApi.TENCENT.id)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR tencent")
             }
             "ui_tencent_translation_pic" -> {
-                prefs.setInt("Pic_API", 1)
+                prefs.setInt("Pic_API", Constants.PicApi.TENCENT.id)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "pic tencent")
             }
             "ui_custom_api_1_text" -> {
-                prefs.setInt("OCR_API", 7)
+                prefs.setInt("Text_API", Constants.TextApi.CUSTOM_TEXT.id)
                 prefs.setInt("Custom_Text_API", 0)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR custom 1")
             }
             "ui_custom_api_1_pic" -> {
-                prefs.setInt("Pic_API", 2)
+                prefs.setInt("Pic_API", Constants.PicApi.CUSTOM_PIC.id)
                 prefs.setInt("Custom_Pic_API", 0)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "pic custom 1")
             }
             "ui_custom_api_2_text" -> {
-                prefs.setInt("OCR_API", 7)
+                prefs.setInt("Text_API", Constants.TextApi.CUSTOM_TEXT.id)
                 prefs.setInt("Custom_Text_API", 1)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR custom 2")
             }
             "ui_custom_api_2_pic" -> {
-                prefs.setInt("Pic_API", 2)
+                prefs.setInt("Pic_API", Constants.PicApi.CUSTOM_PIC.id)
                 prefs.setInt("Custom_Pic_API", 1)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "pic custom 2")
             }
             "ui_custom_api_3_text" -> {
-                prefs.setInt("OCR_API", 7)
+                prefs.setInt("Text_API", Constants.TextApi.CUSTOM_TEXT.id)
                 prefs.setInt("Custom_Text_API", 2)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR custom 3")
             }
             "ui_custom_api_3_pic" -> {
-                prefs.setInt("Pic_API", 2)
+                prefs.setInt("Pic_API", Constants.PicApi.CUSTOM_PIC.id)
                 prefs.setInt("Custom_Pic_API", 2)
                 prefs.setString("Source_Language", "ja")
                 prefs.setString("Target_Language", "zh")
@@ -295,16 +296,16 @@ class APIConfig : PreferenceFragmentCompat() {
 
     private fun loadSettingsFromSharedPreferences() {
         // 获取当前设置
-        val translateMode = prefs.getInt("Translate_Mode", 0)
-        val ocrApi = prefs.getInt("OCR_API", 1)
-        val ocrAi = prefs.getInt("OCR_AI", 0)
-        val picApi = prefs.getInt("Pic_API", 0)
+        val translateMode = prefs.getInt("Translate_Mode", Constants.TranslateMode.TEXT.id)
+        val textApi = prefs.getInt("Text_API", Constants.TextApi.BING.id)
+        val textAi = prefs.getInt("Text_AI", Constants.TextAI.MLKIT.id)
+        val picApi = prefs.getInt("Pic_API", Constants.PicApi.BAIDU.id)
 
         // 加载设置到UI上
         when {
-            translateMode == 0 -> when (ocrApi) {
-                0 -> {
-                    if (ocrAi == 0) {
+            translateMode == Constants.TranslateMode.TEXT.id -> when (textApi) {
+                Constants.TextApi.AI.id -> {
+                    if (textAi == Constants.TextAI.MLKIT.id) {
                         val key = "mlkit_translation"
                         findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                         setKey(key)
@@ -314,32 +315,32 @@ class APIConfig : PreferenceFragmentCompat() {
                         setKey(key)
                     }
                 }
-                1 -> {
+                Constants.TextApi.BING.id -> {
                     val key = "ui_bing_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
                 }
-                2 -> {
+                Constants.TextApi.NIUTRANS.id -> {
                     val key = "ui_niu_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
                 }
-                3 -> {
+                Constants.TextApi.VOLC.id -> {
                     val key = "ui_volc_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
                 }
-                4 -> {
+                Constants.TextApi.AZURE.id -> {
                     val key = "ui_azure_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
                 }
-                5 -> {
+                Constants.TextApi.BAIDU.id -> {
                     val key = "ui_baidu_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
                 }
-                6 -> {
+                Constants.TextApi.TENCENT.id -> {
                     val key = "ui_tencent_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
@@ -365,12 +366,12 @@ class APIConfig : PreferenceFragmentCompat() {
                 }
             }
             else -> when (picApi) {
-                0 -> {
+                Constants.PicApi.BAIDU.id -> {
                     val key = "ui_baidu_translation_pic"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
                 }
-                1 -> {
+                Constants.PicApi.TENCENT.id -> {
                     val key = "ui_tencent_translation_pic"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
