@@ -3,6 +3,7 @@ package com.moe.moetranslator.translate
 import android.content.Context
 import android.util.Log
 import com.moe.moetranslator.R
+import com.moe.moetranslator.utils.Constants
 import com.moe.moetranslator.utils.CustomPreference
 import org.w3c.dom.NodeList
 import javax.xml.parsers.DocumentBuilderFactory
@@ -11,16 +12,16 @@ object TranslateTools {
     fun getLanguagesList(context: Context, type: Int): List<CustomLocale>? = runCatching {
         // 获取当前设置
         val prefs = CustomPreference.getInstance(context)
-        val translateMode = prefs.getInt("Translate_Mode", 0)
-        val ocrApi = prefs.getInt("OCR_API", 1)
-        val ocrAi = prefs.getInt("OCR_AI", 0)
-        val picApi = prefs.getInt("Pic_API", 0)
+        val translateMode = prefs.getInt("Translate_Mode", Constants.TranslateMode.TEXT.id)
+        val textApi = prefs.getInt("Text_API", Constants.TextApi.BING.id)
+        val textAi = prefs.getInt("Text_AI", Constants.TextAI.MLKIT.id)
+        val picApi = prefs.getInt("Pic_API", Constants.PicApi.BAIDU.id)
 
         // 获取与设置相匹配的语言列表
         val resourceId = when {
-            translateMode == 0 -> when (ocrApi) {
-                0 -> {
-                    if (ocrAi == 0) {
+            translateMode == Constants.TranslateMode.TEXT.id -> when (textApi) {
+                Constants.TextApi.AI.id -> {
+                    if (textAi == Constants.TextAI.MLKIT.id) {
                         when (type){
                             1 -> R.raw.ocr_support_languages
                             else -> R.raw.mlkit_support_languages
@@ -32,25 +33,39 @@ object TranslateTools {
                         }
                     }
                 }
-                1 -> {
+                //TODO：待写
+                Constants.TextApi.BING.id -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
                         else -> R.raw.volc_support_languages
                     }
                 }
-                2 -> {
+                Constants.TextApi.NIUTRANS.id -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
                         else -> R.raw.niutrans_support_languages
                     }
                 }
-                3 -> {
+                Constants.TextApi.VOLC.id -> {
+                    when (type){
+                        1 -> R.raw.ocr_support_languages
+                        else -> R.raw.volc_support_languages
+                    }
+                }
+                //TODO：待写
+                Constants.TextApi.AZURE.id -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
                         else -> R.raw.baidu_text_support_languages
                     }
                 }
-                4 -> {
+                Constants.TextApi.BAIDU.id -> {
+                    when (type){
+                        1 -> R.raw.ocr_support_languages
+                        else -> R.raw.baidu_text_support_languages
+                    }
+                }
+                Constants.TextApi.TENCENT.id -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
                         else -> R.raw.tencent_text_support_languages
@@ -67,13 +82,13 @@ object TranslateTools {
                 }
             }
             else -> when (picApi) {
-                0 -> {
+                Constants.PicApi.BAIDU.id -> {
                     when (type){
                         1 -> R.raw.baidu_pic_src_support_languages
                         else -> R.raw.baidu_pic_tar_support_languages
                     }
                 }
-                1 -> {
+                Constants.PicApi.TENCENT.id -> {
                     when (type){
                         1 -> R.raw.tencent_pic_src_support_languages
                         else -> R.raw.tencent_pic_tar_support_languages
