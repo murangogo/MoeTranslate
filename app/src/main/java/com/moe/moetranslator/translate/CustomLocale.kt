@@ -5,34 +5,39 @@ import java.util.Locale
 
 class CustomLocale {
     val locale: Locale
+    val localCode: String
 
     // 包含 language, country, variant
-    constructor(language: String, country: String, variant: String) {
+    constructor(originCode: String, language: String, country: String, variant: String) {
         locale = Locale(language, country, variant)
+        localCode = originCode
     }
 
     // 包含 languageCode 和 countryCode
-    constructor(languageCode: String, countryCode: String) {
+    constructor(originCode: String, languageCode: String, countryCode: String) {
         locale = Locale(languageCode, countryCode)
+        localCode = originCode
     }
 
     // 只包含 languageCode
     constructor(languageCode: String) {
         locale = Locale(languageCode)
+        localCode = languageCode
     }
 
     // 包含 Locale 对象
     constructor(locale: Locale) {
         this.locale = locale
+        localCode = locale.language
     }
 
     companion object {
         fun getInstance(code: String): CustomLocale {
             val languageCode = code.split("-")
             return when (languageCode.size) {
-                1 -> CustomLocale(Locale(languageCode[0]))
-                2 -> CustomLocale(Locale(languageCode[0], languageCode[1]))
-                else -> CustomLocale(Locale(languageCode[0], languageCode[1], languageCode[2]))
+                1 -> CustomLocale(languageCode[0])
+                2 -> CustomLocale(code, languageCode[0], languageCode[1])
+                else -> CustomLocale(code, languageCode[0], languageCode[1], languageCode[2])
             }
         }
     }
@@ -50,6 +55,10 @@ class CustomLocale {
             language.append(country)
         }
         return language.toString()
+    }
+
+    fun getOriCode(): String {
+        return localCode
     }
 
     override fun toString(): String {
