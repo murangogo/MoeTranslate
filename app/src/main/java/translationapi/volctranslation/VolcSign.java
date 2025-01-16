@@ -1,18 +1,3 @@
-package translationapi.volctranslation;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 /**
  * Copyright (year) Beijing Volcano Engine Technology Ltd.
  * <p>
@@ -28,6 +13,29 @@ import java.util.*;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/*
+ * Modified by murangogo in 2024
+ * This file is derived from volc-openapi-demos project.
+ * Modifications:
+ * - Modify part of the code to accommodate the translation signature
+ * Original source: https://github.com/volcengine/volc-openapi-demos
+ */
+
+package translationapi.volctranslation;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class VolcSign {
 
