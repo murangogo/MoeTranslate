@@ -34,7 +34,7 @@ class VolcTranslation(private val ak: String, private val sk: String): Translati
             try {
                 // 这里因为只支持一段文字，所以转为一个单元素列表
                 val list = listOf(text)
-                val result = translate(list, sourceLanguage, targetLanguage)
+                val result = translate(list, modifyTargetLanguage(sourceLanguage), modifyTargetLanguage(targetLanguage))
                 callback(TranslationResult.Success(result))
             } catch (e: Exception) {
                 callback(TranslationResult.Error(e))
@@ -99,6 +99,12 @@ class VolcTranslation(private val ak: String, private val sk: String): Translati
         }
 
         return sb.toString()
+    }
+
+    private fun modifyTargetLanguage(to: String): String = when (to) {
+        "zh-hk-Hant" -> "zh-Hant-hk"
+        "zh-tw-Hant" -> "zh-Hant-tw"
+        else -> to
     }
 
     override fun cancelTranslation() {

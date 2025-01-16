@@ -5,6 +5,14 @@
  * that can be found at http://live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
+/*
+ * Modified by murangogo in 2024
+ * This file is derived from Live2D Cubism Components.
+ * Modifications:
+ * - Some functions have been simplified to suit the needs of the app
+ * Original source: https://github.com/Live2D/CubismJavaSamples
+ */
+
 package live2dsdk.madoka;
 
 import live2dsdk.basic.TouchManager;

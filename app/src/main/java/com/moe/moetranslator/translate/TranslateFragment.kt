@@ -1010,14 +1010,14 @@ class TranslateFragment : Fragment() {
                 TranslateTools.getLanguagesList(requireContext(), type)!!
             ) { selectedLocale ->
                 if (type == 1) {
-                    Log.d(TAG, "Source_Language：" + selectedLocale.getCode())
-                    prefs.setString("Source_Language", selectedLocale.getCode())
+                    Log.d(TAG, "Source_Language：" + selectedLocale.getOriCode())
+                    prefs.setString("Source_Language", selectedLocale.getOriCode())
                     binding.SourceLanguageName.text =
                         CustomLocale.getInstance(prefs.getString("Source_Language", "ja"))
                             .getDisplayName()
                 } else {
-                    Log.d(TAG, "Target_Language：" + selectedLocale.getCode())
-                    prefs.setString("Target_Language", selectedLocale.getCode())
+                    Log.d(TAG, "Target_Language：" + selectedLocale.getOriCode())
+                    prefs.setString("Target_Language", selectedLocale.getOriCode())
                     binding.TargetLanguageName.text =
                         CustomLocale.getInstance(prefs.getString("Target_Language", "zh"))
                             .getDisplayName()
