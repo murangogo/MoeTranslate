@@ -74,7 +74,7 @@
         android:layout_width="200dp"
         android:layout_height="130dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/logo_design"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/imageView" />
