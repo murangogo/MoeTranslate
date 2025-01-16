@@ -24,39 +24,37 @@ object TranslateTools {
                     if (textAi == Constants.TextAI.MLKIT.id) {
                         when (type){
                             1 -> R.raw.ocr_support_languages
-                            else -> R.raw.mlkit_support_languages
+                            else -> R.raw.mlkit_text_support_languages
                         }
                     } else {
                         when (type){
                             1 -> R.raw.ocr_support_languages
-                            else -> R.raw.nllb_support_languages
+                            else -> R.raw.nllb_text_support_languages
                         }
                     }
                 }
-                //TODO：待写
                 Constants.TextApi.BING.id -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
-                        else -> R.raw.volc_support_languages
+                        else -> R.raw.bing_text_support_languages
                     }
                 }
                 Constants.TextApi.NIUTRANS.id -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
-                        else -> R.raw.niutrans_support_languages
+                        else -> R.raw.niutrans_text_support_languages
                     }
                 }
                 Constants.TextApi.VOLC.id -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
-                        else -> R.raw.volc_support_languages
+                        else -> R.raw.volc_text_support_languages
                     }
                 }
-                //TODO：待写
                 Constants.TextApi.AZURE.id -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages
-                        else -> R.raw.baidu_text_support_languages
+                        else -> R.raw.azure_text_support_languages
                     }
                 }
                 Constants.TextApi.BAIDU.id -> {

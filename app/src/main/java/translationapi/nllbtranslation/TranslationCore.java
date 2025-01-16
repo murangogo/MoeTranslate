@@ -156,7 +156,7 @@ public class TranslationCore {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(ctx.getResources().openRawResource(R.raw.nllb_support_languages));
+            Document document = documentBuilder.parse(ctx.getResources().openRawResource(R.raw.nllb_text_support_languages));
             NodeList listCode = document.getElementsByTagName("code");
             NodeList listCodeNllb = document.getElementsByTagName("code_NLLB");
             for (int i = 0; i < listCode.getLength(); i++) {

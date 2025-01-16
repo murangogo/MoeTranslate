@@ -51,8 +51,8 @@ class NiuTranslation(private val apiKey: String) : TranslationTextAPI {
     private fun translate(text: String, from: String, to: String): String {
         // 构建JSON请求体
         val jsonBody = JSONObject().apply {
-            put("from", from)
-            put("to", to)
+            put("from", modifyTargetLanguage(from))
+            put("to", modifyTargetLanguage(to))
             put("apikey", apiKey)
             put("src_text", text)
         }.toString()
@@ -78,6 +78,11 @@ class NiuTranslation(private val apiKey: String) : TranslationTextAPI {
             Log.d("NIUTRANS", "Response: $responseBody")
             return parseResponse(responseBody)
         }
+    }
+
+    private fun modifyTargetLanguage(to: String): String = when (to) {
+        "zh-TW" -> "cht"
+        else -> to
     }
 
     private fun parseResponse(responseBody: String): String {

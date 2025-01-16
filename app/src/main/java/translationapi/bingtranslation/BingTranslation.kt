@@ -80,11 +80,6 @@ class BingTranslation : TranslationTextAPI {
     }
 
     private fun translate(text: String, from: String, to: String): String {
-        //test
-        var from = "ja"
-        var to = "zh-Hans"
-        Log.d("Bing", text)
-
         // 获取token
         val tokenInfo = getTokenInfo()
 
@@ -100,8 +95,8 @@ class BingTranslation : TranslationTextAPI {
 
         // 构建翻译请求表单
         val formBody = FormBody.Builder()
-            .add("fromLang", mapLanguage(from))
-            .add("to", mapLanguage(to))
+            .add("fromLang", modifyTargetLanguage(from))
+            .add("to", modifyTargetLanguage(to))
             .add("text", text)
             .add("tryFetchingGenderDebiasedTranslations", "true")
             .add("token", tokenInfo.token)
@@ -127,6 +122,12 @@ class BingTranslation : TranslationTextAPI {
 
             return parseTranslationResponse(responseBody)
         }
+    }
+
+    private fun modifyTargetLanguage(to: String): String = when (to) {
+        "zh" -> "zh-Hans"
+        "zh-TW" -> "zh-Hant"
+        else -> to
     }
 
     private fun getTokenInfo(): TokenInfo {
@@ -186,15 +187,6 @@ class BingTranslation : TranslationTextAPI {
                 .getString("text")
         } catch (e: Exception) {
             throw IOException("Failed to parse translation response: ${e.message}")
-        }
-    }
-
-    private fun mapLanguage(lang: String): String {
-        return when (lang.lowercase()) {
-            "zh", "cn", "chi" -> "zh-Hans"
-            "cht" -> "zh-Hant"
-            "auto" -> "auto-detect"
-            else -> lang
         }
     }
 
