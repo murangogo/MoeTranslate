@@ -21,6 +21,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.moe.moetranslator.BaseActivity
@@ -37,6 +38,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 
 class LaunchActivity : BaseActivity() {
     private lateinit var prefs: CustomPreference
@@ -62,6 +64,14 @@ class LaunchActivity : BaseActivity() {
         fileUtil = Live2DFileUtil(this)
 
         setContentView(R.layout.activity_launch)
+
+        val logoImageView = findViewById<ImageView>(R.id.logo_name)
+
+        if (shouldShowChineseLogo()) {
+            logoImageView.setImageResource(R.drawable.logo_design)
+        } else {
+            logoImageView.setImageResource(R.drawable.logo_design_en)
+        }
 
         applySystemBarsPadding(findViewById(R.id.launch_layout), true, true)
 
@@ -107,6 +117,11 @@ class LaunchActivity : BaseActivity() {
                 ).show()
             }
         }
+    }
+
+    fun shouldShowChineseLogo(): Boolean {
+        val locale = Locale.getDefault()
+        return locale.language == "zh"
     }
 
     override fun onDestroy() {
