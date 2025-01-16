@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" ?>
 <languages>
     <language>
         <code>zh</code>
     </language>
-<!--    修改繁体中文对应-->
     <language>
         <code>zh-TW</code>
     </language>
@@ -17,25 +16,511 @@
         <code>ko</code>
     </language>
     <language>
-        <code>sq</code>
+        <code>aa</code>
     </language>
     <language>
-        <code>ar</code>
+        <code>ab</code>
+    </language>
+    <language>
+        <code>ace</code>
+    </language>
+    <language>
+        <code>ach</code>
+    </language>
+    <language>
+        <code>ada</code>
+    </language>
+    <language>
+        <code>af</code>
     </language>
     <language>
         <code>am</code>
     </language>
     <language>
+        <code>an</code>
+    </language>
+    <language>
+        <code>ang</code>
+    </language>
+    <language>
+        <code>ar</code>
+    </language>
+    <language>
+        <code>arn</code>
+    </language>
+    <language>
+        <code>ast</code>
+    </language>
+    <language>
+        <code>aym</code>
+    </language>
+    <language>
         <code>az</code>
     </language>
     <language>
-        <code>ga</code>
+        <code>ba</code>
+    </language>
+    <language>
+        <code>bam</code>
+    </language>
+    <language>
+        <code>bas</code>
+    </language>
+    <language>
+        <code>bcl</code>
+    </language>
+    <language>
+        <code>be</code>
+    </language>
+    <language>
+        <code>bem</code>
+    </language>
+    <language>
+        <code>bg</code>
+    </language>
+    <language>
+        <code>bi</code>
+    </language>
+    <language>
+        <code>bin</code>
+    </language>
+    <language>
+        <code>bn</code>
+    </language>
+    <language>
+        <code>br</code>
+    </language>
+    <language>
+        <code>bs</code>
+    </language>
+    <language>
+        <code>bum</code>
+    </language>
+    <language>
+        <code>ca</code>
+    </language>
+    <language>
+        <code>ccp</code>
+    </language>
+    <language>
+        <code>ceb</code>
+    </language>
+    <language>
+        <code>cha</code>
+    </language>
+    <language>
+        <code>che</code>
+    </language>
+    <language>
+        <code>chk</code>
+    </language>
+    <language>
+        <code>chr</code>
+    </language>
+    <language>
+        <code>ckb</code>
+    </language>
+    <language>
+        <code>co</code>
+    </language>
+    <language>
+        <code>cop</code>
+    </language>
+    <language>
+        <code>crh</code>
+    </language>
+    <language>
+        <code>crs</code>
+    </language>
+    <language>
+        <code>cs</code>
+    </language>
+    <language>
+        <code>csb</code>
+    </language>
+    <language>
+        <code>cv</code>
+    </language>
+    <language>
+        <code>cy</code>
+    </language>
+    <language>
+        <code>da</code>
+    </language>
+    <language>
+        <code>de</code>
+    </language>
+    <language>
+        <code>dik</code>
+    </language>
+    <language>
+        <code>dje</code>
+    </language>
+    <language>
+        <code>dsb</code>
+    </language>
+    <language>
+        <code>dua</code>
+    </language>
+    <language>
+        <code>dv</code>
+    </language>
+    <language>
+        <code>dyu</code>
+    </language>
+    <language>
+        <code>dz</code>
+    </language>
+    <language>
+        <code>ee</code>
+    </language>
+    <language>
+        <code>efi</code>
+    </language>
+    <language>
+        <code>el</code>
+    </language>
+    <language>
+        <code>eo</code>
+    </language>
+    <language>
+        <code>es</code>
     </language>
     <language>
         <code>et</code>
     </language>
     <language>
-        <code>ee</code>
+        <code>eu</code>
+    </language>
+    <language>
+        <code>fa</code>
+    </language>
+    <language>
+        <code>fi</code>
+    </language>
+    <language>
+        <code>fil</code>
+    </language>
+    <language>
+        <code>fj</code>
+    </language>
+    <language>
+        <code>fo</code>
+    </language>
+    <language>
+        <code>fon</code>
+    </language>
+    <language>
+        <code>fr</code>
+    </language>
+    <language>
+        <code>fr-CA</code>
+    </language>
+    <language>
+        <code>frm</code>
+    </language>
+    <language>
+        <code>fur</code>
+    </language>
+    <language>
+        <code>fy</code>
+    </language>
+    <language>
+        <code>ga</code>
+    </language>
+    <language>
+        <code>gaa</code>
+    </language>
+    <language>
+        <code>gbo</code>
+    </language>
+    <language>
+        <code>gd</code>
+    </language>
+    <language>
+        <code>gil</code>
+    </language>
+    <language>
+        <code>gl</code>
+    </language>
+    <language>
+        <code>gn</code>
+    </language>
+    <language>
+        <code>gu</code>
+    </language>
+    <language>
+        <code>gug</code>
+    </language>
+    <language>
+        <code>gv</code>
+    </language>
+    <language>
+        <code>ha</code>
+    </language>
+    <language>
+        <code>haw</code>
+    </language>
+    <language>
+        <code>he</code>
+    </language>
+    <language>
+        <code>her</code>
+    </language>
+    <language>
+        <code>hi</code>
+    </language>
+    <language>
+        <code>hil</code>
+    </language>
+    <language>
+        <code>hmo</code>
+    </language>
+    <language>
+        <code>hr</code>
+    </language>
+    <language>
+        <code>hsb</code>
+    </language>
+    <language>
+        <code>ht</code>
+    </language>
+    <language>
+        <code>hu</code>
+    </language>
+    <language>
+        <code>hup</code>
+    </language>
+    <language>
+        <code>hy</code>
+    </language>
+    <language>
+        <code>ia</code>
+    </language>
+    <language>
+        <code>iba</code>
+    </language>
+    <language>
+        <code>id</code>
+    </language>
+    <language>
+        <code>ie</code>
+    </language>
+    <language>
+        <code>ig</code>
+    </language>
+    <language>
+        <code>ilo</code>
+    </language>
+    <language>
+        <code>io</code>
+    </language>
+    <language>
+        <code>is</code>
+    </language>
+    <language>
+        <code>it</code>
+    </language>
+    <language>
+        <code>jbo</code>
+    </language>
+    <language>
+        <code>jmc</code>
+    </language>
+    <language>
+        <code>jv</code>
+    </language>
+    <language>
+        <code>ka</code>
+    </language>
+    <language>
+        <code>kab</code>
+    </language>
+    <language>
+        <code>kac</code>
+    </language>
+    <language>
+        <code>kam</code>
+    </language>
+    <language>
+        <code>kea</code>
+    </language>
+    <language>
+        <code>kg</code>
+    </language>
+    <language>
+        <code>kik</code>
+    </language>
+    <language>
+        <code>kk</code>
+    </language>
+    <language>
+        <code>kl</code>
+    </language>
+    <language>
+        <code>km</code>
+    </language>
+    <language>
+        <code>kmb</code>
+    </language>
+    <language>
+        <code>kn</code>
+    </language>
+    <language>
+        <code>kr</code>
+    </language>
+    <language>
+        <code>ku</code>
+    </language>
+    <language>
+        <code>kua</code>
+    </language>
+    <language>
+        <code>kw</code>
+    </language>
+    <language>
+        <code>ky</code>
+    </language>
+    <language>
+        <code>la</code>
+    </language>
+    <language>
+        <code>lb</code>
+    </language>
+    <language>
+        <code>lg</code>
+    </language>
+    <language>
+        <code>li</code>
+    </language>
+    <language>
+        <code>ln</code>
+    </language>
+    <language>
+        <code>lo</code>
+    </language>
+    <language>
+        <code>loz</code>
+    </language>
+    <language>
+        <code>lt</code>
+    </language>
+    <language>
+        <code>lua</code>
+    </language>
+    <language>
+        <code>lub</code>
+    </language>
+    <language>
+        <code>lun</code>
+    </language>
+    <language>
+        <code>lus</code>
+    </language>
+    <language>
+        <code>lv</code>
+    </language>
+    <language>
+        <code>mad</code>
+    </language>
+    <language>
+        <code>mah</code>
+    </language>
+    <language>
+        <code>mai</code>
+    </language>
+    <language>
+        <code>mfe</code>
+    </language>
+    <language>
+        <code>mg</code>
+    </language>
+    <language>
+        <code>mhr</code>
+    </language>
+    <language>
+        <code>mi</code>
+    </language>
+    <language>
+        <code>mk</code>
+    </language>
+    <language>
+        <code>ml</code>
+    </language>
+    <language>
+        <code>mn</code>
+    </language>
+    <language>
+        <code>mni</code>
+    </language>
+    <language>
+        <code>mo</code>
+    </language>
+    <language>
+        <code>mos</code>
+    </language>
+    <language>
+        <code>mr</code>
+    </language>
+    <language>
+        <code>ms</code>
+    </language>
+    <language>
+        <code>mt</code>
+    </language>
+    <language>
+        <code>mwl</code>
+    </language>
+    <language>
+        <code>my</code>
+    </language>
+    <language>
+        <code>nav</code>
+    </language>
+    <language>
+        <code>nb</code>
+    </language>
+    <language>
+        <code>ndo</code>
+    </language>
+    <language>
+        <code>nds</code>
+    </language>
+    <language>
+        <code>ne</code>
+    </language>
+    <language>
+        <code>nia</code>
+    </language>
+    <language>
+        <code>niu</code>
+    </language>
+    <language>
+        <code>nl</code>
+    </language>
+    <language>
+        <code>nn</code>
+    </language>
+    <language>
+        <code>no</code>
+    </language>
+    <language>
+        <code>nr</code>
+    </language>
+    <language>
+        <code>nso</code>
+    </language>
+    <language>
+        <code>ny</code>
+    </language>
+    <language>
+        <code>nyn</code>
+    </language>
+    <language>
+        <code>nzi</code>
+    </language>
+    <language>
+        <code>oc</code>
     </language>
     <language>
         <code>ojb</code>
@@ -50,526 +535,97 @@
         <code>os</code>
     </language>
     <language>
-        <code>aym</code>
-    </language>
-    <language>
-        <code>efi</code>
-    </language>
-    <language>
-        <code>ach</code>
-    </language>
-    <language>
-        <code>bin</code>
-    </language>
-    <language>
-        <code>oc</code>
-    </language>
-    <language>
-        <code>ast</code>
-    </language>
-    <language>
-        <code>an</code>
-    </language>
-    <language>
-        <code>aa</code>
-    </language>
-    <language>
-        <code>ab</code>
-    </language>
-    <language>
-        <code>tpi</code>
-    </language>
-    <language>
-        <code>ba</code>
-    </language>
-    <language>
-        <code>eu</code>
-    </language>
-    <language>
-        <code>be</code>
-    </language>
-    <language>
-        <code>bg</code>
-    </language>
-    <language>
-        <code>is</code>
-    </language>
-    <language>
-        <code>bi</code>
-    </language>
-    <language>
-        <code>bem</code>
-    </language>
-    <language>
-        <code>pl</code>
-    </language>
-    <language>
-        <code>bs</code>
-    </language>
-    <language>
-        <code>fa</code>
-    </language>
-    <language>
-        <code>br</code>
-    </language>
-    <language>
-        <code>bam</code>
-    </language>
-    <language>
-        <code>gbo</code>
-    </language>
-    <language>
-        <code>bas</code>
-    </language>
-    <language>
-        <code>bum</code>
+        <code>pa</code>
     </language>
     <language>
         <code>pag</code>
     </language>
     <language>
-        <code>pon</code>
-    </language>
-    <language>
-        <code>gug</code>
-    </language>
-    <language>
-        <code>pt-BR</code>
-    </language>
-    <language>
         <code>pam</code>
-    </language>
-    <language>
-        <code>nso</code>
-    </language>
-    <language>
-        <code>se</code>
-    </language>
-    <language>
-        <code>cha</code>
-    </language>
-    <language>
-        <code>cv</code>
-    </language>
-    <language>
-        <code>tn</code>
-    </language>
-    <language>
-        <code>ts</code>
-    </language>
-    <language>
-        <code>che</code>
-    </language>
-    <language>
-        <code>ccp</code>
-    </language>
-    <language>
-        <code>tt</code>
-    </language>
-    <language>
-        <code>da</code>
-    </language>
-    <language>
-        <code>de</code>
-    </language>
-    <language>
-        <code>tet</code>
-    </language>
-    <language>
-        <code>dv</code>
-    </language>
-    <language>
-        <code>dik</code>
-    </language>
-    <language>
-        <code>dyu</code>
-    </language>
-    <language>
-        <code>ada</code>
-    </language>
-    <language>
-        <code>dua</code>
-    </language>
-    <language>
-        <code>tiv</code>
-    </language>
-    <language>
-        <code>bbc</code>
-    </language>
-    <language>
-        <code>zai</code>
-    </language>
-    <language>
-        <code>nds</code>
-    </language>
-    <language>
-        <code>ru</code>
-    </language>
-    <language>
-        <code>nzi</code>
-    </language>
-    <language>
-        <code>nyn</code>
-    </language>
-    <language>
-        <code>ndo</code>
-    </language>
-    <language>
-        <code>fr</code>
-    </language>
-    <language>
-        <code>fo</code>
-    </language>
-    <language>
-        <code>fil</code>
-    </language>
-    <language>
-        <code>fj</code>
-    </language>
-    <language>
-        <code>fi</code>
-    </language>
-    <language>
-        <code>kea</code>
-    </language>
-    <language>
-        <code>fon</code>
-    </language>
-    <language>
-        <code>fur</code>
-    </language>
-    <language>
-        <code>sa</code>
-    </language>
-    <language>
-        <code>km</code>
-    </language>
-    <language>
-        <code>kg</code>
-    </language>
-    <language>
-        <code>fy</code>
-    </language>
-    <language>
-        <code>gu</code>
-    </language>
-    <language>
-        <code>swc</code>
-    </language>
-    <language>
-        <code>gn</code>
-    </language>
-    <language>
-        <code>kl</code>
-    </language>
-    <language>
-        <code>plt</code>
-    </language>
-    <language>
-        <code>ang</code>
-    </language>
-    <language>
-        <code>ka</code>
-    </language>
-    <language>
-        <code>kk</code>
-    </language>
-    <language>
-        <code>ht</code>
-    </language>
-    <language>
-        <code>ha</code>
-    </language>
-    <language>
-        <code>nl</code>
-    </language>
-    <language>
-        <code>her</code>
-    </language>
-    <language>
-        <code>hup</code>
-    </language>
-    <language>
-        <code>ky</code>
-    </language>
-    <language>
-        <code>quc</code>
-    </language>
-    <language>
-        <code>gl</code>
-    </language>
-    <language>
-        <code>ca</code>
-    </language>
-    <language>
-        <code>cs</code>
-    </language>
-    <language>
-        <code>gil</code>
-    </language>
-    <language>
-        <code>kac</code>
-    </language>
-    <language>
-        <code>gaa</code>
-    </language>
-    <language>
-        <code>kik</code>
-    </language>
-    <language>
-        <code>kmb</code>
-    </language>
-    <language>
-        <code>fr-CA</code>
-    </language>
-    <language>
-        <code>kab</code>
-    </language>
-    <language>
-        <code>kn</code>
-    </language>
-    <language>
-        <code>cop</code>
-    </language>
-    <language>
-        <code>co</code>
-    </language>
-    <language>
-        <code>hr</code>
-    </language>
-    <language>
-        <code>ku</code>
-    </language>
-    <language>
-        <code>ckb</code>
-    </language>
-    <language>
-        <code>quz</code>
-    </language>
-    <language>
-        <code>crh</code>
-    </language>
-    <language>
-        <code>xal</code>
-    </language>
-    <language>
-        <code>rar</code>
-    </language>
-    <language>
-        <code>kam</code>
-    </language>
-    <language>
-        <code>kua</code>
-    </language>
-    <language>
-        <code>tlh</code>
-    </language>
-    <language>
-        <code>kr</code>
-    </language>
-    <language>
-        <code>kw</code>
-    </language>
-    <language>
-        <code>csb</code>
-    </language>
-    <language>
-        <code>rw</code>
-    </language>
-    <language>
-        <code>la</code>
-    </language>
-    <language>
-        <code>lv</code>
-    </language>
-    <language>
-        <code>lo</code>
-    </language>
-    <language>
-        <code>rn</code>
-    </language>
-    <language>
-        <code>lt</code>
-    </language>
-    <language>
-        <code>ln</code>
-    </language>
-    <language>
-        <code>lg</code>
-    </language>
-    <language>
-        <code>lb</code>
-    </language>
-    <language>
-        <code>ro</code>
-    </language>
-    <language>
-        <code>loz</code>
-    </language>
-    <language>
-        <code>lua</code>
-    </language>
-    <language>
-        <code>lub</code>
-    </language>
-    <language>
-        <code>lun</code>
-    </language>
-    <language>
-        <code>li</code>
-    </language>
-    <language>
-        <code>jbo</code>
-    </language>
-    <language>
-        <code>mg</code>
-    </language>
-    <language>
-        <code>mt</code>
-    </language>
-    <language>
-        <code>gv</code>
-    </language>
-    <language>
-        <code>mr</code>
-    </language>
-    <language>
-        <code>ml</code>
-    </language>
-    <language>
-        <code>ms</code>
-    </language>
-    <language>
-        <code>mhr</code>
-    </language>
-    <language>
-        <code>mk</code>
-    </language>
-    <language>
-        <code>mi</code>
-    </language>
-    <language>
-        <code>mo</code>
-    </language>
-    <language>
-        <code>mn</code>
-    </language>
-    <language>
-        <code>my</code>
-    </language>
-    <language>
-        <code>bn</code>
-    </language>
-    <language>
-        <code>mni</code>
-    </language>
-    <language>
-        <code>mah</code>
-    </language>
-    <language>
-        <code>mad</code>
-    </language>
-    <language>
-        <code>mos</code>
-    </language>
-    <language>
-        <code>lus</code>
-    </language>
-    <language>
-        <code>mfe</code>
-    </language>
-    <language>
-        <code>umb</code>
-    </language>
-    <language>
-        <code>arn</code>
-    </language>
-    <language>
-        <code>mwl</code>
-    </language>
-    <language>
-        <code>mai</code>
-    </language>
-    <language>
-        <code>af</code>
-    </language>
-    <language>
-        <code>xh</code>
-    </language>
-    <language>
-        <code>zu</code>
-    </language>
-    <language>
-        <code>ne</code>
-    </language>
-    <language>
-        <code>no</code>
-    </language>
-    <language>
-        <code>niu</code>
-    </language>
-    <language>
-        <code>nia</code>
-    </language>
-    <language>
-        <code>nav</code>
-    </language>
-    <language>
-        <code>pcm</code>
-    </language>
-    <language>
-        <code>nr</code>
     </language>
     <language>
         <code>pap</code>
     </language>
     <language>
-        <code>pa</code>
-    </language>
-    <language>
-        <code>pt</code>
-    </language>
-    <language>
-        <code>ps</code>
+        <code>pcm</code>
     </language>
     <language>
         <code>pis</code>
     </language>
     <language>
-        <code>ny</code>
+        <code>pl</code>
     </language>
     <language>
-        <code>tw</code>
+        <code>plt</code>
     </language>
     <language>
-        <code>chr</code>
+        <code>pon</code>
     </language>
     <language>
-        <code>chk</code>
+        <code>ps</code>
     </language>
     <language>
-        <code>sv</code>
+        <code>pt</code>
     </language>
     <language>
-        <code>sm</code>
+        <code>pt-BR</code>
     </language>
     <language>
-        <code>sr</code>
+        <code>quc</code>
     </language>
     <language>
-        <code>crs</code>
+        <code>quz</code>
     </language>
     <language>
-        <code>st</code>
+        <code>rar</code>
+    </language>
+    <language>
+        <code>rn</code>
+    </language>
+    <language>
+        <code>ro</code>
+    </language>
+    <language>
+        <code>ru</code>
+    </language>
+    <language>
+        <code>rw</code>
+    </language>
+    <language>
+        <code>sa</code>
+    </language>
+    <language>
+        <code>sc</code>
+    </language>
+    <language>
+        <code>sco</code>
+    </language>
+    <language>
+        <code>sd</code>
+    </language>
+    <language>
+        <code>se</code>
+    </language>
+    <language>
+        <code>seh</code>
     </language>
     <language>
         <code>sg</code>
     </language>
     <language>
+        <code>sh</code>
+    </language>
+    <language>
+        <code>shi</code>
+    </language>
+    <language>
+        <code>shn</code>
+    </language>
+    <language>
         <code>si</code>
     </language>
     <language>
-        <code>eo</code>
+        <code>sid</code>
     </language>
     <language>
         <code>sk</code>
@@ -578,10 +634,10 @@
         <code>sl</code>
     </language>
     <language>
-        <code>sw</code>
+        <code>sm</code>
     </language>
     <language>
-        <code>gd</code>
+        <code>sn</code>
     </language>
     <language>
         <code>so</code>
@@ -590,76 +646,127 @@
         <code>spy</code>
     </language>
     <language>
-        <code>jmc</code>
+        <code>sq</code>
     </language>
     <language>
-        <code>seh</code>
-    </language>
-    <language>
-        <code>sco</code>
-    </language>
-    <language>
-        <code>nb</code>
-    </language>
-    <language>
-        <code>sc</code>
-    </language>
-    <language>
-        <code>shn</code>
-    </language>
-    <language>
-        <code>sh</code>
+        <code>sr</code>
     </language>
     <language>
         <code>ss</code>
     </language>
     <language>
-        <code>hsb</code>
+        <code>st</code>
     </language>
     <language>
-        <code>tg</code>
+        <code>su</code>
     </language>
     <language>
-        <code>ty</code>
+        <code>sv</code>
     </language>
     <language>
-        <code>te</code>
+        <code>sw</code>
+    </language>
+    <language>
+        <code>swc</code>
+    </language>
+    <language>
+        <code>syc</code>
     </language>
     <language>
         <code>ta</code>
     </language>
     <language>
-        <code>th</code>
-    </language>
-    <language>
-        <code>to</code>
-    </language>
-    <language>
-        <code>tig</code>
-    </language>
-    <language>
-        <code>tmh</code>
-    </language>
-    <language>
-        <code>tr</code>
-    </language>
-    <language>
-        <code>tk</code>
-    </language>
-    <language>
-        <code>tyv</code>
+        <code>te</code>
     </language>
     <language>
         <code>teo</code>
     </language>
     <language>
-        <code>tvl</code>
+        <code>tet</code>
+    </language>
+    <language>
+        <code>tg</code>
     </language>
     <language>
         <code>tgl</code>
     </language>
     <language>
+        <code>th</code>
+    </language>
+    <language>
+        <code>tig</code>
+    </language>
+    <language>
+        <code>tiv</code>
+    </language>
+    <language>
+        <code>tk</code>
+    </language>
+    <language>
+        <code>tlh</code>
+    </language>
+    <language>
+        <code>tmh</code>
+    </language>
+    <language>
+        <code>tn</code>
+    </language>
+    <language>
+        <code>to</code>
+    </language>
+    <language>
+        <code>tpi</code>
+    </language>
+    <language>
+        <code>tr</code>
+    </language>
+    <language>
+        <code>ts</code>
+    </language>
+    <language>
+        <code>tt</code>
+    </language>
+    <language>
         <code>tum</code>
+    </language>
+    <language>
+        <code>tvl</code>
+    </language>
+    <language>
+        <code>tw</code>
+    </language>
+    <language>
+        <code>ty</code>
+    </language>
+    <language>
+        <code>tyv</code>
+    </language>
+    <language>
+        <code>udm</code>
+    </language>
+    <language>
+        <code>uk</code>
+    </language>
+    <language>
+        <code>umb</code>
+    </language>
+    <language>
+        <code>ur</code>
+    </language>
+    <language>
+        <code>uz</code>
+    </language>
+    <language>
+        <code>ve</code>
+    </language>
+    <language>
+        <code>vi</code>
+    </language>
+    <language>
+        <code>vun</code>
+    </language>
+    <language>
+        <code>wa</code>
     </language>
     <language>
         <code>wal</code>
@@ -668,144 +775,33 @@
         <code>war</code>
     </language>
     <language>
-        <code>ve</code>
-    </language>
-    <language>
         <code>wol</code>
     </language>
     <language>
-        <code>udm</code>
+        <code>xal</code>
     </language>
     <language>
-        <code>ur</code>
-    </language>
-    <language>
-        <code>uk</code>
-    </language>
-    <language>
-        <code>uz</code>
-    </language>
-    <language>
-        <code>vun</code>
-    </language>
-    <language>
-        <code>cy</code>
-    </language>
-    <language>
-        <code>wa</code>
-    </language>
-    <language>
-        <code>es</code>
-    </language>
-    <language>
-        <code>he</code>
-    </language>
-    <language>
-        <code>shi</code>
-    </language>
-    <language>
-        <code>el</code>
-    </language>
-    <language>
-        <code>haw</code>
-    </language>
-    <language>
-        <code>sd</code>
-    </language>
-    <language>
-        <code>hu</code>
-    </language>
-    <language>
-        <code>sn</code>
-    </language>
-    <language>
-        <code>ceb</code>
-    </language>
-    <language>
-        <code>syc</code>
-    </language>
-    <language>
-        <code>hmo</code>
-    </language>
-    <language>
-        <code>sid</code>
-    </language>
-    <language>
-        <code>hil</code>
-    </language>
-    <language>
-        <code>nn</code>
-    </language>
-    <language>
-        <code>dsb</code>
-    </language>
-    <language>
-        <code>ie</code>
-    </language>
-    <language>
-        <code>hy</code>
-    </language>
-    <language>
-        <code>ace</code>
-    </language>
-    <language>
-        <code>ig</code>
-    </language>
-    <language>
-        <code>it</code>
-    </language>
-    <language>
-        <code>yi</code>
-    </language>
-    <language>
-        <code>hi</code>
-    </language>
-    <language>
-        <code>su</code>
-    </language>
-    <language>
-        <code>id</code>
-    </language>
-    <language>
-        <code>jv</code>
-    </language>
-    <language>
-        <code>yo</code>
-    </language>
-    <language>
-        <code>vi</code>
-    </language>
-    <language>
-        <code>yue</code>
-    </language>
-    <language>
-        <code>zyb</code>
-    </language>
-    <language>
-        <code>iba</code>
-    </language>
-    <language>
-        <code>ilo</code>
+        <code>xh</code>
     </language>
     <language>
         <code>yap</code>
     </language>
     <language>
-        <code>io</code>
+        <code>yi</code>
     </language>
     <language>
-        <code>ia</code>
+        <code>yo</code>
     </language>
     <language>
-        <code>dje</code>
+        <code>yue</code>
     </language>
     <language>
-        <code>dz</code>
+        <code>zai</code>
     </language>
     <language>
-        <code>bcl</code>
+        <code>zu</code>
     </language>
     <language>
-        <code>frm</code>
+        <code>zyb</code>
     </language>
 </languages>

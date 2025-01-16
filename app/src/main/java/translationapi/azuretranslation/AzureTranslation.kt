@@ -50,19 +50,14 @@ class AzureTranslation(private val subscriptionKey: String) : TranslationTextAPI
     }
 
     private fun translate(text: String, from: String, to: String): String {
-        //test
-        var from = "ja"
-        var to = "zh-Hans"
-        Log.d("AZURE", text)
-
         // 构建URL，添加所有必要的查询参数
         val urlBuilder = HttpUrl.Builder()
             .scheme("https")
             .host("api.cognitive.microsofttranslator.com")
             .addPathSegment("translate")
             .addQueryParameter("api-version", API_VERSION)
-            .addQueryParameter("to", to)
-            .addQueryParameter("from", from)
+            .addQueryParameter("to", modifyTargetLanguage(to))
+            .addQueryParameter("from", modifyTargetLanguage(from))
             .addQueryParameter("textType", "plain")
             .addQueryParameter("profanityAction", "NoAction")
 
@@ -96,6 +91,12 @@ class AzureTranslation(private val subscriptionKey: String) : TranslationTextAPI
             Log.d("AZURE", "Response: $responseBody")
             return parseResponse(responseBody)
         }
+    }
+
+    private fun modifyTargetLanguage(to: String): String = when (to) {
+        "zh" -> "zh-Hans"
+        "zh-TW" -> "zh-Hant"
+        else -> to
     }
 
     private fun parseResponse(responseBody: String): String {
