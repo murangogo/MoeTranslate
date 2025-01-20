@@ -17,6 +17,7 @@
 
 package com.moe.moetranslator.launch
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -34,6 +35,7 @@ import nl.dionsegijn.konfetti.core.Position
 import nl.dionsegijn.konfetti.core.emitter.Emitter
 import nl.dionsegijn.konfetti.core.models.Shape
 import nl.dionsegijn.konfetti.xml.KonfettiView
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 
@@ -41,15 +43,10 @@ class TutorialFragment(val position:Int) : Fragment() {
 
     lateinit var root : View
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val party = Party(
             angle = 300,
             spread = 60,
@@ -78,10 +75,16 @@ class TutorialFragment(val position:Int) : Fragment() {
         )
         when(position) {
             0->{
-                root = inflater.inflate(R.layout.fragment_tutorial0,container,false)
-                var cele = root.findViewById<KonfettiView>(R.id.konfettiView)
-                var again = root.findViewById<Button>(R.id.again)
-                var next = root.findViewById<Button>(R.id.buttonnext)
+                root = inflater.inflate(R.layout.fragment_tutorial_0,container,false)
+                val cele = root.findViewById<KonfettiView>(R.id.konfettiView)
+                val again = root.findViewById<Button>(R.id.again)
+                val next = root.findViewById<Button>(R.id.buttonnext)
+                val logoImageView = root.findViewById<ImageView>(R.id.logo_name)
+                if (Locale.getDefault().language == "zh") {
+                    logoImageView.setImageResource(R.drawable.logo_design)
+                } else {
+                    logoImageView.setImageResource(R.drawable.logo_design_en)
+                }
                 cele.start(party)
                 cele.start(party2)
                 again.setOnClickListener{
@@ -89,74 +92,105 @@ class TutorialFragment(val position:Int) : Fragment() {
                     cele.start(party2)
                 }
                 next.setOnClickListener{
-                    var myactivity = activity as FirstLaunchPage
-                    myactivity.nextPage()
+                    val activity = activity as FirstLaunchPage
+                    activity.nextPage()
                 }
             }
+
             1->{
-                root = inflater.inflate(R.layout.fragment_tutorial1_2,container,false)
-                var tuimg = root.findViewById<ImageView>(R.id.FrimageView)
-                tuimg.setImageResource(R.drawable.accessibility)
-                var next = root.findViewById<Button>(R.id.accessnext)
-                var gotoaccess = root.findViewById<Button>(R.id.gotoaccesss)
+                root = inflater.inflate(R.layout.fragment_tutorial_1_2_3,container,false)
+                val tuimg = root.findViewById<ImageView>(R.id.FrimageView)
+                tuimg.setImageResource(R.drawable.tutorial_accessibility)
+                val next = root.findViewById<Button>(R.id.next)
+                val grant = root.findViewById<Button>(R.id.grant)
                 next.setOnClickListener{
-                    var myactivity = activity as FirstLaunchPage
-                    myactivity.nextPage()
+                    val activity = activity as FirstLaunchPage
+                    activity.nextPage()
                 }
-                gotoaccess.setOnClickListener {
-                    startActivity(
-                        Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                    )
+                grant.setOnClickListener {
+                    val dialog = AlertDialog.Builder(requireContext())
+                        .setTitle(R.string.tutorial_access_title)
+                        .setMessage(R.string.tutorial_access_content)
+                        .setPositiveButton(R.string.go_to_grant) { _, _ ->
+                            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                        }
+                        .setNegativeButton(R.string.user_cancel, null)
+                        .setCancelable(false)
+                        .create()
+                    dialog.show()
+                    dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
                 }
             }
+
             2->{
-                root = inflater.inflate(R.layout.fragment_tutorial1_2,container,false)
-                var tuimg = root.findViewById<ImageView>(R.id.FrimageView)
-                tuimg.setImageResource(R.drawable.pers)
-                var next = root.findViewById<Button>(R.id.accessnext)
-                var gotoset = root.findViewById<Button>(R.id.gotoaccesss)
-                gotoset.text = "去授予这两个权限"
-                var intent = Intent()
+                root = inflater.inflate(R.layout.fragment_tutorial_1_2_3,container,false)
+                val tuimg = root.findViewById<ImageView>(R.id.FrimageView)
+                tuimg.setImageResource(R.drawable.tutorial_notify)
+                val next = root.findViewById<Button>(R.id.next)
+                val gotoset = root.findViewById<Button>(R.id.grant)
                 next.setOnClickListener {
-                    var myactivity = activity as FirstLaunchPage
-                    myactivity.nextPage()
+                    val activity = activity as FirstLaunchPage
+                    activity.nextPage()
                 }
                 gotoset.setOnClickListener {
-                    intent.action = "android.settings.APPLICATION_DETAILS_SETTINGS";
-                    intent.data = Uri.fromParts("package", requireContext().packageName, null)
-                    requireContext().startActivity(intent)
+                    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                        putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    startActivity(intent)
                 }
             }
-            3,4,5,6,7->{
+
+            3->{
+                root = inflater.inflate(R.layout.fragment_tutorial_1_2_3,container,false)
+                val tuimg = root.findViewById<ImageView>(R.id.FrimageView)
+                tuimg.setImageResource(R.drawable.tutorial_ball)
+                val next = root.findViewById<Button>(R.id.next)
+                val grant = root.findViewById<Button>(R.id.grant)
+                next.setOnClickListener {
+                    val activity = activity as FirstLaunchPage
+                    activity.nextPage()
+                }
+                grant.setOnClickListener {
+                    val intent = Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:${requireContext().packageName}")
+                    )
+                    startActivity(intent)
+                }
+            }
+
+            4,5,6->{
                 root = inflater.inflate(R.layout.fragment_tutorial_use,container,false)
-                var imguse = root.findViewById<ImageView>(R.id.UseView)
-                var nextuse = root.findViewById<Button>(R.id.nextuse)
+                val imguse = root.findViewById<ImageView>(R.id.UseView)
+                val nextuse = root.findViewById<Button>(R.id.nextuse)
                 when(position){
-                    3->imguse.setImageResource(R.drawable.use_0)
-                    4->imguse.setImageResource(R.drawable.use_1)
-                    5->imguse.setImageResource(R.drawable.use_2)
-                    6->imguse.setImageResource(R.drawable.use_3)
-                    7->imguse.setImageResource(R.drawable.use_4)
+                    4->imguse.setImageResource(R.drawable.tutorial_use_1)
+                    5->imguse.setImageResource(R.drawable.tutorial_use_2)
+                    6->imguse.setImageResource(R.drawable.tutorial_use_3)
                 }
                 nextuse.setOnClickListener{
-                    var myactivity = activity as FirstLaunchPage
-                    myactivity.nextPage()
+                    val activity = activity as FirstLaunchPage
+                    activity.nextPage()
                 }
             }
-            8->{
-                root = inflater.inflate(R.layout.fragment_tutorial3,container,false)
-                var cele = root.findViewById<KonfettiView>(R.id.konfettiView2)
-                var again = root.findViewById<Button>(R.id.agains2)
-                var next = root.findViewById<Button>(R.id.buttonnext2)
+
+            7->{
+                root = inflater.inflate(R.layout.fragment_tutorial_last,container,false)
+                val cele = root.findViewById<KonfettiView>(R.id.konfettiView)
+                val again = root.findViewById<Button>(R.id.again)
+                val enter = root.findViewById<Button>(R.id.enter)
                 cele.start(party)
                 cele.start(party2)
                 again.setOnClickListener{
                     cele.start(party)
                     cele.start(party2)
                 }
-                next.setOnClickListener{
-                    var startintent = Intent(context, MainActivity::class.java)
-                    startActivity(startintent)
+                enter.setOnClickListener{
+                    val intent = Intent(requireContext(), MainActivity::class.java)
+                    startActivity(intent)
                     requireActivity().finish()
                 }
             }

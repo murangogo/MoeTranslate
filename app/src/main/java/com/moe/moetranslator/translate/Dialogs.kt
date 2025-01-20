@@ -46,12 +46,12 @@ object Dialogs {
     fun menuDialog(ctx: Context): DialogResult {
         val strlist = ctx.resources.getStringArray(R.array.menu_item)
         val imglist = arrayOf(
-            R.drawable.cut_screen,
-            R.drawable.word_position,
-            R.drawable.close_text,
-            R.drawable.font_size,
-            R.drawable.close_floatingball,
-            R.drawable.back_moe
+            R.drawable.crop_screen,
+            R.drawable.result_position,
+            R.drawable.remove_result,
+            R.drawable.result_size,
+            R.drawable.close_service,
+            R.drawable.back_home
         )
         val view = LayoutInflater.from(ctx).inflate(R.layout.dialog_floating_menu, null,false)
         val img = view.findViewById<ImageView>(R.id.TitleIcon)

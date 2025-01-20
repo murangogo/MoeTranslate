@@ -38,7 +38,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/logo_design" />
+            android:src="@drawable/logo_design" />
 
         <ImageView
             android:id="@+id/logo"
@@ -48,7 +48,7 @@
             app:layout_constraintBottom_toTopOf="@+id/logo_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/launch_icon" />
+            android:src="@drawable/launch_icon" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

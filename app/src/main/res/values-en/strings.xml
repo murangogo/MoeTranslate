@@ -288,6 +288,18 @@
     <string name="import_success">Import successful</string>
     <string name="import_failed">Import failed：%s</string>
     <string name="model3_not_found">No files ending in .model3.json were found, please check if the selected folder is correct</string>
-
+    <string name="tutorial_0_welcome">Welcome to</string>
+    <string name="tutorial_0_go">Let\'s Go !</string>
+    <string name="tutorial_0_again">It was so fun, play it again!</string>
+    <string name="tutorial_continue">OK, let\'s continue</string>
+    <string name="tutorial_grant">Go and grant that permission</string>
+    <string name="tutorial_access_title">Grant accessibility permissions</string>
+    <string name="tutorial_access_content">Screenshot Translation requires accessibility permissions to take screenshots. Click to grant accessibility permissions to grant the app.\n\nThe specific authorization path varies slightly on devices of different brands, roughly:\n<b>General tab → Downloaded apps → Find \"MoeTranslateTranslation Service\" → Use \"MoeTranslate Translation Service\".</b>\nWhen granting permissions, a warning will pop up. Please rest assured that MoeTranslate will not collect any of your information.</string>
+    <string name="tutorial_teach">Teaching Time !</string>
+    <string name="tutorial_got">Got it! Next!</string>
+    <string name="tutorial_enjoy">Start enjoying!</string>
+    <string name="tutorial_last_again">Actually, I\'d like to see the flowers again</string>
+    <string name="tutorial_enter">Enter MoeTranslate</string>
+    <string name="tutorial_permission">Permission Time!</string>
 
 </resources>

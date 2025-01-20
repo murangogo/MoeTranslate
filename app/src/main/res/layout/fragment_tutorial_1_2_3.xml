@@ -31,7 +31,7 @@
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tutorial_teach"
+            android:text="@string/tutorial_permission"
             android:textColor="#5D4F57"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +39,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
-            android:id="@+id/UseView"
+            android:id="@+id/FrimageView"
             android:layout_width="380dp"
             android:layout_height="500dp"
             android:layout_marginTop="20dp"
@@ -48,15 +48,26 @@
             app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
         <Button
-            android:id="@+id/nextuse"
+            android:id="@+id/next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:backgroundTint="#fbb8a2"
-            android:text="@string/tutorial_got"
+            android:text="@string/tutorial_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/UseView" />
+            app:layout_constraintTop_toBottomOf="@+id/FrimageView" />
+
+        <Button
+            android:id="@+id/grant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#fbb8a2"
+            android:text="@string/tutorial_grant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/next" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
