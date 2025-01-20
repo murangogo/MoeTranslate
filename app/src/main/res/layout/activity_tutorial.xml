@@ -25,7 +25,7 @@
     tools:context=".launch.FirstLaunchPage">
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/teach_you"
+        android:id="@+id/tutorial_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

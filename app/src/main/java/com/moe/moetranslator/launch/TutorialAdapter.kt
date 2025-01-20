@@ -21,7 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-const val NUM = 9
+const val NUM = 8
 
 class TutorialAdapter(act:FragmentActivity):FragmentStateAdapter(act) {
     override fun getItemCount(): Int {

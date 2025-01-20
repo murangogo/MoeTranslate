@@ -288,6 +288,18 @@
     <string name="import_success">导入成功</string>
     <string name="import_failed">导入失败：%s</string>
     <string name="model3_not_found">没有发现以.model3.json结尾的文件，请检查选择的文件夹是否正确</string>
-
+    <string name="tutorial_0_welcome">欢迎来到</string>
+    <string name="tutorial_0_go">我们走吧</string>
+    <string name="tutorial_0_again">太好玩了，再放一遍！</string>
+    <string name="tutorial_continue">好，我们继续</string>
+    <string name="tutorial_grant">去授予该权限</string>
+    <string name="tutorial_access_title">授予无障碍权限</string>
+    <string name="tutorial_access_content">截图翻译需要获取无障碍权限来进行截图，点击去授予即可授予应用无障碍权限。\n\n具体的授权路径不同品牌的设备略有差别，大概是：\n<b>通用选项卡→已下载的应用→找到“萌译翻译服务”→使用“萌译翻译服务”。</b>\n在给予权限时，会弹出警告，请放心，萌译不会收集您的任何信息。</string>
+    <string name="tutorial_teach">教学时间！</string>
+    <string name="tutorial_got">学会了！下一个！</string>
+    <string name="tutorial_enjoy">开始享受吧！</string>
+    <string name="tutorial_last_again">其实我还想再看一遍撒花</string>
+    <string name="tutorial_enter">Let\'s Go !</string>
+    <string name="tutorial_permission">授权时间！</string>
 
 </resources>
