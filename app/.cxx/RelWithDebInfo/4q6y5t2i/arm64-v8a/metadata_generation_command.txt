@@ -1,0 +1,18 @@
+                        -HD:\AndroidDevelopBasic\MoeTranslate\app\src\main\cpp
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_SYSTEM_VERSION=29
+-DANDROID_PLATFORM=android-29
+-DANDROID_ABI=arm64-v8a
+-DCMAKE_ANDROID_ARCH_ABI=arm64-v8a
+-DANDROID_NDK=D:\AndroidSDK\ndk\26.1.10909125
+-DCMAKE_ANDROID_NDK=D:\AndroidSDK\ndk\26.1.10909125
+-DCMAKE_TOOLCHAIN_FILE=D:\AndroidSDK\ndk\26.1.10909125\build\cmake\android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=D:\AndroidSDK\cmake\3.22.1\bin\ninja.exe
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=D:\AndroidDevelopBasic\MoeTranslate\app\build\intermediates\cxx\RelWithDebInfo\4q6y5t2i\obj\arm64-v8a
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=D:\AndroidDevelopBasic\MoeTranslate\app\build\intermediates\cxx\RelWithDebInfo\4q6y5t2i\obj\arm64-v8a
+-DCMAKE_BUILD_TYPE=RelWithDebInfo
+-BD:\AndroidDevelopBasic\MoeTranslate\app\.cxx\RelWithDebInfo\4q6y5t2i\arm64-v8a
+-GNinja
+                        Build command args: []
+                        Version: 2

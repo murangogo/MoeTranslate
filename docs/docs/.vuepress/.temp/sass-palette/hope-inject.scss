@@ -1,0 +1,8 @@
+@use "sass:meta";
+@use "@sass-palette/helper";
+@use "@sass-palette/hope-palette";
+
+$palette-variables: meta.module-variables("hope-palette");
+
+
+@include helper.inject($palette-variables);

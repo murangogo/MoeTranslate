@@ -1,0 +1,158 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 316,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 322,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"D:/AndroidDevelopBasic/MoeTranslate/app/build/intermediates/cxx/RelWithDebInfo/4q6y5t2i/obj/arm64-v8a/libsentencepiece.so"
+			],
+			"targetId" : "sentencepiece::@145eef247bfb46b6828c",
+			"targetIndex" : 0,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"D:/AndroidDevelopBasic/MoeTranslate/app/build/intermediates/cxx/RelWithDebInfo/4q6y5t2i/obj/arm64-v8a/libsentencepiece_train.so"
+			],
+			"targetId" : "sentencepiece_train::@145eef247bfb46b6828c",
+			"targetIndex" : 2,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"src/libsentencepiece.a"
+			],
+			"targetId" : "sentencepiece-static::@145eef247bfb46b6828c",
+			"targetIndex" : 1,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"src/libsentencepiece_train.a"
+			],
+			"targetId" : "sentencepiece_train-static::@145eef247bfb46b6828c",
+			"targetIndex" : 3,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"D:/AndroidDevelopBasic/MoeTranslate/app/build/intermediates/cxx/RelWithDebInfo/4q6y5t2i/obj/arm64-v8a/spm_encode"
+			],
+			"targetId" : "spm_encode::@145eef247bfb46b6828c",
+			"targetIndex" : 5,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"D:/AndroidDevelopBasic/MoeTranslate/app/build/intermediates/cxx/RelWithDebInfo/4q6y5t2i/obj/arm64-v8a/spm_decode"
+			],
+			"targetId" : "spm_decode::@145eef247bfb46b6828c",
+			"targetIndex" : 4,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"D:/AndroidDevelopBasic/MoeTranslate/app/build/intermediates/cxx/RelWithDebInfo/4q6y5t2i/obj/arm64-v8a/spm_normalize"
+			],
+			"targetId" : "spm_normalize::@145eef247bfb46b6828c",
+			"targetIndex" : 7,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"D:/AndroidDevelopBasic/MoeTranslate/app/build/intermediates/cxx/RelWithDebInfo/4q6y5t2i/obj/arm64-v8a/spm_train"
+			],
+			"targetId" : "spm_train::@145eef247bfb46b6828c",
+			"targetIndex" : 8,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"D:/AndroidDevelopBasic/MoeTranslate/app/build/intermediates/cxx/RelWithDebInfo/4q6y5t2i/obj/arm64-v8a/spm_export_vocab"
+			],
+			"targetId" : "spm_export_vocab::@145eef247bfb46b6828c",
+			"targetIndex" : 6,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				"src/sentencepiece_trainer.h",
+				"src/sentencepiece_processor.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "src",
+		"source" : "src"
+	}
+}
