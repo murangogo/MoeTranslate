@@ -104,7 +104,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="20dp"
                         android:layout_toEndOf="@id/website"
-                        android:text="萌译官网"
+                        android:text="@string/official_website"
                         android:textColor="#6A6464"
                         android:textSize="20sp" />
 
@@ -136,7 +136,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="20dp"
                         android:layout_toEndOf="@id/idea"
-                        android:text="意见反馈"
+                        android:text="@string/feedback"
                         android:textColor="#6A6464"
                         android:textSize="20sp" />
 
@@ -168,7 +168,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="20dp"
                         android:layout_toEndOf="@id/wechatimg"
-                        android:text="官方公众号"
+                        android:text="@string/official_account"
                         android:textColor="#6A6464"
                         android:textSize="20sp" />
 
@@ -201,6 +201,38 @@
                         android:layout_marginStart="20dp"
                         android:layout_toEndOf="@id/git"
                         android:text="GitHub"
+                        android:textColor="#6A6464"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/righticon" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:id="@+id/opensource"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/os"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/opensource" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@id/os"
+                        android:text="@string/open_source_statement"
                         android:textColor="#6A6464"
                         android:textSize="20sp" />
 

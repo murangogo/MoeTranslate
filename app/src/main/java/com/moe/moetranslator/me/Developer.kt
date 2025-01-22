@@ -122,6 +122,13 @@ class Developer : Fragment() {
             dialogperapi.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
             dialogperapi.show()
         }
+
+        binding.opensource.setOnClickListener {
+            val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.OPEN_SOURCE)
+            }
+            startActivity(intent)
+        }
     }
 
 }

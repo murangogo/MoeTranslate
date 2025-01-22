@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./docs/images/head-cover.png" alt="icon"/>
+<img src="markdown/images/head-cover.png" alt="icon"/>
 <h1 align="center">萌译MoeTranslate</h1>
 一键翻译图片文字内容，让您和非中文游戏的距离不再遥远；不仅如此，还支持Gemini聊天和Live2D。
 
@@ -16,8 +16,8 @@
 [Document-image]: https://img.shields.io/badge/%E6%96%87%E6%A1%A3-%E8%AF%B4%E6%98%8E-purple?logo=adobeacrobatreader
 [document-url]: http://file.moetranslate.top/s/aKSG
 
-![cover](./docs/images/cover1.png)
+![cover](markdown/images/cover1.png)
 
-![cover](./docs/images/cover2.png)
+![cover](markdown/images/cover2.png)
 
 </div>

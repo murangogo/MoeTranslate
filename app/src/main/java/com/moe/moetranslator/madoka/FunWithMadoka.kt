@@ -404,7 +404,7 @@ class FunWithMadoka : Fragment() {
             }
             .setNegativeButton(android.R.string.cancel, null)
             .setNeutralButton(R.string.view_tutorial){_,_->
-                val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                val urlt = "https://www.moetranslate.top/docs/live2d/importmodel/"
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse(urlt)
                 startActivity(intent)

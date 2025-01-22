@@ -154,7 +154,7 @@ class ChatwithGemini : Fragment() {
                 }
             }
             .setNeutralButton(R.string.view_tutorial){_,_->
-                val url = "https://blog.csdn.net/qq_45487246/article/details/135536624"
+                val url = "https://www.moetranslate.top/docs/gemini/apiapplication/"
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse(url)
                 startActivity(intent)
