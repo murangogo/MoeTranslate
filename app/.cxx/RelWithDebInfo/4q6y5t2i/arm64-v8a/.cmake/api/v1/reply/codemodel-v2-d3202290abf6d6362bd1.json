@@ -1,0 +1,163 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-RelWithDebInfo-ebb877274adf38ed20e3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.6.0"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "src",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-src-RelWithDebInfo-5b3c2119c49cfcb84d14.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.6.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8
+					]
+				},
+				{
+					"build" : "third_party",
+					"jsonFile" : "directory-third_party-RelWithDebInfo-a2e0515af5b7021cdaa7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.6.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "third_party"
+				}
+			],
+			"name" : "RelWithDebInfo",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2
+					],
+					"name" : "sentencepiece",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "sentencepiece::@145eef247bfb46b6828c",
+					"jsonFile" : "target-sentencepiece-RelWithDebInfo-1038a1524cd39548d72a.json",
+					"name" : "sentencepiece",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "sentencepiece-static::@145eef247bfb46b6828c",
+					"jsonFile" : "target-sentencepiece-static-RelWithDebInfo-7e9ac979f04021225ea2.json",
+					"name" : "sentencepiece-static",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "sentencepiece_train::@145eef247bfb46b6828c",
+					"jsonFile" : "target-sentencepiece_train-RelWithDebInfo-c3e3ff01d210a4b3ddd7.json",
+					"name" : "sentencepiece_train",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "sentencepiece_train-static::@145eef247bfb46b6828c",
+					"jsonFile" : "target-sentencepiece_train-static-RelWithDebInfo-547eece2fb96e52d67d5.json",
+					"name" : "sentencepiece_train-static",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "spm_decode::@145eef247bfb46b6828c",
+					"jsonFile" : "target-spm_decode-RelWithDebInfo-dfd055176fd042689dea.json",
+					"name" : "spm_decode",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "spm_encode::@145eef247bfb46b6828c",
+					"jsonFile" : "target-spm_encode-RelWithDebInfo-ac86c4865a2bf763ac6e.json",
+					"name" : "spm_encode",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "spm_export_vocab::@145eef247bfb46b6828c",
+					"jsonFile" : "target-spm_export_vocab-RelWithDebInfo-21fe2a328f9ddefc9e25.json",
+					"name" : "spm_export_vocab",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "spm_normalize::@145eef247bfb46b6828c",
+					"jsonFile" : "target-spm_normalize-RelWithDebInfo-1bc13eb35a5c86979a6e.json",
+					"name" : "spm_normalize",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "spm_train::@145eef247bfb46b6828c",
+					"jsonFile" : "target-spm_train-RelWithDebInfo-d4677bd45ae5a688c84d.json",
+					"name" : "spm_train",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/AndroidDevelopBasic/MoeTranslate/app/.cxx/RelWithDebInfo/4q6y5t2i/arm64-v8a",
+		"source" : "D:/AndroidDevelopBasic/MoeTranslate/app/src/main/cpp"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

@@ -1,5 +1,39 @@
-/.gradle
+# Android Studio / IntelliJ IDEA
 /.idea
-/build
-local.properties
+*.iml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/dictionaries
+app/build
+app/release
+
+# Gradle files
+.gradle/
+build/
 /framework/build/
+local.properties
+
+# Node.js
+/node_modules
+/docs/node_modules/
+
+# VuePress
+/docs/.vuepress/.temp
+/docs/.vuepress/.cache
+/docs/.vuepress/dist
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Log Files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

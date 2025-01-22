@@ -1,0 +1,91 @@
+{
+  "buildFiles": [
+    "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\src\\main\\cpp\\CMakeLists.txt",
+    "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\src\\main\\cpp\\src\\CMakeLists.txt",
+    "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\src\\main\\cpp\\third_party\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "D:\\AndroidSDK\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\.cxx\\Debug\\1r1g731w\\arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "D:\\AndroidSDK\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\.cxx\\Debug\\1r1g731w\\arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "sentencepiece::@145eef247bfb46b6828c": {
+      "artifactName": "sentencepiece",
+      "abi": "arm64-v8a",
+      "output": "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\libsentencepiece.so",
+      "runtimeFiles": []
+    },
+    "spm_encode::@145eef247bfb46b6828c": {
+      "artifactName": "spm_encode",
+      "abi": "arm64-v8a",
+      "output": "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\spm_encode",
+      "runtimeFiles": [
+        "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\libsentencepiece.so"
+      ]
+    },
+    "sentencepiece-static::@145eef247bfb46b6828c": {
+      "artifactName": "sentencepiece-static",
+      "abi": "arm64-v8a",
+      "output": "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\.cxx\\Debug\\1r1g731w\\arm64-v8a\\src\\libsentencepiece.a",
+      "runtimeFiles": []
+    },
+    "sentencepiece_train-static::@145eef247bfb46b6828c": {
+      "artifactName": "sentencepiece_train-static",
+      "abi": "arm64-v8a",
+      "output": "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\.cxx\\Debug\\1r1g731w\\arm64-v8a\\src\\libsentencepiece_train.a",
+      "runtimeFiles": []
+    },
+    "spm_normalize::@145eef247bfb46b6828c": {
+      "artifactName": "spm_normalize",
+      "abi": "arm64-v8a",
+      "output": "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\spm_normalize",
+      "runtimeFiles": [
+        "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\libsentencepiece_train.so",
+        "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\libsentencepiece.so"
+      ]
+    },
+    "spm_train::@145eef247bfb46b6828c": {
+      "artifactName": "spm_train",
+      "abi": "arm64-v8a",
+      "output": "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\spm_train",
+      "runtimeFiles": [
+        "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\libsentencepiece_train.so",
+        "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\libsentencepiece.so"
+      ]
+    },
+    "sentencepiece_train::@145eef247bfb46b6828c": {
+      "artifactName": "sentencepiece_train",
+      "abi": "arm64-v8a",
+      "output": "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\libsentencepiece_train.so",
+      "runtimeFiles": [
+        "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\libsentencepiece.so"
+      ]
+    },
+    "spm_decode::@145eef247bfb46b6828c": {
+      "artifactName": "spm_decode",
+      "abi": "arm64-v8a",
+      "output": "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\spm_decode",
+      "runtimeFiles": [
+        "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\libsentencepiece.so"
+      ]
+    },
+    "spm_export_vocab::@145eef247bfb46b6828c": {
+      "artifactName": "spm_export_vocab",
+      "abi": "arm64-v8a",
+      "output": "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\spm_export_vocab",
+      "runtimeFiles": [
+        "D:\\AndroidDevelopBasic\\MoeTranslate\\app\\build\\intermediates\\cxx\\Debug\\1r1g731w\\obj\\arm64-v8a\\libsentencepiece.so"
+      ]
+    }
+  }
+}
