@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.moe.moetranslator.databinding.FragmentFaqPageBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.moe.moetranslator.R
 
 class FAQPage : Fragment() {
 
@@ -42,9 +43,9 @@ class FAQPage : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val faqs = listOf(
-            CustomCard("问题1答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2", "答案1"),
-            CustomCard("问题2", "答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2答案2"),
-            // 添加更多FAQ项目
+            CustomCard(getText(R.string.faq_q1), getText(R.string.faq_a1)),
+            CustomCard(getText(R.string.faq_q2), getText(R.string.faq_a2)),
+            CustomCard(getText(R.string.faq_q3), getText(R.string.faq_a3))
         )
 
         adapter = CardAdapter(faqs)

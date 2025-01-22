@@ -301,5 +301,33 @@
     <string name="tutorial_last_again">其实我还想再看一遍撒花</string>
     <string name="tutorial_enter">Let\'s Go !</string>
     <string name="tutorial_permission">授权时间！</string>
+    <string name="faq_q1">为什么我的HarmonyOS版本大于等于3.0，但还是提示安卓版本过低？</string>
+    <string name="faq_a1">这是由于华为更新HarmonyOS后（注意并不是HarmonyOS NEXT），其底层的Android API不再能被用户直观地看出。对于<font color="#E25A5C">大部分较新款</font>的华为手机，HarmonyOS 2.0对应Android 10 (API 29)；HarmonyOS 3.0对应Android 12 (API 31)。但对于部分较旧的华为机型，虽然更新了HarmonyOS 3.0，但实际上并未更新底层的Android API，一些机型底层的Android版本仍为Android 10。因此<font color="#E25A5C">系统仍没有达到本软件要求</font>的Android 11 (API 30)。下面是一些已知的型号：\n\n搭载麒麟980及以下的机型，如mate20，P30，Nova5等机型，HarmonyOS 3.0对应的Android版本是10 (API 29)。这些机型的HarmonyOS 3.0其实并不是真正的3.0，功能缺失比较多，主要升级是：更新了版本号，使用了3.0的新主题，增加了一些不依赖Android 12的小功能。</string>
+    <string name="faq_q2">为什么我已经授予了无障碍权限，但软件依旧提示没有获取到无障碍权限？</string>
+    <string name="faq_a2">这是由于<font color="#E25A5C">无障碍权限被系统回收</font>导致的；在安卓系统中，无障碍是一个非常重要的权限。大部分基于安卓的系统在您退出软件或者关机重启时就会将无障碍权限回收，这也是出于安全考虑（当然，本软件是开源的，不会收集您的任何信息）。\n\n明白了原因，解决起来也非常方便。只要软件首页点击右上角的“？”->找到授予无障碍权限的那一步->点击“去授予该权限”->找到本软件，然后<font color="#E25A5C">关闭软件的无障碍权限，重新授予</font>即可。</string>
+    <string name="more_api">在【设置】页面的“翻译模式”和“API配置”中调整该选项</string>
+    <string name="faq_q3">为什么点击了悬浮球，长时间没有翻译结果，最后报错？</string>
+    <string name="faq_a3">这大概率是<font color="#E25A5C">由于网络不畅导致的</font>。很多外服游戏需要使用加速器，但使用加速器后，再访问国内的翻译API就比较慢了。所以就会导致翻译超时，出现错误。\n\n这时请<font color="#E25A5C">关闭您的wifi，打开数据流量，然后重新用加速器加速</font>。这时应该就能流畅使用翻译了。<font color="#E25A5C">无需担心流量消耗</font>，一般来说，当您使用“本地OCR识别+文本翻译”的翻译模式时，花费的流量是微乎其微的。</string>
+    <string name="err_baidu_text_title">百度翻译（OCR）</string>
+    <string name="err_baidu_text_content">百度翻译（文本）的错误码可在下方链接中找到：\n注意：需使用桌面端UA方可正常浏览，否则会跳转至百度翻译开放平台首页。\nhttps://fanyi-api.baidu.com/doc/21</string>
+    <string name="err_bing_text_title">必应翻译（OCR）</string>
+    <string name="err_bing_text_content">必应翻译不需要配置API Key即可使用，这是因为它是通过模拟浏览器访问网页的行为来实现翻译的，这是非常不规范的方法。也正因为如此，萌译无法保证它的稳定性。当您使用必应翻译出现问题时，<font color="#E25A5C">推荐您使用其他翻译API来进行翻译</font>，同时也欢迎您在【设置】->【关于】->【意见反馈】中提交反馈，以便在后续版本进行修复。</string>
+    <string name="err_niutrans_text_title">小牛翻译（OCR）</string>
+    <string name="err_niutrans_text_content">小牛翻译的错误码可在下方链接中找到：\n\nhttps://niutrans.com/documents/contents/trans_text#error</string>
+    <string name="err_volc_text_title">火山引擎（OCR）</string>
+    <string name="err_volc_text_content">火山引擎的错误码可在下方链接中找到：\n\nhttps://www.volcengine.com/docs/4640/65067#%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E</string>
+    <string name="err_azure_text_title">Azure AI 翻译（OCR）</string>
+    <string name="err_azure_text_content">Azure AI 翻译的错误码可在下方链接中找到：\n\nhttps://learn.microsoft.com/azure/ai-services/translator/reference/v3-0-translate#response-status-codes</string>
+    <string name="err_baidu_pic_title">百度翻译（图片）</string>
+    <string name="err_baidu_pic_content">百度翻译（图片）的错误码可在下方链接中找到：\n注意：需使用桌面端UA方可正常浏览，否则会跳转至百度翻译开放平台首页。\nhttps://fanyi-api.baidu.com/doc/26</string>
+    <string name="err_tencent_text_title">腾讯云（OCR）</string>
+    <string name="err_tencent_text_content">腾讯云（文本）的错误码可在下方链接中找到：\n\nhttps://cloud.tencent.com/document/product/551/15619#6.-.E9.94.99.E8.AF.AF.E7.A0.81</string>
+    <string name="err_tencent_pic_title">腾讯云（图片）</string>
+    <string name="err_tencent_pic_content">腾讯云（图片）的错误码可在下方链接中找到：\n\nhttps://cloud.tencent.com/document/product/551/17232#6.-.E9.94.99.E8.AF.AF.E7.A0.81</string>
+    <string name="wechat_official_account_title">萌译官方公众号</string>
+    <string name="wechat_official_account_content">您可以截图下面的二维码，在微信中扫一扫；或者在微信中搜索“MoeTranslate”来关注官方公众号。</string>
+    <string name="github_repo_title">萌译的GitHub仓库</string>
+    <string name="github_repo_content">萌译使用LGPL-3.0协议开源，您可以访问GitHub仓库。但如果您在国内，可能会比较困难。</string>
+    <string name="have_look">去看看</string>
 
 </resources>

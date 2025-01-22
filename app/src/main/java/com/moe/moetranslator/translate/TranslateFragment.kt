@@ -124,6 +124,10 @@ class TranslateFragment : Fragment() {
             checkNotification(true)
         }
 
+        binding.selectedAPI.setOnClickListener {
+            showToast(getString(R.string.more_api))
+        }
+
         binding.startButton.setOnClickListener {
             if (!isServiceRunning(FloatingBallService::class.java)) {
                 if (checkAndroidSDK() && checkAccessibilityService() && checkFloatingBall() && checkNotify() && checkTranslateAPI() && checkCombination()) {
