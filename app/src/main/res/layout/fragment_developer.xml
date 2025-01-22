@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:text="@string/app_name"
-                android:textColor="#8EA4CA"
+                android:textColor="#6A6464"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toTopOf="@+id/imageView6"
                 app:layout_constraintEnd_toEndOf="parent"

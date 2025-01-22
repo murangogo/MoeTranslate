@@ -2,7 +2,7 @@
     <string name="app_name">MoeTranslate</string>
     <string name="floating_ball_menu_1">Floating Ball Menu</string>
     <string name="accessibility_service_label">MoeTranslator Translate Service</string>
-    <string name="accessibility_service_description">[Function Description] \nEnable accessibility permissions to take screenshots for translation.\nWhen granting permissions, a warning will pop up. Please rest assured that Mengyi will not collect any of your information.</string>
+    <string name="accessibility_service_description">[Function Description] \nEnable accessibility permissions to take screenshots for translation.\nWhen granting permissions, a warning will pop up. Please rest assured that MoeTranslate will not collect any of your information.</string>
     <string name="translate_page">Translate</string>
     <string name="gemini_page">Gemini</string>
     <string name="madoka_page">Madoka</string>
@@ -51,7 +51,7 @@
     <string name="faq_title">FAQ</string>
     <string name="error_code">Error Code</string>
     <string name="check_update">Check for Updates</string>
-    <string name="clear_cache">Clear the Cache</string>
+    <string name="clear_cache">Clear Cache</string>
     <string name="about_page">About</string>
     <string name="choose_mode">Select the translation mode you wish to use</string>
     <string name="ocr_mode">Local OCR Recognition + Text Translation<font color="#E25A5C">(Recommended)</font></string>
@@ -300,6 +300,34 @@
     <string name="tutorial_last_again">Actually, I\'d like to see the flowers again</string>
     <string name="tutorial_enter">Enter MoeTranslate</string>
     <string name="tutorial_permission">Permission Time!</string>
+    <string name="faq_q1">Why is my HarmonyOS version 3.0 or greater, but it still says that the Android version is too low?</string>
+    <string name="faq_a1">This is due to the fact that after Huawei updated HarmonyOS (note that it is not HarmonyOS NEXT), its underlying Android API can no longer be visually visible to users. For <font color="#E25A5C">most newer</font> Huawei phones, HarmonyOS 2.0 supports Android 10 (API 29). HarmonyOS 3.0 is compatible with Android 12 (API 31). However, for some older Huawei models, although HarmonyOS 3.0 has been updated, the underlying Android API has not been updated, and the underlying Android version of some models is still Android 10. As a result, the <font color="#E25A5C">system still does not meet the requirements</font> of Android 11 (API 30) for this software. Here are some of the known models:\n\nEquipped with Kirin 980 and below models, such as mate20, P30, Nova 5, etc., HarmonyOS 3.0 corresponds to Android version 10 (API 29). The HarmonyOS 3.0 of these models is not really 3.0, and there are many missing features, but the main upgrades are: updating the version number, using the new theme of 3.0, and adding some small features that do not depend on Android 12.</string>
+    <string name="faq_q2">Why do I have granted accessibility permissions, but the software still prompts that I have not obtained accessibility permissions?</string>
+    <string name="faq_a2">This is due to <font color="#E25A5C">accessibility permissions being reclaimed by the system</font>; Accessibility is a very important permission in Android. Most Android-based systems will revoke accessibility privileges when you exit the software or shut down and restart it, also for security reasons (of course, this software is open source and does not collect any information from you).\n\nKnowing the reason, it is also very easy to solve. As long as the software homepage clicks on the \"? > find the step to grant accessibility permissions - > click \"Go to grant this permission\" - > find the software, then <font color="#E25A5C">turn off the accessibility permissions of the software, and re-grant</font> them.</string>
+    <string name="more_api">Adjust this option in the \"Translation Mode\" and \"API Configuration\" of the Settings page</string>
+    <string name="faq_q3">Why did I click on the hoverball, but there was no translation result for a long time, and finally an error was reported?</string>
+    <string name="faq_a3">This is most likely <font color="#E25A5C">due to poor internet connections</font>. Many waifu games need to use accelerators, but after using accelerators, it is relatively slow to access the domestic translation API. As a result, the translation will time out and errors will occur.\n\nAt this time, please <font color="#E25A5C">turn off your wifi, turn on the data data, and then speed up with the accelerator again</font>. At this point, you should be able to use the translation fluently. <font color="#E25A5C">There is no need to worry about data consumption</font>, generally speaking, when you use the translation mode of \"local OCR recognition + text translation\", the amount of traffic spent is minimal.</string>
+    <string name="err_baidu_text_title">Baidu Translate（OCR）</string>
+    <string name="err_baidu_text_content">The error code for Baidu Translate （Text） can be found at the link below:\nNote: You need to use desktop UA to browse normally, otherwise you will be redirected to the homepage of Baidu Translation Open Platform.\nhttps://fanyi-api.baidu.com/doc/21</string>
+    <string name="err_bing_text_title">Bing Translate（OCR）</string>
+    <string name="err_bing_text_content">Bing Translator does not require an API key to be configured to use it, and this is because it does so by simulating the behavior of a browser visiting a web page, which is a very non-standard approach. Because of this, MoeTranslate cannot guarantee its stability. When you have problems using Bing Translate, <font color="#E25A5C">it is recommended that you use other translation APIs for translation</font>, and you are also welcome to submit feedback in [Settings] - > [About] - > [Feedback] for fixes in subsequent versions.</string>
+    <string name="err_niutrans_text_content">The error code for NiuTrans can be found at the link below:\n\nhttps://niutrans.com/documents/contents/trans_text#error</string>
+    <string name="err_niutrans_text_title">NiuTrans（OCR）</string>
+    <string name="err_volc_text_title">Volc Engine（OCR）</string>
+    <string name="err_volc_text_content">The error code for Volc Engine can be found at the link below:\n\nhttps://www.volcengine.com/docs/4640/65067#%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E</string>
+    <string name="err_azure_text_title">Azure AI Translate（OCR）</string>
+    <string name="err_azure_text_content">The error code for Azure AI Translate can be found at the link below:\n\nhttps://learn.microsoft.com/azure/ai-services/translator/reference/v3-0-translate#response-status-codes</string>
+    <string name="err_baidu_pic_title">Baidu Translate（Pic）</string>
+    <string name="err_baidu_pic_content">The error code for Baidu Translate （Pic） can be found at the link below:\nNote: You need to use desktop UA to browse normally, otherwise you will be redirected to the homepage of Baidu Translation Open Platform.\nhttps://fanyi-api.baidu.com/doc/26</string>
+    <string name="err_tencent_text_title">Tencent Cloud（OCR）</string>
+    <string name="err_tencent_text_content">The error code for Tencent Cloud （OCR） can be found at the link below:\n\nhttps://cloud.tencent.com/document/product/551/15619#6.-.E9.94.99.E8.AF.AF.E7.A0.81</string>
+    <string name="err_tencent_pic_title">Tencent Cloud（Pic）</string>
+    <string name="err_tencent_pic_content">The error code for Tencent Cloud （Pic） can be found at the link below:\n\nhttps://cloud.tencent.com/document/product/551/17232#6.-.E9.94.99.E8.AF.AF.E7.A0.81</string>
+    <string name="wechat_official_account_title">MoeTranslate WeChat Official Account</string>
+    <string name="wechat_official_account_content">You can take a screenshot of the QR code below and scan it in WeChat; Or search for \"MoeTranslate\" in WeChat to follow the official account.</string>
+    <string name="github_repo_title">MoeTranslate’s Github repository</string>
+    <string name="github_repo_content">MoeTranslate uses the LGPL-3.0 license as an open source, and you can access the GitHub repository.</string>
+    <string name="have_look">Have a look</string>
 
 
 </resources>

@@ -36,7 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:autoLink="web"
+                android:linksClickable="true" />
 
             <ImageView
                 android:id="@+id/ivExpand"

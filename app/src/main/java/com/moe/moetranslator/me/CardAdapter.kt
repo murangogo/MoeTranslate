@@ -75,4 +75,4 @@ class CardAdapter(private val cards: List<CustomCard>) : RecyclerView.Adapter<Re
     override fun getItemCount() = cards.size
 }
 
-data class CustomCard(val title: String, val content: String, var isExpanded: Boolean = false)
+data class CustomCard(val title: CharSequence, val content: CharSequence, var isExpanded: Boolean = false)

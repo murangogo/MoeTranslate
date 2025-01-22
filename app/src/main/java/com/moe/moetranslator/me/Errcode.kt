@@ -22,28 +22,39 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.moe.moetranslator.databinding.FragmentErrcodeBinding
-
+import androidx.recyclerview.widget.RecyclerView
+import com.moe.moetranslator.R
 
 class Errcode : Fragment() {
+
     private lateinit var binding: FragmentErrcodeBinding
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: CardAdapter
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentErrcodeBinding.inflate(inflater,container,false)
+        recyclerView = binding.cardRecyclerview
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-    }
+        val faqs = listOf(
+            CustomCard(getText(R.string.err_bing_text_title), getText(R.string.err_bing_text_content)),
+            CustomCard(getText(R.string.err_niutrans_text_title), getText(R.string.err_niutrans_text_content)),
+            CustomCard(getText(R.string.err_volc_text_title), getText(R.string.err_volc_text_content)),
+            CustomCard(getText(R.string.err_azure_text_title), getText(R.string.err_azure_text_content)),
+            CustomCard(getText(R.string.err_baidu_text_title), getText(R.string.err_baidu_text_content)),
+            CustomCard(getText(R.string.err_baidu_pic_title), getText(R.string.err_baidu_pic_content)),
+            CustomCard(getText(R.string.err_tencent_text_title), getText(R.string.err_tencent_text_content)),
+            CustomCard(getText(R.string.err_tencent_pic_title), getText(R.string.err_tencent_pic_content))
+        )
 
+        adapter = CardAdapter(faqs)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+    }
 }
