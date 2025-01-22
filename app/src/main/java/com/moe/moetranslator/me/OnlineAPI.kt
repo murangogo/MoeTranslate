@@ -84,13 +84,13 @@ class OnlineAPI : Fragment() {
                 .setMessage(getString(R.string.whats_api_content, getString(R.string.niuapi_name)))
                 .setCancelable(false)
                 .setNeutralButton(R.string.view_tutorial){_,_->
-                    val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                    val urlt = "https://www.moetranslate.top/docs/translationapi/niutrans/"
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(urlt)
                     startActivity(intent)
                 }
                 .setPositiveButton(R.string.go_now) { _, _ ->
-                    val url = "https://fanyi-api.baidu.com/"
+                    val url = "https://niutrans.com/"
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(url)
                     startActivity(intent)
@@ -130,13 +130,13 @@ class OnlineAPI : Fragment() {
                 .setMessage(getString(R.string.whats_api_content, getString(R.string.volcapi_name)))
                 .setCancelable(false)
                 .setNeutralButton(R.string.view_tutorial){_,_->
-                    val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                    val urlt = "https://www.moetranslate.top/docs/translationapi/volc/"
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(urlt)
                     startActivity(intent)
                 }
                 .setPositiveButton(R.string.go_now) { _, _ ->
-                    val url = "https://fanyi-api.baidu.com/"
+                    val url = "https://www.volcengine.com/"
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(url)
                     startActivity(intent)
@@ -184,13 +184,13 @@ class OnlineAPI : Fragment() {
                 .setMessage(getString(R.string.whats_api_content, getString(R.string.azureapi_name)))
                 .setCancelable(false)
                 .setNeutralButton(R.string.view_tutorial){_,_->
-                    val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                    val urlt = "https://www.moetranslate.top/docs/translationapi/azure/"
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(urlt)
                     startActivity(intent)
                 }
                 .setPositiveButton(R.string.go_now) { _, _ ->
-                    val url = "https://fanyi-api.baidu.com/"
+                    val url = "https://portal.azure.com/"
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(url)
                     startActivity(intent)
@@ -230,7 +230,7 @@ class OnlineAPI : Fragment() {
                 .setMessage(getString(R.string.whats_api_content, getString(R.string.baiduapi_name)))
                 .setCancelable(false)
                 .setNeutralButton(R.string.view_tutorial){_,_->
-                    val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                    val urlt = "https://www.moetranslate.top/docs/translationapi/baidu/"
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(urlt)
                     startActivity(intent)
@@ -281,13 +281,13 @@ class OnlineAPI : Fragment() {
                 .setMessage(getString(R.string.whats_api_content, getString(R.string.tencentapi_name)))
                 .setCancelable(false)
                 .setNeutralButton(R.string.view_tutorial){_,_->
-                    val urlt = "https://blog.csdn.net/qq_45487246/article/details/131876712"
+                    val urlt = "https://www.moetranslate.top/docs/translationapi/tencent/"
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(urlt)
                     startActivity(intent)
                 }
                 .setPositiveButton(R.string.go_now) { _, _ ->
-                    val url = "https://fanyi-api.baidu.com/"
+                    val url = "https://cloud.tencent.com/"
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(url)
                     startActivity(intent)

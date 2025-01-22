@@ -42,6 +42,7 @@ class ManageActivity : BaseActivity() {
         const val CODE_CUSTOM_0 = 0
         const val CODE_CUSTOM_1 = 1
         const val CODE_CUSTOM_2 = 2
+        const val OPEN_SOURCE = 99
     }
 
     private lateinit var binding: ActivityManageBinding
@@ -133,6 +134,12 @@ class ManageActivity : BaseActivity() {
                     putInt(EXTRA_CUSTOM_CODE, intent.getIntExtra(EXTRA_CUSTOM_CODE,0))
                 }
                 fragment.arguments = args
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
+            OPEN_SOURCE-> {
+                val fragment = OpenSource()
                 supportFragmentManager.beginTransaction()
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()

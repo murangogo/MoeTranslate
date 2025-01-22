@@ -42,7 +42,7 @@ class Errcode : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val faqs = listOf(
+        val errs = listOf(
             CustomCard(getText(R.string.err_bing_text_title), getText(R.string.err_bing_text_content)),
             CustomCard(getText(R.string.err_niutrans_text_title), getText(R.string.err_niutrans_text_content)),
             CustomCard(getText(R.string.err_volc_text_title), getText(R.string.err_volc_text_content)),
@@ -53,7 +53,7 @@ class Errcode : Fragment() {
             CustomCard(getText(R.string.err_tencent_pic_title), getText(R.string.err_tencent_pic_content))
         )
 
-        adapter = CardAdapter(faqs)
+        adapter = CardAdapter(errs)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
     }
