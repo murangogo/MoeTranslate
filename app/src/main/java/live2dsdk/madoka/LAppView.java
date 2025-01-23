@@ -129,6 +129,31 @@ public class LAppView implements AutoCloseable {
         spriteShader = new LAppSpriteShader();
     }
 
+    private float[] calculateFillScreenSize(
+            float windowWidth,
+            float windowHeight,
+            float imageWidth,
+            float imageHeight
+    ) {
+        // 计算窗口和图片的宽高比
+        float windowRatio = windowWidth / windowHeight;
+        float imageRatio = imageWidth / imageHeight;
+
+        float fWidth, fHeight;
+
+        if (windowRatio > imageRatio) {
+            // 如果窗口比图片更宽，则以窗口宽度为基准进行缩放
+            fWidth = windowWidth;
+            fHeight = fWidth / imageRatio;
+        } else {
+            // 如果窗口比图片更窄，则以窗口高度为基准进行缩放
+            fHeight = windowHeight;
+            fWidth = fHeight * imageRatio;
+        }
+
+        return new float[]{fWidth, fHeight};
+    }
+
     // 画像を初期化する
     public void initializeSprite() {
         int windowWidth = LAppDelegate.getInstance().getWindowWidth();
@@ -143,10 +168,17 @@ public class LAppView implements AutoCloseable {
         // x,yは画像の中心座標
         float x = windowWidth * 0.5f;
         float y = windowHeight * 0.5f;
-        float fWidth = backgroundTexture.width * 2.0f;
-//        float fWidth = windowWidth * 1.0f;
-        float fHeight = backgroundTexture.height * 2.0f;
-//        float fHeight = windowHeight * 1.0f;
+
+        // 计算适合窗口的尺寸（保持原比例）
+        float[] size = calculateFillScreenSize(
+                windowWidth,
+                windowHeight,
+                backgroundTexture.width,
+                backgroundTexture.height
+        );
+        float fWidth = size[0];
+        float fHeight = size[1];
+
         int programId = spriteShader.getShaderId();
 
         if (backSprite == null) {

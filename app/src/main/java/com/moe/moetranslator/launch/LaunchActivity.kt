@@ -33,6 +33,7 @@ import com.moe.moetranslator.madoka.ModelInfoRepository
 import com.moe.moetranslator.madoka.ModelInfoRoomDatabase
 import com.moe.moetranslator.utils.AppPathManager
 import com.moe.moetranslator.utils.CustomPreference
+import com.moe.moetranslator.utils.UtilTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -58,6 +59,8 @@ class LaunchActivity : BaseActivity() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         // 初始化路径管理类
         AppPathManager.init(this)
+        // 初始化工具类
+        UtilTools.init(this)
         prefs = CustomPreference.getInstance(this)
         database = ModelInfoRoomDatabase.getDatabase(this)
         repository = ModelInfoRepository(database.ModelInfoDAO())
