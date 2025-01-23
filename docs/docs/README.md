@@ -4,7 +4,7 @@ externalLinkIcon: false
 config:
   -
     type: banner
-    banner: .vuepress/public/bg.jpg
+    banner: /bg.jpg
     bannerMask:
       light: 0.1
       dark: 0.3
