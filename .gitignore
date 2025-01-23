@@ -19,9 +19,13 @@ local.properties
 /docs/node_modules/
 
 # VuePress
-/docs/.vuepress/.temp
-/docs/.vuepress/.cache
-/docs/.vuepress/dist
+/docs/docs/.vuepress/.temp
+/docs/docs/.vuepress/.cache
+/docs/docs/.vuepress/dist
+/docs/README.md
+/docs/README.zh-CN.md
+/docs/.env
+/docs/.env.local
 
 # OS-specific files
 .DS_Store
