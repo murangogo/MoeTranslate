@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "description": "An Android Translate App.",
-  "author": "yanghaotian <448117151@qq.com>",
+  "author": "azuki <azuki.yang@foxmail.com>",
   "license": "MIT",
   "engines": {
     "node": "^18.20.0 || >=20.0.0"
