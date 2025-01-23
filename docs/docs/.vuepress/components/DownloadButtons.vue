@@ -54,11 +54,12 @@ export default {
     }
   },
   mounted() {
+
     // 初始化 LeanCloud
     AV.init({
-      appId: import.meta.env.VITE_LEANCLOUD_APP_ID,
-      appKey: import.meta.env.VITE_LEANCLOUD_APP_KEY,
-      serverURL: import.meta.env.VITE_LEANCLOUD_SERVER_URL
+      appId: VITE_LEANCLOUD_APP_ID,
+      appKey: VITE_LEANCLOUD_APP_KEY,
+      serverURL: VITE_LEANCLOUD_SERVER_URL
     })
     
     // 获取所有下载统计

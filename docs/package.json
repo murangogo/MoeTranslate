@@ -25,6 +25,7 @@
     "vuepress-theme-plume": "1.0.0-rc.117"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "leancloud-storage": "^4.15.2"
   }
 }

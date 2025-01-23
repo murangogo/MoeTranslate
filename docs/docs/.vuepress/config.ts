@@ -1,6 +1,10 @@
-import { viteBundler } from '@vuepress/bundler-vite'
-import { defineUserConfig } from 'vuepress'
-import { plumeTheme } from 'vuepress-theme-plume'
+import { viteBundler } from '@vuepress/bundler-vite';
+import { defineUserConfig } from 'vuepress';
+import { plumeTheme } from 'vuepress-theme-plume';
+import * as dotenv from 'dotenv';
+
+// 加载 .env 文件
+dotenv.config();
 
 
 export default defineUserConfig({
@@ -92,4 +96,11 @@ export default defineUserConfig({
       // },
     },
   }),
+
+    // 在 define 中注入环境变量
+    define: {
+      VITE_LEANCLOUD_APP_ID: process.env.VITE_LEANCLOUD_APP_ID,
+      VITE_LEANCLOUD_APP_KEY: process.env.VITE_LEANCLOUD_APP_KEY,
+      VITE_LEANCLOUD_SERVER_URL: process.env.VITE_LEANCLOUD_SERVER_URL,
+    },
 })
