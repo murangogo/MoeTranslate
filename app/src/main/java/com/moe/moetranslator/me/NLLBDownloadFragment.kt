@@ -140,8 +140,7 @@ class NLLBDownloadFragment : Fragment() {
         }
 
         binding.downloadHandText.setOnClickListener {
-            // TODO：手动下载的方法
-            val urlt = "https://www.moetranslate.top/"
+            val urlt = "https://www.moetranslate.top/docs/translationapi/nllb/"
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(urlt)
             startActivity(intent)

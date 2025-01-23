@@ -14,7 +14,7 @@ export default defineThemeConfig({
   appearance: true,
 
   social: [
-    { icon: 'github', link: '/' },
+    { icon: 'github', link: 'https://github.com/murangogo/MoeTranslate' },
   ],
 
   locales: {
