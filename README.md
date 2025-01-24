@@ -50,7 +50,6 @@
 > 翻译质量：★（1星）
 
 > **NLLB翻译：** 属于本地AI翻译。除了第一次使用需下载模型（约1GB）外，其余时间可离线使用。搭配本地OCR识别，可实现全程离线翻译。该模型相较于前者，翻译质量有所提升，支持的目标语言也更多，但受限于手机端算力，翻译质量相较于在线API差距仍然很大。
->
 > 翻译质量：★★（2星）
 
 > **必应翻译：** 属于在线翻译API。这是唯一一个不需要提前配置API Key即可使用的在线翻译方式。其实现原理是通过模拟浏览器访问网页的行为来实现翻译，依赖于网页结构和token提取，这是非常不规范的行为，稳定性较差。也正因为如此，萌译无法保证它随时可用。该方法翻译质量尚可，不过由于它实现方式的特殊性，还是适合特殊情况下使用。
@@ -120,3 +119,19 @@
 Google的Gemini正处于全民公测阶段，而且实际上Gemini模型的实力不俗，刚好其[Gemini-1.5 Flash](https://ai.google.dev/pricing#1_5flash)的API有免费方案可以使用，因此我们可获取API后在萌译中和其进行聊天。值得注意的是中国大陆用户需开启VPN后使用。
 
 具体的使用教程可[点击此处](https://www.moetranslate.top/docs/gemini/apiapplication/)查看。
+
+## 使用到的其他开源项目
+
+- [RTranslator](https://github.com/niedev/RTranslator)
+  本地运行的适用于 Android 的开源实时翻译应用程序。萌译中的NLLB翻译功能使用了RTranslator项目的模型和代码。
+
+- [Live 2D SDK](https://www.live2d.com/)
+  用于展示和操作 Live2D 模型的框架。萌译的Live 2D功能使用到了Live 2D SDK。
+
+- [ColorPicker](https://github.com/jaredrummler/ColorPicker)
+  Android 的颜色选择器组件。
+
+- [Konfetti](https://github.com/DanielMartinus/Konfetti)
+  Android 的粒子效果库，用于创建炫酷的视觉效果。
+
+更多使用到的基础开源项目请在萌译中的【设置】->【关于】->【开放源代码声明】中查看。
