@@ -106,16 +106,16 @@ Google的Gemini正处于全民公测阶段，而且实际上Gemini模型的实�
 
 ## 使用到的其他开源项目
 
-- [RTranslator](https://github.com/niedev/RTranslator)
+- [RTranslator](https://github.com/niedev/RTranslator)  
   本地运行的适用于 Android 的开源实时翻译应用程序。萌译中的NLLB翻译功能使用了RTranslator项目的模型和代码。
 
-- [Live 2D SDK](https://www.live2d.com/)
+- [Live 2D SDK](https://www.live2d.com/)  
   用于展示和操作 Live2D 模型的框架。萌译的Live 2D功能使用到了Live 2D SDK。
 
-- [ColorPicker](https://github.com/jaredrummler/ColorPicker)
+- [ColorPicker](https://github.com/jaredrummler/ColorPicker)  
   Android 的颜色选择器组件。
 
-- [Konfetti](https://github.com/DanielMartinus/Konfetti)
+- [Konfetti](https://github.com/DanielMartinus/Konfetti)  
   Android 的粒子效果库，用于创建炫酷的视觉效果。
 
 更多使用到的基础开源项目请在萌译中的【设置】->【关于】->【开放源代码声明】中查看。
