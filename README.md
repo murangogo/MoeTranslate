@@ -98,7 +98,3 @@
 <img src="markdown/images/gemini.png"/>
 
 Google的Gemini正处于全民公测阶段，而且实际上Gemini模型的实力不俗，刚好其[Gemini-1.5 Flash](https://ai.google.dev/pricing#1_5flash)的API有免费方案可以使用，因此我们可获取API后在萌译中和其进行聊天。值得注意的是中国大陆用户需开启VPN后使用。
-
-
-
-</div>
