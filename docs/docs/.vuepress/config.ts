@@ -12,14 +12,14 @@ export default defineUserConfig({
   lang: 'zh-CN',
   locales: {
     '/': {
-      title: '萌译',
+      title: '萌译 - MoeTranslate',
       lang: 'zh-CN',
-      description: 'An Android Translate App.',
+      description: '一键翻译图片文字内容，让您和非中文游戏的距离不再遥远；不仅如此，还支持Gemini聊天和Live2D。',
     },
     '/en/': {
       title: 'MoeTranslate',
       lang: 'en-US',
-      description: 'An Android Translate App.',
+      description: 'One-click translation of picture text content, so that the distance between you and non-Chinese games is no longer far; Not only that, but Gemini chat and Live2D are also supported.',
     },
   },
 
