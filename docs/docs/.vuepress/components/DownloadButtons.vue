@@ -11,7 +11,7 @@
         <div class="button-content">
           <img src="/123pan.png" alt="123云盘" class="button-icon">
           <div class="button-text">
-            <div class="primary-text">网盘下载</div>
+            <div class="primary-text">网盘下载（推荐）</div>
             <div class="secondary-text">(123云盘)</div>
           </div>
         </div>
