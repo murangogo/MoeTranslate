@@ -27,13 +27,13 @@
 
 ## 一、翻译功能
 
-翻译是萌译的核心功能，对于上述两种模式，分别支持不同的API，每个API的申请方法在[萌译官网](https://www.moetranslate.top/)中都有详细的教程（视频教程、图文教程）。
+翻译是萌译的核心功能，对于上述两种模式，分别支持不同的API，每个API的申请方法在萌译官网中都有[详细的教程](https://www.moetranslate.top/docs/translation/apiconfig/)（视频教程、图文教程）。
 
 除此之外，您还可以**自定义API接口**来进行翻译，上述两种模式均支持自定义API接口，也就是说，**您可以在局域网内的电脑上搭建您喜欢的翻译服务（如：对接GPT、搭建Sakura本地翻译模型），然后通过萌译在手机上享受这些服务带来的便利**。这种方法需要您掌握一定的编程知识和计算机网络知识，在萌译官网上有一些简易的[搭建教程](https://www.moetranslate.top/docs/translationapi/customtext/)。
 
 ### 1、使用方法
 
-简易的使用方法介绍如下图所示，更详细的使用方法在您初次使用App时会有详细的介绍。
+简易的使用方法介绍如下图所示，更详细的使用方法在您初次使用App时会有详细的介绍，您也可[点击此处](https://www.moetranslate.top/docs/usetranslation/)去官网查看更详细的使用方法。
 
 <img src="markdown/images/menu.png"/>
 
