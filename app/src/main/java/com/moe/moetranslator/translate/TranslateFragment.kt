@@ -973,7 +973,7 @@ class TranslateFragment : Fragment() {
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.find_new_version)
             .setMessage(
-                getString(R.string.version_name) + update.versionName + "\n{${update.versionDescription}}\n" + getString(
+                getString(R.string.version_name) + update.versionName + "\n${update.versionDescription}\n" + getString(
                     R.string.update_prompt
                 )
             )

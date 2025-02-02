@@ -150,7 +150,7 @@ class AboutMe : Fragment() {
     private fun showUpdateDialog(update: UpdateResult.UpdateAvailable) {
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.find_new_version)
-            .setMessage(getString(R.string.version_name)+ update.versionName+"\n{${update.versionDescription}}\n"+getString(R.string.update_prompt))
+            .setMessage(getString(R.string.version_name)+ update.versionName+"\n${update.versionDescription}\n"+getString(R.string.update_prompt))
             .setCancelable(false)
             .setPositiveButton(R.string.go_to_update) { _, _ ->
                 val url = "https://www.moetranslate.top/"
