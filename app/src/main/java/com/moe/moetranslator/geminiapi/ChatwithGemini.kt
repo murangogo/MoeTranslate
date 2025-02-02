@@ -200,7 +200,9 @@ class ChatwithGemini : Fragment() {
 
             // 调用Gemini API
             try {
-                if (geminiApiKey.isEmpty()) {
+                // 没有Key或者Key已更新，则重新获取
+                if ((geminiApiKey.isEmpty()) || (geminiApiKey != KeystoreManager.retrieveKey(requireContext(), "Gemini")!!)) {
+                    geminiModel = null
                     if (prefs.getString("Gemini_EncryptedKey", "") == "") {
                         showToast(getString(R.string.gemini_api_empty))
                         val emptyAPIMessage = ChatMessage(

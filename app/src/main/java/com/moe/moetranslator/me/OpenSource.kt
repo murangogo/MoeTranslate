@@ -58,8 +58,10 @@ class OpenSource : Fragment() {
             CustomCard(getText(R.string.proj_gga_title), getText(R.string.proj_gga_content)),
             CustomCard(getText(R.string.proj_cp_title), getText(R.string.proj_cp_content)),
             CustomCard(getText(R.string.proj_konfetti_title), getText(R.string.proj_konfetti_content)),
+            CustomCard(getText(R.string.proj_rtranslator_title), getText(R.string.proj_rtranslator_content)),
             CustomCard(getText(R.string.proj_glide_title), getText(R.string.proj_glide_content)),
             CustomCard(getText(R.string.proj_l2d_title), getText(R.string.proj_l2d_content)),
+            CustomCard(getText(R.string.proj_magireco_title), getText(R.string.proj_magireco_content)),
             CustomCard(getText(R.string.proj_guava_title), getText(R.string.proj_guava_content)),
             CustomCard(getText(R.string.proj_kc_title), getText(R.string.proj_kc_content)),
             CustomCard(getText(R.string.proj_room_title), getText(R.string.proj_room_content))

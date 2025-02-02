@@ -327,7 +327,7 @@
     <string name="wechat_official_account_title">萌译官方公众号</string>
     <string name="wechat_official_account_content">您可以截图下面的二维码，在微信中扫一扫；或者在微信中搜索“MoeTranslate”来关注官方公众号。</string>
     <string name="github_repo_title">萌译的GitHub仓库</string>
-    <string name="github_repo_content">萌译使用LGPL-3.0协议开源，您可以访问GitHub仓库。但如果您在国内，可能会比较困难。</string>
+    <string name="github_repo_content">萌译使用LGPL-3.0协议开源，您可以随时访问GitHub仓库，欢迎给项目点一个“Star🌟”。</string>
     <string name="have_look">去看看</string>
     <string name="proj_androidx_core_ktx_title">AndroidX Core KTX</string>
     <string name="proj_androidx_core_ktx_content">Android 核心功能的 Kotlin 扩展库，提供了许多 Kotlin 特定的扩展功能。\nhttps://developer.android.com/jetpack/androidx/releases/core</string>
@@ -362,7 +362,7 @@
     <string name="proj_glide_title">Glide</string>
     <string name="proj_glide_content">高效的 Android 图片加载和缓存库。  \nhttps://github.com/bumptech/glide</string>
     <string name="proj_l2d_title">Live2D Cubism SDK</string>
-    <string name="proj_l2d_content">用于展示和操作 Live2D 模型的框架。  \nhttps://www.live2d.com/</string>
+    <string name="proj_l2d_content">用于展示和操作 Live2D 模型的框架。  \nhttps://www.live2d.com</string>
     <string name="proj_guava_title">Guava</string>
     <string name="proj_guava_content">Google 的 Java 核心库，提供了许多实用工具类。  \nhttps://github.com/google/guava</string>
     <string name="proj_kc_title">Kotlin Coroutines</string>
@@ -373,5 +373,9 @@
     <string name="feedback">意见反馈</string>
     <string name="official_account">微信公众号</string>
     <string name="open_source_statement">开放源代码声明</string>
+    <string name="proj_rtranslator_title">RTranslator</string>
+    <string name="proj_rtranslator_content">本地运行的适用于 Android 的开源实时翻译应用程序。\nhttps://github.com/niedev/RTranslator</string>
+    <string name="proj_magireco_title">魔法纪录</string>
+    <string name="proj_magireco_content">魔法纪录是一款手机游戏，Live 2D页面的鹿目圆模型即来自该游戏。在此仅作为预置模型展示软件功能，版权归原作者所有。\nhttps://magireco.com</string>
 
 </resources>

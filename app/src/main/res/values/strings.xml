@@ -326,7 +326,7 @@
     <string name="wechat_official_account_title">MoeTranslate WeChat Official Account</string>
     <string name="wechat_official_account_content">You can take a screenshot of the QR code below and scan it in WeChat; Or search for \"MoeTranslate\" in WeChat to follow the official account.</string>
     <string name="github_repo_title">MoeTranslate’s Github repository</string>
-    <string name="github_repo_content">MoeTranslate uses the LGPL-3.0 license as an open source, and you can access the GitHub repository.</string>
+    <string name="github_repo_content">MoeTranslate uses the LGPL-3.0 license to open source, you can visit the GitHub repository at any time, welcome to give the project a \"Star🌟\".</string>
     <string name="have_look">Have a look</string>
     <string name="proj_androidx_core_ktx_title">AndroidX Core KTX</string>
     <string name="proj_androidx_core_ktx_content">Kotlin extensions for Android core functionality, providing many Kotlin-specific extensions.\nhttps://developer.android.com/jetpack/androidx/releases/core</string>
@@ -361,7 +361,7 @@
     <string name="proj_glide_title">Glide</string>
     <string name="proj_glide_content">Efficient image loading and caching library for Android.  \nhttps://github.com/bumptech/glide</string>
     <string name="proj_l2d_title">Live2D Cubism SDK</string>
-    <string name="proj_l2d_content">Framework for displaying and manipulating Live2D models.  \nhttps://www.live2d.com/</string>
+    <string name="proj_l2d_content">Framework for displaying and manipulating Live2D models.  \nhttps://www.live2d.com</string>
     <string name="proj_guava_title">Guava</string>
     <string name="proj_guava_content">Google\'s core Java libraries providing many utility classes.  \nhttps://github.com/google/guava</string>
     <string name="proj_kc_title">Kotlin Coroutines</string>
@@ -372,6 +372,10 @@
     <string name="feedback">Feedback</string>
     <string name="official_account">Wechat Account</string>
     <string name="open_source_statement">Open Source Statement</string>
+    <string name="proj_rtranslator_title">RTranslator</string>
+    <string name="proj_rtranslator_content">Open source real-time translation app for Android that runs locally.\nhttps://github.com/niedev/RTranslator</string>
+    <string name="proj_magireco_title">Magia Record</string>
+    <string name="proj_magireco_content">Magia Record is a mobile game, and the Live2D model of Kaname Madoka in the Live2D page comes from this game. It is only used as a preset model to demonstrate the software\'s functionality, and all rights belong to the original creators.\nhttps://magireco.com</string>
 
 
 </resources>
