@@ -29,10 +29,12 @@ AIzaSyDAn1IevbWyKmqN-95QJusP3wptx010Whw
 
 接下来，将在第一步获取的API Key填入萌译中，具体步骤如下图所示（再次提醒，图中的密钥只是一个例子，不是真实的API Key）。
 
-<img src="https://img.moetranslate.top/usegemini_api.jpg"/>
+<img src="https://img.moetranslate.top/usegemini_tutorial.jpg"/>
 
 ## 三、愉快使用
 
 接下来，就可以愉快地和Gemini进行对话了，在右上角可以清除聊天记录。
 
-<img src="https://img.moetranslate.top/usegemini_chat.jpg"/>
+<div style="text-align: center;">
+  <img src="https://img.moetranslate.top/usegemini_example.jpg" width="35%" />
+</div>

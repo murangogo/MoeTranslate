@@ -59,6 +59,7 @@ export const docsNotes = defineNoteConfig({
         items: [
           'Live2D文件结构',
           '导入模型',
+          '常见问题',
         ],
       },
       {
