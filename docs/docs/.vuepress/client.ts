@@ -3,11 +3,13 @@ import { defineClientConfig } from 'vuepress/client'
 // import CustomComponent from './theme/components/Custom.vue'
 import "./theme/styles/index.scss";
 import DownloadButtons from './components/DownloadButtons.vue'
+import DownloadButtons2 from './components/DownloadButtons2.vue'
 
 export default defineClientConfig({
   enhance({ app }) {
     // app.component('RepoCard', RepoCard)
     // app.component('CustomComponent', CustomComponent)
     app.component('DownloadButtons', DownloadButtons)
+    app.component('DownloadButtons2', DownloadButtons2)
   },
 })
