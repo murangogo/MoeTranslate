@@ -32,7 +32,7 @@ Live 2D功能是萌译中比较有意思的一个功能，它支持导入模型�
 
 <img src="https://img.moetranslate.top/uselive2d_change_model.jpg"/>
 
-在已导入的模型列表中，长按模型名称可以对模型进行【重命名】和【删除】操作。
+在已导入的模型列表中，长按模型名称可以对模型进行【重命名】和【删除模型】操作。
 
 <img src="https://img.moetranslate.top/uselive2d_rename_model.jpg"/>
 
