@@ -56,7 +56,7 @@ Live 2D功能是萌译中比较有意思的一个功能，它支持导入模型�
 
 ::: tip 可能出现的问题
 
-如果点击动作后，萌译出现了<span style="color:#E25A5C; font-weight:bold;">闪退</span>
+如果点击列表中的动作项后，萌译出现了<span style="color:#E25A5C; font-weight:bold;">闪退</span>
 ，请[点击此处](https://www.moetranslate.top/docs/live2d/faq/)查看解决方法。
 
 :::

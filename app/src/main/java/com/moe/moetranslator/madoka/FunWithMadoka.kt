@@ -353,7 +353,7 @@ class FunWithMadoka : Fragment() {
     }
 
     private fun showDeleteConfirmDialog(model: Live2DModel) {
-        AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.confirm_deletion)
             .setMessage(getString(R.string.delete_description, model.displayName))
             .setPositiveButton(R.string.confirm) { _, _ ->
@@ -379,7 +379,9 @@ class FunWithMadoka : Fragment() {
                 }
             }
             .setNegativeButton(R.string.user_cancel, null)
-            .show()
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
     private fun showImportModelDialog() {
