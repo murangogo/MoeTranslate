@@ -98,9 +98,9 @@ export default defineUserConfig({
   }),
 
     // 在 define 中注入环境变量
-    define: {
-      VITE_LEANCLOUD_APP_ID: process.env.VITE_LEANCLOUD_APP_ID,
-      VITE_LEANCLOUD_APP_KEY: process.env.VITE_LEANCLOUD_APP_KEY,
-      VITE_LEANCLOUD_SERVER_URL: process.env.VITE_LEANCLOUD_SERVER_URL,
-    },
+    // define: {
+    //   VITE_LEANCLOUD_APP_ID: process.env.VITE_LEANCLOUD_APP_ID,
+    //   VITE_LEANCLOUD_APP_KEY: process.env.VITE_LEANCLOUD_APP_KEY,
+    //   VITE_LEANCLOUD_SERVER_URL: process.env.VITE_LEANCLOUD_SERVER_URL,
+    // },
 })
