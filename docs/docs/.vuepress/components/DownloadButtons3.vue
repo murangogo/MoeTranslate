@@ -63,6 +63,9 @@
         }
       },
       async handleDownload(type, url) {
+        // 触发下载
+        window.open(url, '_blank');
+
         try {
           // 更新下载统计
           const response = await fetch(`https://cfapi.moetranslate.top/api/updateDownload?type=${type}`, {
@@ -72,14 +75,9 @@
           if (response.ok) {
             // 更新总下载次数
             await this.getTotalDownloadCount();
-            // 触发下载
-            window.open(url, '_blank');
-          } else {
-            alert('更新下载次数失败');
           }
         } catch (error) {
           console.error('更新下载统计失败:', error);
-          alert('更新下载次数时出现错误');
         }
       }
     }
