@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+   * Copyright (C) 2024 murangogo
+   *
+   * This library is free software; you can redistribute it and/or modify it under
+   * the terms of the GNU Lesser General Public License as published by the Free
+   * Software Foundation; either version 3 of the License, or (at your option)
+   * any later version.
+   *
+   * This library is distributed in the hope that it will be useful, but WITHOUT
+   * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+   *
+   * You should have received a copy of the GNU Lesser General Public License along
+   * with this library; if not, write to the Free Software Foundation, Inc.,
+   * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+   *-->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/nllb_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.02" />
+
+        <ImageView
+            android:id="@+id/download_imageView"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/meta_nllb_download"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nllb_guideline" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/download_imageView">
+
+            <TextView
+                android:id="@+id/download_tip_Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/download_tips"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/download_hand_Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/download_manually"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="15dp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/progressText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="0%"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/sizeText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/speedText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/downloadButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/start_download" />
+
+                <Button
+                    android:id="@+id/deleteButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/delete_models" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

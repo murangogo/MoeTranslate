@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+   * Copyright (C) 2024 murangogo
+   *
+   * This library is free software; you can redistribute it and/or modify it under
+   * the terms of the GNU Lesser General Public License as published by the Free
+   * Software Foundation; either version 3 of the License, or (at your option)
+   * any later version.
+   *
+   * This library is distributed in the hope that it will be useful, but WITHOUT
+   * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+   *
+   * You should have received a copy of the GNU Lesser General Public License along
+   * with this library; if not, write to the Free Software Foundation, Inc.,
+   * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+   *-->
+
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:key="ui_current_mode_pic"
+        app:title="@string/current_mode_pic"
+        app:titleTextAppearance="?android:attr/textAppearanceLarge"
+        app:iconSpaceReserved="false" />
+
+    <PreferenceCategory
+        app:key="ui_cloud_api_translation_pic"
+        app:title="@string/pre_api_title"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="ui_baidu_translation_pic"
+            app:title="@string/baiduapi_name"
+            app:icon="@drawable/baiduyi"
+            app:summary="@string/baiduapi_description_pic"/>
+
+        <Preference
+            app:key="ui_manage_baidu_api_pic"
+            app:title="@string/manage_baidu_api" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_tencent_translation_pic"
+            app:title="@string/tencentapi_name"
+            app:icon="@drawable/tencentyun"
+            app:summary="@string/tencentapi_description_pic"/>
+
+        <Preference
+            app:key="ui_manage_tencent_api_pic"
+            app:title="@string/manage_tencent_api" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="ui_custom_cloud_api_translation_pic"
+        app:title="@string/custom_api_pic_title"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            app:key="ui_custom_api_1_pic"
+            app:icon="@drawable/custom_1"
+            app:title="@string/custom_api_pic_1" />
+
+        <Preference
+            app:key="ui_manage_custom_api_1_pic"
+            app:title="@string/manage_custom_api_pic_1" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_custom_api_2_pic"
+            app:icon="@drawable/custom_2"
+            app:title="@string/custom_api_pic_2" />
+
+        <Preference
+            app:key="ui_manage_custom_api_2_pic"
+            app:title="@string/manage_custom_api_pic_2" />
+
+        <SwitchPreferenceCompat
+            app:key="ui_custom_api_3_pic"
+            app:icon="@drawable/custom_3"
+            app:title="@string/custom_api_pic_3" />
+
+        <Preference
+            app:key="ui_manage_custom_api_3_pic"
+            app:title="@string/manage_custom_api_pic_3" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

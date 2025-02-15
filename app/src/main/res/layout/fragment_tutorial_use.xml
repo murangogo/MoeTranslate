@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+   * Copyright (C) 2024 murangogo
+   *
+   * This library is free software; you can redistribute it and/or modify it under
+   * the terms of the GNU Lesser General Public License as published by the Free
+   * Software Foundation; either version 3 of the License, or (at your option)
+   * any later version.
+   *
+   * This library is distributed in the hope that it will be useful, but WITHOUT
+   * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+   *
+   * You should have received a copy of the GNU Lesser General Public License along
+   * with this library; if not, write to the Free Software Foundation, Inc.,
+   * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+   *-->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp">
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tutorial_teach"
+            android:textColor="#5D4F57"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/UseView"
+            android:layout_width="380dp"
+            android:layout_height="500dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleText" />
+
+        <Button
+            android:id="@+id/nextuse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#fbb8a2"
+            android:text="@string/tutorial_got"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/UseView" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

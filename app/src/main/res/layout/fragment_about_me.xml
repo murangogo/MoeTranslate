@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+   * Copyright (C) 2024 murangogo
+   *
+   * This library is free software; you can redistribute it and/or modify it under
+   * the terms of the GNU Lesser General Public License as published by the Free
+   * Software Foundation; either version 3 of the License, or (at your option)
+   * any later version.
+   *
+   * This library is distributed in the hope that it will be useful, but WITHOUT
+   * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+   *
+   * You should have received a copy of the GNU Lesser General Public License along
+   * with this library; if not, write to the Free Software Foundation, Inc.,
+   * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+   *-->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constrainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    tools:context=".me.AboutMe" >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/lin1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="85dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/setting_shape"
+            android:orientation="vertical"
+            android:padding="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/translate_mode_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/apiselect"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/apiicon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/apiselect"
+                    android:text="@string/translation_mode"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righticon" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/api_config_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/apiset"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/apiset" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/apiset"
+                    android:text="@string/api_configuration"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righticon" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/personalization_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/themeset"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/personalization" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/themeset"
+                    android:text="@string/personalization_setting"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righticon" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/read_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/read"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/read" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/read"
+                    android:text="@string/article_page"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righticon" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/faq_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/faq"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/faq" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/faq"
+                    android:text="@string/faq_title"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righticon" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/error_code_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/errcode"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/errorcode" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/errcode"
+                    android:text="@string/error_code"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righticon" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/setting_shape"
+            android:orientation="vertical"
+            android:padding="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lin1">
+
+            <RelativeLayout
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/update_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/update"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/update"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/update"
+                    android:text="@string/check_update"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righticon"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/clean_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/clean"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/clean" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/clean"
+                    android:text="@string/clear_cache"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/cachesize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/cleanpic"
+                    android:text="0.00 KB"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/cleanpic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righticon" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/developer_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/developer"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/develop"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/developer"
+                    android:text="@string/about_page"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righticon"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

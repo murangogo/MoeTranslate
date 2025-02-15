@@ -1,0 +1,24 @@
+// 主页 banner
+.vp-home-banner {
+  .content {
+    .hero-name,
+    .hero-tagline,
+    .hero-text {
+      font-weight: bold !important;
+    }
+  }
+}
+
+/* 浅色主题 */
+.vp-badge.cimportant {
+  color: #8e5cd9;
+  background-color: rgba(159, 122, 234, 0.14);
+  border-color: transparent;
+}
+
+/* 深色主题 */
+[data-theme="dark"] .vp-badge.cimportant {
+  color: #8e5cd9;
+  background-color: rgba(159, 122, 234, 0.16);
+  border-color: transparent;
+}
