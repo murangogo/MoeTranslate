@@ -49,7 +49,6 @@ export const docsNotes = defineNoteConfig({
      collapsed: true,
      items: [
         'Gemini API申请',
-        '注意事项',
         ],
       },
       {
