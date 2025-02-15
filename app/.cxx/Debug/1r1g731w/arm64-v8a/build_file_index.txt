@@ -1,3 +1,0 @@
-D:\AndroidDevelopBasic\MoeTranslate\app\src\main\cpp\CMakeLists.txt
-D:\AndroidDevelopBasic\MoeTranslate\app\src\main\cpp\src\CMakeLists.txt
-D:\AndroidDevelopBasic\MoeTranslate\app\src\main\cpp\third_party\CMakeLists.txt

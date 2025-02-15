@@ -8,6 +8,9 @@
 app/build
 app/release
 
+# cpp
+app/.cxx
+
 # Gradle files
 .gradle/
 build/
