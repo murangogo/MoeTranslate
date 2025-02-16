@@ -29,7 +29,7 @@ Azure AI 翻译的API申请需要使用**国际银行卡**，如Visa或Master Ca
 https://go.microsoft.com/fwlink/?linkid=2227353&clcid=0x804&l=zh-cn
 ```
 
-点击**创建一个**按钮。
+点击**创建一个**。
 
 <img src="https://img.moetranslate.top/azure_step_1.png"/>
 
@@ -47,11 +47,11 @@ https://go.microsoft.com/fwlink/?linkid=2227353&clcid=0x804&l=zh-cn
 
 <img src="https://img.moetranslate.top/azure_step_4.png"/>
 
-填写资源清单，注意区域选择**全球**，定价层选择**Free F0**。
+填写资源清单，注意区域选择**全球**，定价层选择**Free F0**，然后点击下一页。
 
-<img src="https://img.moetranslate.top/azure_step_5.png"/>
+<img src="https://img.moetranslate.top/azure_step_5_fix.png"/>
 
-一路下一步，最后点击**创建**。
+一路下一页，最后点击**创建**。
 
 <img src="https://img.moetranslate.top/azure_step_6.png"/>
 
