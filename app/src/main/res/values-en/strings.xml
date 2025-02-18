@@ -377,5 +377,8 @@
     <string name="proj_rtranslator_content">Open source real-time translation app for Android that runs locally.\nhttps://github.com/niedev/RTranslator</string>
     <string name="proj_magireco_title">Magia Record</string>
     <string name="proj_magireco_content">Magia Record is a mobile game, and the Live2D model of Kaname Madoka in the Live2D page comes from this game. It is only used as a preset model to demonstrate the software\'s functionality, and all rights belong to the original creators.\nhttps://magireco.com</string>
+    <string name="donate_proj">Donate Project</string>
+    <string name="donate_proj_content">Life is a wilderness, not a track.\nThe answers are on the road, and freedom is in the wind.\nA respectful heart is not found in empty words.</string>
+    <string name="jump">Jump</string>
 
 </resources>

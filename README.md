@@ -107,6 +107,10 @@ Google的Gemini正处于全民公测阶段，而且实际上Gemini模型的实�
 
 具体的使用教程可[点击此处](https://www.moetranslate.top/docs/gemini/apiapplication/)查看。
 
+## 捐助项目
+
+如果您想给开发者物质上的帮助，可以[点击此处](https://www.moetranslate.top/support/)来捐赠。
+
 ## 使用到的其他开源项目
 
 - [RTranslator](https://github.com/niedev/RTranslator)  

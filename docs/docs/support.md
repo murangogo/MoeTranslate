@@ -4,4 +4,14 @@ createTime: 2024/09/27 08:47:36
 permalink: /support/
 ---
 
-完善中...
+人生是旷野，而非轨道。  
+答案都在路上，自由都在风里。  
+恭敬之心，不在虚文。  
+
+---
+
+| :[ri:wechat-pay-fill /#02D568]: 微信 | :[uiw:alipay /#1572F7]: 支付宝 |
+| -------------------------------------- | ----------------------------------------- |
+| <img src="https://img.moetranslate.top/wechat.png" alt="微信" width="150" /> | <img src="https://img.moetranslate.top/alipay.jpg" alt="支付宝" width="150" /> |
+
+

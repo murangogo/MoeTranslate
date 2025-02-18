@@ -90,6 +90,22 @@ class Developer : Fragment() {
             intent.data = Uri.parse(url)
             startActivity(intent)
         }
+        binding.donate.setOnClickListener {
+            val dialog = AlertDialog.Builder(requireContext())
+                .setTitle(R.string.donate_proj)
+                .setMessage(R.string.donate_proj_content)
+                .setCancelable(false)
+                .setNegativeButton(R.string.user_cancel) { _, _ -> }
+                .setPositiveButton(R.string.jump) { _, _ ->
+                    val url = "https://www.moetranslate.top/support/"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                }
+                .create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+        }
         binding.wechat.setOnClickListener {
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(R.string.wechat_official_account_title)

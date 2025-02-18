@@ -28,8 +28,8 @@ android {
         applicationId "com.moe.moetranslator"
         minSdk 29
         targetSdk 35
-        versionCode 24
-        versionName "5.0.1"
+        versionCode 25
+        versionName "5.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -41,12 +41,12 @@ android {
         }
 
         ndk {
-            abiFilters 'arm64-v8a' // 添加这一行，确保只包含 arm64-v8a
+            abiFilters 'arm64-v8a' // 只包含 arm64-v8a
         }
     }
 
-    // 在 android 块中添加全局 NDK 配置
-    ndkVersion "25.2.9519653"  // 使用您项目中的 NDK 版本
+    // 添加全局 NDK 配置
+    ndkVersion "25.2.9519653"  // 使用项目中的 NDK 版本
 
     buildTypes {
         release {
@@ -55,7 +55,7 @@ android {
             signingConfig signingConfigs.debug
 
             ndk {
-                abiFilters 'arm64-v8a' // 确保发布包只包含 arm64-v8a
+                abiFilters 'arm64-v8a' // 发布包只包含 arm64-v8a
             }
         }
     }

@@ -1,9 +1,9 @@
 <template>
     <div class="download-section">
       <!-- 统计展示区 -->
-      <div class="download-stats">
+      <!-- <div class="download-stats">
         <p>本页面发起的总下载量：{{ totalDownloads }} 次</p>
-      </div>
+      </div> -->
   
       <!-- 下载按钮区 -->
       <div class="download-buttons">
@@ -50,17 +50,17 @@
     },
     mounted() {
       // 页面加载时获取总下载次数
-      this.getTotalDownloadCount();
+      // this.getTotalDownloadCount();
     },
     methods: {
       async getTotalDownloadCount() {
-        try {
-          const response = await fetch('https://cfapi.moetranslate.top/api/getTotalDownloadCount');
-          const data = await response.json();
-          this.totalDownloads = data.total || 0;
-        } catch (error) {
-          console.error('获取总下载次数失败:', error);
-        }
+        // try {
+        //   const response = await fetch('https://cfapi.moetranslate.top/api/getTotalDownloadCount');
+        //   const data = await response.json();
+        //   this.totalDownloads = data.total || 0;
+        // } catch (error) {
+        //   console.error('获取总下载次数失败:', error);
+        // }
       },
       async handleDownload(type, url) {
         // 触发下载
@@ -74,7 +74,7 @@
   
           if (response.ok) {
             // 更新总下载次数
-            await this.getTotalDownloadCount();
+            // await this.getTotalDownloadCount();
           }
         } catch (error) {
           console.error('更新下载统计失败:', error);

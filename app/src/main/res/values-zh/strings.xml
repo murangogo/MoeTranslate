@@ -377,5 +377,8 @@
     <string name="proj_rtranslator_content">本地运行的适用于 Android 的开源实时翻译应用程序。\nhttps://github.com/niedev/RTranslator</string>
     <string name="proj_magireco_title">魔法纪录</string>
     <string name="proj_magireco_content">魔法纪录是一款手机游戏，Live 2D页面的鹿目圆模型即来自该游戏。在此仅作为预置模型展示软件功能，版权归原作者所有。\nhttps://magireco.com</string>
+    <string name="donate_proj">支持项目</string>
+    <string name="donate_proj_content">人生是旷野，而非轨道。\n答案都在路上，自由都在风里。\n恭敬之心，不在虚文。</string>
+    <string name="jump">跳转</string>
 
 </resources>
