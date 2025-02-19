@@ -40,7 +40,7 @@ permalink: /docs/translationapi/custompic/
 6、请求体（仅POST）：发送请求时附带的内容  
 7、JSON响应路径：调用API后，从响应的JSON中获取翻译结果的路径  
 
-注意：
+注意：  
 1、在“查询参数”和“Content-Type为‘application/json’的请求体”中，<b>使用“useimgbase64”代表待翻译的图片文件</b>；  
 2、在“Content-Type为‘multipart/form-data’的请求体”中，<b>使用“useimgfile”代表待翻译的图片文件</b>；  
 3、同时请注意，务必将“源语言”和“目标语言”的语言代码包含在“查询参数”或“请求体”中。  
