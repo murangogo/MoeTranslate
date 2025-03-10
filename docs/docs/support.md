@@ -15,3 +15,9 @@ permalink: /support/
 | <img src="https://img.moetranslate.top/wechat.png" alt="微信" width="150" /> | <img src="https://img.moetranslate.top/alipay.jpg" alt="支付宝" width="150" /> |
 
 
+## 支持记录
+
+| 支持者 | 日期       |   金额 | 备注                                           |
+| ---- | ---------- | -----: | ---------------------------------------------- |
+| W*S | 2025-02-20 |   5.00 | -                             |
+
