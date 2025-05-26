@@ -28,8 +28,8 @@ android {
         applicationId "com.moe.moetranslator"
         minSdk 29
         targetSdk 35
-        versionCode 25
-        versionName "5.0.2"
+        versionCode 26
+        versionName "5.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -113,6 +113,8 @@ dependencies {
     implementation 'com.google.mlkit:text-recognition:16.0.1'
     // 日文识别
     implementation 'com.google.mlkit:text-recognition-japanese:16.0.1'
+    // 韩文识别
+    implementation 'com.google.mlkit:text-recognition-korean:16.0.1'
 
     // Google生成式AI组件
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")

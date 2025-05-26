@@ -25,6 +25,7 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.chinese.ChineseTextRecognizerOptions
 import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions
+import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -42,6 +43,7 @@ object OCRTextRecognizer {
                 "zh" -> TextRecognition.getClient(ChineseTextRecognizerOptions.Builder().build())
                 "en" -> TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 "ja" -> TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build())
+                "ko" -> TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
                 else -> TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
             }
         }

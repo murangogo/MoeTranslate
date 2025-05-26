@@ -48,7 +48,8 @@ class MLKitDownloadFragment : Fragment() {
     // 定义需要下载的语言模型
     private val languageModels = listOf(
         TranslateLanguage.CHINESE,
-        TranslateLanguage.JAPANESE
+        TranslateLanguage.JAPANESE,
+        TranslateLanguage.KOREAN
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -181,6 +182,7 @@ class MLKitDownloadFragment : Fragment() {
         return when (languageCode) {
             TranslateLanguage.CHINESE -> CustomLocale.getInstance("zh").getDisplayName()
             TranslateLanguage.JAPANESE -> CustomLocale.getInstance("ja").getDisplayName()
+            TranslateLanguage.KOREAN -> CustomLocale.getInstance("ko").getDisplayName()
             else -> languageCode
         }
     }
