@@ -49,6 +49,6 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: docs/docs/.vuepress/dist
-          fqdn: www.moetranslate.top
+          # fqdn: www.moetranslate.top
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
