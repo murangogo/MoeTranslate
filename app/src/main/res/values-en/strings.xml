@@ -56,7 +56,7 @@
     <string name="about_page">About</string>
     <string name="choose_mode">Select the translation mode you wish to use</string>
     <string name="ocr_mode">Local OCR Recognition + Text Translation<font color="#E25A5C">(Recommended)</font></string>
-    <string name="ocr_mode_description">Perform offline OCR locally to extract text from the image, and then translate the text. Supports local AI offline text translation, as well as the use of preset cloud text translation APIs and custom cloud text translation APIs. Note that offline OCR recognition only supports Chinese, Japanese, and English. This method consumes very little data traffic; if you choose to process it completely locally, you can even do it completely offline.</string>
+    <string name="ocr_mode_description">Perform offline OCR locally to extract text from the image, and then translate the text. Supports local AI offline text translation, as well as the use of preset cloud text translation APIs and custom cloud text translation APIs. Note that offline OCR recognition only supports Chinese,  English, Japanese, and Korean. This method consumes very little data traffic; if you choose to process it completely locally, you can even do it completely offline.</string>
     <string name="pic_mode">Upload Images Directly for Translation</string>
     <string name="pic_mode_description">Upload the screenshot directly to the cloud API for translation. It supports using the preset cloud image translation API, and also supports using the custom cloud image translation API. <font color="#E25A5C">It does not support local translation</font>. This method consumes relatively more data traffic.</string>
     <string name="mlkit_name">ML Kit</string>
@@ -380,5 +380,22 @@
     <string name="donate_proj">Donate Project</string>
     <string name="donate_proj_content">Life is a wilderness, not a track.\nThe answers are on the road, and freedom is in the wind.\nA respectful heart is not found in empty words.</string>
     <string name="jump">Jump</string>
+    <string name="auto_translate_start">Automatic translation is enabled, please pay attention to API quota consumption</string>
+    <string name="auto_translate_stop">Automatic translation is turned off</string>
+    <string name="auto_translate_changed">Screen orientation change detected and automatic translation is turned off</string>
+    <string name="auto_translate">Automatic Translation</string>
+    <string name="auto_translate_interval">Automatic translation intervals</string>
+    <string name="auto_translate_str_length">Word length threshold</string>
+    <string name="auto_translate_str_similarity">Similarity threshold</string>
+    <string name="currtent_interval">Current time interval：%s ms</string>
+    <string name="set_auto_translate_interval">Set the time interval for automatic translation</string>
+    <string name="auto_translate_interval_summary">Current time interval: %s ms\nWhen automatic translation is turned on, the time interval between each automatic translation judgment</string>
+    <string name="current_str_length">Current word length threshold：%s</string>
+    <string name="set_str_length">Set the word length threshold</string>
+    <string name="auto_translate_str_length_summary">Current word length threshold: %s\n(only available in OCR mode) Each time an automatic translation decision is performed, the similarity judgment will not be performed on strings with OCR results less than the length of the word, and the translation process will proceed directly</string>
+    <string name="auto_translate_str_similarity_summary">Current similarity threshold: %s\n(only available in OCR mode) Each time the automatic translation decision is made, the similarity between the current OCR result and the previous OCR result is compared, and the string with less than the similarity will be translated, and if it is greater than the previous OCR result, it will be considered the same as the previous OCR result and will not be translated</string>
+    <string name="str_similarity_tips">The similarity between the two strings is calculated using the Levenshtein distance, enter a decimal between 0 and 1</string>
+    <string name="current_str_similarity">Current similarity threshold：%s</string>
+    <string name="set_str_similarity">Set similarity threshold</string>
 
 </resources>

@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="menu_item">
+    <string-array name="menu_item_auto_off">
         <item>Select Translation Area</item>
         <item>Adjust Translation Result Position</item>
         <item>Close Translation Result</item>
         <item>Set Font Size</item>
+        <item>Turn On Automatic Translation</item>
+        <item>Close Floating Ball</item>
+        <item>Return to MoeTranslate Main Page</item>
+    </string-array>
+
+    <string-array name="menu_item_auto_on">
+        <item>Select Translation Area</item>
+        <item>Adjust Translation Result Position</item>
+        <item>Close Translation Result</item>
+        <item>Set Font Size</item>
+        <item>Turn Off Automatic Translation</item>
         <item>Close Floating Ball</item>
         <item>Return to MoeTranslate Main Page</item>
     </string-array>

@@ -56,7 +56,7 @@
     <string name="about_page">关于</string>
     <string name="choose_mode">选择您希望使用的翻译模式</string>
     <string name="ocr_mode">本地OCR识别+文本翻译<font color="#E25A5C">（推荐）</font></string>
-    <string name="ocr_mode_description">在本地进行离线OCR来提取图片中的文字，再对文字进行翻译。支持本地AI离线文字翻译，也支持使用预置的云端文字翻译API，还支持使用自定义的云端文字翻译API。需要注意的是离线OCR识别仅支持中文、日文、英文三种。这种方式花费的数据流量非常少；如果您完全选择本地处理，甚至可以做到完全离线。</string>
+    <string name="ocr_mode_description">在本地进行离线OCR来提取图片中的文字，再对文字进行翻译。支持本地AI离线文字翻译，也支持使用预置的云端文字翻译API，还支持使用自定义的云端文字翻译API。需要注意的是离线OCR识别仅支持中文、英文、日文、韩文四种。这种方式花费的数据流量非常少；如果您完全选择本地处理，甚至可以做到完全离线。</string>
     <string name="pic_mode">直接上传图片进行翻译</string>
     <string name="pic_mode_description">直接把截图上传到云端API进行翻译。支持使用预置的云端图片翻译API，也支持使用自定义的云端图片翻译API，<font color="#E25A5C">不支持本地翻译</font>。这种方式花费的数据流量相对来说要多一些。</string>
     <string name="mlkit_name">ML Kit</string>
@@ -380,5 +380,22 @@
     <string name="donate_proj">支持项目</string>
     <string name="donate_proj_content">人生是旷野，而非轨道。\n答案都在路上，自由都在风里。\n恭敬之心，不在虚文。</string>
     <string name="jump">跳转</string>
+    <string name="auto_translate_start">自动翻译已开启，请注意API额度消耗</string>
+    <string name="auto_translate_stop">自动翻译已关闭</string>
+    <string name="auto_translate_changed">检测到屏幕方向改变，自动翻译已关闭</string>
+    <string name="auto_translate">自动翻译</string>
+    <string name="auto_translate_interval">自动翻译时间间隔</string>
+    <string name="auto_translate_str_length">字长阈值</string>
+    <string name="auto_translate_str_similarity">相似度阈值</string>
+    <string name="currtent_interval">当前时间间隔：%s ms</string>
+    <string name="set_auto_translate_interval">设置自动翻译的时间间隔</string>
+    <string name="auto_translate_interval_summary">当前时间间隔：%s ms\n开启自动翻译时，每次进行自动翻译判定的时间间隔</string>
+    <string name="current_str_length">当前字长阈值：%s</string>
+    <string name="set_str_length">设置字长阈值</string>
+    <string name="auto_translate_str_length_summary">当前字长阈值：%s\n（仅对OCR模式生效）每次进行自动翻译判定时，OCR结果小于该字长的字符串将不会进行相似度判断，而是直接进行翻译流程</string>
+    <string name="auto_translate_str_similarity_summary">当前相似度阈值：%s\n（仅对OCR模式生效）每次进行自动翻译判定时，会对比本次OCR结果与上次OCR结果的相似度，小于该相似度的字符串将会进行翻译流程，大于则视为与上一次OCR结果相同，不会进行翻译流程</string>
+    <string name="str_similarity_tips">两个字符串之间的相似度使用 Levenshtein 距离计算，请输入0至1之间的小数</string>
+    <string name="current_str_similarity">当前相似度阈值：%s</string>
+    <string name="set_str_similarity">设置相似度阈值</string>
 
 </resources>

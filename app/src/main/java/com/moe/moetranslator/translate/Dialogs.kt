@@ -43,16 +43,33 @@ data class DialogResult(
 
 object Dialogs {
     @SuppressLint("MissingInflatedId")
-    fun menuDialog(ctx: Context): DialogResult {
-        val strlist = ctx.resources.getStringArray(R.array.menu_item)
-        val imglist = arrayOf(
-            R.drawable.crop_screen,
-            R.drawable.result_position,
-            R.drawable.remove_result,
-            R.drawable.result_size,
-            R.drawable.close_service,
-            R.drawable.back_home
-        )
+    fun menuDialog(ctx: Context, isAutoTranslating: Boolean): DialogResult {
+        val strlist =  if (isAutoTranslating) {
+            ctx.resources.getStringArray(R.array.menu_item_auto_on)
+        } else {
+            ctx.resources.getStringArray(R.array.menu_item_auto_off)
+        }
+        val imglist = if (isAutoTranslating) {
+            arrayOf(
+                R.drawable.crop_screen,
+                R.drawable.result_position,
+                R.drawable.remove_result,
+                R.drawable.result_size,
+                R.drawable.stop_auto,
+                R.drawable.close_service,
+                R.drawable.back_home
+            )
+        } else {
+            arrayOf(
+                R.drawable.crop_screen,
+                R.drawable.result_position,
+                R.drawable.remove_result,
+                R.drawable.result_size,
+                R.drawable.start_auto,
+                R.drawable.close_service,
+                R.drawable.back_home
+            )
+        }
         val view = LayoutInflater.from(ctx).inflate(R.layout.dialog_floating_menu, null,false)
         val img = view.findViewById<ImageView>(R.id.TitleIcon)
         val welcome = view.findViewById<TextView>(R.id.welcome)

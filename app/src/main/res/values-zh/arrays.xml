@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="menu_item">
+    <string-array name="menu_item_auto_off">
         <item>选取翻译区域</item>
         <item>调整翻译结果位置</item>
         <item>关闭翻译结果</item>
         <item>字体大小设置</item>
+        <item>开启自动翻译</item>
+        <item>关闭悬浮球</item>
+        <item>回到萌译主界面</item>
+    </string-array>
+
+    <string-array name="menu_item_auto_on">
+        <item>选取翻译区域</item>
+        <item>调整翻译结果位置</item>
+        <item>关闭翻译结果</item>
+        <item>字体大小设置</item>
+        <item>关闭自动翻译</item>
         <item>关闭悬浮球</item>
         <item>回到萌译主界面</item>
     </string-array>

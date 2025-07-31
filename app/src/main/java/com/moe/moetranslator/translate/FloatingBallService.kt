@@ -41,6 +41,7 @@ import com.moe.moetranslator.me.ConfigurationStorage.loadTextConfig
 import com.moe.moetranslator.utils.Constants
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.KeystoreManager
+import com.moe.moetranslator.utils.UtilTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -149,6 +150,20 @@ class FloatingBallService : LifecycleService() {
     // 初始化的翻译对象
     private var translatorText: TranslationTextAPI? = null
     private var translatorPic: TranslationPicAPI? = null
+
+    // 5.1.0版本新增：自动翻译相关属性
+    private var isAutoTranslating = false   // 是否开启自动翻译
+    private var lastOcrResult = ""  // 上次自动翻译的OCR结果（相似度分析）
+    private val autoTranslateHandler = Handler(Looper.getMainLooper())
+    private val autoTranslateRunnable = object : Runnable {
+        override fun run() {
+            if (isAutoTranslating && currentBallStatus == BallStatus.Normal) {
+                performAutoTranslate()
+                // 再次执行
+                autoTranslateHandler.postDelayed(this, prefs.getLong("Auto_Translate_Interval", 3000L))
+            }
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -383,7 +398,7 @@ class FloatingBallService : LifecycleService() {
     }
 
     private fun showLongPressMenu() {
-        val (dialog, listView) = Dialogs.menuDialog(applicationContext)
+        val (dialog, listView) = Dialogs.menuDialog(applicationContext, isAutoTranslating)
         listView.onItemClickListener = object : AdapterView.OnItemClickListener {
             override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 when (p2) {
@@ -419,10 +434,14 @@ class FloatingBallService : LifecycleService() {
                         showFontSizeDialog()
                     }
                     4 -> {
+                        // 5.1.0新增：自动翻译开关
+                        toggleAutoTranslate()
+                    }
+                    5 -> {
                         // 停止服务，移除所有窗口（悬浮球、翻译结果框、框选框等）
                         stopServiceAndRemoveViews()
                     }
-                    5 -> {
+                    6 -> {
                         // 回到主界面
                         backToMainActivity()
                     }
@@ -436,8 +455,83 @@ class FloatingBallService : LifecycleService() {
         dialog.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
-    private fun setCropView(){
+    // 5.1.0新增：切换自动翻译状态
+    private fun toggleAutoTranslate() {
+        if (isAutoTranslating) {
+            stopAutoTranslate()
+//            isAutoTranslating = false
+        } else {
+            startAutoTranslate()
+//            isAutoTranslating = true
+        }
+    }
 
+    // 5.1.0新增：启动自动翻译
+    private fun startAutoTranslate() {
+        if (AccessibilityServiceManager.getService() == null) {
+            showToast(getString(R.string.accessibility_recycle))
+            return
+        }
+
+        when (currentBallStatus) {
+            is BallStatus.Crop -> {
+                showToast(getString(R.string.crop_first))
+                return
+            }
+            is BallStatus.MovingText -> {
+                showToast(getString(R.string.textview_first))
+                return
+            }
+            is BallStatus.Normal -> {}
+        }
+
+        if (orientation == this.resources.configuration.orientation){
+            if(isTranslating.get()){
+                showToast(getString(R.string.is_translating), true)
+            }
+        }else{
+            showToast(getString(R.string.orientation_changed))
+        }
+
+        // 确保翻译结果视图已添加
+        if (!isViewAdded(floatingTextView)) {
+            windowManager.addView(floatingTextView, floatingTextViewParams)
+            windowManager.removeView(floatingBallView)
+            windowManager.addView(floatingBallView, floatingBallParams)
+            setFloatingTextViewTouchable(false)
+        }
+
+        // 开始定时任务
+        autoTranslateHandler.post(autoTranslateRunnable)
+        isAutoTranslating = true
+        lastOcrResult = ""
+        showToast(getString(R.string.auto_translate_start))
+    }
+
+    // 5.1.0新增：停止自动翻译
+    private fun stopAutoTranslate() {
+        isAutoTranslating = false
+        autoTranslateHandler.removeCallbacks(autoTranslateRunnable)
+        showToast(getString(R.string.auto_translate_stop))
+    }
+
+    // 5.1.0新增：执行自动翻译
+    private fun performAutoTranslate() {
+        if (orientation != this.resources.configuration.orientation) {
+            showToast(getString(R.string.auto_translate_changed))
+            stopAutoTranslate()
+            return
+        }
+
+        if (isTranslating.get()) {
+            // 如果正在翻译中，跳过这次自动翻译
+            return
+        }
+
+        AccessibilityServiceManager.takeScreenshot(mRectF, cropView.absolutePointOffset)
+    }
+
+    private fun setCropView(){
         // 若有保存的裁剪框，则直接应用
         if ((orientation == this.resources.configuration.orientation) && (mRectF != null)){
             cropView.setRect(mRectF!!)
@@ -551,7 +645,17 @@ class FloatingBallService : LifecycleService() {
             if(prefs.getInt("Translate_Mode", 0) == 0){
                 // OCR后文本翻译
                 val txt = OCRTextRecognizer.getPicText(prefs.getString("Source_Language", "ja"), bitmap, prefs.getInt("Custom_OCR_Merge_Mode", 2))
-                translateByText(txt)
+                // 判断是否为自动翻译模式
+                if (isAutoTranslating) {
+                    if (shouldTranslateText(txt)) {
+                        lastOcrResult = txt
+                        translateByText(txt)
+                    } else {
+                        isTranslating.set(false)
+                    }
+                } else {
+                    translateByText(txt)
+                }
             }else{
                 // 上传图片翻译，注意要创建bitmap副本并交给图片翻译API处理
                 val bitmapCopy = bitmap.copy(bitmap.config!!, true)
@@ -560,10 +664,26 @@ class FloatingBallService : LifecycleService() {
         }catch (e: Exception){
             isTranslating.set(false)
             e.printStackTrace()
-            showToast("Translate Failed：$e")
+            showToast(getString(R.string.translation_failed, e.message))
         }finally {
             bitmap.recycle()
         }
+    }
+
+    // 5.1.0新增：判断是否需要翻译文本
+    private fun shouldTranslateText(currentText: String): Boolean {
+        // 直接翻译
+        if (currentText.length < prefs.getInt("Auto_Translate_Str_Length", 10)) {
+            return true
+        }
+
+        // 进行相似度比对
+        if (lastOcrResult.isEmpty()) {
+            return true
+        }
+
+        val similarity = UtilTools.calculateSimilarity(lastOcrResult, currentText)
+        return similarity < prefs.getFloat("Auto_Translate_Str_Similarity", 0.8f) // 相似度判定
     }
 
     // 文本翻译
@@ -630,6 +750,11 @@ class FloatingBallService : LifecycleService() {
 
     private fun stopServiceAndRemoveViews() {
         try {
+            // 停止自动翻译
+            if (isAutoTranslating) {
+                stopAutoTranslate()
+            }
+
             // 移除所有窗口
             if (isViewAdded(floatingBallView)) {
                 windowManager.removeView(floatingBallView)
@@ -676,6 +801,12 @@ class FloatingBallService : LifecycleService() {
 
     override fun onDestroy() {
         super.onDestroy()
+
+        // 停止自动翻译
+        if (isAutoTranslating) {
+            stopAutoTranslate()
+        }
+
         // 移除所有窗口
         if (isViewAdded(floatingBallView)) {
             windowManager.removeView(floatingBallView)

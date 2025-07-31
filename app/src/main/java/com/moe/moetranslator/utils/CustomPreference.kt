@@ -99,6 +99,11 @@ class CustomPreference private constructor(context: Context) {
     //Custom_Floating_Pic(Str)：用户自定义的悬浮球图片
     //Custom_Adjust_Not_Text(Boolean)：是否显示提示文本
 
+    //----自动翻译选项----
+    //Auto_Translate_Interval(Long)：自动翻译时间间隔
+    //Auto_Translate_Str_Length(Int)：自动翻译中，直接翻译的字符串阈值
+    //Auto_Translate_Str_Similarity(Float)：自动翻译字符串相似度阈值
+
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     companion object {
