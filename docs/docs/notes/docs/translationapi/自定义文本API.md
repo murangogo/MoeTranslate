@@ -44,7 +44,7 @@ permalink: /docs/translationapi/customtext/
 2、务必将“源语言”和“目标语言”的语言代码包含在“查询参数”或“JSON请求体”中；  
 3、同时请注意将主页面指定“源语言”，因为萌译在使用OCR识别文字时，需要知道“源语言”是什么。  
 
-#  四、请求示例
+##  四、请求示例
 <b>GET请求</b>  
 基础URL：  
 https://api.example.com/translate  

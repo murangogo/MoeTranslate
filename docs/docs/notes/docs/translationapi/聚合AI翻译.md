@@ -30,18 +30,18 @@ permalink: /docs/translationapi/uniaitrans/
 此功能允许您使用市面上主流的AI来进行翻译（<b>只要兼容OpenAI接口规范即可接入</b>），如ChatGPT、Qwen、DeepSeek等，接入方式为调用官方API接口。
 
 ## 二、参数说明
-1、API_KEY：对应官网上给出的API密钥
-2、基础URL：对应官网上给出的接入路径
-3、model：即使用的模型名称
-4、系统提示词：给模型设定身份，保持默认即可
-5、用户提示词：发送给模型的翻译指令，保持默认即可
+1、API_KEY：对应官网上给出的API密钥 
+2、基础URL：对应官网上给出的接入路径 
+3、model：即使用的模型名称 
+4、系统提示词：给模型设定身份，保持默认即可 
+5、用户提示词：发送给模型的翻译指令，保持默认即可 
 
 ## 三、填写示例
-以接入阿里的“通义千问-Plus”模型为例：
-对于API_KEY，正常填写即可；
-对于基础URL，阿里旗下的千问模型一般都是`https://dashscope.aliyuncs.com/compatible-mode/v1`；
-对于model，“通义千问-Plus”模型对应的代号是qwen-plus；
-对于系统提示词和用户提示词，保持默认即可。
+以接入阿里的“通义千问-Plus”模型为例： 
+对于API_KEY，正常填写即可； 
+对于基础URL，阿里旗下的千问模型一般都是`https://dashscope.aliyuncs.com/compatible-mode/v1`； 
+对于model，“通义千问-Plus”模型对应的代号是qwen-plus； 
+对于系统提示词和用户提示词，保持默认即可。 
 
 ## 四、在使用该功能之前
 您可以先使用Postman、Reqable等工具测试API响应，待测试成功后再将相关参数填入该功能中。
