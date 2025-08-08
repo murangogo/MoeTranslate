@@ -62,6 +62,12 @@ object TranslateTools {
                         else -> R.raw.niutrans_text_support_languages
                     }
                 }
+                Constants.TextApi.OPENAI.id -> {
+                    when (type){
+                        1 -> R.raw.ocr_support_languages
+                        else -> R.raw.niutrans_text_support_languages
+                    }
+                }
                 Constants.TextApi.VOLC.id -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages

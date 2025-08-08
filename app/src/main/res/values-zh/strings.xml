@@ -206,7 +206,7 @@
     <string name="int_only">输入整数</string>
     <string name="introduce_custom_text_api_title">自定义文本翻译API功能说明</string>
     <string name="introduce_custom_text_api_content">\n⚠️注意：<b>这是一个高级功能，需要您了解基本的API调用知识。</b>\n\n<big>一、基本说明</big>\n此功能允许您配置自己的<b>文本翻译API</b>，支持GET和POST两种请求方式（对于文本翻译，POST的Content-Type是且只能是“application/json; charset=utf-8”，<b>不需</b>显式填写在下面的请求头中，已预置好）。所有API响应必须为JSON格式。\n\n<big>二、使用场景</big>\n一般来说，由于各大翻译API提供商都有自己的签名算法，无法通过简单的GET/POST请求接入，因此实际上自定义文本翻译API可以接入的商用API接口数量有限，更贴合实际的使用场景为接入自己搭建的翻译API接口。\n\n<big>三、参数说明</big>\n1、请求方法：可以为GET或POST\n2、基础URL：可指定http或https，如不指定scheme，则默认为https\n3、查询参数（仅GET）：附加于基础URL之后的参数\n4、请求头：发送请求时的头部\n5、JSON请求体（仅POST）：发送请求时附带的JSON内容\n6、JSON响应路径：调用API后，从响应的JSON中获取翻译结果的路径\n\n注意：\n1、在“查询参数”和“JSON请求体”中，<b>使用“usesourcetext”代表待翻译的文本</b>；\n2、务必将“源语言”和“目标语言”的语言代码包含在“查询参数”或“JSON请求体”中；\n3、同时请注意将主页面指定“源语言”，因为萌译在使用OCR识别文字时，需要知道“源语言”是什么。\n\n<big>四、请求示例</big>\n<b>GET请求</b>\n基础URL：\nhttps://api.example.com/translate\n\n查询参数：\nkey：text，value：usesourcetext；\nkey：source，value：ja；\nkey：target，value：zh\n\n请求头：\nAuthorization = my_custom_token\n\n<b>POST请求</b>\n基础URL：\nhttps://api.example.com/translate\n\n请求头：\nAuthorization = my_custom_token\n\nJSON请求体:\nkey：text，value：usesourcetext；\nkey：source，value：ja；\nkey：target，value：zh\n\n\n<big>五、JSON响应路径</big>\n<b>举例1：</b>\n假设成功响应的JSON如下：\n\n{\n    \"code\": 0,\n    \"msg\": \"success\",\n    \"data\": {\n        \"translation\": \"你好世界\"\n    }\n}\n\n则JSON响应路径应填写：data.translation\n\n<b>举例2：</b>\n假设成功响应的JSON如下：\n\n{\n    \"code\": 0,\n    \"msg\": \"success\",\n    \"result\": \"你好世界\"\n}\n\n则JSON响应路径应填写：result\n\n<big>六、在使用该功能之前</big>\n您可以先使用Postman、Reqable等工具测试API响应，待测试成功后再将相关参数填入该功能中。</string>
-    <string name="dont_konw_custom">😵不知道这是什么？点我查看提示。</string>
+    <string name="dont_know_custom">😵不知道这是什么？点我查看提示。</string>
     <string name="request_method">请求方法</string>
     <string name="base_url">基础URL</string>
     <string name="headers">请求头</string>
@@ -397,5 +397,16 @@
     <string name="str_similarity_tips">两个字符串之间的相似度使用 Levenshtein 距离计算，请输入0至1之间的小数</string>
     <string name="current_str_similarity">当前相似度阈值：%s</string>
     <string name="set_str_similarity">设置相似度阈值</string>
+    <string name="api_key">API_KEY</string>
+    <string name="model">model</string>
+    <string name="system_prompt">系统提示词（留空使用默认）</string>
+    <string name="user_prompt">用户提示词（留空使用默认）</string>
+    <string name="openai_use_source_text">在用户提示词中，使用“usefromlang”代表源语言，使用“usetolang”代表目标语言，使用“usesourcetext”代表待翻译的文本</string>
+    <string name="uniaiapi_name">聚合 AI 翻译</string>
+    <string name="uniaiapi_description">支持包括ChatGPT、Qwen、DeepSeek在内的AI接口，只要AI接口兼容OpenAI接口规范，萌译便可接入</string>
+    <string name="manage_uniai_api">管理聚合 AI 翻译API</string>
+    <string name="model_tips">请使用通用文本生成模型，如gpt-4o、qwen-plus、deepseek-chat等；不要使用特化模型，如qwen-mt-turbo等</string>
+    <string name="introduce_openai_api_title">聚合AI翻译API功能说明</string>
+    <string name="introduce_openai_api_content">\n⚠️注意：<b>这是一个高级功能，需要您了解基本的API调用知识。</b>\n\n<big>一、基本说明</big>\n此功能允许您使用市面上主流的AI来进行翻译（<b>只要兼容OpenAI接口规范即可接入</b>），如ChatGPT、Qwen、DeepSeek等，接入方式为调用官方API接口。\n\n<big>二、参数说明</big>\n1、API_KEY：对应官网上给出的API密钥\n2、基础URL：对应官网上给出的接入路径\n3、model：即使用的模型名称\n4、系统提示词：给模型设定身份，保持默认即可\n5、用户提示词：发送给模型的翻译指令，保持默认即可\n\n<big>三、填写示例</big>\n以接入阿里的“通义千问-Plus”模型为例：\n对于API_KEY，正常填写即可；\n对于基础URL，阿里旗下的千问模型一般都是https://dashscope.aliyuncs.com/compatible-mode/v1；\n对于model，“通义千问-Plus”模型对应的代号是qwen-plus；\n对于系统提示词和用户提示词，保持默认即可。\n\n\n<big>四、在使用该功能之前</big>\n您可以先使用Postman、Reqable等工具测试API响应，待测试成功后再将相关参数填入该功能中。</string>
 
 </resources>

@@ -204,7 +204,7 @@
     <string name="current_judgment_time">Current judgment time：%s ms</string>
     <string name="int_only">Enter an integer</string>
     <string name="introduce_custom_text_api_title">Custom Text Translation API Function Description</string>
-    <string name="dont_konw_custom">😵Don\'t know what this is? Click me for tips.</string>
+    <string name="dont_know_custom">😵Don\'t know what this is? Click me for tips.</string>
     <string name="request_method">Request Method</string>
     <string name="base_url">Base URL</string>
     <string name="headers">Headers</string>
@@ -396,6 +396,17 @@
     <string name="str_similarity_tips">The similarity between the two strings is calculated using the Levenshtein distance, enter a decimal between 0 and 1</string>
     <string name="current_str_similarity">Current similarity threshold：%s</string>
     <string name="set_str_similarity">Set similarity threshold</string>
+    <string name="api_key">API_KEY</string>
+    <string name="model">model</string>
+    <string name="system_prompt">System prompt (leave blank to use the default)</string>
+    <string name="user_prompt">User prompt (leave blank to use default)</string>
+    <string name="openai_use_source_text">In the user prompt, use \"usefromlang\" to represent the source language, \"usetolang\" to represent the target language, and \"usesourcetext\" to represent the text to be translated</string>
+    <string name="uniaiapi_name">Uni AI translation</string>
+    <string name="uniaiapi_description">Supports AI interfaces including ChatGPT, Qwen, and DeepSeek, and as long as the AI interface is compatible with the OpenAI interface specification, MoeTranslate can be accessed</string>
+    <string name="manage_uniai_api">Manage Uni AI translation API</string>
+    <string name="model_tips">Please use a general text generation model, such as gpt-4o、qwen-plus、deepseek-chat, etc.; Do not use specialized models such as qwen-mt-turbo, etc</string>
+    <string name="introduce_openai_api_title">Uni AI Translation API Function Description</string>
+    <string name="introduce_openai_api_content">\n⚠️ Note: <b>This is an advanced feature that requires you to have basic API call knowledge.</b>\n\n<big>1. Basic Description</big>\nThis feature allows you to use mainstream AI services for translation (<b>as long as they are compatible with OpenAI API specifications</b>), such as ChatGPT, Qwen, DeepSeek, etc. The integration method is through calling official API interfaces.\n\n<big>2. Parameter Description</big>\n1. API_KEY: The API key provided by the official website\n2. Base URL: The access endpoint provided by the official website  \n3. Model: The name of the model to be used\n4. System Prompt: Sets the identity for the model, keep default is recommended\n5. User Prompt: Translation instructions sent to the model, keep default is recommended\n\n<big>3. Configuration Example</big>\nTaking the integration of Alibaba\'s \"Qwen-Plus\" model as an example:\nFor API_KEY, fill in normally;\nFor Base URL, Alibaba\'s Qwen models generally use https://dashscope.aliyuncs.com/compatible-mode/v1;\nFor Model, the \"Qwen-Plus\" model corresponds to the code name qwen-plus;\nFor System Prompt and User Prompt, keep the defaults.\n\n<big>4. Before Using This Feature</big>\nYou can first test the API response using tools like Postman, Reqable, etc. After successful testing, fill in the relevant parameters into this feature.</string>
 
 
 </resources>

@@ -54,6 +54,7 @@ import translationapi.customtranslation.CustomTranslationText
 import translationapi.mlkittranslation.MLKitTranslation
 import translationapi.niutrans.NiuTranslation
 import translationapi.nllbtranslation.NLLBTranslation
+import translationapi.openaitranslation.OpenAITranslation
 import translationapi.tencentcloud.TencentTranslationImage
 import translationapi.tencentcloud.TencentTranslationText
 import translationapi.volctranslation.VolcTranslation
@@ -110,6 +111,9 @@ class FloatingBallService : LifecycleService() {
     private var cropViewParams: WindowManager.LayoutParams? = null
 
     private lateinit var prefs: CustomPreference
+
+    private val defaultSystemPrompt = "你是一名专业翻译。你的任务是准确、自然地翻译给定的文本。\n具体规则如下： \n1、根据用户的要求，将文本翻译成指定的目标语言；\n2、保持原意和语气；\n3、尽可能保持格式和结构；\n4、直接返回翻译后的文本，不要有任何解释或附加内容；\n5、如果文本已经是目标语言，请按原样返回。"
+    private val defaultUserPrompt = "请将下面的文本从usefromlang翻译为usetolang：\n\nusesourcetext"
 
     // 是否正在翻译，默认false
     private val isTranslating = AtomicBoolean(false)
@@ -185,6 +189,7 @@ class FloatingBallService : LifecycleService() {
                     }
                     Constants.TextApi.BING.id -> translatorText = BingTranslation()
                     Constants.TextApi.NIUTRANS.id -> translatorText = NiuTranslation(KeystoreManager.retrieveKey(this, "Niutrans")!!)
+                    Constants.TextApi.OPENAI.id -> translatorText = OpenAITranslation(apiKey = prefs.getString("OpenAI_Api_Key", ""), baseUrl = prefs.getString("OpenAI_Base_Url", ""), model = prefs.getString("OpenAI_Model_Name", ""), systemPrompt = prefs.getString("OpenAI_System_Prompt", defaultSystemPrompt), userPrompt = prefs.getString("OpenAI_User_Prompt", defaultUserPrompt))
                     Constants.TextApi.VOLC.id -> translatorText = VolcTranslation(KeystoreManager.retrieveKey(this, "Volc_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Volc_SECRETKEY")!!)
                     Constants.TextApi.AZURE.id -> translatorText = AzureTranslation(KeystoreManager.retrieveKey(this, "Azure")!!)
                     Constants.TextApi.BAIDU.id -> translatorText = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
@@ -672,6 +677,11 @@ class FloatingBallService : LifecycleService() {
 
     // 5.1.0新增：判断是否需要翻译文本
     private fun shouldTranslateText(currentText: String): Boolean {
+        // 文本内容为空
+        if (currentText.isBlank()){
+            return false
+        }
+
         // 直接翻译
         if (currentText.length < prefs.getInt("Auto_Translate_Str_Length", 10)) {
             return true

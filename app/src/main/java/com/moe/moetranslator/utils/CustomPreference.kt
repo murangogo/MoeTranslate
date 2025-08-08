@@ -29,10 +29,11 @@ class CustomPreference private constructor(context: Context) {
     //Is_First_Run(Boolean)：是否是第一次运行
     //Read_Custom_Text_Introduce(Boolean)：是否阅读自定义文本翻译API的介绍
     //Read_Custom_Pic_Introduce(Boolean)：是否阅读自定义图片翻译API的介绍
+    //Read_OpenAI_API_Introduce(Boolean)：是否阅读OpenAI API的介绍
 
     //----翻译选项----
     //Translate_Mode(Int)：0为本地OCR后进行文本翻译；1为上传截图后进行图片翻译
-    //Text_API(Int)：0为使用本地大模型；1为使用必应翻译；2为使用小牛翻译；3为使用火山引擎；4为使用Azure AI翻译；5为使用百度翻译；6为使用腾讯云；7为使用自定义API
+    //Text_API(Int)：0为使用本地大模型；1为使用必应翻译；2为使用小牛翻译；3为使用火山引擎；4为使用Azure AI翻译；5为使用百度翻译；6为使用腾讯云；7为使用自定义API；8为使用聚合AI翻译
     //Text_AI(Int)：0为使用MLKit套件；1为使用NLLB模型
     //Pic_API(Int)：0为使用百度翻译；1为使用腾讯云；2为使用自定义API
     //Custom_Text_API(Int)：用户选择的自定义的文本翻译API，用户最多可添加三个自定义的文本翻译API（0，1，2）
@@ -57,6 +58,12 @@ class CustomPreference private constructor(context: Context) {
     //----API列表----
     //Niutrans_EncryptedKey(Str)：KeyStore参数，存储小牛翻译API（Key）
     //Niutrans_IV(Str)：KeyStore参数，存储小牛翻译API（Key）
+
+    //OpenAI_Api_Key(Str)：存储OpenAI API
+    //OpenAI_Base_Url(Str)：存储OpenAI API的Base URL
+    //OpenAI_Model_Name(Str)：存储OpenAI API的模型
+    //OpenAI_System_Prompt(Str)：存储OpenAI API的系统提示词
+    //OpenAI_User_Prompt(Str)：存储OpenAI API的用户提示词
 
     //Volc_ACCOUNT_EncryptedKey(Str)：KeyStore参数，存储火山引擎API（APPID）
     //Volc_ACCOUNT_IV(Str)：KeyStore参数，存储火山引擎API（APPID）

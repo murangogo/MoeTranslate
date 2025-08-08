@@ -35,6 +35,7 @@ export const docsNotes = defineNoteConfig({
         'NLLB',
         '必应翻译',
         '小牛翻译',
+        '聚合AI翻译',
         '火山引擎',
         'Azure AI 翻译',
         '百度翻译',

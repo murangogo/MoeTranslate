@@ -75,6 +75,16 @@
             app:title="@string/manage_niu_api" />
 
         <SwitchPreferenceCompat
+            app:key="ui_openai_translation_text"
+            app:title="@string/uniaiapi_name"
+            app:icon="@drawable/uniai"
+            app:summary="@string/uniaiapi_description"/>
+
+        <Preference
+            app:key="ui_manage_openai_api_text"
+            app:title="@string/manage_uniai_api" />
+
+        <SwitchPreferenceCompat
             app:key="ui_volc_translation_text"
             app:title="@string/volcapi_name"
             app:icon="@drawable/volc_engine"

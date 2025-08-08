@@ -33,7 +33,8 @@ object Constants {
         AZURE(4),
         BAIDU(5),
         TENCENT(6),
-        CUSTOM_TEXT(7)
+        CUSTOM_TEXT(7),
+        OPENAI(8)
     }
 
     enum class TextAI(val id: Int) {

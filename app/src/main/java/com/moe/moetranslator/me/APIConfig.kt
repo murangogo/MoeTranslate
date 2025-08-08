@@ -40,6 +40,7 @@ class APIConfig : PreferenceFragmentCompat() {
             allTranslationKeys = listOf(
                 "mlkit_translation", "nllb_translation",
                 "ui_bing_translation_text", "ui_niu_translation_text",
+                "ui_openai_translation_text",
                 "ui_volc_translation_text", "ui_azure_translation_text",
                 "ui_baidu_translation_text", "ui_tencent_translation_text",
                 "ui_custom_api_1_text", "ui_custom_api_2_text", "ui_custom_api_3_text"
@@ -88,6 +89,14 @@ class APIConfig : PreferenceFragmentCompat() {
             findPreference<Preference>("ui_manage_niu_api_text")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_NIU_API)
+                }
+                startActivity(intent)
+                true
+            }
+
+            findPreference<Preference>("ui_manage_openai_api_text")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_OPENAI_API)
                 }
                 startActivity(intent)
                 true
@@ -228,6 +237,12 @@ class APIConfig : PreferenceFragmentCompat() {
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR niu")
             }
+            "ui_openai_translation_text"->{
+                prefs.setInt("Text_API", Constants.TextApi.OPENAI.id)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
+                Log.d("APIConfig", "OCR openai")
+            }
             "ui_volc_translation_text"->{
                 prefs.setInt("Text_API", Constants.TextApi.VOLC.id)
                 prefs.setString("Source_Language", "ja")
@@ -337,6 +352,11 @@ class APIConfig : PreferenceFragmentCompat() {
                 }
                 Constants.TextApi.NIUTRANS.id -> {
                     val key = "ui_niu_translation_text"
+                    findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
+                    setKey(key)
+                }
+                Constants.TextApi.OPENAI.id -> {
+                    val key = "ui_openai_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
                 }
