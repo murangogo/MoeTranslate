@@ -1,5 +1,5 @@
 {
-    "versionCode": 27,
-    "versionName": "5.1.0",
-    "versionContent": "普通更新：\n🚀 新特性\n- 增加自动翻译\n\n🐛 问题修复\n- 部分描述文本修复\n"
+    "versionCode": 28,
+    "versionName": "5.2.0",
+    "versionContent": "重要更新：\n🚀 新特性\n- 增加聚合AI翻译API，支持ChatGPT、Qwen、DeepSeek等AI接口\n\n🐛 问题修复\n- OCR状态下，自动翻译检测到翻译区域没有文字时，会跳过本次翻译，避免翻译空白区域进而报错"
 }
