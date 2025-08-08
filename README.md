@@ -61,7 +61,7 @@
 > [申请教程](https://www.moetranslate.top/docs/translationapi/niutrans/)  
 > 翻译质量：★★★★★（5星）
 
-> **聚合 AI 翻译：** 属于在线翻译API。需要提前配置API Key方可使用。萌译支持兼容OpenAI接口规范的AI接口，因此可以使用ChatGPT、Qwen、DeepSeek等模型进行翻译。这里比较推荐使用Qwen，目前Qwen的各个模型都赠送大量的免费Token，翻译质量很高。  
+> **聚合 AI 翻译：** 属于在线翻译API。需要提前配置API Key方可使用。萌译支持兼容OpenAI接口规范的AI接口，因此可以使用ChatGPT、Qwen、DeepSeek等模型进行翻译。这里比较推荐使用Qwen，**目前Qwen的各个模型都赠送大量的免费Token**，翻译质量很高。  
 > [申请教程](https://www.moetranslate.top/docs/translationapi/uniaitrans/)  
 > 翻译质量：★★★★★（5星）
 

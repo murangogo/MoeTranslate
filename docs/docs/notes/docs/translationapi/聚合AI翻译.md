@@ -3,6 +3,7 @@ title: 聚合AI翻译
 author: azuki
 createTime: 2025/08/08 10:48:14
 permalink: /docs/translationapi/uniaitrans/
+badge: 质量最佳
 ---
 
 - <Badge type="cimportant" text="是否需要网络：是" />
