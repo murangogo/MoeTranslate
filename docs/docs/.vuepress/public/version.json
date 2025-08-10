@@ -1,5 +1,5 @@
 {
-    "versionCode": 28,
-    "versionName": "5.2.0",
-    "versionContent": "重要更新：\n🚀 新特性\n- 增加聚合AI翻译API，支持ChatGPT、Qwen、DeepSeek等AI接口\n\n🐛 问题修复\n- OCR状态下，自动翻译检测到翻译区域没有文字时，会跳过本次翻译，避免翻译空白区域进而报错"
+    "versionCode": 29,
+    "versionName": "5.2.1",
+    "versionContent": "普通更新：\n\n🐛 问题修复\n- 修复聚合AI翻译修改提示词保存后会变回默认提示词的问题\n"
 }
