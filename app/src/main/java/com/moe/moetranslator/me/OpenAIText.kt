@@ -107,9 +107,13 @@ class OpenAIText :Fragment() {
                 prefs.setString("OpenAI_Model_Name", binding.editModelName.text.toString())
                 if ((binding.editSystemPrompt.text.toString()).isBlank()){
                     prefs.setString("OpenAI_System_Prompt", defaultSystemPrompt)
+                } else {
+                    prefs.setString("OpenAI_System_Prompt", binding.editSystemPrompt.text.toString())
                 }
                 if ((binding.editUserPrompt.text.toString()).isBlank()){
                     prefs.setString("OpenAI_User_Prompt", defaultUserPrompt)
+                } else {
+                    prefs.setString("OpenAI_User_Prompt", binding.editUserPrompt.text.toString())
                 }
                 showToast(getString(R.string.save_successfully))
                 requireActivity().finish()
