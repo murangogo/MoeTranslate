@@ -1,0 +1,5 @@
+{
+    "versionCode": 29,
+    "versionName": "5.2.1",
+    "versionContent": "普通更新：\n\n🐛 问题修复\n- 修复聚合AI翻译修改提示词保存后会变回默认提示词的问题\n"
+}
