@@ -106,6 +106,14 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/base_url" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/base_url_tips"
+                    android:textColor="?android:textColorSecondary" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
