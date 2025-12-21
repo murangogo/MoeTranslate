@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MoeTranslate</string>
     <string name="floating_ball_menu_1">Floating Ball Menu</string>
@@ -59,9 +60,9 @@
     <string name="pic_mode">Upload Images Directly for Translation</string>
     <string name="pic_mode_description">Upload the screenshot directly to the cloud API for translation. It supports using the preset cloud image translation API, and also supports using the custom cloud image translation API. <font color="#E25A5C">It does not support local translation</font>. This method consumes relatively more data traffic.</string>
     <string name="mlkit_name">ML Kit</string>
-    <string name="mlkit_description">Google\'s machine learning kit runs on the device and is suitable for casual and simple translation. <font color="#E25A5C">You need to download a model file of about 100MB for the first run</font>. After the download is complete, you can use it right away without the need for a network connection. Click \"Manage ML Kit model files\" below to download and delete model files.</string>
+    <string name="mlkit_description">Google\'s machine learning kit runs on the device and is suitable for casual and simple translation. <b><u>You need to download a model file of about 100MB for the first run</u></b>. After the download is complete, you can use it right away without the need for a network connection. Click \"Manage ML Kit model files\" below to download and delete model files.</string>
     <string name="nllb_name">NLLB Translate Model</string>
-    <string name="nllb_description">Meta\'s model, which is designed for translation, is called \"No Language Left Behind\". As the name suggests, it supports multiple languages. The translation effect of this model is better, but it also needs to be downloaded before use. <font color="#E25A5C">When running for the first time, you need to download a model file of about 1GB. At the same time, the device needs to have at least 6GB of RAM to use this model</font>. After the download is complete, there is no need for a network connection, and it can be used immediately. Click \"Manage NLLB model files\" below to download and delete model files.</string>
+    <string name="nllb_description">Meta\'s model, which is designed for translation, is called \"No Language Left Behind\". As the name suggests, it supports multiple languages. The translation effect of this model is better, but it also needs to be downloaded before use. <b><u>When running for the first time, you need to download a model file of about 1GB. At the same time, the device needs to have at least 6GB of RAM to use this model</u></b>. After the download is complete, there is no need for a network connection, and it can be used immediately. Click \"Manage NLLB model files\" below to download and delete model files.</string>
     <string name="manage_nllb_models">Manage NLLB Model Files</string>
     <string name="baiduapi_name">Baidu Translate</string>
     <string name="baiduapi_description">Baidu Translate\'s API, click \"Manage Baidu Translate API\" below to set up the API, and you can also view the API application tutorial (there is a free call quota of 1 million characters per month).</string>
@@ -69,10 +70,10 @@
     <string name="tencentapi_name">Tencent Cloud</string>
     <string name="ai_title">Local AI Translation</string>
     <string name="pre_api_title">Pre-Configured Cloud API</string>
-    <string name="custom_api_text_title"><font color="#E25A5C">(Advanced settings)</font> Customize the Cloud Text Translation API</string>
-    <string name="custom_api_text_1">Custom cloud <font color="#E25A5C">text</font> translation API1</string>
-    <string name="custom_api_text_2">Custom cloud <font color="#E25A5C">text</font> translation API2</string>
-    <string name="custom_api_text_3">Custom cloud <font color="#E25A5C">text</font> translation API3</string>
+    <string name="custom_api_text_title"><b><u>(Advanced settings)</u></b> Customize the Cloud Text Translation API</string>
+    <string name="custom_api_text_1">Custom cloud <b><u>text</u></b> translation API1</string>
+    <string name="custom_api_text_2">Custom cloud <b><u>text</u></b> translation API2</string>
+    <string name="custom_api_text_3">Custom cloud <b><u>text</u></b> translation API3</string>
     <string name="manage_baidu_api">Manage Baidu Translate API</string>
     <string name="manage_tencent_api">Manage Tencent Cloud API</string>
     <string name="manage_custom_api_text_1">Manage custom cloud text translation API1</string>
@@ -80,16 +81,16 @@
     <string name="manage_custom_api_text_3">Manage custom cloud text translation API3</string>
     <string name="current_mode_text">Current Translation Mode：Local OCR Recognition + Text Translation</string>
     <string name="current_mode_pic">Current Translation Mode：Upload Images Directly for Translation</string>
-    <string name="custom_api_pic_title"><font color="#E25A5C">(Advanced settings)</font> Customize the Cloud Image Translation API</string>
-    <string name="custom_api_pic_1">Custom cloud <font color="#E25A5C">image</font> translation API1</string>
-    <string name="custom_api_pic_2">Custom cloud <font color="#E25A5C">image</font> translation API2</string>
-    <string name="custom_api_pic_3">Custom cloud <font color="#E25A5C">image</font> translation API3</string>
+    <string name="custom_api_pic_title"><b><u>(Advanced settings)</u></b> Customize the Cloud Image Translation API</string>
+    <string name="custom_api_pic_1">Custom cloud <b><u>image</u></b> translation API1</string>
+    <string name="custom_api_pic_2">Custom cloud <b><u>image</u></b> translation API2</string>
+    <string name="custom_api_pic_3">Custom cloud <b><u>image</u></b> translation API3</string>
     <string name="manage_custom_api_pic_1">Manage custom cloud image translation API1</string>
     <string name="manage_custom_api_pic_2">Manage custom cloud image translation API2</string>
     <string name="manage_custom_api_pic_3">Manage custom cloud image translation API3</string>
     <string name="no_less_one">Please select an option</string>
     <string name="small_ram_title">RAM is less than 6GB</string>
-    <string name="small_ram_content">It looks like you have selected NLLB as the translation API, but it seems that your device has less than 8G of RAM, which may cause problems when inferring the model. Please rest assured that the program will not prevent you from using the model, but there is no guarantee that there will be no accidents when the RAM is less than 6G.</string>
+    <string name="small_ram_content">It looks like you have selected NLLB as the translation API, but it seems that your device has less than 6GB of RAM, which may cause problems when inferring the model. Please rest assured that the program will not prevent you from using the model, but there is no guarantee that there will be no accidents when the RAM is less than 6GB.</string>
     <string name="custom_api_select_language_title">Custom API does not support language selection</string>
     <string name="custom_api_select_language_content">It looks like you are using a custom translation API. In this case, you should not use MoeTranslate to select the source and target languages. Instead, you should write the source and target languages ​​into the API because MoeTranslate does not know the language codes specified by your custom API (some API providers do not use BCP-47 codes as their language codes).</string>
     <string name="whatsthis">What\'s this?</string>
@@ -105,7 +106,7 @@
     <string name="go_now">Go Now</string>
     <string name="manage_mlkit_models">Manage ML Kit Model Files</string>
     <string name="mlkit_not_download_title">ML Kit model file not downloaded</string>
-    <string name="mlkit_not_download_content">It looks like you have selected ML Kit as the translation model, but it seems that the ML Kit model file has not been downloaded yet, so translation cannot be performed. Click Go to Download to enter the download page. <font color="#E25A5C">The first run requires downloading a model file of about 100MB</font>, so it is recommended to download in a WIFI environment. After the download is complete, there is no need for a network, and it can be used immediately.</string>
+    <string name="mlkit_not_download_content">It looks like you have selected ML Kit as the translation model, but it seems that the ML Kit model file has not been downloaded yet, so translation cannot be performed. Click Go to Download to enter the download page. <b><u>The first run requires downloading a model file of about 100MB</u></b>, so it is recommended to download in a WIFI environment. After the download is complete, there is no need for a network, and it can be used immediately.</string>
     <string name="startup_success">Startup successfully</string>
     <string name="startup_failure">Startup failed：%s</string>
     <string name="accessibility_recycle">The accessibility permission has been reclaimed by the system. You can re-grant the relevant permission in the tutorial in the upper right corner of the homepage.</string>
@@ -123,7 +124,7 @@
     <string name="finish_crop">Selection completed</string>
     <string name="not_added_remove">The translation result view has not been added and does not need to be removed.</string>
     <string name="orientation_changed">Screen orientation change detected, please reselect the screenshot area</string>
-    <string name="download_tips">In this page, you can download the NLLB model file. In order to keep the download process uninterrupted, please <font color="#E25A5C">do not leave this page while downloading</font>. Since the file is hosted in Cloudflare R2, it may not be available for download depending on network conditions. You can flexibly switch between Wi-Fi and data traffic, and enable or disable the VPN.\n</string>
+    <string name="download_tips">In this page, you can download the NLLB model file. In order to keep the download process uninterrupted, please <b><u>do not leave this page while downloading</u></b>. Since the file is hosted in Cloudflare R2, it may not be available for download depending on network conditions. You can flexibly switch between Wi-Fi and data traffic, and enable or disable the VPN.\n</string>
     <string name="download_manually">If the file cannot be downloaded in any case, please <font color="#2474b5">click here</font> to see how to download it manually.</string>
     <string name="start_download">Start Download</string>
     <string name="delete_models">Delete Models</string>
@@ -142,7 +143,7 @@
     <string name="get_download_info">Getting download information...</string>
     <string name="nllb_status_download">NLLB model download status: Downloaded</string>
     <string name="nllb_status_not_download">NLLB model download status: Not downloaded</string>
-    <string name="mlkit_download_tips">In this page, you can download ML Kit model files. In order to keep the download process from being interrupted, please <font color="#E25A5C">do not leave this page while downloading</font>. Since the model file is stored on Google\'s server, and the download operation is encapsulated in the ML Kit library, it cannot be controlled separately. Therefore, the download may not be possible depending on the network conditions; please flexibly switch WLAN and data traffic, and enable Or turn off the VPN.\n\nSince the download operation is encapsulated in the ML Kit library, the download progress cannot be displayed in the software. The download operation will call the system downloader and the progress should be displayed in the notification bar. <font color="#E25A5C">The total size of the files to be downloaded is expected to be about 100MB</font>.</string>
+    <string name="mlkit_download_tips">In this page, you can download ML Kit model files. In order to keep the download process from being interrupted, please <b><u>do not leave this page while downloading</u></b>. Since the model file is stored on Google\'s server, and the download operation is encapsulated in the ML Kit library, it cannot be controlled separately. Therefore, the download may not be possible depending on the network conditions; please flexibly switch WLAN and data traffic, and enable Or turn off the VPN.\n\nSince the download operation is encapsulated in the ML Kit library, the download progress cannot be displayed in the software. The download operation will call the system downloader and the progress should be displayed in the notification bar. <b><u>The total size of the files to be downloaded is expected to be about 100MB</u></b>.</string>
     <string name="mlkit_status_download">ML Kit model download status: Downloaded</string>
     <string name="mlkit_status_not_download">ML Kit model download status: Not Downloaded</string>
     <string name="check_mlkit_download_error">Check status failed：%s</string>
@@ -228,7 +229,7 @@
     <string name="key_value_blank">Key or value is blank</string>
     <string name="url_blank">URL cannot be blank</string>
     <string name="response_json_blank">JSON Response Path cannot be blank</string>
-    <string name="gemini_intro">Gemini is Google\'s latest generative AI, and it\'s very easy to configure, but <font color="#E25A5C">if you\'re in China, you\'ll probably need a VPN to use it</font>. Click \"View Tutorial\" to see how to get Gemini\'s API.</string>
+    <string name="gemini_intro">Gemini is Google\'s latest generative AI, and it\'s very easy to configure, but <b><u>if you\'re in China, you\'ll probably need a VPN to use it</u></b>. Click \"View Tutorial\" to see how to get Gemini\'s API.</string>
     <string name="gemini_key">Your Gemini API Key</string>
     <string name="gemini_title">Configure Gemini API</string>
     <string name="set_floating_ball_press">Set long press judgment time</string>
@@ -261,7 +262,7 @@
     <string name="still_running">The Translation Floatingball seems to be still running, so please turn it off before adjusting the settings</string>
     <string name="invalid_combination">The source language and the target language are the same, which is a meaningless translation combination</string>
     <string name="bingapi_name">Bing Translate</string>
-    <string name="bingapi_description">The translation API can be used without configuring a key, and is implemented by simulating a browser accessing Bing Translate for the web. <font color="#E25A5C">This method relies on the structure of the web page and the extraction of tokens, which is less stable and may be subject to access restrictions, so please use other translation APIs more</font>.</string>
+    <string name="bingapi_description">The translation API can be used without configuring a key, and is implemented by simulating a browser accessing Bing Translate for the web. <b><u>This method relies on the structure of the web page and the extraction of tokens, which is less stable and may be subject to access restrictions, so please use other translation APIs more</u></b>.</string>
     <string name="azureapi_name">Azure AI Translate</string>
     <string name="azureapi_description">Microsoft Azure AI Translator API, click \"Manage Azure API\" below to set up the API, and you can also view the API application tutorial (there is a free call quota of 2 million characters per month).</string>
     <string name="manage_azure_api">Manage Azure API</string>
@@ -282,7 +283,7 @@
     <string name="delete_success">Delete successfully</string>
     <string name="rename_tip">Please don’t give too weird names.</string>
     <string name="import_model_dialog_title">Import model</string>
-    <string name="import_model_folder_message">Fill in the name of the model you want to import below, then <font color="#E25A5C">go to the folder containing the \".model3.json\" file for the model</font> in the file manager and click the \"Use this folder\" button at the bottom of the screen.\n\nYou can click the \"View Tutorial\" button below for more detailed information (such as the infrastructure of Live2D model files, and the issue that some models cannot be played after importing emoticons and actions, etc.).</string>
+    <string name="import_model_folder_message">Fill in the name of the model you want to import below, then <b><u>go to the folder containing the \".model3.json\" file for the model</u></b> in the file manager and click the \"Use this folder\" button at the bottom of the screen.\n\nYou can click the \"View Tutorial\" button below for more detailed information (such as the infrastructure of Live2D model files, and the issue that some models cannot be played after importing emoticons and actions, etc.).</string>
     <string name="model_name">Enter a model name...</string>
     <string name="import_success">Import successful</string>
     <string name="import_failed">Import failed：%s</string>
@@ -301,16 +302,16 @@
     <string name="tutorial_enter">Enter MoeTranslate</string>
     <string name="tutorial_permission">Permission Time!</string>
     <string name="faq_q1">Why is my HarmonyOS version 3.0 or greater, but it still says that the Android version is too low?</string>
-    <string name="faq_a1">This is due to the fact that after Huawei updated HarmonyOS (note that it is not HarmonyOS NEXT), its underlying Android API can no longer be visually visible to users. For <font color="#E25A5C">most newer</font> Huawei phones, HarmonyOS 2.0 supports Android 10 (API 29). HarmonyOS 3.0 is compatible with Android 12 (API 31). However, for some older Huawei models, although HarmonyOS 3.0 has been updated, the underlying Android API has not been updated, and the underlying Android version of some models is still Android 10. As a result, the <font color="#E25A5C">system still does not meet the requirements</font> of Android 11 (API 30) for this software. Here are some of the known models:\n\nEquipped with Kirin 980 and below models, such as mate20, P30, Nova 5, etc., HarmonyOS 3.0 corresponds to Android version 10 (API 29). The HarmonyOS 3.0 of these models is not really 3.0, and there are many missing features, but the main upgrades are: updating the version number, using the new theme of 3.0, and adding some small features that do not depend on Android 12.</string>
+    <string name="faq_a1">This is due to the fact that after Huawei updated HarmonyOS (note that it is not HarmonyOS NEXT), its underlying Android API can no longer be visually visible to users. For <b><u>most newer</u></b> Huawei phones, HarmonyOS 2.0 supports Android 10 (API 29). HarmonyOS 3.0 is compatible with Android 12 (API 31). However, for some older Huawei models, although HarmonyOS 3.0 has been updated, the underlying Android API has not been updated, and the underlying Android version of some models is still Android 10. As a result, the <b><u>system still does not meet the requirements</u></b> of Android 11 (API 30) for this software. Here are some of the known models:\n\nEquipped with Kirin 980 and below models, such as mate20, P30, Nova 5, etc., HarmonyOS 3.0 corresponds to Android version 10 (API 29). The HarmonyOS 3.0 of these models is not really 3.0, and there are many missing features, but the main upgrades are: updating the version number, using the new theme of 3.0, and adding some small features that do not depend on Android 12.</string>
     <string name="faq_q2">Why do I have granted accessibility permissions, but the software still prompts that I have not obtained accessibility permissions?</string>
-    <string name="faq_a2">This is due to <font color="#E25A5C">accessibility permissions being reclaimed by the system</font>; Accessibility is a very important permission in Android. Most Android-based systems will revoke accessibility privileges when you exit the software or shut down and restart it, also for security reasons (of course, this software is open source and does not collect any information from you).\n\nKnowing the reason, it is also very easy to solve. As long as the software homepage clicks on the \"? > find the step to grant accessibility permissions - > click \"Go to grant this permission\" - > find the software, then <font color="#E25A5C">turn off the accessibility permissions of the software, and re-grant</font> them.</string>
+    <string name="faq_a2">This is due to <b><u>accessibility permissions being reclaimed by the system</u></b>; Accessibility is a very important permission in Android. Most Android-based systems will revoke accessibility privileges when you exit the software or shut down and restart it, also for security reasons (of course, this software is open source and does not collect any information from you).\n\nKnowing the reason, it is also very easy to solve. As long as the software homepage clicks on the \"? > find the step to grant accessibility permissions - > click \"Go to grant this permission\" - > find the software, then <b><u>turn off the accessibility permissions of the software, and re-grant</u></b> them.</string>
     <string name="more_api">Adjust this option in the \"Translation Mode\" and \"API Configuration\" of the Settings page</string>
     <string name="faq_q3">Why did I click on the hoverball, but there was no translation result for a long time, and finally an error was reported?</string>
-    <string name="faq_a3">This is most likely <font color="#E25A5C">due to poor internet connections</font>. Many waifu games need to use accelerators, but after using accelerators, it is relatively slow to access the domestic translation API. As a result, the translation will time out and errors will occur.\n\nAt this time, please <font color="#E25A5C">turn off your wifi, turn on the data data, and then speed up with the accelerator again</font>. At this point, you should be able to use the translation fluently. <font color="#E25A5C">There is no need to worry about data consumption</font>, generally speaking, when you use the translation mode of \"local OCR recognition + text translation\", the amount of traffic spent is minimal.</string>
+    <string name="faq_a3">This is most likely <b><u>due to poor internet connections</u></b>. Many waifu games need to use accelerators, but after using accelerators, it is relatively slow to access the domestic translation API. As a result, the translation will time out and errors will occur.\n\nAt this time, please <b><u>turn off your wifi, turn on the data data, and then speed up with the accelerator again</u></b>. At this point, you should be able to use the translation fluently. <b><u>There is no need to worry about data consumption</u></b>, generally speaking, when you use the translation mode of \"local OCR recognition + text translation\", the amount of traffic spent is minimal.</string>
     <string name="err_baidu_text_title">Baidu Translate（OCR）</string>
     <string name="err_baidu_text_content">The error code for Baidu Translate （Text） can be found at the link below:\nNote: You need to use desktop UA to browse normally, otherwise you will be redirected to the homepage of Baidu Translation Open Platform.\nhttps://fanyi-api.baidu.com/doc/21</string>
     <string name="err_bing_text_title">Bing Translate（OCR）</string>
-    <string name="err_bing_text_content">Bing Translator does not require an API key to be configured to use it, and this is because it does so by simulating the behavior of a browser visiting a web page, which is a very non-standard approach. Because of this, MoeTranslate cannot guarantee its stability. When you have problems using Bing Translate, <font color="#E25A5C">it is recommended that you use other translation APIs for translation</font>, and you are also welcome to submit feedback in [Settings] - > [About] - > [Feedback] for fixes in subsequent versions.</string>
+    <string name="err_bing_text_content">Bing Translator does not require an API key to be configured to use it, and this is because it does so by simulating the behavior of a browser visiting a web page, which is a very non-standard approach. Because of this, MoeTranslate cannot guarantee its stability. When you have problems using Bing Translate, <b><u>it is recommended that you use other translation APIs for translation</u></b>, and you are also welcome to submit feedback in [Settings] - > [About] - > [Feedback] for fixes in subsequent versions.</string>
     <string name="err_niutrans_text_content">The error code for NiuTrans can be found at the link below:\n\nhttps://niutrans.com/documents/contents/trans_text#error</string>
     <string name="err_niutrans_text_title">NiuTrans（OCR）</string>
     <string name="err_volc_text_title">Volc Engine（OCR）</string>
@@ -408,6 +409,9 @@
     <string name="introduce_openai_api_title">Uni AI Translation API Function Description</string>
     <string name="introduce_openai_api_content">\n⚠️ Note: <b>This is an advanced feature that requires you to have basic API call knowledge.</b>\n\n<big>1. Basic Description</big>\nThis feature allows you to use mainstream AI services for translation (<b>as long as they are compatible with OpenAI API specifications</b>), such as ChatGPT, Qwen, DeepSeek, etc. The integration method is through calling official API interfaces.\n\n<big>2. Parameter Description</big>\n1. API_KEY: The API key provided by the official website\n2. Base URL: The access endpoint provided by the official website  \n3. Model: The name of the model to be used\n4. System Prompt: Sets the identity for the model, keep default is recommended\n5. User Prompt: Translation instructions sent to the model, keep default is recommended\n\n<big>3. Configuration Example</big>\nTaking the integration of Alibaba\'s \"Qwen-Plus\" model as an example:\nFor API_KEY, fill in normally;\nFor Base URL, Alibaba\'s Qwen models generally use https://dashscope.aliyuncs.com/compatible-mode/v1;\nFor Model, the \"Qwen-Plus\" model corresponds to the code name qwen-plus;\nFor System Prompt and User Prompt, keep the defaults.\n\n<big>4. Before Using This Feature</big>\nYou can first test the API response using tools like Postman, Reqable, etc. After successful testing, fill in the relevant parameters into this feature.</string>
     <string name="base_url_tips">Not working? Try adding \"/v1\" to the end of the base URL; and \"/chat/completions\" will be added automatically.</string>
-
-
+    <string name="language_setting_title">Language Setting</string>
+    <string name="language_setting_summary">Current language: %s \nAfter resetting the language, the app will automatically restart.</string>
+    <string name="language_change_title">Change Language</string>
+    <string name="language_change_message">Switch to %s?\nThe app will restart to apply the new language.</string>
+    <string name="language_changed">Language changed successfully</string>
 </resources>

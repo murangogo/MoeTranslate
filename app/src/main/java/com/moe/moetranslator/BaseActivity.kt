@@ -17,14 +17,22 @@
 
 package com.moe.moetranslator
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.moe.moetranslator.utils.LanguageManager
 
 abstract class BaseActivity : AppCompatActivity() {
+
+    override fun attachBaseContext(newBase: Context) {
+        // 应用语言设置
+        val context = LanguageManager.applyLanguage(newBase)
+        super.attachBaseContext(context)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         // 启用 Edge-to-Edge，一定要在super.onCreate之前调用
         enableEdgeToEdge()

@@ -31,6 +31,9 @@ class CustomPreference private constructor(context: Context) {
     //Read_Custom_Pic_Introduce(Boolean)：是否阅读自定义图片翻译API的介绍
     //Read_OpenAI_API_Introduce(Boolean)：是否阅读OpenAI API的介绍
 
+    //----应用语言----
+    //App_Language(Str)：用户选择的应用语言
+
     //----翻译选项----
     //Translate_Mode(Int)：0为本地OCR后进行文本翻译；1为上传截图后进行图片翻译
     //Text_API(Int)：0为使用本地大模型；1为使用必应翻译；2为使用小牛翻译；3为使用火山引擎；4为使用Azure AI翻译；5为使用百度翻译；6为使用腾讯云；7为使用自定义API；8为使用聚合AI翻译
@@ -142,6 +145,27 @@ class CustomPreference private constructor(context: Context) {
 
     fun setBoolean(key: String, value: Boolean) {
         prefs.edit().putBoolean(key, value).apply()
+    }
+
+    /**
+     * 同步写入字符串到 SharedPreferences
+     */
+    fun setStringSync(key: String, value: String) {
+        prefs.edit().putString(key, value).commit()
+    }
+
+    /**
+     * 同步写入整数到 SharedPreferences
+     */
+    fun setIntSync(key: String, value: Int) {
+        prefs.edit().putInt(key, value).commit()
+    }
+
+    /**
+     * 同步写入布尔值到 SharedPreferences
+     */
+    fun setBooleanSync(key: String, value: Boolean) {
+        prefs.edit().putBoolean(key, value).commit()
     }
 
     fun getBoolean(key: String, defaultValue: Boolean): Boolean {

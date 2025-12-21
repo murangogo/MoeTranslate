@@ -131,6 +131,14 @@
             android:summary="@string/adjust_not_tip_summary"
             android:defaultValue="false"/>
 
+        <ListPreference
+            android:key="app_language"
+            app:iconSpaceReserved="false"
+            android:defaultValue="system"
+            android:title="@string/language_setting_title"
+            android:entries="@array/language_entries"
+            android:entryValues="@array/language_values" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

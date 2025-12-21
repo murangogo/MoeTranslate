@@ -60,9 +60,9 @@
     <string name="pic_mode">直接上传图片进行翻译</string>
     <string name="pic_mode_description">直接把截图上传到云端API进行翻译。支持使用预置的云端图片翻译API，也支持使用自定义的云端图片翻译API，<font color="#E25A5C">不支持本地翻译</font>。这种方式花费的数据流量相对来说要多一些。</string>
     <string name="mlkit_name">ML Kit</string>
-    <string name="mlkit_description">谷歌推出的机器学习套件，运行在设备端，适用于随意且简单的翻译。<font color="#E25A5C">首次运行时需下载约100MB的模型文件</font>，后续则无需网络，即点即用。点击下方的“管理ML Kit模型文件”可进行模型文件的下载、删除等操作。</string>
+    <string name="mlkit_description">谷歌推出的机器学习套件，运行在设备端，适用于随意且简单的翻译。<b><u>首次运行时需下载约100MB的模型文件</u></b>，后续则无需网络，即点即用。点击下方的“管理ML Kit模型文件”可进行模型文件的下载、删除等操作。</string>
     <string name="nllb_name">NLLB翻译模型</string>
-    <string name="nllb_description">Meta推出的专为翻译而生的模型，全称为“No Language Left Behind”，顾名思义，支持多种语言。该模型的翻译效果更好，但同样需要下载后使用。<font color="#E25A5C">首次运行时需下载约1GB的模型文件，同时，使用该模型需要设备至少拥有6GB的运行内存</font>。下载完成后，同样无需网络，即点即用。点击下方的“管理NLLB模型文件”可进行模型文件的下载、删除等操作。</string>
+    <string name="nllb_description">Meta推出的专为翻译而生的模型，全称为“No Language Left Behind”，顾名思义，支持多种语言。该模型的翻译效果更好，但同样需要下载后使用。<b><u>首次运行时需下载约1GB的模型文件，同时，使用该模型需要设备至少拥有6GB的运行内存</u></b>。下载完成后，同样无需网络，即点即用。点击下方的“管理NLLB模型文件”可进行模型文件的下载、删除等操作。</string>
     <string name="manage_nllb_models">管理NLLB模型文件</string>
     <string name="baiduapi_name">百度翻译</string>
     <string name="baiduapi_description">百度翻译的API，点击下方的“管理百度翻译API”即可设置API，还可以在其中查看API的申请教程（每月有100万字符的免费调用额度）。</string>
@@ -70,10 +70,10 @@
     <string name="tencentapi_description">腾讯云的翻译API，点击下方的“管理腾讯云API”即可设置API，还可以在其中查看API的申请教程（每月有500万字符的免费调用额度）。</string>
     <string name="ai_title">本地AI翻译</string>
     <string name="pre_api_title">预置云端API</string>
-    <string name="custom_api_text_title"><font color="#E25A5C">（高级设置）</font>自定义云端文本翻译API</string>
-    <string name="custom_api_text_1">自定义云端<font color="#E25A5C">文本</font>翻译API1</string>
-    <string name="custom_api_text_2">自定义云端<font color="#E25A5C">文本</font>翻译API2</string>
-    <string name="custom_api_text_3">自定义云端<font color="#E25A5C">文本</font>翻译API3</string>
+    <string name="custom_api_text_title"><b>（高级设置）</b>自定义云端文本翻译API</string>
+    <string name="custom_api_text_1">自定义云端<b><u>文本</u></b>翻译API1</string>
+    <string name="custom_api_text_2">自定义云端<b><u>文本</u></b>翻译API2</string>
+    <string name="custom_api_text_3">自定义云端<b><u>文本</u></b>翻译API3</string>
     <string name="manage_baidu_api">管理百度翻译API</string>
     <string name="manage_tencent_api">管理腾讯云API</string>
     <string name="manage_custom_api_text_1">管理自定义云端文本翻译API1</string>
@@ -81,16 +81,16 @@
     <string name="manage_custom_api_text_3">管理自定义云端文本翻译API3</string>
     <string name="current_mode_text">当前翻译模式：本地OCR识别+文本翻译</string>
     <string name="current_mode_pic">当前翻译模式：直接上传图片进行翻译</string>
-    <string name="custom_api_pic_title"><font color="#E25A5C">（高级设置）</font>自定义云端图片翻译API</string>
-    <string name="custom_api_pic_1">自定义云端<font color="#E25A5C">图片</font>翻译API1</string>
-    <string name="custom_api_pic_2">自定义云端<font color="#E25A5C">图片</font>翻译API2</string>
-    <string name="custom_api_pic_3">自定义云端<font color="#E25A5C">图片</font>翻译API3</string>
+    <string name="custom_api_pic_title"><b>（高级设置）</b>自定义云端图片翻译API</string>
+    <string name="custom_api_pic_1">自定义云端<b><u>图片</u></b>翻译API1</string>
+    <string name="custom_api_pic_2">自定义云端<b><u>图片</u></b>翻译API2</string>
+    <string name="custom_api_pic_3">自定义云端<b><u>图片</u></b>翻译API3</string>
     <string name="manage_custom_api_pic_1">管理自定义云端图片翻译API1</string>
     <string name="manage_custom_api_pic_2">管理自定义云端图片翻译API2</string>
     <string name="manage_custom_api_pic_3">管理自定义云端图片翻译API3</string>
     <string name="no_less_one">需选择一个选项</string>
     <string name="small_ram_title">运行内存小于6GB</string>
-    <string name="small_ram_content">看起来您选择了NLLB作为翻译API，但似乎您的设备的运行内存小于6G，这可能会导致在模型推理时出现问题。请您放心，程序不会因此阻止您使用该模型，但不保证在运行内存小于8G的情况下不会出现意外。</string>
+    <string name="small_ram_content">看起来您选择了NLLB作为翻译API，但似乎您的设备的运行内存小于6GB，这可能会导致在模型推理时出现问题。请您放心，程序不会因此阻止您使用该模型，但不保证在运行内存小于6GB的情况下不会出现意外。</string>
     <string name="custom_api_select_language_title">自定义API不支持选择语言</string>
     <string name="custom_api_select_language_content">看起来您使用了自定义翻译API，在这种情况下，您不该使用萌译来选择源语言和目标语言，相反，您应该将源语言和目标语言写进API中，因为萌译不知道您自定义的API规定的语言代码（一些API提供商并不使用BCP-47代码作为他们的语言代码）。</string>
     <string name="whatsthis">这是什么？</string>
@@ -106,7 +106,7 @@
     <string name="go_now">现在就去</string>
     <string name="manage_mlkit_models">管理ML Kit模型文件</string>
     <string name="mlkit_not_download_title">未下载ML Kit模型文件</string>
-    <string name="mlkit_not_download_content">看起来您选择了ML Kit作为翻译模型，但似乎还没有下载ML Kit模型文件，因此无法进行翻译。点击去下载即可进入下载页面，<font color="#E25A5C">首次运行时需下载约100MB的模型文件</font>，因此推荐在WIFI环境中下载。后续则无需网络，即点即用。</string>
+    <string name="mlkit_not_download_content">看起来您选择了ML Kit作为翻译模型，但似乎还没有下载ML Kit模型文件，因此无法进行翻译。点击去下载即可进入下载页面，<b><u>首次运行时需下载约100MB的模型文件</u></b>，因此推荐在WIFI环境中下载。后续则无需网络，即点即用。</string>
     <string name="startup_success">启动成功</string>
     <string name="startup_failure">启动失败：%s</string>
     <string name="accessibility_recycle">无障碍权限被系统回收，可在主页右上角教程处重新授予相关权限</string>
@@ -124,7 +124,7 @@
     <string name="finish_crop">选取完成</string>
     <string name="not_added_remove">没有添加翻译结果视图，无需移除</string>
     <string name="orientation_changed">检测到屏幕方向更改，请重新选取截屏区域</string>
-    <string name="download_tips">在本页面中，您可以下载NLLB模型文件。为了保持下载过程不被打断，请您在<font color="#E25A5C">进行下载时不要离开本页面</font>。由于文件托管在Cloudflare R2中，视网络状况可能会出现无法下载等情况；请您灵活切换WLAN与数据流量，以及开启或关闭VPN。</string>
+    <string name="download_tips">在本页面中，您可以下载NLLB模型文件。为了保持下载过程不被打断，请您在<b><u>进行下载时不要离开本页面</u></b>。由于文件托管在Cloudflare R2中，视网络状况可能会出现无法下载等情况；请您灵活切换WLAN与数据流量，以及开启或关闭VPN。</string>
     <string name="download_manually">若无论如何文件都无法下载成功，请<font color="#2474b5">点击这里</font>查看手动下载的方法。</string>
     <string name="start_download">开始下载</string>
     <string name="delete_models">删除模型</string>
@@ -143,7 +143,7 @@
     <string name="get_download_info">正在获取下载信息......</string>
     <string name="nllb_status_download">NLLB模型下载状态：已下载</string>
     <string name="nllb_status_not_download">NLLB模型下载状态：未下载</string>
-    <string name="mlkit_download_tips">在本页面中，您可以下载ML Kit模型文件。为了保持下载过程不被打断，请您在<font color="#E25A5C">进行下载时不要离开本页面</font>。由于模型文件存放在谷歌的服务器上，且下载操作被封装在了ML Kit库中，无法单独进行控制，因此视网络状况可能会出现无法下载等情况；请您灵活切换WLAN与数据流量，以及开启或关闭VPN。\n\n由于下载操作被封装在ML Kit库中，因此软件内无法显示下载进度，下载操作会调用系统下载器，进度应该会显示在通知栏中，<font color="#E25A5C">预计需要下载的文件总大小在100MB左右</font>。</string>
+    <string name="mlkit_download_tips">在本页面中，您可以下载ML Kit模型文件。为了保持下载过程不被打断，请您在<b><u>进行下载时不要离开本页面</u></b>。由于模型文件存放在谷歌的服务器上，且下载操作被封装在了ML Kit库中，无法单独进行控制，因此视网络状况可能会出现无法下载等情况；请您灵活切换WLAN与数据流量，以及开启或关闭VPN。\n\n由于下载操作被封装在ML Kit库中，因此软件内无法显示下载进度，下载操作会调用系统下载器，进度应该会显示在通知栏中，<b><u>预计需要下载的文件总大小在100MB左右</u></b>。</string>
     <string name="mlkit_status_download">ML Kit模型下载状态：已下载</string>
     <string name="mlkit_status_not_download">ML Kit模型下载状态：未下载</string>
     <string name="check_mlkit_download_error">检查状态失败：%s</string>
@@ -229,7 +229,7 @@
     <string name="key_value_blank">存在空的Key或Value</string>
     <string name="url_blank">URL不能为空</string>
     <string name="response_json_blank">JSON响应路径不能为空</string>
-    <string name="gemini_intro">Gemini是Google最新推出的生成式AI，其配置非常简单，但<font color="#E25A5C">如果您在国内，则大概率需要借助VPN才可使用</font>。点击“查看教程”即可查看如何获取Gemini的API。</string>
+    <string name="gemini_intro">Gemini是Google最新推出的生成式AI，其配置非常简单，但<b><u>如果您在国内，则大概率需要借助VPN才可使用</u></b>。点击“查看教程”即可查看如何获取Gemini的API。</string>
     <string name="gemini_key">您的Gemini API 密钥</string>
     <string name="gemini_title">配置Gemini API</string>
     <string name="set_floating_ball_press">设置长按判定时间</string>
@@ -262,7 +262,7 @@
     <string name="still_running">翻译悬浮球好像还在运行，请先关闭它再调整设置吧</string>
     <string name="invalid_combination">源语言和目标语言相同，这是无意义的翻译组合哦</string>
     <string name="bingapi_name">必应翻译</string>
-    <string name="bingapi_description">不需要配置密钥即可使用的翻译API，实现原理是模拟浏览器访问必应翻译网页版。<font color="#E25A5C">该方法依赖网页结构和token提取，稳定性较差且可能受到访问限制，还请您更多地使用其他的翻译API</font>。</string>
+    <string name="bingapi_description">不需要配置密钥即可使用的翻译API，实现原理是模拟浏览器访问必应翻译网页版。<b><u>该方法依赖网页结构和token提取，稳定性较差且可能受到访问限制，还请您更多地使用其他的翻译API</u></b>。</string>
     <string name="azureapi_name">Azure AI 翻译</string>
     <string name="azureapi_description">微软Azure AI 翻译的API，点击下方的“管理Azure API”即可设置API，还可以在其中查看API的申请教程（每月有200万字符的免费调用额度）。</string>
     <string name="manage_azure_api">管理Azure API</string>
@@ -283,7 +283,7 @@
     <string name="delete_success">删除成功</string>
     <string name="rename_tip">还请不要起过于奇怪的名字</string>
     <string name="import_model_dialog_title">导入模型</string>
-    <string name="import_model_folder_message">在下方填入要导入的模型的名称，然后在文件管理器中<font color="#E25A5C">进入包含该模型的“.model3.json”文件的文件夹</font>，并点击屏幕下方的“使用此文件夹”按钮。\n\n您可以点击下方的“查看教程”按钮获取更详细的信息（如Live2D模型文件的基础结构、解决某些模型导入后无法播放表情和动作的问题等）。</string>
+    <string name="import_model_folder_message">在下方填入要导入的模型的名称，然后在文件管理器中<b><u>进入包含该模型的“.model3.json”文件的文件夹</u></b>，并点击屏幕下方的“使用此文件夹”按钮。\n\n您可以点击下方的“查看教程”按钮获取更详细的信息（如Live2D模型文件的基础结构、解决某些模型导入后无法播放表情和动作的问题等）。</string>
     <string name="model_name">输入模型名称...</string>
     <string name="import_success">导入成功</string>
     <string name="import_failed">导入失败：%s</string>
@@ -302,16 +302,16 @@
     <string name="tutorial_enter">Let\'s Go !</string>
     <string name="tutorial_permission">授权时间！</string>
     <string name="faq_q1">为什么我的HarmonyOS版本大于等于3.0，但还是提示安卓版本过低？</string>
-    <string name="faq_a1">这是由于华为更新HarmonyOS后（注意并不是HarmonyOS NEXT），其底层的Android API不再能被用户直观地看出。对于<font color="#E25A5C">大部分较新款</font>的华为手机，HarmonyOS 2.0对应Android 10 (API 29)；HarmonyOS 3.0对应Android 12 (API 31)。但对于部分较旧的华为机型，虽然更新了HarmonyOS 3.0，但实际上并未更新底层的Android API，一些机型底层的Android版本仍为Android 10。因此<font color="#E25A5C">系统仍没有达到本软件要求</font>的Android 11 (API 30)。下面是一些已知的型号：\n\n搭载麒麟980及以下的机型，如mate20，P30，Nova5等机型，HarmonyOS 3.0对应的Android版本是10 (API 29)。这些机型的HarmonyOS 3.0其实并不是真正的3.0，功能缺失比较多，主要升级是：更新了版本号，使用了3.0的新主题，增加了一些不依赖Android 12的小功能。</string>
+    <string name="faq_a1">这是由于华为更新HarmonyOS后（注意并不是HarmonyOS NEXT），其底层的Android API不再能被用户直观地看出。对于<b><u>大部分较新款</u></b>的华为手机，HarmonyOS 2.0对应Android 10 (API 29)；HarmonyOS 3.0对应Android 12 (API 31)。但对于部分较旧的华为机型，虽然更新了HarmonyOS 3.0，但实际上并未更新底层的Android API，一些机型底层的Android版本仍为Android 10。因此<b><u>系统仍没有达到本软件要求</u></b>的Android 11 (API 30)。下面是一些已知的型号：\n\n搭载麒麟980及以下的机型，如mate20，P30，Nova5等机型，HarmonyOS 3.0对应的Android版本是10 (API 29)。这些机型的HarmonyOS 3.0其实并不是真正的3.0，功能缺失比较多，主要升级是：更新了版本号，使用了3.0的新主题，增加了一些不依赖Android 12的小功能。</string>
     <string name="faq_q2">为什么我已经授予了无障碍权限，但软件依旧提示没有获取到无障碍权限？</string>
-    <string name="faq_a2">这是由于<font color="#E25A5C">无障碍权限被系统回收</font>导致的；在安卓系统中，无障碍是一个非常重要的权限。大部分基于安卓的系统在您退出软件或者关机重启时就会将无障碍权限回收，这也是出于安全考虑（当然，本软件是开源的，不会收集您的任何信息）。\n\n明白了原因，解决起来也非常方便。只要软件首页点击右上角的“？”->找到授予无障碍权限的那一步->点击“去授予该权限”->找到本软件，然后<font color="#E25A5C">关闭软件的无障碍权限，重新授予</font>即可。</string>
+    <string name="faq_a2">这是由于<b>无障碍权限被系统回收</b>导致的；在安卓系统中，无障碍是一个非常重要的权限。大部分基于安卓的系统在您退出软件或者关机重启时就会将无障碍权限回收，这也是出于安全考虑（当然，本软件是开源的，不会收集您的任何信息）。\n\n明白了原因，解决起来也非常方便。只要软件首页点击右上角的“？”->找到授予无障碍权限的那一步->点击“去授予该权限”->找到本软件，然后<b><u>关闭软件的无障碍权限，重新授予</u></b>即可。</string>
     <string name="more_api">在【设置】页面的“翻译模式”和“API配置”中调整该选项</string>
     <string name="faq_q3">为什么点击了悬浮球，长时间没有翻译结果，最后报错？</string>
-    <string name="faq_a3">这大概率是<font color="#E25A5C">由于网络不畅导致的</font>。很多外服游戏需要使用加速器，但使用加速器后，再访问国内的翻译API就比较慢了。所以就会导致翻译超时，出现错误。\n\n这时请<font color="#E25A5C">关闭您的wifi，打开数据流量，然后重新用加速器加速</font>。这时应该就能流畅使用翻译了。<font color="#E25A5C">无需担心流量消耗</font>，一般来说，当您使用“本地OCR识别+文本翻译”的翻译模式时，花费的流量是微乎其微的。</string>
+    <string name="faq_a3">这大概率是<b>由于网络不畅导致的</b>。很多外服游戏需要使用加速器，但使用加速器后，再访问国内的翻译API就比较慢了。所以就会导致翻译超时，出现错误。\n\n这时请<b><u>关闭您的wifi，打开数据流量，然后重新用加速器加速</u></b>。这时应该就能流畅使用翻译了。<b><u>无需担心流量消耗</u></b>，一般来说，当您使用“本地OCR识别+文本翻译”的翻译模式时，花费的流量是微乎其微的。</string>
     <string name="err_baidu_text_title">百度翻译（OCR）</string>
     <string name="err_baidu_text_content">百度翻译（文本）的错误码可在下方链接中找到：\n注意：需使用桌面端UA方可正常浏览，否则会跳转至百度翻译开放平台首页。\nhttps://fanyi-api.baidu.com/doc/21</string>
     <string name="err_bing_text_title">必应翻译（OCR）</string>
-    <string name="err_bing_text_content">必应翻译不需要配置API Key即可使用，这是因为它是通过模拟浏览器访问网页的行为来实现翻译的，这是非常不规范的方法。也正因为如此，萌译无法保证它的稳定性。当您使用必应翻译出现问题时，<font color="#E25A5C">推荐您使用其他翻译API来进行翻译</font>，同时也欢迎您在【设置】->【关于】->【意见反馈】中提交反馈，以便在后续版本进行修复。</string>
+    <string name="err_bing_text_content">必应翻译不需要配置API Key即可使用，这是因为它是通过模拟浏览器访问网页的行为来实现翻译的，这是非常不规范的方法。也正因为如此，萌译无法保证它的稳定性。当您使用必应翻译出现问题时，<b><u>推荐您使用其他翻译API来进行翻译</u></b>，同时也欢迎您在【设置】->【关于】->【意见反馈】中提交反馈，以便在后续版本进行修复。</string>
     <string name="err_niutrans_text_title">小牛翻译（OCR）</string>
     <string name="err_niutrans_text_content">小牛翻译的错误码可在下方链接中找到：\n\nhttps://niutrans.com/documents/contents/trans_text#error</string>
     <string name="err_volc_text_title">火山引擎（OCR）</string>
@@ -409,5 +409,9 @@
     <string name="introduce_openai_api_title">聚合AI翻译API功能说明</string>
     <string name="introduce_openai_api_content">\n⚠️注意：<b>这是一个高级功能，需要您了解基本的API调用知识。</b>\n\n<big>一、基本说明</big>\n此功能允许您使用市面上主流的AI来进行翻译（<b>只要兼容OpenAI接口规范即可接入</b>），如ChatGPT、Qwen、DeepSeek等，接入方式为调用官方API接口。\n\n<big>二、参数说明</big>\n1、API_KEY：对应官网上给出的API密钥\n2、基础URL：对应官网上给出的接入路径\n3、model：即使用的模型名称\n4、系统提示词：给模型设定身份，保持默认即可\n5、用户提示词：发送给模型的翻译指令，保持默认即可\n\n<big>三、填写示例</big>\n以接入阿里的“通义千问-Plus”模型为例：\n对于API_KEY，正常填写即可；\n对于基础URL，阿里旗下的千问模型一般都是https://dashscope.aliyuncs.com/compatible-mode/v1；\n对于model，“通义千问-Plus”模型对应的代号是qwen-plus；\n对于系统提示词和用户提示词，保持默认即可。\n\n\n<big>四、在使用该功能之前</big>\n您可以先使用Postman、Reqable等工具测试API响应，待测试成功后再将相关参数填入该功能中。</string>
     <string name="base_url_tips">无法使用？试试在基础URL最后加上“/v1”，“/chat/completions”会自动添加。</string>
-
+    <string name="language_setting_title">语言设置</string>
+    <string name="language_setting_summary">当前语言：%s \n重新设置语言后，应用会自动重启。</string>
+    <string name="language_change_title">更改语言</string>
+    <string name="language_change_message">切换到%s？\n应用将重启以应用新语言。</string>
+    <string name="language_changed">语言切换成功</string>
 </resources>

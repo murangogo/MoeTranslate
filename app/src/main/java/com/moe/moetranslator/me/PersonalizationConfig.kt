@@ -22,10 +22,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.text.InputType
-import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -36,12 +33,11 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.jaredrummler.android.colorpicker.ColorPreferenceCompat
 import com.moe.moetranslator.R
+import com.moe.moetranslator.translate.CustomLocale
 import com.moe.moetranslator.translate.DecimalDigitsInputFilter
 import com.moe.moetranslator.translate.Dialogs
 import com.moe.moetranslator.utils.CustomPreference
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import okhttp3.internal.notify
+import com.moe.moetranslator.utils.LanguageManager
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -62,6 +58,8 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
     private lateinit var autoStrSimilarity: Preference
     private lateinit var showSource: ListPreference
 
+    private lateinit var languagePreference: ListPreference
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         prefs = CustomPreference.getInstance(requireContext())
         setPreferencesFromResource(R.xml.personalization, rootKey)
@@ -75,6 +73,7 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
         autoStrLength = findPreference<Preference>("auto_translate_str_length")!!
         autoStrSimilarity = findPreference<Preference>("auto_translate_str_similarity")!!
         showSource = findPreference<ListPreference>("show_source_text")!!
+        languagePreference = findPreference<ListPreference>("app_language")!!
 
         // 悬浮球图片
         ballIcon.setOnPreferenceClickListener {
@@ -167,6 +166,65 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
         updateStrSimilaritySummary()
         updateFontSummary()
         updateFontSizeSummary()
+        setupLanguagePreference()
+    }
+
+    /**
+     * 设置语言选择功能
+     */
+    private fun setupLanguagePreference() {
+        // 设置当前选中的语言
+        val currentLanguage = LanguageManager.getAppLanguage(requireContext())
+        languagePreference.value = currentLanguage
+
+        // 更新摘要显示
+        languagePreference.summaryProvider = Preference.SummaryProvider<ListPreference> {
+            getString(R.string.language_setting_summary, CustomLocale.getInstance(it.value).getDisplayName())
+        }
+
+        // 监听语言变化
+        languagePreference.setOnPreferenceChangeListener { _, newValue ->
+            val newLanguage = newValue as String
+
+            // 如果语言没有变化，直接返回
+            if (newLanguage == LanguageManager.getAppLanguage(requireContext())) {
+                return@setOnPreferenceChangeListener true
+            }
+
+            // 显示确认对话框
+            showLanguageChangeDialog(newLanguage)
+            false // 暂时不改变值，等待用户确认
+        }
+    }
+
+    /**
+     * 显示语言切换确认对话框
+     */
+    private fun showLanguageChangeDialog(newLanguage: String) {
+        val languageName = CustomLocale.getInstance(newLanguage).getDisplayName()
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.language_change_title)
+            .setMessage(getString(R.string.language_change_message, languageName))
+            .setCancelable(false)
+            .setPositiveButton(R.string.confirm) { _, _ ->
+                // 保存语言设置
+                LanguageManager.setAppLanguage(requireContext(), newLanguage, true)
+
+                // 更新 Preference 的值
+                languagePreference.value = newLanguage
+
+                // 提示用户
+                showToast(getString(R.string.language_changed), true)
+
+                // 退出应用，用户重新打开时会应用新语言
+                activity?.let { LanguageManager.exitApplication(it) }
+            }
+            .setNegativeButton(R.string.user_cancel, null)
+            .create()
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
     private fun updateIconSummary(){
