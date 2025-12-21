@@ -1,5 +1,5 @@
 {
-    "versionCode": 29,
-    "versionName": "5.2.1",
-    "versionContent": "普通更新：\n\n🐛 问题修复\n- 修复聚合AI翻译修改提示词保存后会变回默认提示词的问题\n"
+    "versionCode": 30,
+    "versionName": "5.2.2",
+    "versionContent": "普通更新：\n\n🚀 新特性\n- 支持切换应用程序语言，可在【个性化设置】->【语言设置】中切换\n\n✨ 优化\n- 部分提示文本优化\n"
 }

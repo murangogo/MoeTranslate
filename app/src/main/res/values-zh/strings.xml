@@ -410,7 +410,7 @@
     <string name="introduce_openai_api_content">\n⚠️注意：<b>这是一个高级功能，需要您了解基本的API调用知识。</b>\n\n<big>一、基本说明</big>\n此功能允许您使用市面上主流的AI来进行翻译（<b>只要兼容OpenAI接口规范即可接入</b>），如ChatGPT、Qwen、DeepSeek等，接入方式为调用官方API接口。\n\n<big>二、参数说明</big>\n1、API_KEY：对应官网上给出的API密钥\n2、基础URL：对应官网上给出的接入路径\n3、model：即使用的模型名称\n4、系统提示词：给模型设定身份，保持默认即可\n5、用户提示词：发送给模型的翻译指令，保持默认即可\n\n<big>三、填写示例</big>\n以接入阿里的“通义千问-Plus”模型为例：\n对于API_KEY，正常填写即可；\n对于基础URL，阿里旗下的千问模型一般都是https://dashscope.aliyuncs.com/compatible-mode/v1；\n对于model，“通义千问-Plus”模型对应的代号是qwen-plus；\n对于系统提示词和用户提示词，保持默认即可。\n\n\n<big>四、在使用该功能之前</big>\n您可以先使用Postman、Reqable等工具测试API响应，待测试成功后再将相关参数填入该功能中。</string>
     <string name="base_url_tips">无法使用？试试在基础URL最后加上“/v1”，“/chat/completions”会自动添加。</string>
     <string name="language_setting_title">语言设置</string>
-    <string name="language_setting_summary">当前语言：%s \n重新设置语言后，应用会自动重启。</string>
+    <string name="language_setting_summary">当前语言：%s \n重新设置语言后，应用会自动重启</string>
     <string name="language_change_title">更改语言</string>
     <string name="language_change_message">切换到%s？\n应用将重启以应用新语言。</string>
     <string name="language_changed">语言切换成功</string>

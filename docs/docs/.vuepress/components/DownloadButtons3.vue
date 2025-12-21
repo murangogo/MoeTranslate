@@ -7,7 +7,7 @@
   
       <!-- 下载按钮区 -->
       <div class="download-buttons">
-        <button @click="handleDownload(0, 'https://www.123865.com/s/2f38Vv-D6CzH')" class="download-button pan-button">
+        <button @click="handleDownload(0, 'https://www.123865.com/s/2f38Vv-bqNzH')" class="download-button pan-button">
           <div class="button-content">
             <img src="/123pan.png" alt="123云盘" class="button-icon">
             <div class="button-text">
@@ -27,7 +27,7 @@
           </div>
         </button>
   
-        <button @click="handleDownload(2, 'https://repo.azuki.top/MoeTranslate_arm64-v8a_5.2.1.apk')" class="download-button local-button">
+        <button @click="handleDownload(2, 'https://repo.azuki.top/MoeTranslate_arm64-v8a_5.2.2.apk')" class="download-button local-button">
           <div class="button-content">
             <img src="/cloudflare.png" alt="CloudFlare" class="button-icon">
             <div class="button-text">
