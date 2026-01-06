@@ -7,7 +7,7 @@
   
       <!-- 下载按钮区 -->
       <div class="download-buttons">
-        <button @click="handleDownload(0, 'https://www.123865.com/s/2f38Vv-bqNzH')" class="download-button pan-button">
+        <button @click="handleDownload(0, 'https://www.123865.com/s/2f38Vv-CdOzH')" class="download-button pan-button">
           <div class="button-content">
             <img src="/123pan.png" alt="123云盘" class="button-icon">
             <div class="button-text">
