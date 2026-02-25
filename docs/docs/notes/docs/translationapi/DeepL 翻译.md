@@ -16,6 +16,12 @@ permalink: /docs/translationapi/deepl/
 
 :::
 
+::: tip 需要国际银行卡提示
+
+DeepL 翻译的API申请需要使用**国际银行卡**，如Visa或Master Card（万事达），在您开始申请前请务必知悉。
+
+:::
+
 ## 一、注册并登录DeepL翻译账号
 
 打开[DeepL翻译开发者平台](https://developers.deepl.com/docs/getting-started/intro/)。
@@ -32,7 +38,7 @@ https://developers.deepl.com/docs/getting-started/intro/
 
 <img src="https://img.moetranslate.top/deepl_step_2.png"/>
 
-填写个人信息和信用卡信息（注意这里需要使用国外信用卡），完成后点击“Begin subscription”，开始订阅。
+填写个人信息和银行卡信息（注意这里需要使用国际银行卡），完成后点击“Begin subscription”，开始订阅。
 
 <img src="https://img.moetranslate.top/deepl_step_3.png"/>
 
@@ -54,7 +60,7 @@ https://www.deepl.com/your-account/keys
 
 再点击【管理DeepL 翻译API】，进入API Key配置页面。
 
-这里要注意，填写第一行的Host时，如果你使用的是**免费版，请<font color="#E25A5C">严格</font>填写`api-free.deepl.com`**；如果你使用的是**免费版，请<font color="#E25A5C">严格</font>填写`api.deepl.com`**。
+这里要注意，填写第一行的Host时，如果你使用的是**免费版，请<font color="#E25A5C">严格</font>填写`api-free.deepl.com`**；如果你使用的是**付费版，请<font color="#E25A5C">严格</font>填写`api.deepl.com`**。
 
 然后，将刚才复制的**API Key**粘贴到第二行，并点击【保存】；
 

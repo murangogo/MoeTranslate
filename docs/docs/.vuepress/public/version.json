@@ -1,5 +1,5 @@
 {
-    "versionCode": 30,
-    "versionName": "5.2.2",
-    "versionContent": "普通更新：\n\n🚀 新特性\n- 支持切换应用程序语言，可在【个性化设置】->【语言设置】中切换\n\n✨ 优化\n- 部分提示文本优化\n"
+    "versionCode": 31,
+    "versionName": "5.3.0",
+    "versionContent": "普通更新：\n\n🚀 新特性\n- 萌译现在支持DeepL翻译啦，可前往官网查看教程文档\n\n✨ 优化\n- 部分提示文本UI优化\n"
 }
