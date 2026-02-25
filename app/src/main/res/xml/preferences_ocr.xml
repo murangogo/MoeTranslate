@@ -105,6 +105,16 @@
             app:title="@string/manage_azure_api" />
 
         <SwitchPreferenceCompat
+            app:key="ui_deepl_translation_text"
+            app:title="@string/deeplapi_name"
+            app:icon="@drawable/deepl"
+            app:summary="@string/deeplapi_description"/>
+
+        <Preference
+            app:key="ui_manage_deepl_api_text"
+            app:title="@string/manage_deepl_api" />
+
+        <SwitchPreferenceCompat
             app:key="ui_baidu_translation_text"
             app:title="@string/baiduapi_name"
             app:icon="@drawable/baiduyi"

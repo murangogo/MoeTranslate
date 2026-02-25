@@ -414,4 +414,9 @@
     <string name="language_change_title">Change Language</string>
     <string name="language_change_message">Switch to %s?\nThe app will restart to apply the new language.</string>
     <string name="language_changed">Language changed successfully</string>
+    <string name="deeplapi_name">DeepL Translate</string>
+    <string name="deeplapi_description">The DeepL Translation API; click \"Manage DeepL Translation API\" below to set up the API, and you can also view the API application tutorial there (with a free monthly call quota of 500,000 characters).</string>
+    <string name="manage_deepl_api">Manage DeepL Translate API</string>
+    <string name="deepl_hint_host">Please enter Host; Free version: api-free.deepl.com; Paid version: api.deepl.com</string>
+    <string name="deepl_hint_apikey">API Key</string>
 </resources>

@@ -77,6 +77,12 @@ class CustomPreference private constructor(context: Context) {
     //Azure_EncryptedKey(Str)：KeyStore参数，存储Azure API（Key）
     //Azure_IV(Str)：KeyStore参数，存储Azure翻译API（Key）
 
+    //DeepL_Translate_HOST_EncryptedKey(Str)：KeyStore参数，存储DeepL翻译API（Host）
+    //DeepL_Translate_HOST_IV(Str)：KeyStore参数，存储DeepL翻译API（Host）
+
+    //DeepL_Translate_APIKEY_EncryptedKey(Str)：KeyStore参数，存储DeepL翻译API（APIKey）
+    //DeepL_Translate_APIKEY_IV(Str)：KeyStore参数，存储DeepL翻译API（APIKey）
+
     //Baidu_Translate_ACCOUNT_EncryptedKey(Str)：KeyStore参数，存储百度翻译API（APPID）
     //Baidu_Translate_ACCOUNT_IV(Str)：KeyStore参数，存储百度翻译API（APPID）
 

@@ -60,6 +60,7 @@ class OnlineAPI : Fragment() {
             "niu" -> prepareNiu()
             "volc" -> prepareVolc()
             "azure" -> prepareAzure()
+            "deepl" -> prepareDeepL()
             "baidu" -> prepareBaidu()
             "tencent" -> prepareTencent()
             else -> Toast.makeText(context, "Unknow Error.", Toast.LENGTH_LONG).show()
@@ -208,6 +209,57 @@ class OnlineAPI : Fragment() {
                     requireContext(),
                     binding.secretKey.text.toString().trim(),
                     "Azure"
+                )
+                Toast.makeText(context, getString(R.string.save_successfully), Toast.LENGTH_LONG).show()
+                requireActivity().finish()
+            }
+        }
+    }
+
+    private fun prepareDeepL(){
+        binding.tvApiType.text = getString(R.string.api_name, getString(R.string.deeplapi_name))
+        if (prefs.getString("DeepL_Translate_APIKEY_EncryptedKey","") != ""){
+            binding.account.hint = getString(R.string.api_saved)
+            binding.secretKey.hint = getString(R.string.api_saved)
+        }else{
+            binding.account.hint = getString(R.string.deepl_hint_host)
+            binding.secretKey.hint = getString(R.string.deepl_hint_apikey)
+        }
+        binding.whatsThis.setOnClickListener {
+            val dialog = AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.whats_api_title, getString(R.string.deeplapi_name)))
+                .setMessage(getString(R.string.whats_api_content, getString(R.string.deeplapi_name)))
+                .setCancelable(false)
+                .setNeutralButton(R.string.view_tutorial){_,_->
+                    val urlt = "https://www.moetranslate.top/docs/translationapi/deepl/"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(urlt)
+                    startActivity(intent)
+                }
+                .setPositiveButton(R.string.go_now) { _, _ ->
+                    val url = "https://developers.deepl.com/docs/getting-started/intro/"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                }
+                .setNegativeButton(R.string.user_cancel) { _, _ ->}
+                .create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+        }
+        binding.saveOnlineApiButton.setOnClickListener {
+            if (binding.account.text.isBlank() || binding.secretKey.text.isBlank()) {
+                Toast.makeText(context, getString(R.string.fill_blank), Toast.LENGTH_LONG).show()
+            } else {
+                KeystoreManager.storeKey(
+                    requireContext(),
+                    binding.account.text.toString().trim(),
+                    "DeepL_Translate_HOST"
+                )
+                KeystoreManager.storeKey(
+                    requireContext(),
+                    binding.secretKey.text.toString().trim(),
+                    "DeepL_Translate_APIKEY"
                 )
                 Toast.makeText(context, getString(R.string.save_successfully), Toast.LENGTH_LONG).show()
                 requireActivity().finish()

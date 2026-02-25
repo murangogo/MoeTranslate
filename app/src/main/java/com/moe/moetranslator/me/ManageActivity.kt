@@ -40,6 +40,7 @@ class ManageActivity : BaseActivity() {
         const val TYPE_FRAGMENT_MANAGE_CUSTOM_TEXT_API = 8
         const val TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API = 9
         const val TYPE_FRAGMENT_MANAGE_OPENAI_API = 10
+        const val TYPE_FRAGMENT_MANAGE_DEEPL_API = 11
         const val CODE_CUSTOM_0 = 0
         const val CODE_CUSTOM_1 = 1
         const val CODE_CUSTOM_2 = 2
@@ -99,6 +100,16 @@ class ManageActivity : BaseActivity() {
                 val fragment = OnlineAPI()
                 val args = Bundle().apply {
                     putString("api_type", "azure")
+                }
+                fragment.arguments = args
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
+            TYPE_FRAGMENT_MANAGE_DEEPL_API->{
+                val fragment = OnlineAPI()
+                val args = Bundle().apply {
+                    putString("api_type", "deepl")
                 }
                 fragment.arguments = args
                 supportFragmentManager.beginTransaction()

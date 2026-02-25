@@ -51,6 +51,7 @@ import translationapi.baidutranslation.BaiduTranslationText
 import translationapi.bingtranslation.BingTranslation
 import translationapi.customtranslation.CustomTranslationImage
 import translationapi.customtranslation.CustomTranslationText
+import translationapi.deepltranslation.DeepLTranslation
 import translationapi.mlkittranslation.MLKitTranslation
 import translationapi.niutrans.NiuTranslation
 import translationapi.nllbtranslation.NLLBTranslation
@@ -192,6 +193,7 @@ class FloatingBallService : LifecycleService() {
                     Constants.TextApi.OPENAI.id -> translatorText = OpenAITranslation(apiKey = prefs.getString("OpenAI_Api_Key", ""), baseUrl = prefs.getString("OpenAI_Base_Url", ""), model = prefs.getString("OpenAI_Model_Name", ""), systemPrompt = prefs.getString("OpenAI_System_Prompt", defaultSystemPrompt), userPrompt = prefs.getString("OpenAI_User_Prompt", defaultUserPrompt))
                     Constants.TextApi.VOLC.id -> translatorText = VolcTranslation(KeystoreManager.retrieveKey(this, "Volc_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Volc_SECRETKEY")!!)
                     Constants.TextApi.AZURE.id -> translatorText = AzureTranslation(KeystoreManager.retrieveKey(this, "Azure")!!)
+                    Constants.TextApi.DEEPL.id -> translatorText = DeepLTranslation(KeystoreManager.retrieveKey(this, "DeepL_Translate_HOST")!!, KeystoreManager.retrieveKey(this, "DeepL_Translate_APIKEY")!!)
                     Constants.TextApi.BAIDU.id -> translatorText = BaiduTranslationText(KeystoreManager.retrieveKey(this, "Baidu_Translate_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Baidu_Translate_SECRETKEY")!!)
                     Constants.TextApi.TENCENT.id -> translatorText = TencentTranslationText(KeystoreManager.retrieveKey(this, "Tencent_Cloud_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Tencent_Cloud_SECRETKEY")!!)
                     Constants.TextApi.CUSTOM_TEXT.id -> {

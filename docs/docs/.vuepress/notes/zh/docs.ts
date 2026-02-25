@@ -38,6 +38,7 @@ export const docsNotes = defineNoteConfig({
         '聚合AI翻译',
         '火山引擎',
         'Azure AI 翻译',
+        'DeepL 翻译',
         '百度翻译',
         '腾讯云',
         '自定义文本API',

@@ -41,7 +41,7 @@ class APIConfig : PreferenceFragmentCompat() {
                 "mlkit_translation", "nllb_translation",
                 "ui_bing_translation_text", "ui_niu_translation_text",
                 "ui_openai_translation_text",
-                "ui_volc_translation_text", "ui_azure_translation_text",
+                "ui_volc_translation_text", "ui_azure_translation_text", "ui_deepl_translation_text",
                 "ui_baidu_translation_text", "ui_tencent_translation_text",
                 "ui_custom_api_1_text", "ui_custom_api_2_text", "ui_custom_api_3_text"
             )
@@ -113,6 +113,14 @@ class APIConfig : PreferenceFragmentCompat() {
             findPreference<Preference>("ui_manage_azure_api_text")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_AZURE_API)
+                }
+                startActivity(intent)
+                true
+            }
+
+            findPreference<Preference>("ui_manage_deepl_api_text")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_DEEPL_API)
                 }
                 startActivity(intent)
                 true
@@ -255,6 +263,12 @@ class APIConfig : PreferenceFragmentCompat() {
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "OCR azure")
             }
+            "ui_deepl_translation_text"->{
+                prefs.setInt("Text_API", Constants.TextApi.DEEPL.id)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
+                Log.d("APIConfig", "OCR deepl")
+            }
             "ui_baidu_translation_text"->{
                 prefs.setInt("Text_API", Constants.TextApi.BAIDU.id)
                 prefs.setString("Source_Language", "ja")
@@ -367,6 +381,11 @@ class APIConfig : PreferenceFragmentCompat() {
                 }
                 Constants.TextApi.AZURE.id -> {
                     val key = "ui_azure_translation_text"
+                    findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
+                    setKey(key)
+                }
+                Constants.TextApi.DEEPL.id -> {
+                    val key = "ui_deepl_translation_text"
                     findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
                     setKey(key)
                 }

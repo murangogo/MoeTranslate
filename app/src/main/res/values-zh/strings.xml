@@ -414,4 +414,9 @@
     <string name="language_change_title">更改语言</string>
     <string name="language_change_message">切换到%s？\n应用将重启以应用新语言。</string>
     <string name="language_changed">语言切换成功</string>
+    <string name="deeplapi_name">DeepL 翻译</string>
+    <string name="deeplapi_description">DeepL 翻译的API，点击下方的“管理DeepL 翻译API”即可设置API，还可以在其中查看API的申请教程（每月有50万字符的免费调用额度）。</string>
+    <string name="manage_deepl_api">管理DeepL 翻译API</string>
+    <string name="deepl_hint_host">请填入Host；免费版：api-free.deepl.com；付费版：api.deepl.com</string>
+    <string name="deepl_hint_apikey">API Key</string>
 </resources>

@@ -80,6 +80,12 @@ object TranslateTools {
                         else -> R.raw.azure_text_support_languages
                     }
                 }
+                Constants.TextApi.DEEPL.id -> {
+                    when (type){
+                        1 -> R.raw.ocr_support_languages
+                        else -> R.raw.deepl_text_tar_support_languages
+                    }
+                }
                 Constants.TextApi.BAIDU.id -> {
                     when (type){
                         1 -> R.raw.ocr_support_languages

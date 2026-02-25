@@ -274,6 +274,13 @@ class TranslateFragment : Fragment() {
                     ) + "（${getString(R.string.ocr)}）"
                 }
 
+                Constants.TextApi.DEEPL.id -> {
+                    binding.selectedAPI.text = getString(
+                        R.string.api_name,
+                        getString(R.string.deeplapi_name)
+                    ) + "（${getString(R.string.ocr)}）"
+                }
+
                 Constants.TextApi.BAIDU.id -> {
                     binding.selectedAPI.text = getString(
                         R.string.api_name,
@@ -567,6 +574,37 @@ class TranslateFragment : Fragment() {
                                         putExtra(
                                             ManageActivity.EXTRA_FRAGMENT_TYPE,
                                             ManageActivity.TYPE_FRAGMENT_MANAGE_AZURE_API
+                                        )
+                                    }
+                                startActivity(intent)
+                            }
+                            .setNegativeButton(R.string.user_cancel, null)
+                            .create()
+                        dialog.show()
+                        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+                        false
+                    } else {
+                        true
+                    }
+                }
+
+                Constants.TextApi.DEEPL.id -> {
+                    if (prefs.getString("DeepL_Translate_APIKEY_EncryptedKey", "") == "") {
+                        val dialog = AlertDialog.Builder(requireContext())
+                            .setTitle(R.string.api_not_config_title)
+                            .setMessage(
+                                getString(
+                                    R.string.api_not_config_content,
+                                    getString(R.string.deeplapi_name)
+                                )
+                            )
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.go_to_config) { _, _ ->
+                                val intent =
+                                    Intent(requireContext(), ManageActivity::class.java).apply {
+                                        putExtra(
+                                            ManageActivity.EXTRA_FRAGMENT_TYPE,
+                                            ManageActivity.TYPE_FRAGMENT_MANAGE_DEEPL_API
                                         )
                                     }
                                 startActivity(intent)
