@@ -419,4 +419,6 @@
     <string name="manage_deepl_api">Manage DeepL Translate API</string>
     <string name="deepl_hint_host">Please enter Host; Free version: api-free.deepl.com; Paid version: api.deepl.com</string>
     <string name="deepl_hint_apikey">API Key</string>
+    <string name="err_deepl_text_title">DeepL Translate（OCR）</string>
+    <string name="err_deepl_text_content">The error code for DeepL Translate can be found at the link below:\n\nhttps://developers.deepl.com/docs/best-practices/error-handling</string>
 </resources>

@@ -47,6 +47,7 @@ class Errcode : Fragment() {
             CustomCard(getText(R.string.err_niutrans_text_title), getText(R.string.err_niutrans_text_content)),
             CustomCard(getText(R.string.err_volc_text_title), getText(R.string.err_volc_text_content)),
             CustomCard(getText(R.string.err_azure_text_title), getText(R.string.err_azure_text_content)),
+            CustomCard(getText(R.string.err_deepl_text_title), getText(R.string.err_deepl_text_content)),
             CustomCard(getText(R.string.err_baidu_text_title), getText(R.string.err_baidu_text_content)),
             CustomCard(getText(R.string.err_baidu_pic_title), getText(R.string.err_baidu_pic_content)),
             CustomCard(getText(R.string.err_tencent_text_title), getText(R.string.err_tencent_text_content)),

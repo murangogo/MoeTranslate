@@ -419,4 +419,6 @@
     <string name="manage_deepl_api">管理DeepL 翻译API</string>
     <string name="deepl_hint_host">请填入Host；免费版：api-free.deepl.com；付费版：api.deepl.com</string>
     <string name="deepl_hint_apikey">API Key</string>
+    <string name="err_deepl_text_title">DeepL 翻译（OCR）</string>
+    <string name="err_deepl_text_content">DeepL 翻译的错误码可在下方链接中找到：\n\nhttps://developers.deepl.com/docs/best-practices/error-handling</string>
 </resources>
