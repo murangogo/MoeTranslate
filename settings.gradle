@@ -27,3 +27,4 @@ dependencyResolutionManagement {
 rootProject.name = "MoeTranslator"
 include ':app'
 include ':framework'
+include ':llama'

@@ -46,7 +46,7 @@ android {
     }
 
     // 添加全局 NDK 配置
-    ndkVersion "25.2.9519653"  // 使用项目中的 NDK 版本
+    ndkVersion "27.3.13750724"  // 使用项目中的 NDK 版本
 
     buildTypes {
         release {
