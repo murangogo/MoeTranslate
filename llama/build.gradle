@@ -1,3 +1,9 @@
+/*
+ * :llama —— GGUF 本地推理模块
+ *
+ * 这是一个纯底层 native library，只暴露 LlamaAndroid Kotlin API。
+ * 不要在这里引入任何 UI / 业务依赖（appcompat / material 等）。
+ */
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
@@ -9,25 +15,70 @@ android {
 
     defaultConfig {
         minSdk 29
+        consumerProguardFiles 'consumer-rules.pro'
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        // 只编 arm64。llama.cpp 在 armv7 上几乎不可用，x86_64 仅模拟器用得到。
+        // 若以后需要支持 x86_64 模拟器，把它加回来即可，但默认不开。
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+
+        // 这里的 arguments / cppFlags 会被传给 CMake。
+        // CMakeLists.txt 里那些 set(... CACHE ...) 才是 llama.cpp 内部开关，两边互补。
+        externalNativeBuild {
+            cmake {
+                // -fexceptions / -frtti：llama.cpp 大量使用异常和 RTTI，必须打开
+                // -std=c++17：llama.cpp 要求 C++17
+                cppFlags '-std=c++17 -fexceptions -frtti'
+
+                arguments '-DANDROID_STL=c++_shared',
+                          '-DCMAKE_BUILD_TYPE=Release'
+            }
+        }
     }
+
+    // 锁死 NDK 版本，避免被 root project 的旧 NDK 拖下水
+    ndkVersion "27.3.13750724"
+
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
 
+    // 防止 BuildConfig 自动生成（这个库不需要）
+    buildFeatures {
+        buildConfig false
+    }
+
+    // 让 .so 在 release 构建里不被压缩 — 启动加载更快，Play 也不再要求压缩
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging false
+        }
+    }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'androidx.core:core-ktx:1.18.0'
-    implementation 'com.google.android.material:material:1.13.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    // 仅保留绝对必要的 Kotlin 工具
+    implementation 'androidx.core:core-ktx:1.15.0'
+
+    // 后面 LlamaAndroid 的 Flow 流式推理需要
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
 }
