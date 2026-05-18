@@ -51,6 +51,16 @@
             app:key="manage_nllb_model"
             app:title="@string/manage_nllb_models" />
 
+        <SwitchPreferenceCompat
+            app:key="llama_translation"
+            app:title="@string/llama_name"
+            app:icon="@drawable/ic_llama_translation"
+            app:summary="@string/llama_description"/>
+
+        <Preference
+            app:key="manage_llama_model"
+            app:title="@string/manage_llama_models" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

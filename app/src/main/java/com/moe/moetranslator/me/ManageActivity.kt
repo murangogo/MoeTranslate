@@ -41,6 +41,7 @@ class ManageActivity : BaseActivity() {
         const val TYPE_FRAGMENT_MANAGE_CUSTOM_PIC_API = 9
         const val TYPE_FRAGMENT_MANAGE_OPENAI_API = 10
         const val TYPE_FRAGMENT_MANAGE_DEEPL_API = 11
+        const val TYPE_FRAGMENT_MANAGE_LLAMA = 12
         const val CODE_CUSTOM_0 = 0
         const val CODE_CUSTOM_1 = 1
         const val CODE_CUSTOM_2 = 2
@@ -66,6 +67,12 @@ class ManageActivity : BaseActivity() {
             }
             TYPE_FRAGMENT_MANAGE_NLLB-> {
                 val fragment = NLLBDownloadFragment()
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
+            TYPE_FRAGMENT_MANAGE_LLAMA-> {
+                val fragment = com.moe.moetranslator.llamamanager.LlamaModelManagerFragment()
                 supportFragmentManager.beginTransaction()
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()

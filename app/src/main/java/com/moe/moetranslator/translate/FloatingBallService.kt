@@ -52,6 +52,7 @@ import translationapi.bingtranslation.BingTranslation
 import translationapi.customtranslation.CustomTranslationImage
 import translationapi.customtranslation.CustomTranslationText
 import translationapi.deepltranslation.DeepLTranslation
+import translationapi.llamacpptranslation.LlamaCppTranslation
 import translationapi.mlkittranslation.MLKitTranslation
 import translationapi.niutrans.NiuTranslation
 import translationapi.nllbtranslation.NLLBTranslation
@@ -186,6 +187,12 @@ class FloatingBallService : LifecycleService() {
                     Constants.TextApi.AI.id -> when (prefs.getInt("Text_AI", Constants.TextAI.MLKIT.id)){
                         Constants.TextAI.MLKIT.id -> translatorText = MLKitTranslation()
                         Constants.TextAI.NLLB.id -> translatorText = NLLBTranslation(this)
+                        Constants.TextAI.LLAMA.id -> translatorText = LlamaCppTranslation(
+                            context = this,
+                            modelFileName = prefs.getString("Llama_Model_Name", ""),
+                            systemPrompt = prefs.getString("Llama_System_Prompt", defaultSystemPrompt),
+                            userPrompt = prefs.getString("Llama_User_Prompt", defaultUserPrompt),
+                        )
                         else -> { showToast("Unknown Translator.") }
                     }
                     Constants.TextApi.BING.id -> translatorText = BingTranslation()

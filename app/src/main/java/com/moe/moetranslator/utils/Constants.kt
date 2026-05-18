@@ -40,7 +40,8 @@ object Constants {
 
     enum class TextAI(val id: Int) {
         MLKIT(0),
-        NLLB(1)
+        NLLB(1),
+        LLAMA(2)
     }
 
     enum class PicApi(val id: Int) {

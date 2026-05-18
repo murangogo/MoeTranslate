@@ -421,4 +421,37 @@
     <string name="deepl_hint_apikey">API Key</string>
     <string name="err_deepl_text_title">DeepL Translate（OCR）</string>
     <string name="err_deepl_text_content">The error code for DeepL Translate can be found at the link below:\n\nhttps://developers.deepl.com/docs/best-practices/error-handling</string>
+
+    <!-- LlamaCpp local GGUF -->
+    <string name="llama_name">LlamaCpp Local (GGUF)</string>
+    <string name="llama_description">Run a GGUF model (Qwen / Gemma / etc.) locally on-device via llama.cpp. <b><u>Recommend a device with at least 6GB RAM; the model file is typically 0.5–3GB. After the model is added, no network is required.</u></b> Click \"Manage LlamaCpp Models\" below to add, delete, or switch active model.</string>
+    <string name="manage_llama_models">Manage LlamaCpp Models</string>
+    <string name="llama_manager_title">LlamaCpp Models</string>
+    <string name="llama_no_models">No models yet. Tap \"Add Model\" to download a preset or import a local GGUF file.</string>
+    <string name="llama_add_model">Add Model</string>
+    <string name="llama_add_from_preset">Download from preset list</string>
+    <string name="llama_add_from_local">Import local GGUF file</string>
+    <string name="llama_add_from_preset_desc">Curated GGUF models hosted by MoeTranslate (with checksum + resume).</string>
+    <string name="llama_add_from_local_desc">Pick a .gguf file from your device storage.</string>
+    <string name="llama_active_badge">ACTIVE</string>
+    <string name="llama_set_active">Set as Active</string>
+    <string name="llama_unset_active_hint">This model is currently active. Pick another row to switch.</string>
+    <string name="llama_delete_confirm_title">Delete model</string>
+    <string name="llama_delete_confirm_message">Delete model \"%s\"? The file will be permanently removed from the device.</string>
+    <string name="llama_preset_loading">Loading preset list…</string>
+    <string name="llama_preset_load_failed">Failed to load preset list: %s</string>
+    <string name="llama_preset_select_title">Pick a model to download</string>
+    <string name="llama_already_exists">A model with name \"%s\" already exists. Delete it first if you want to replace.</string>
+    <string name="llama_download_completed">Model \"%s\" downloaded</string>
+    <string name="llama_download_failed">Download failed: %s</string>
+    <string name="llama_download_in_progress">Downloading %1$s — %2$d%%</string>
+    <string name="llama_download_canceled">Download canceled</string>
+    <string name="llama_import_started">Importing file…</string>
+    <string name="llama_import_completed">Imported \"%s\"</string>
+    <string name="llama_import_failed">Import failed: %s</string>
+    <string name="llama_not_gguf">Selected file is not a .gguf file</string>
+    <string name="llama_active_set">\"%s\" is now active</string>
+    <string name="llama_no_active_model">No active LlamaCpp model. Open \"Manage LlamaCpp Models\" and pick one first.</string>
+    <string name="llama_size_speed">%1$s / %2$s  ·  %3$s/s</string>
+    <string name="llama_storage_path_hint">Files are stored privately at: %s</string>
 </resources>

@@ -38,7 +38,7 @@ class APIConfig : PreferenceFragmentCompat() {
         if(prefs.getInt("Translate_Mode", 0) == 0){
             setPreferencesFromResource(R.xml.preferences_ocr, rootKey)
             allTranslationKeys = listOf(
-                "mlkit_translation", "nllb_translation",
+                "mlkit_translation", "nllb_translation", "llama_translation",
                 "ui_bing_translation_text", "ui_niu_translation_text",
                 "ui_openai_translation_text",
                 "ui_volc_translation_text", "ui_azure_translation_text", "ui_deepl_translation_text",
@@ -81,6 +81,14 @@ class APIConfig : PreferenceFragmentCompat() {
             findPreference<Preference>("manage_nllb_model")?.setOnPreferenceClickListener {
                 val intent = Intent(requireContext(), ManageActivity::class.java).apply {
                     putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_NLLB)
+                }
+                startActivity(intent)
+                true
+            }
+
+            findPreference<Preference>("manage_llama_model")?.setOnPreferenceClickListener {
+                val intent = Intent(requireContext(), ManageActivity::class.java).apply {
+                    putExtra(ManageActivity.EXTRA_FRAGMENT_TYPE, ManageActivity.TYPE_FRAGMENT_MANAGE_LLAMA)
                 }
                 startActivity(intent)
                 true
@@ -233,6 +241,13 @@ class APIConfig : PreferenceFragmentCompat() {
                 prefs.setString("Target_Language", "zh")
                 Log.d("APIConfig", "nllb_translation")
             }
+            "llama_translation" -> {
+                prefs.setInt("Text_API", Constants.TextApi.AI.id)
+                prefs.setInt("Text_AI", Constants.TextAI.LLAMA.id)
+                prefs.setString("Source_Language", "ja")
+                prefs.setString("Target_Language", "zh")
+                Log.d("APIConfig", "llama_translation")
+            }
             "ui_bing_translation_text"->{
                 prefs.setInt("Text_API", Constants.TextApi.BING.id)
                 prefs.setString("Source_Language", "ja")
@@ -349,15 +364,14 @@ class APIConfig : PreferenceFragmentCompat() {
         when {
             translateMode == Constants.TranslateMode.TEXT.id -> when (textApi) {
                 Constants.TextApi.AI.id -> {
-                    if (textAi == Constants.TextAI.MLKIT.id) {
-                        val key = "mlkit_translation"
-                        findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
-                        setKey(key)
-                    } else {
-                        val key = "nllb_translation"
-                        findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
-                        setKey(key)
+                    val key = when (textAi) {
+                        Constants.TextAI.MLKIT.id -> "mlkit_translation"
+                        Constants.TextAI.NLLB.id -> "nllb_translation"
+                        Constants.TextAI.LLAMA.id -> "llama_translation"
+                        else -> "mlkit_translation"
                     }
+                    findPreference<SwitchPreferenceCompat>(key)?.isChecked = true
+                    setKey(key)
                 }
                 Constants.TextApi.BING.id -> {
                     val key = "ui_bing_translation_text"

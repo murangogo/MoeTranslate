@@ -421,4 +421,37 @@
     <string name="deepl_hint_apikey">API Key</string>
     <string name="err_deepl_text_title">DeepL 翻译（OCR）</string>
     <string name="err_deepl_text_content">DeepL 翻译的错误码可在下方链接中找到：\n\nhttps://developers.deepl.com/docs/best-practices/error-handling</string>
+
+    <!-- LlamaCpp 本地 GGUF -->
+    <string name="llama_name">LlamaCpp 本地 (GGUF)</string>
+    <string name="llama_description">通过 llama.cpp 在本机离线运行 GGUF 模型（Qwen / Gemma 等）。<b><u>建议设备至少 6GB 内存；模型文件通常在 0.5–3GB 之间。模型添加完成后即可完全离线使用。</u></b>点击下方的「管理 LlamaCpp 模型」即可添加、删除或切换激活模型。</string>
+    <string name="manage_llama_models">管理 LlamaCpp 模型</string>
+    <string name="llama_manager_title">LlamaCpp 模型管理</string>
+    <string name="llama_no_models">尚未添加任何模型。点击「添加模型」从预设列表下载或从本地导入 GGUF 文件。</string>
+    <string name="llama_add_model">添加模型</string>
+    <string name="llama_add_from_preset">从预设列表下载</string>
+    <string name="llama_add_from_local">导入本地 GGUF 文件</string>
+    <string name="llama_add_from_preset_desc">由萌译托管的精选 GGUF 模型（支持断点续传 + 校验）。</string>
+    <string name="llama_add_from_local_desc">从设备存储中选择一个 .gguf 文件。</string>
+    <string name="llama_active_badge">激活中</string>
+    <string name="llama_set_active">设为激活</string>
+    <string name="llama_unset_active_hint">该模型当前已激活。点击其他行进行切换。</string>
+    <string name="llama_delete_confirm_title">删除模型</string>
+    <string name="llama_delete_confirm_message">确认删除模型「%s」？文件将被从设备中永久删除。</string>
+    <string name="llama_preset_loading">正在获取预设列表…</string>
+    <string name="llama_preset_load_failed">获取预设列表失败：%s</string>
+    <string name="llama_preset_select_title">选择要下载的模型</string>
+    <string name="llama_already_exists">已存在同名模型「%s」。如需替换，请先删除旧模型。</string>
+    <string name="llama_download_completed">模型「%s」下载完成</string>
+    <string name="llama_download_failed">下载失败：%s</string>
+    <string name="llama_download_in_progress">正在下载 %1$s — %2$d%%</string>
+    <string name="llama_download_canceled">下载已取消</string>
+    <string name="llama_import_started">正在导入文件…</string>
+    <string name="llama_import_completed">已导入「%s」</string>
+    <string name="llama_import_failed">导入失败：%s</string>
+    <string name="llama_not_gguf">选中的文件不是 .gguf 文件</string>
+    <string name="llama_active_set">已将「%s」设为激活模型</string>
+    <string name="llama_no_active_model">尚未选择激活的 LlamaCpp 模型。请先打开「管理 LlamaCpp 模型」并选择一个。</string>
+    <string name="llama_size_speed">%1$s / %2$s  ·  %3$s/s</string>
+    <string name="llama_storage_path_hint">文件存储位置（私有目录）：%s</string>
 </resources>
