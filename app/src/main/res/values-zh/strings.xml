@@ -423,7 +423,7 @@
     <string name="err_deepl_text_content">DeepL 翻译的错误码可在下方链接中找到：\n\nhttps://developers.deepl.com/docs/best-practices/error-handling</string>
 
     <!-- LlamaCpp 本地 GGUF -->
-    <string name="llama_name">LlamaCpp 本地 (GGUF)</string>
+    <string name="llama_name">LlamaCpp 推理引擎</string>
     <string name="llama_description">通过 llama.cpp 在本机离线运行 GGUF 模型（Qwen / Gemma 等）。<b><u>建议设备至少 6GB 内存；模型文件通常在 0.5–3GB 之间。模型添加完成后即可完全离线使用。</u></b>点击下方的「管理 LlamaCpp 模型」即可添加、删除或切换激活模型。</string>
     <string name="manage_llama_models">管理 LlamaCpp 模型</string>
     <string name="llama_manager_title">LlamaCpp 模型管理</string>
@@ -454,4 +454,5 @@
     <string name="llama_no_active_model">尚未选择激活的 LlamaCpp 模型。请先打开「管理 LlamaCpp 模型」并选择一个。</string>
     <string name="llama_size_speed">%1$s / %2$s  ·  %3$s/s</string>
     <string name="llama_storage_path_hint">文件存储位置（私有目录）：%s</string>
+    <string name="unknow_model">未知</string>
 </resources>

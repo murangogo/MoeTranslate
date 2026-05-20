@@ -226,16 +226,31 @@ class TranslateFragment : Fragment() {
         when {
             translateMode == Constants.TranslateMode.TEXT.id -> when (textApi) {
                 Constants.TextApi.AI.id -> {
-                    if (textAi == Constants.TextAI.MLKIT.id) {
-                        binding.selectedAPI.text = getString(
-                            R.string.api_name,
-                            getString(R.string.mlkit_name)
-                        ) + "（${getString(R.string.ocr)}）"
-                    } else {
-                        binding.selectedAPI.text = getString(
-                            R.string.api_name,
-                            getString(R.string.nllb_name)
-                        ) + "（${getString(R.string.ocr)}）"
+                    when(textApi) {
+                        Constants.TextAI.MLKIT.id -> {
+                            binding.selectedAPI.text = getString(
+                                R.string.api_name,
+                                getString(R.string.mlkit_name)
+                            ) + "（${getString(R.string.ocr)}）"
+                        }
+                        Constants.TextAI.NLLB.id -> {
+                            binding.selectedAPI.text = getString(
+                                R.string.api_name,
+                                getString(R.string.nllb_name)
+                            ) + "（${getString(R.string.ocr)}）"
+                        }
+                        Constants.TextAI.LLAMA.id -> {
+                            binding.selectedAPI.text = getString(
+                                R.string.api_name,
+                                getString(R.string.llama_name)
+                            ) + "（${getString(R.string.ocr)}）"
+                        }
+                        else -> {
+                            binding.selectedAPI.text = getString(
+                                R.string.api_name,
+                                getString(R.string.unknow_model)
+                            ) + "（${getString(R.string.ocr)}）"
+                        }
                     }
                 }
 

@@ -423,7 +423,7 @@
     <string name="err_deepl_text_content">The error code for DeepL Translate can be found at the link below:\n\nhttps://developers.deepl.com/docs/best-practices/error-handling</string>
 
     <!-- LlamaCpp local GGUF -->
-    <string name="llama_name">LlamaCpp Local (GGUF)</string>
+    <string name="llama_name">LlamaCpp Inference Engine</string>
     <string name="llama_description">Run a GGUF model (Qwen / Gemma / etc.) locally on-device via llama.cpp. <b><u>Recommend a device with at least 6GB RAM; the model file is typically 0.5–3GB. After the model is added, no network is required.</u></b> Click \"Manage LlamaCpp Models\" below to add, delete, or switch active model.</string>
     <string name="manage_llama_models">Manage LlamaCpp Models</string>
     <string name="llama_manager_title">LlamaCpp Models</string>
@@ -454,4 +454,5 @@
     <string name="llama_no_active_model">No active LlamaCpp model. Open \"Manage LlamaCpp Models\" and pick one first.</string>
     <string name="llama_size_speed">%1$s / %2$s  ·  %3$s/s</string>
     <string name="llama_storage_path_hint">Files are stored privately at: %s</string>
+    <string name="unknow_model">Unknown</string>
 </resources>
