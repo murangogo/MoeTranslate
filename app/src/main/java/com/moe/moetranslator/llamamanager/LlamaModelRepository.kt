@@ -44,8 +44,20 @@ class LlamaModelRepository private constructor(
 
     suspend fun setActive(id: Long) {
         dao.setActive(id)
-        val entity = dao.listAll().firstOrNull { it.id == id }
-        prefs.setString(PREF_ACTIVE_FILE_NAME, entity?.fileName ?: "")
+        val entity = dao.findById(id)
+        mirrorActiveToPrefs(entity)
+    }
+
+    /**
+     * 更新模型的提示词覆写。空串归一化为 null，避免历史脏数据导致 isBlank 判断不一致。
+     * 如果改的恰好是当前 active 模型，同步把镜像 prefs 也更新，FloatingBallService 下次读取生效。
+     */
+    suspend fun updatePrompts(id: Long, system: String?, user: String?) {
+        val normSys = system?.takeIf { it.isNotBlank() }
+        val normUser = user?.takeIf { it.isNotBlank() }
+        dao.updatePrompts(id, normSys, normUser)
+        val active = dao.getActive()
+        if (active?.id == id) mirrorActiveToPrefs(active.copy(systemPromptOverride = normSys, userPromptOverride = normUser))
     }
 
     /**
@@ -57,12 +69,21 @@ class LlamaModelRepository private constructor(
         val rows = dao.deleteById(entity.id)
         val file = LlamaModelStorage.modelFile(context, entity.fileName)
         if (file.exists()) file.delete()
-        if (wasActive) prefs.setString(PREF_ACTIVE_FILE_NAME, "")
+        if (wasActive) mirrorActiveToPrefs(null)
         return rows > 0
+    }
+
+    /** active 模型在 prefs 里的镜像，统一在这里写，避免散落 */
+    private fun mirrorActiveToPrefs(entity: LlamaModelEntity?) {
+        prefs.setString(PREF_ACTIVE_FILE_NAME, entity?.fileName ?: "")
+        prefs.setString(PREF_ACTIVE_SYS_PROMPT_OVERRIDE, entity?.systemPromptOverride ?: "")
+        prefs.setString(PREF_ACTIVE_USER_PROMPT_OVERRIDE, entity?.userPromptOverride ?: "")
     }
 
     companion object {
         const val PREF_ACTIVE_FILE_NAME = "Llama_Model_Name"
+        const val PREF_ACTIVE_SYS_PROMPT_OVERRIDE = "Llama_Active_System_Prompt_Override"
+        const val PREF_ACTIVE_USER_PROMPT_OVERRIDE = "Llama_Active_User_Prompt_Override"
 
         @Volatile
         private var INSTANCE: LlamaModelRepository? = null

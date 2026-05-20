@@ -77,6 +77,14 @@
         </LinearLayout>
 
         <ImageButton
+            android:id="@+id/btn_edit_prompts"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/llama_edit_prompts"
+            android:src="@drawable/ic_settings_gear" />
+
+        <ImageButton
             android:id="@+id/btn_delete"
             android:layout_width="40dp"
             android:layout_height="40dp"

@@ -453,6 +453,14 @@
     <string name="llama_active_set">\"%s\" is now active</string>
     <string name="llama_no_active_model">No active LlamaCpp model. Open \"Manage LlamaCpp Models\" and pick one first.</string>
     <string name="llama_size_speed">%1$s / %2$s  ·  %3$s/s</string>
-    <string name="llama_storage_path_hint">Files are stored privately at: %s</string>
+    <string name="llama_storage_path_hint">Storage path: %s</string>
+    <string name="llama_edit_prompts">Edit prompts</string>
+    <string name="llama_edit_prompts_title">Prompts for \"%s\"</string>
+    <string name="llama_system_prompt_label">System prompt</string>
+    <string name="llama_user_prompt_label">User prompt</string>
+    <string name="llama_user_prompt_hint">Placeholders: usefromlang, usetolang, usesourcetext</string>
+    <string name="llama_prompt_override_explain">Leave blank to use the global default prompt.</string>
+    <string name="llama_prompt_reset_default">Reset to default</string>
+    <string name="llama_prompt_saved">Prompts saved for \"%s\"</string>
     <string name="unknow_model">Unknown</string>
 </resources>

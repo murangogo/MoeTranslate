@@ -27,6 +27,7 @@ import com.moe.moetranslator.databinding.ItemLlamaModelBinding
 class LlamaModelAdapter(
     private val onSetActive: (LlamaModelEntity) -> Unit,
     private val onDelete: (LlamaModelEntity) -> Unit,
+    private val onEditPrompts: (LlamaModelEntity) -> Unit,
 ) : ListAdapter<LlamaModelEntity, LlamaModelAdapter.VH>(DIFF) {
 
     inner class VH(val binding: ItemLlamaModelBinding) : RecyclerView.ViewHolder(binding.root)
@@ -64,6 +65,7 @@ class LlamaModelAdapter(
         b.root.setOnClickListener(activateClick)
         b.radioActive.setOnClickListener(activateClick)
 
+        b.btnEditPrompts.setOnClickListener { onEditPrompts(item) }
         b.btnDelete.setOnClickListener { onDelete(item) }
     }
 

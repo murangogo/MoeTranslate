@@ -59,4 +59,10 @@ abstract class LlamaModelDao {
 
     @Query("UPDATE llama_models SET displayName = :name WHERE id = :id")
     abstract suspend fun renameDisplay(id: Long, name: String)
+
+    @Query("UPDATE llama_models SET systemPromptOverride = :system, userPromptOverride = :user WHERE id = :id")
+    abstract suspend fun updatePrompts(id: Long, system: String?, user: String?)
+
+    @Query("SELECT * FROM llama_models WHERE id = :id LIMIT 1")
+    abstract suspend fun findById(id: Long): LlamaModelEntity?
 }

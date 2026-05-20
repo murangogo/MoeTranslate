@@ -65,8 +65,12 @@ class LlamaCppTranslation(
 
     // 获取应用上下文，便于读取模型文件
     private val ctx = context.applicationContext
-    // 读取模型文件（内部存储 filesDir，与 LlamaModelManagerFragment 落盘位置一致）
-    private val modelFile: File = File(File(ctx.filesDir, MODELS_SUBDIR), modelFileName)
+    // 读取模型文件（应用专属外部目录 getExternalFilesDir(null)/llamacppmodels，与 LlamaModelManagerFragment
+    // 落盘位置一致；若外部存储不可用则回退到 filesDir，与 LlamaModelStorage 的回退规则一致）
+    private val modelFile: File = run {
+        val base = ctx.getExternalFilesDir(null) ?: ctx.filesDir
+        File(File(base, MODELS_SUBDIR), modelFileName)
+    }
 
     // 使用@Volatile保证一致性
     @Volatile private var ready = false

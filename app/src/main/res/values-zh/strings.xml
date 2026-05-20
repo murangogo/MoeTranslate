@@ -453,6 +453,14 @@
     <string name="llama_active_set">已将「%s」设为激活模型</string>
     <string name="llama_no_active_model">尚未选择激活的 LlamaCpp 模型。请先打开「管理 LlamaCpp 模型」并选择一个。</string>
     <string name="llama_size_speed">%1$s / %2$s  ·  %3$s/s</string>
-    <string name="llama_storage_path_hint">文件存储位置（私有目录）：%s</string>
+    <string name="llama_storage_path_hint">存储路径：%s</string>
+    <string name="llama_edit_prompts">编辑提示词</string>
+    <string name="llama_edit_prompts_title">「%s」的提示词</string>
+    <string name="llama_system_prompt_label">系统提示词</string>
+    <string name="llama_user_prompt_label">用户提示词</string>
+    <string name="llama_user_prompt_hint">可用占位符：usefromlang、usetolang、usesourcetext</string>
+    <string name="llama_prompt_override_explain">留空即使用全局默认提示词。</string>
+    <string name="llama_prompt_reset_default">恢复默认</string>
+    <string name="llama_prompt_saved">已保存「%s」的提示词</string>
     <string name="unknow_model">未知</string>
 </resources>

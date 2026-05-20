@@ -187,12 +187,18 @@ class FloatingBallService : LifecycleService() {
                     Constants.TextApi.AI.id -> when (prefs.getInt("Text_AI", Constants.TextAI.MLKIT.id)){
                         Constants.TextAI.MLKIT.id -> translatorText = MLKitTranslation()
                         Constants.TextAI.NLLB.id -> translatorText = NLLBTranslation(this)
-                        Constants.TextAI.LLAMA.id -> translatorText = LlamaCppTranslation(
-                            context = this,
-                            modelFileName = prefs.getString("Llama_Model_Name", ""),
-                            systemPrompt = prefs.getString("Llama_System_Prompt", defaultSystemPrompt),
-                            userPrompt = prefs.getString("Llama_User_Prompt", defaultUserPrompt),
-                        )
+                        Constants.TextAI.LLAMA.id -> {
+                            // 提示词优先级：active 模型的 override > 全局 Llama_System_Prompt/User_Prompt > 默认。
+                            // override 镜像由 LlamaModelRepository 在 setActive / updatePrompts / delete 时同步维护。
+                            val sysOverride = prefs.getString("Llama_Active_System_Prompt_Override", "")
+                            val usrOverride = prefs.getString("Llama_Active_User_Prompt_Override", "")
+                            translatorText = LlamaCppTranslation(
+                                context = this,
+                                modelFileName = prefs.getString("Llama_Model_Name", ""),
+                                systemPrompt = sysOverride.ifBlank { prefs.getString("Llama_System_Prompt", defaultSystemPrompt) },
+                                userPrompt = usrOverride.ifBlank { prefs.getString("Llama_User_Prompt", defaultUserPrompt) },
+                            )
+                        }
                         else -> { showToast("Unknown Translator.") }
                     }
                     Constants.TextApi.BING.id -> translatorText = BingTranslation()

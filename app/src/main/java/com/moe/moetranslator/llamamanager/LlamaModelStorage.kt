@@ -25,8 +25,10 @@ import java.util.Locale
 /**
  * 统一管理 llama.cpp GGUF 模型在磁盘上的位置。
  *
- * 路径：Context.filesDir/llamacppmodels/<fileName>
- * 选择内部存储而非 getExternalFilesDir，与用户的明确要求一致；私有目录，外部应用不可访问。
+ * 路径：Context.getExternalFilesDir(null)/llamacppmodels/<fileName>
+ * 即 Android/data/<package>/files/llamacppmodels/，应用专属外部目录，用户可通过文件管理器访问，
+ * 应用卸载时自动清理。若 getExternalFilesDir 不可用（外部存储未挂载），回退到内部 filesDir，
+ * 保证翻译仍能运行。
  */
 object LlamaModelStorage {
 
@@ -34,7 +36,9 @@ object LlamaModelStorage {
     private const val BUFFER_SIZE = 8192
 
     fun modelsDir(context: Context): File {
-        val dir = File(context.applicationContext.filesDir, MODELS_DIR_NAME)
+        val app = context.applicationContext
+        val base = app.getExternalFilesDir(null) ?: app.filesDir
+        val dir = File(base, MODELS_DIR_NAME)
         if (!dir.exists()) dir.mkdirs()
         return dir
     }

@@ -35,8 +35,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.DialogLlamaAddModelBinding
+import com.moe.moetranslator.databinding.DialogLlamaEditPromptsBinding
 import com.moe.moetranslator.databinding.DialogLlamaPresetPickerBinding
 import com.moe.moetranslator.databinding.FragmentLlamaModelManagerBinding
+import com.moe.moetranslator.utils.CustomPreference
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -86,6 +88,7 @@ class LlamaModelManagerFragment : Fragment() {
                 }
             },
             onDelete = { entity -> confirmDelete(entity) },
+            onEditPrompts = { entity -> showEditPromptsDialog(entity) },
         )
         binding.recyclerModels.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerModels.adapter = adapter
@@ -121,6 +124,55 @@ class LlamaModelManagerFragment : Fragment() {
                 }
             }
             .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+    }
+
+    // -------------------- 编辑提示词 --------------------
+
+    /**
+     * 弹一个对话框让用户编辑当前模型的 system / user 提示词覆写。
+     *
+     * UX：
+     *   - 已有 override → 直接预填该 override，让用户在自己的基础上改；
+     *   - 无 override → 预填当前的全局默认提示词（来自 SharedPreferences 或硬编码默认），
+     *     让用户看到 "起点" 是什么，避免对着空白框猜该写什么；
+     *   - 用户清空到全空 / 点 Reset → 保存时归一为 null，运行时回退到全局默认；
+     *   - 保存按钮：把内容写回 DAO；若该模型是 active，repo.updatePrompts 会顺手同步 prefs 镜像。
+     */
+    private fun showEditPromptsDialog(entity: LlamaModelEntity) {
+        val dialogBinding = DialogLlamaEditPromptsBinding.inflate(layoutInflater)
+        val prefs = CustomPreference.getInstance(requireContext())
+        val globalSys = prefs.getString("Llama_System_Prompt", DEFAULT_SYSTEM_PROMPT)
+        val globalUser = prefs.getString("Llama_User_Prompt", DEFAULT_USER_PROMPT)
+
+        dialogBinding.textTitle.text = getString(R.string.llama_edit_prompts_title, entity.displayName)
+        dialogBinding.editSystemPrompt.setText(entity.systemPromptOverride ?: globalSys)
+        dialogBinding.editUserPrompt.setText(entity.userPromptOverride ?: globalUser)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+            .setCancelable(true)
+            .create()
+
+        dialogBinding.btnReset.setOnClickListener {
+            dialogBinding.editSystemPrompt.setText(globalSys)
+            dialogBinding.editUserPrompt.setText(globalUser)
+        }
+        dialogBinding.btnCancel.setOnClickListener { dialog.dismiss() }
+        dialogBinding.btnSave.setOnClickListener {
+            val sys = dialogBinding.editSystemPrompt.text?.toString()?.trim().orEmpty()
+            val usr = dialogBinding.editUserPrompt.text?.toString()?.trim().orEmpty()
+            // 与全局默认一致就当作 "无 override"，否则写入数据库
+            val sysToStore = if (sys.isEmpty() || sys == globalSys) null else sys
+            val userToStore = if (usr.isEmpty() || usr == globalUser) null else usr
+            lifecycleScope.launch {
+                repo.updatePrompts(entity.id, sysToStore, userToStore)
+                toast(getString(R.string.llama_prompt_saved, entity.displayName))
+                dialog.dismiss()
+            }
+        }
+
         dialog.show()
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
@@ -395,5 +447,20 @@ class LlamaModelManagerFragment : Fragment() {
 
     companion object {
         private const val TAG = "LlamaModelManager"
+
+        // 与 FloatingBallService.defaultSystemPrompt / defaultUserPrompt 保持一致：
+        // 编辑提示词对话框需要在 prefs 没值时也能展示一个合理的 "默认" 给用户参考。
+        // 复制一份字符串比跨包暴露 private 字段更稳妥。
+        private const val DEFAULT_SYSTEM_PROMPT =
+            "你是一名专业翻译。你的任务是准确、自然地翻译给定的文本。\n" +
+                    "具体规则如下： \n" +
+                    "1、根据用户的要求，将文本翻译成指定的目标语言；\n" +
+                    "2、保持原意和语气；\n" +
+                    "3、尽可能保持格式和结构；\n" +
+                    "4、直接返回翻译后的文本，不要有任何解释或附加内容；\n" +
+                    "5、如果文本已经是目标语言，请按原样返回。"
+
+        private const val DEFAULT_USER_PROMPT =
+            "请将下面的文本从usefromlang翻译为usetolang：\n\nusesourcetext"
     }
 }
