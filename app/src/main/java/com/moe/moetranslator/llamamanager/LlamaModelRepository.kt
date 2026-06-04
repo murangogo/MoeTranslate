@@ -18,6 +18,8 @@
 package com.moe.moetranslator.llamamanager
 
 import android.content.Context
+import com.moe.moetranslator.utils.Constants.defaultSystemPrompt
+import com.moe.moetranslator.utils.Constants.defaultUserPrompt
 import com.moe.moetranslator.utils.CustomPreference
 import kotlinx.coroutines.flow.Flow
 
@@ -76,8 +78,8 @@ class LlamaModelRepository private constructor(
     /** active 模型在 prefs 里的镜像，统一在这里写，避免散落 */
     private fun mirrorActiveToPrefs(entity: LlamaModelEntity?) {
         prefs.setString(PREF_ACTIVE_FILE_NAME, entity?.fileName ?: "")
-        prefs.setString(PREF_ACTIVE_SYS_PROMPT_OVERRIDE, entity?.systemPromptOverride ?: "")
-        prefs.setString(PREF_ACTIVE_USER_PROMPT_OVERRIDE, entity?.userPromptOverride ?: "")
+        prefs.setString(PREF_ACTIVE_SYS_PROMPT_OVERRIDE, entity?.systemPromptOverride ?: defaultSystemPrompt)
+        prefs.setString(PREF_ACTIVE_USER_PROMPT_OVERRIDE, entity?.userPromptOverride ?: defaultUserPrompt)
     }
 
     companion object {

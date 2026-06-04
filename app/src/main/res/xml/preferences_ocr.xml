@@ -54,7 +54,7 @@
         <SwitchPreferenceCompat
             app:key="llama_translation"
             app:title="@string/llama_name"
-            app:icon="@drawable/ic_llama_translation"
+            app:icon="@drawable/llama"
             app:summary="@string/llama_description"/>
 
         <Preference

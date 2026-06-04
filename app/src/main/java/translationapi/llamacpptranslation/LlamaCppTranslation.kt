@@ -192,7 +192,13 @@ class LlamaCppTranslation(
             .replace("usetolang", toLang)
             .replace("usesourcetext", text)
 
-        // Qwen2.5 chat template；assistant 段末尾的换行很重要，模型从这里开始生成
+        // Qwen 系 ChatML 模板；assistant 段末尾的换行很重要，模型从这里开始生成。
+        //
+        // 关闭思考(thinking)：预设的 Qwen3.5 等 Qwen3 系模型默认开启思考，会先吐一大段
+        // <think>…</think> 推理再给译文，对翻译既慢又浪费 token。这里在 assistant 段开头
+        // 预填一个【空的 think 块】，等价于官方 chat template 的 enable_thinking=false，
+        // 模型看到思考块已闭合就直接输出译文。预填内容属于 prompt（输入），不会出现在
+        // nativeCompletion 的返回结果里。对不带思考的模型（如 Hunyuan-MT）也无副作用。
         return buildString {
             append("<|im_start|>system\n")
             append(systemPrompt)
@@ -201,6 +207,7 @@ class LlamaCppTranslation(
             append(renderedUser)
             append("<|im_end|>\n")
             append("<|im_start|>assistant\n")
+            append("<think>\n\n</think>\n\n")
         }
     }
 

@@ -226,7 +226,7 @@ class TranslateFragment : Fragment() {
         when {
             translateMode == Constants.TranslateMode.TEXT.id -> when (textApi) {
                 Constants.TextApi.AI.id -> {
-                    when(textApi) {
+                    when(textAi) {
                         Constants.TextAI.MLKIT.id -> {
                             binding.selectedAPI.text = getString(
                                 R.string.api_name,

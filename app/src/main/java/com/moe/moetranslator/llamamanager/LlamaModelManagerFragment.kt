@@ -38,6 +38,8 @@ import com.moe.moetranslator.databinding.DialogLlamaAddModelBinding
 import com.moe.moetranslator.databinding.DialogLlamaEditPromptsBinding
 import com.moe.moetranslator.databinding.DialogLlamaPresetPickerBinding
 import com.moe.moetranslator.databinding.FragmentLlamaModelManagerBinding
+import com.moe.moetranslator.utils.Constants.defaultSystemPrompt
+import com.moe.moetranslator.utils.Constants.defaultUserPrompt
 import com.moe.moetranslator.utils.CustomPreference
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -50,6 +52,7 @@ import java.io.FileOutputStream
 import java.security.MessageDigest
 
 class LlamaModelManagerFragment : Fragment() {
+    private val TAG = "LlamaModelManager"
 
     private var _binding: FragmentLlamaModelManagerBinding? = null
     private val binding get() = _binding!!
@@ -142,13 +145,10 @@ class LlamaModelManagerFragment : Fragment() {
      */
     private fun showEditPromptsDialog(entity: LlamaModelEntity) {
         val dialogBinding = DialogLlamaEditPromptsBinding.inflate(layoutInflater)
-        val prefs = CustomPreference.getInstance(requireContext())
-        val globalSys = prefs.getString("Llama_System_Prompt", DEFAULT_SYSTEM_PROMPT)
-        val globalUser = prefs.getString("Llama_User_Prompt", DEFAULT_USER_PROMPT)
 
         dialogBinding.textTitle.text = getString(R.string.llama_edit_prompts_title, entity.displayName)
-        dialogBinding.editSystemPrompt.setText(entity.systemPromptOverride ?: globalSys)
-        dialogBinding.editUserPrompt.setText(entity.userPromptOverride ?: globalUser)
+        dialogBinding.editSystemPrompt.setText(entity.systemPromptOverride ?: defaultSystemPrompt)
+        dialogBinding.editUserPrompt.setText(entity.userPromptOverride ?: defaultUserPrompt)
 
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogBinding.root)
@@ -156,16 +156,16 @@ class LlamaModelManagerFragment : Fragment() {
             .create()
 
         dialogBinding.btnReset.setOnClickListener {
-            dialogBinding.editSystemPrompt.setText(globalSys)
-            dialogBinding.editUserPrompt.setText(globalUser)
+            dialogBinding.editSystemPrompt.setText(defaultSystemPrompt)
+            dialogBinding.editUserPrompt.setText(defaultUserPrompt)
         }
         dialogBinding.btnCancel.setOnClickListener { dialog.dismiss() }
         dialogBinding.btnSave.setOnClickListener {
             val sys = dialogBinding.editSystemPrompt.text?.toString()?.trim().orEmpty()
             val usr = dialogBinding.editUserPrompt.text?.toString()?.trim().orEmpty()
             // 与全局默认一致就当作 "无 override"，否则写入数据库
-            val sysToStore = if (sys.isEmpty() || sys == globalSys) null else sys
-            val userToStore = if (usr.isEmpty() || usr == globalUser) null else usr
+            val sysToStore = sys.ifEmpty { defaultSystemPrompt }
+            val userToStore = usr.ifEmpty { defaultUserPrompt }
             lifecycleScope.launch {
                 repo.updatePrompts(entity.id, sysToStore, userToStore)
                 toast(getString(R.string.llama_prompt_saved, entity.displayName))
@@ -443,24 +443,5 @@ class LlamaModelManagerFragment : Fragment() {
 
     private fun toast(text: String) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
-    }
-
-    companion object {
-        private const val TAG = "LlamaModelManager"
-
-        // 与 FloatingBallService.defaultSystemPrompt / defaultUserPrompt 保持一致：
-        // 编辑提示词对话框需要在 prefs 没值时也能展示一个合理的 "默认" 给用户参考。
-        // 复制一份字符串比跨包暴露 private 字段更稳妥。
-        private const val DEFAULT_SYSTEM_PROMPT =
-            "你是一名专业翻译。你的任务是准确、自然地翻译给定的文本。\n" +
-                    "具体规则如下： \n" +
-                    "1、根据用户的要求，将文本翻译成指定的目标语言；\n" +
-                    "2、保持原意和语气；\n" +
-                    "3、尽可能保持格式和结构；\n" +
-                    "4、直接返回翻译后的文本，不要有任何解释或附加内容；\n" +
-                    "5、如果文本已经是目标语言，请按原样返回。"
-
-        private const val DEFAULT_USER_PROMPT =
-            "请将下面的文本从usefromlang翻译为usetolang：\n\nusesourcetext"
     }
 }

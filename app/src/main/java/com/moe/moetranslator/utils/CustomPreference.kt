@@ -120,6 +120,11 @@ class CustomPreference private constructor(context: Context) {
     //Auto_Translate_Str_Length(Int)：自动翻译中，直接翻译的字符串阈值
     //Auto_Translate_Str_Similarity(Float)：自动翻译字符串相似度阈值
 
+    //----Llama.cpp相关----
+    //Llama_Model_Name：激活的 llama.cpp 模型名称
+    //Llama_Active_System_Prompt_Override：记录激活模型的系统提示词
+    //Llama_Active_User_Prompt_Override：记录激活模型的用户提示词
+
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     companion object {

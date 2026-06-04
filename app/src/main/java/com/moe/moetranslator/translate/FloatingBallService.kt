@@ -114,9 +114,6 @@ class FloatingBallService : LifecycleService() {
 
     private lateinit var prefs: CustomPreference
 
-    private val defaultSystemPrompt = "你是一名专业翻译。你的任务是准确、自然地翻译给定的文本。\n具体规则如下： \n1、根据用户的要求，将文本翻译成指定的目标语言；\n2、保持原意和语气；\n3、尽可能保持格式和结构；\n4、直接返回翻译后的文本，不要有任何解释或附加内容；\n5、如果文本已经是目标语言，请按原样返回。"
-    private val defaultUserPrompt = "请将下面的文本从usefromlang翻译为usetolang：\n\nusesourcetext"
-
     // 是否正在翻译，默认false
     private val isTranslating = AtomicBoolean(false)
 
@@ -188,22 +185,18 @@ class FloatingBallService : LifecycleService() {
                         Constants.TextAI.MLKIT.id -> translatorText = MLKitTranslation()
                         Constants.TextAI.NLLB.id -> translatorText = NLLBTranslation(this)
                         Constants.TextAI.LLAMA.id -> {
-                            // 提示词优先级：active 模型的 override > 全局 Llama_System_Prompt/User_Prompt > 默认。
-                            // override 镜像由 LlamaModelRepository 在 setActive / updatePrompts / delete 时同步维护。
-                            val sysOverride = prefs.getString("Llama_Active_System_Prompt_Override", "")
-                            val usrOverride = prefs.getString("Llama_Active_User_Prompt_Override", "")
                             translatorText = LlamaCppTranslation(
                                 context = this,
                                 modelFileName = prefs.getString("Llama_Model_Name", ""),
-                                systemPrompt = sysOverride.ifBlank { prefs.getString("Llama_System_Prompt", defaultSystemPrompt) },
-                                userPrompt = usrOverride.ifBlank { prefs.getString("Llama_User_Prompt", defaultUserPrompt) },
+                                systemPrompt = prefs.getString("Llama_Active_System_Prompt_Override", Constants.defaultSystemPrompt),
+                                userPrompt = prefs.getString("Llama_Active_User_Prompt_Override", Constants.defaultUserPrompt),
                             )
                         }
                         else -> { showToast("Unknown Translator.") }
                     }
                     Constants.TextApi.BING.id -> translatorText = BingTranslation()
                     Constants.TextApi.NIUTRANS.id -> translatorText = NiuTranslation(KeystoreManager.retrieveKey(this, "Niutrans")!!)
-                    Constants.TextApi.OPENAI.id -> translatorText = OpenAITranslation(apiKey = prefs.getString("OpenAI_Api_Key", ""), baseUrl = prefs.getString("OpenAI_Base_Url", ""), model = prefs.getString("OpenAI_Model_Name", ""), systemPrompt = prefs.getString("OpenAI_System_Prompt", defaultSystemPrompt), userPrompt = prefs.getString("OpenAI_User_Prompt", defaultUserPrompt))
+                    Constants.TextApi.OPENAI.id -> translatorText = OpenAITranslation(apiKey = prefs.getString("OpenAI_Api_Key", ""), baseUrl = prefs.getString("OpenAI_Base_Url", ""), model = prefs.getString("OpenAI_Model_Name", ""), systemPrompt = prefs.getString("OpenAI_System_Prompt", Constants.defaultSystemPrompt), userPrompt = prefs.getString("OpenAI_User_Prompt", Constants.defaultUserPrompt))
                     Constants.TextApi.VOLC.id -> translatorText = VolcTranslation(KeystoreManager.retrieveKey(this, "Volc_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Volc_SECRETKEY")!!)
                     Constants.TextApi.AZURE.id -> translatorText = AzureTranslation(KeystoreManager.retrieveKey(this, "Azure")!!)
                     Constants.TextApi.DEEPL.id -> translatorText = DeepLTranslation(KeystoreManager.retrieveKey(this, "DeepL_Translate_HOST")!!, KeystoreManager.retrieveKey(this, "DeepL_Translate_APIKEY")!!)
