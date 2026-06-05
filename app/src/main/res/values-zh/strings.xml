@@ -60,14 +60,14 @@
     <string name="pic_mode">直接上传图片进行翻译</string>
     <string name="pic_mode_description">直接把截图上传到云端API进行翻译。支持使用预置的云端图片翻译API，也支持使用自定义的云端图片翻译API，<font color="#E25A5C">不支持本地翻译</font>。这种方式花费的数据流量相对来说要多一些。</string>
     <string name="mlkit_name">ML Kit</string>
-    <string name="mlkit_description">谷歌推出的机器学习套件，运行在设备端，适用于随意且简单的翻译。<b><u>首次运行时需下载约100MB的模型文件</u></b>，后续则无需网络，即点即用。点击下方的“管理ML Kit模型文件”可进行模型文件的下载、删除等操作。</string>
+    <string name="mlkit_description">谷歌推出的机器学习套件，运行在设备端，适用于随意且简单的翻译。<b><u>首次运行时需下载约100MB的模型文件</u></b>，后续则无需网络，即点即用。点击下方的「管理ML Kit模型文件」可进行模型文件的下载、删除等操作。</string>
     <string name="nllb_name">NLLB翻译模型</string>
-    <string name="nllb_description">Meta推出的专为翻译而生的模型，全称为“No Language Left Behind”，顾名思义，支持多种语言。该模型的翻译效果更好，但同样需要下载后使用。<b><u>首次运行时需下载约1GB的模型文件，同时，使用该模型需要设备至少拥有6GB的运行内存</u></b>。下载完成后，同样无需网络，即点即用。点击下方的“管理NLLB模型文件”可进行模型文件的下载、删除等操作。</string>
+    <string name="nllb_description">Meta推出的专为翻译而生的模型，全称为“No Language Left Behind”，顾名思义，支持多种语言。该模型的翻译效果更好，但同样需要下载后使用。<b><u>首次运行时需下载约1GB的模型文件，同时，使用该模型需要设备至少拥有6GB的运行内存</u></b>。下载完成后，同样无需网络，即点即用。点击下方的「管理NLLB模型文件」可进行模型文件的下载、删除等操作。</string>
     <string name="manage_nllb_models">管理NLLB模型文件</string>
     <string name="baiduapi_name">百度翻译</string>
-    <string name="baiduapi_description">百度翻译的API，点击下方的“管理百度翻译API”即可设置API，还可以在其中查看API的申请教程（每月有100万字符的免费调用额度）。</string>
+    <string name="baiduapi_description">百度翻译的API，点击下方的「管理百度翻译API」即可设置API，还可以在其中查看API的申请教程（每月有100万字符的免费调用额度）。</string>
     <string name="tencentapi_name">腾讯云</string>
-    <string name="tencentapi_description">腾讯云的翻译API，点击下方的“管理腾讯云API”即可设置API，还可以在其中查看API的申请教程（每月有500万字符的免费调用额度）。</string>
+    <string name="tencentapi_description">腾讯云的翻译API，点击下方的「管理腾讯云API」即可设置API，还可以在其中查看API的申请教程（每月有500万字符的免费调用额度）。</string>
     <string name="ai_title">本地AI翻译</string>
     <string name="pre_api_title">预置云端API</string>
     <string name="custom_api_text_title"><b><u>（高级设置）</u></b>自定义云端文本翻译API</string>
@@ -180,13 +180,13 @@
     <string name="show_source_text_title">同时显示原文</string>
     <string name="show_source_text_summary">当前模式：%s\n（仅对OCR模式生效）在显示翻译结果的同时，也显示OCR后的原文</string>
     <string name="volcapi_name">火山引擎</string>
-    <string name="volcapi_description">火山引擎的API，点击下方的“管理火山引擎API”即可设置API，还可以在其中查看API的申请教程（每月有200万字符的免费调用额度）。</string>
+    <string name="volcapi_description">火山引擎的API，点击下方的「管理火山引擎API」即可设置API，还可以在其中查看API的申请教程（每月有200万字符的免费调用额度）。</string>
     <string name="manage_volc_api">管理火山引擎API</string>
     <string name="niuapi_name">小牛翻译</string>
-    <string name="niuapi_description">小牛翻译的API，点击下方的“管理小牛翻译API”即可设置API，还可以在其中查看API的申请教程（每天有20万字符的免费调用额度）。</string>
+    <string name="niuapi_description">小牛翻译的API，点击下方的「管理小牛翻译API」即可设置API，还可以在其中查看API的申请教程（每天有20万字符的免费调用额度）。</string>
     <string name="manage_niu_api">管理小牛翻译API</string>
-    <string name="baiduapi_description_pic">百度翻译的API，点击下方的“管理百度翻译API”即可设置API，还可以在其中查看API的申请教程（每月有1万次的图片翻译免费调用次数）。</string>
-    <string name="tencentapi_description_pic">腾讯云的翻译API，点击下方的“管理腾讯云API”即可设置API，还可以在其中查看API的申请教程（每月有1万次的图片翻译免费调用次数）。</string>
+    <string name="baiduapi_description_pic">百度翻译的API，点击下方的「管理百度翻译API」即可设置API，还可以在其中查看API的申请教程（每月有1万次的图片翻译免费调用次数）。</string>
+    <string name="tencentapi_description_pic">腾讯云的翻译API，点击下方的「管理腾讯云API」即可设置API，还可以在其中查看API的申请教程（每月有1万次的图片翻译免费调用次数）。</string>
     <string name="volc_hint_account">Access Key ID</string>
     <string name="volc_hint_secret_key">Secret Access Key</string>
     <string name="whats_api_title">什么是%sAPI</string>
@@ -264,7 +264,7 @@
     <string name="bingapi_name">必应翻译</string>
     <string name="bingapi_description">不需要配置密钥即可使用的翻译API，实现原理是模拟浏览器访问必应翻译网页版。<b><u>该方法依赖网页结构和token提取，稳定性较差且可能受到访问限制，还请您更多地使用其他的翻译API</u></b>。</string>
     <string name="azureapi_name">Azure AI 翻译</string>
-    <string name="azureapi_description">微软Azure AI 翻译的API，点击下方的“管理Azure API”即可设置API，还可以在其中查看API的申请教程（每月有200万字符的免费调用额度）。</string>
+    <string name="azureapi_description">微软Azure AI 翻译的API，点击下方的「管理Azure API」即可设置API，还可以在其中查看API的申请教程（每月有200万字符的免费调用额度）。</string>
     <string name="manage_azure_api">管理Azure API</string>
     <string name="azure_hint_secret_key">密钥（1或2均可）</string>
     <string name="other_setting">其他</string>
@@ -402,6 +402,10 @@
     <string name="system_prompt">系统提示词（留空使用默认）</string>
     <string name="user_prompt">用户提示词（留空使用默认）</string>
     <string name="openai_use_source_text">在用户提示词中，使用“usefromlang”代表源语言，使用“usetolang”代表目标语言，使用“usesourcetext”代表待翻译的文本</string>
+    <string name="openai_temperature">温度（0–2，留空则不发送，例如推理模型）</string>
+    <string name="openai_custom_params">自定义请求参数</string>
+    <string name="openai_custom_params_hint">按类型（true/false、数字、JSON）合并进请求体。可用于关闭思考或适配新模型，例如 enable_thinking=false、reasoning_effort=low、max_completion_tokens=2048、top_p=0.9。</string>
+    <string name="openai_add_param">添加参数</string>
     <string name="uniaiapi_name">聚合 AI 翻译</string>
     <string name="uniaiapi_description">支持包括ChatGPT、Qwen、DeepSeek在内的AI接口，只要AI接口兼容OpenAI接口规范，萌译便可接入</string>
     <string name="manage_uniai_api">管理聚合 AI 翻译API</string>
@@ -415,7 +419,7 @@
     <string name="language_change_message">切换到%s？\n应用将重启以应用新语言。</string>
     <string name="language_changed">语言切换成功</string>
     <string name="deeplapi_name">DeepL 翻译</string>
-    <string name="deeplapi_description">DeepL 翻译的API，点击下方的“管理DeepL 翻译API”即可设置API，还可以在其中查看API的申请教程（每月有50万字符的免费调用额度）。</string>
+    <string name="deeplapi_description">DeepL 翻译的API，点击下方的「管理DeepL 翻译API」即可设置API，还可以在其中查看API的申请教程（每月有50万字符的免费调用额度）。</string>
     <string name="manage_deepl_api">管理DeepL 翻译API</string>
     <string name="deepl_hint_host">请填入Host；免费版：api-free.deepl.com；付费版：api.deepl.com</string>
     <string name="deepl_hint_apikey">API Key</string>
@@ -423,7 +427,7 @@
     <string name="err_deepl_text_content">DeepL 翻译的错误码可在下方链接中找到：\n\nhttps://developers.deepl.com/docs/best-practices/error-handling</string>
 
     <!-- LlamaCpp 本地 GGUF -->
-    <string name="llama_name">LlamaCpp 推理引擎</string>
+    <string name="llama_name">LlamaCpp 引擎</string>
     <string name="llama_description">通过 llama.cpp 在本机离线运行 GGUF 模型（Qwen / Gemma 等）。<b><u>建议设备至少 6GB 内存；模型文件通常在 0.5–3GB 之间。模型添加完成后即可完全离线使用。</u></b>点击下方的「管理 LlamaCpp 模型」即可添加、删除或切换激活模型。</string>
     <string name="manage_llama_models">管理 LlamaCpp 模型</string>
     <string name="llama_manager_title">LlamaCpp 模型管理</string>
@@ -437,30 +441,34 @@
     <string name="llama_set_active">设为激活</string>
     <string name="llama_unset_active_hint">该模型当前已激活。点击其他行进行切换。</string>
     <string name="llama_delete_confirm_title">删除模型</string>
-    <string name="llama_delete_confirm_message">确认删除模型「%s」？文件将被从设备中永久删除。</string>
+    <string name="llama_delete_confirm_message">确认删除模型“%s”？文件将被从设备中永久删除。</string>
     <string name="llama_preset_loading">正在获取预设列表…</string>
     <string name="llama_preset_load_failed">获取预设列表失败：%s</string>
     <string name="llama_preset_select_title">选择要下载的模型</string>
-    <string name="llama_already_exists">已存在同名模型「%s」。如需替换，请先删除旧模型。</string>
-    <string name="llama_download_completed">模型「%s」下载完成</string>
+    <string name="llama_already_exists">已存在同名模型“%s”。如需替换，请先删除旧模型。</string>
+    <string name="llama_download_completed">模型“%s”下载完成</string>
     <string name="llama_download_failed">下载失败：%s</string>
     <string name="llama_download_in_progress">正在下载 %1$s — %2$d%%</string>
     <string name="llama_download_canceled">下载已取消</string>
     <string name="llama_import_started">正在导入文件…</string>
-    <string name="llama_import_completed">已导入「%s」</string>
+    <string name="llama_import_completed">已导入“%s”</string>
     <string name="llama_import_failed">导入失败：%s</string>
     <string name="llama_not_gguf">选中的文件不是 .gguf 文件</string>
-    <string name="llama_active_set">已将「%s」设为激活模型</string>
-    <string name="llama_no_active_model">尚未选择激活的 LlamaCpp 模型。请先打开「管理 LlamaCpp 模型」并选择一个。</string>
+    <string name="llama_active_set">已将“%s”设为激活模型</string>
+    <string name="llama_no_active_model">尚未选择激活的 LlamaCpp 模型。请先打开“管理 LlamaCpp 模型”并选择一个。</string>
     <string name="llama_size_speed">%1$s / %2$s  ·  %3$s/s</string>
     <string name="llama_storage_path_hint">存储路径：%s</string>
-    <string name="llama_edit_prompts">编辑提示词</string>
-    <string name="llama_edit_prompts_title">「%s」的提示词</string>
+    <string name="llama_edit_prompts">模型设置</string>
+    <string name="llama_edit_prompts_title">“%s”的设置</string>
     <string name="llama_system_prompt_label">系统提示词</string>
     <string name="llama_user_prompt_label">用户提示词</string>
     <string name="llama_user_prompt_hint">可用占位符：usefromlang、usetolang、usesourcetext</string>
     <string name="llama_prompt_override_explain">留空即使用全局默认提示词。</string>
     <string name="llama_prompt_reset_default">恢复默认</string>
-    <string name="llama_prompt_saved">已保存「%s」的提示词</string>
+    <string name="llama_prompt_saved">已保存“%s”的设置</string>
+    <string name="llama_enable_thinking_label">启用思考（推理）</string>
+    <string name="llama_enable_thinking_hint">关闭可加快翻译。仅对支持推理的模型（如 Qwen3）生效。</string>
+    <string name="llama_temperature_label">温度（0–2，越低越稳定）</string>
+    <string name="llama_max_tokens_label">最大输出 token 数（16–4096）</string>
     <string name="unknow_model">未知</string>
 </resources>

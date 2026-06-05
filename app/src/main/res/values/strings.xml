@@ -402,6 +402,10 @@
     <string name="system_prompt">System prompt (leave blank to use the default)</string>
     <string name="user_prompt">User prompt (leave blank to use default)</string>
     <string name="openai_use_source_text">In the user prompt, use \"usefromlang\" to represent the source language, \"usetolang\" to represent the target language, and \"usesourcetext\" to represent the text to be translated</string>
+    <string name="openai_temperature">Temperature (0–2, leave blank to omit, e.g. for reasoning models)</string>
+    <string name="openai_custom_params">Custom request parameters</string>
+    <string name="openai_custom_params_hint">Merged into the request body by type (true/false, numbers, JSON). Use this to turn off thinking or fit newer models, e.g. enable_thinking=false, reasoning_effort=low, max_completion_tokens=2048, top_p=0.9.</string>
+    <string name="openai_add_param">Add parameter</string>
     <string name="uniaiapi_name">Uni AI translation</string>
     <string name="uniaiapi_description">Supports AI interfaces including ChatGPT, Qwen, and DeepSeek, and as long as the AI interface is compatible with the OpenAI interface specification, MoeTranslate can be accessed</string>
     <string name="manage_uniai_api">Manage Uni AI translation API</string>
@@ -423,7 +427,7 @@
     <string name="err_deepl_text_content">The error code for DeepL Translate can be found at the link below:\n\nhttps://developers.deepl.com/docs/best-practices/error-handling</string>
 
     <!-- LlamaCpp local GGUF -->
-    <string name="llama_name">LlamaCpp Inference Engine</string>
+    <string name="llama_name">LlamaCpp Engine</string>
     <string name="llama_description">Run a GGUF model (Qwen / Gemma / etc.) locally on-device via llama.cpp. <b><u>Recommend a device with at least 6GB RAM; the model file is typically 0.5–3GB. After the model is added, no network is required.</u></b> Click \"Manage LlamaCpp Models\" below to add, delete, or switch active model.</string>
     <string name="manage_llama_models">Manage LlamaCpp Models</string>
     <string name="llama_manager_title">LlamaCpp Models</string>
@@ -454,13 +458,17 @@
     <string name="llama_no_active_model">No active LlamaCpp model. Open \"Manage LlamaCpp Models\" and pick one first.</string>
     <string name="llama_size_speed">%1$s / %2$s  ·  %3$s/s</string>
     <string name="llama_storage_path_hint">Storage path: %s</string>
-    <string name="llama_edit_prompts">Edit prompts</string>
-    <string name="llama_edit_prompts_title">Prompts for \"%s\"</string>
+    <string name="llama_edit_prompts">Model settings</string>
+    <string name="llama_edit_prompts_title">Settings for \"%s\"</string>
     <string name="llama_system_prompt_label">System prompt</string>
     <string name="llama_user_prompt_label">User prompt</string>
     <string name="llama_user_prompt_hint">Placeholders: usefromlang, usetolang, usesourcetext</string>
     <string name="llama_prompt_override_explain">Leave blank to use the global default prompt.</string>
     <string name="llama_prompt_reset_default">Reset to default</string>
-    <string name="llama_prompt_saved">Prompts saved for \"%s\"</string>
+    <string name="llama_prompt_saved">Settings saved for \"%s\"</string>
+    <string name="llama_enable_thinking_label">Enable thinking (reasoning)</string>
+    <string name="llama_enable_thinking_hint">Off = faster translation. Only affects models that support reasoning (e.g. Qwen3).</string>
+    <string name="llama_temperature_label">Temperature (0–2, lower = more stable)</string>
+    <string name="llama_max_tokens_label">Max output tokens (16–4096)</string>
     <string name="unknow_model">Unknown</string>
 </resources>

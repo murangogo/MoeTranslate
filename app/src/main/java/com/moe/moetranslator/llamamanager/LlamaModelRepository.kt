@@ -18,6 +18,9 @@
 package com.moe.moetranslator.llamamanager
 
 import android.content.Context
+import com.moe.moetranslator.utils.Constants.defaultLlamaEnableThinking
+import com.moe.moetranslator.utils.Constants.defaultLlamaMaxTokens
+import com.moe.moetranslator.utils.Constants.defaultLlamaTemperature
 import com.moe.moetranslator.utils.Constants.defaultSystemPrompt
 import com.moe.moetranslator.utils.Constants.defaultUserPrompt
 import com.moe.moetranslator.utils.CustomPreference
@@ -51,15 +54,31 @@ class LlamaModelRepository private constructor(
     }
 
     /**
-     * 更新模型的提示词覆写。空串归一化为 null，避免历史脏数据导致 isBlank 判断不一致。
-     * 如果改的恰好是当前 active 模型，同步把镜像 prefs 也更新，FloatingBallService 下次读取生效。
+     * 更新模型的提示词覆写 + 推理参数。提示词空串归一化为 null，避免历史脏数据导致
+     * isBlank 判断不一致。如果改的恰好是当前 active 模型，同步把镜像 prefs 也更新，
+     * FloatingBallService 下次读取生效。
      */
-    suspend fun updatePrompts(id: Long, system: String?, user: String?) {
+    suspend fun updateConfig(
+        id: Long,
+        system: String?,
+        user: String?,
+        enableThinking: Boolean,
+        temperature: Float,
+        maxTokens: Int,
+    ) {
         val normSys = system?.takeIf { it.isNotBlank() }
         val normUser = user?.takeIf { it.isNotBlank() }
-        dao.updatePrompts(id, normSys, normUser)
+        dao.updateConfig(id, normSys, normUser, enableThinking, temperature, maxTokens)
         val active = dao.getActive()
-        if (active?.id == id) mirrorActiveToPrefs(active.copy(systemPromptOverride = normSys, userPromptOverride = normUser))
+        if (active?.id == id) mirrorActiveToPrefs(
+            active.copy(
+                systemPromptOverride = normSys,
+                userPromptOverride = normUser,
+                enableThinking = enableThinking,
+                temperature = temperature,
+                maxTokens = maxTokens,
+            )
+        )
     }
 
     /**
@@ -80,12 +99,18 @@ class LlamaModelRepository private constructor(
         prefs.setString(PREF_ACTIVE_FILE_NAME, entity?.fileName ?: "")
         prefs.setString(PREF_ACTIVE_SYS_PROMPT_OVERRIDE, entity?.systemPromptOverride ?: defaultSystemPrompt)
         prefs.setString(PREF_ACTIVE_USER_PROMPT_OVERRIDE, entity?.userPromptOverride ?: defaultUserPrompt)
+        prefs.setBoolean(PREF_ACTIVE_ENABLE_THINKING, entity?.enableThinking ?: defaultLlamaEnableThinking)
+        prefs.setFloat(PREF_ACTIVE_TEMPERATURE, entity?.temperature ?: defaultLlamaTemperature)
+        prefs.setInt(PREF_ACTIVE_MAX_TOKENS, entity?.maxTokens ?: defaultLlamaMaxTokens)
     }
 
     companion object {
         const val PREF_ACTIVE_FILE_NAME = "Llama_Model_Name"
         const val PREF_ACTIVE_SYS_PROMPT_OVERRIDE = "Llama_Active_System_Prompt_Override"
         const val PREF_ACTIVE_USER_PROMPT_OVERRIDE = "Llama_Active_User_Prompt_Override"
+        const val PREF_ACTIVE_ENABLE_THINKING = "Llama_Active_Enable_Thinking"
+        const val PREF_ACTIVE_TEMPERATURE = "Llama_Active_Temperature"
+        const val PREF_ACTIVE_MAX_TOKENS = "Llama_Active_Max_Tokens"
 
         @Volatile
         private var INSTANCE: LlamaModelRepository? = null

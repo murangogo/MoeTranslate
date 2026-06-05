@@ -46,13 +46,47 @@ class OpenAITranslation(
     private val model: String = "gpt-3.5-turbo",
     private val systemPrompt: String,
     private val userPrompt: String,
-    private val maxTokens: Int = 1000,
-    private val temperature: Float = 0.3f
+    private val temperature: Float? = null,
+    private val extraParams: List<Pair<String, String>> = emptyList()
 ) : TranslationTextAPI {
 
     companion object {
         private const val TAG = "OpenAITranslation"
         private const val SOCKET_TIMEOUT = 30L // 30秒，AI接口需要更长时间
+
+        private const val EXTRA_KEY = "key"
+        private const val EXTRA_VALUE = "value"
+
+        /** 将设置页里的「自定义请求参数」键值对编码为 JSON 字符串，存入 SharedPreferences。 */
+        fun encodeExtraParams(pairs: List<Pair<String, String>>): String {
+            val arr = JSONArray()
+            pairs.forEach { (k, v) ->
+                if (k.isNotBlank()) {
+                    arr.put(JSONObject().apply {
+                        put(EXTRA_KEY, k)
+                        put(EXTRA_VALUE, v)
+                    })
+                }
+            }
+            return arr.toString()
+        }
+
+        /** 从 SharedPreferences 的 JSON 字符串还原键值对列表；为空或解析失败时返回空表。 */
+        fun decodeExtraParams(json: String): List<Pair<String, String>> {
+            if (json.isBlank()) return emptyList()
+            return try {
+                val arr = JSONArray(json)
+                val list = mutableListOf<Pair<String, String>>()
+                for (i in 0 until arr.length()) {
+                    val o = arr.getJSONObject(i)
+                    list.add(o.getString(EXTRA_KEY) to o.optString(EXTRA_VALUE, ""))
+                }
+                list
+            } catch (e: Exception) {
+                Log.e(TAG, "decodeExtraParams failed", e)
+                emptyList()
+            }
+        }
     }
 
     // 创建协程作用域
@@ -165,10 +199,38 @@ class OpenAITranslation(
         return JSONObject().apply {
             put("model", model)
             put("messages", messages)
-            put("max_tokens", maxTokens)
-            put("temperature", temperature)
             put("stream", false)
+            // 温度留空则不发送：部分推理模型（如 OpenAI o 系列）只接受默认温度，发送会报 400
+            temperature?.let { put("temperature", it.toDouble()) }
+            // 合并用户自定义参数，按类型推断写入，可覆盖上面的字段（messages 除外）
+            // 这是关闭思考 / 适配新模型的通用入口：enable_thinking=false、reasoning_effort=low、
+            // max_completion_tokens=2048、top_p=0.9、chat_template_kwargs={"enable_thinking":false} 等
+            extraParams.forEach { (key, raw) ->
+                val k = key.trim()
+                if (k.isEmpty() || k == "messages") return@forEach
+                put(k, inferJsonValue(raw))
+            }
         }.toString()
+    }
+
+    /**
+     * 把用户在设置页填入的字符串值推断成合适的 JSON 类型，使其在请求体里表达正确：
+     *   true/false → 布尔；整数/小数 → 数字；{...}/[...] → JSON 对象/数组；null → JSON null；其余按字符串。
+     */
+    private fun inferJsonValue(raw: String): Any {
+        val v = raw.trim()
+        return when {
+            v.isEmpty() -> ""
+            v.equals("true", ignoreCase = true) -> true
+            v.equals("false", ignoreCase = true) -> false
+            v.equals("null", ignoreCase = true) -> JSONObject.NULL
+            v.toIntOrNull() != null -> v.toInt()
+            v.toLongOrNull() != null -> v.toLong()
+            v.toDoubleOrNull() != null -> v.toDouble()
+            v.startsWith("{") -> runCatching { JSONObject(v) }.getOrElse { raw }
+            v.startsWith("[") -> runCatching { JSONArray(v) }.getOrElse { raw }
+            else -> raw
+        }
     }
 
     private fun parseResponse(responseBody: String): String {
@@ -191,7 +253,9 @@ class OpenAITranslation(
 
             val firstChoice = choices.getJSONObject(0)
             val message = firstChoice.getJSONObject("message")
-            val content = message.getString("content").trim()
+            // 只取最终回答 content；思考模型单独放在 reasoning_content 的思考内容被忽略，
+            // 夹带在 content 里的 <think>…</think> 也会被剥离
+            val content = stripThinking(message.optString("content", "")).trim()
 
             if (content.isEmpty()) {
                 throw IOException("Empty translation result")
@@ -201,6 +265,15 @@ class OpenAITranslation(
         } catch (e: Exception) {
             throw IOException("Failed to parse response: ${e.message}")
         }
+    }
+
+    /** 去除回答里夹带的思考：成对的 <think>…</think>，以及模板只回传闭合标签时位于开头的孤立 </think>。 */
+    private fun stripThinking(content: String): String {
+        var result = content.replace(Regex("(?s)<think>.*?</think>"), "").trim()
+        if (result.startsWith("</think>")) {
+            result = result.removePrefix("</think>").trim()
+        }
+        return result
     }
 
     override fun cancelTranslation() {

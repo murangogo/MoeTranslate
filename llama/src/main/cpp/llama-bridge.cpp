@@ -24,6 +24,7 @@
 #include "llama.h"
 #include "common.h"
 #include "sampling.h"
+#include "chat.h"
 
 #define TAG "llama-android"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO,  TAG, __VA_ARGS__)
@@ -129,6 +130,78 @@ Java_com_moe_moetranslator_llama_LlamaAndroid_nativeFreeContext(
     if (ctxHandle != 0L) {
         llama_free(reinterpret_cast<llama_context *>(ctxHandle));
         LOGI("nativeFreeContext done");
+    }
+}
+
+// ===========================================================================
+//  Chat 模板渲染
+//
+//  用模型 GGUF 自带的 Jinja chat_template，把 system / user 两条消息渲染成最终
+//  prompt（含 generation prompt，可直接喂给 nativeCompletion）。这样不同模型族
+//  （Qwen / Gemma / Llama / Hunyuan-MT …）各自走正确模板；并通过 enableThinking
+//  精确控制 Qwen3 这类模型的"思考"段。
+//
+//  返回:
+//    - 成功: 渲染好的 prompt 字符串
+//    - 失败（模型无 chat_template / 模板解析异常）: 空字符串
+//      —— Kotlin 端据此回退到硬编码 ChatML。
+//
+//  注意: 这里用的是 common 层的 common_chat_templates_*（minja Jinja 引擎），
+//        而不是 llama.h 里的 llama_chat_apply_template —— 后者不解析 Jinja，
+//        也无法处理 enable_thinking。
+// ===========================================================================
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_moe_moetranslator_llama_LlamaAndroid_nativeFormatChat(
+        JNIEnv *env, jobject /* thiz */,
+        jlong modelHandle,
+        jstring jSystem, jstring jUser,
+        jboolean enableThinking) {
+
+    auto *model = reinterpret_cast<llama_model *>(modelHandle);
+    if (!model) {
+        LOGE("nativeFormatChat: model handle is null");
+        return env->NewStringUTF("");
+    }
+
+    const char *sys_c = env->GetStringUTFChars(jSystem, nullptr);
+    std::string system_text(sys_c ? sys_c : "");
+    env->ReleaseStringUTFChars(jSystem, sys_c);
+
+    const char *usr_c = env->GetStringUTFChars(jUser, nullptr);
+    std::string user_text(usr_c ? usr_c : "");
+    env->ReleaseStringUTFChars(jUser, usr_c);
+
+    try {
+        // 第二个参数为空 = 不覆盖，直接用 GGUF metadata 里的 chat_template
+        common_chat_templates_ptr tmpls = common_chat_templates_init(model, "");
+
+        common_chat_templates_inputs inputs;
+        if (!system_text.empty()) {
+            common_chat_msg sys_msg;
+            sys_msg.role    = "system";
+            sys_msg.content = system_text;
+            inputs.messages.push_back(std::move(sys_msg));
+        }
+        common_chat_msg user_msg;
+        user_msg.role    = "user";
+        user_msg.content = user_text;
+        inputs.messages.push_back(std::move(user_msg));
+
+        inputs.add_generation_prompt = true;
+        inputs.use_jinja             = true;
+        inputs.enable_thinking       = (enableThinking == JNI_TRUE);
+
+        common_chat_params params = common_chat_templates_apply(tmpls.get(), inputs);
+        LOGI("nativeFormatChat: %zu chars, thinking=%d", params.prompt.size(),
+             inputs.enable_thinking ? 1 : 0);
+        return env->NewStringUTF(params.prompt.c_str());
+    } catch (const std::exception &e) {
+        LOGE("nativeFormatChat: exception: %s", e.what());
+        return env->NewStringUTF("");
+    } catch (...) {
+        LOGE("nativeFormatChat: unknown exception");
+        return env->NewStringUTF("");
     }
 }
 

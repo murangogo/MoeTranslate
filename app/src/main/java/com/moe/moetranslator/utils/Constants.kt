@@ -23,6 +23,15 @@ object Constants {
     val defaultSystemPrompt = "你是一名专业翻译。你的任务是准确、自然地翻译给定的文本。\n具体规则如下： \n1、根据用户的要求，将文本翻译成指定的目标语言；\n2、保持原意和语气；\n3、尽可能保持格式和结构；\n4、直接返回翻译后的文本，不要有任何解释或附加内容；\n5、如果文本已经是目标语言，请按原样返回。"
     val defaultUserPrompt = "请将下面的文本从usefromlang翻译为usetolang：\n\nusesourcetext"
 
+    // OpenAI 兼容接口默认温度；设置页留空则不发送 temperature（兼容只接受默认温度的推理模型）
+    const val defaultOpenAITemperature = 0.3f
+
+    // llama.cpp 本地推理的每模型默认参数（新建/导入模型时的初值，也是 active 镜像缺失时的回退值）
+    // 思考默认关闭：翻译场景追求速度，Qwen3 等模型默认开思考会显著拖慢
+    const val defaultLlamaEnableThinking = false
+    const val defaultLlamaTemperature = 0.2f
+    const val defaultLlamaMaxTokens = 512
+
     // 翻译相关常量
     enum class TranslateMode(val id: Int) {
         TEXT(0),

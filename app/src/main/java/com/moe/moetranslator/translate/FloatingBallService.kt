@@ -190,13 +190,16 @@ class FloatingBallService : LifecycleService() {
                                 modelFileName = prefs.getString("Llama_Model_Name", ""),
                                 systemPrompt = prefs.getString("Llama_Active_System_Prompt_Override", Constants.defaultSystemPrompt),
                                 userPrompt = prefs.getString("Llama_Active_User_Prompt_Override", Constants.defaultUserPrompt),
+                                enableThinking = prefs.getBoolean("Llama_Active_Enable_Thinking", Constants.defaultLlamaEnableThinking),
+                                temperature = prefs.getFloat("Llama_Active_Temperature", Constants.defaultLlamaTemperature),
+                                maxTokens = prefs.getInt("Llama_Active_Max_Tokens", Constants.defaultLlamaMaxTokens),
                             )
                         }
                         else -> { showToast("Unknown Translator.") }
                     }
                     Constants.TextApi.BING.id -> translatorText = BingTranslation()
                     Constants.TextApi.NIUTRANS.id -> translatorText = NiuTranslation(KeystoreManager.retrieveKey(this, "Niutrans")!!)
-                    Constants.TextApi.OPENAI.id -> translatorText = OpenAITranslation(apiKey = prefs.getString("OpenAI_Api_Key", ""), baseUrl = prefs.getString("OpenAI_Base_Url", ""), model = prefs.getString("OpenAI_Model_Name", ""), systemPrompt = prefs.getString("OpenAI_System_Prompt", Constants.defaultSystemPrompt), userPrompt = prefs.getString("OpenAI_User_Prompt", Constants.defaultUserPrompt))
+                    Constants.TextApi.OPENAI.id -> translatorText = OpenAITranslation(apiKey = prefs.getString("OpenAI_Api_Key", ""), baseUrl = prefs.getString("OpenAI_Base_Url", ""), model = prefs.getString("OpenAI_Model_Name", ""), systemPrompt = prefs.getString("OpenAI_System_Prompt", Constants.defaultSystemPrompt), userPrompt = prefs.getString("OpenAI_User_Prompt", Constants.defaultUserPrompt), temperature = prefs.getString("OpenAI_Temperature", Constants.defaultOpenAITemperature.toString()).toFloatOrNull(), extraParams = OpenAITranslation.decodeExtraParams(prefs.getString("OpenAI_Extra_Params", "")))
                     Constants.TextApi.VOLC.id -> translatorText = VolcTranslation(KeystoreManager.retrieveKey(this, "Volc_ACCOUNT")!!, KeystoreManager.retrieveKey(this, "Volc_SECRETKEY")!!)
                     Constants.TextApi.AZURE.id -> translatorText = AzureTranslation(KeystoreManager.retrieveKey(this, "Azure")!!)
                     Constants.TextApi.DEEPL.id -> translatorText = DeepLTranslation(KeystoreManager.retrieveKey(this, "DeepL_Translate_HOST")!!, KeystoreManager.retrieveKey(this, "DeepL_Translate_APIKEY")!!)

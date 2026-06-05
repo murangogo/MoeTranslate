@@ -27,7 +27,7 @@ android {
     defaultConfig {
         applicationId "com.moe.moetranslator"
         minSdk 29
-        targetSdk 35
+        targetSdk 36
         versionCode 32
         versionName "5.3.1"
 

@@ -43,6 +43,10 @@ object LlamaAndroid {
         temperature: Float, topP: Float, repeatPenalty: Float
     ): String
 
+    private external fun nativeFormatChat(
+        modelHandle: Long, system: String, user: String, enableThinking: Boolean
+    ): String
+
     // ------------------ 内部状态 ------------------
     @Volatile private var modelHandle: Long = 0L
     @Volatile private var ctxHandle:   Long = 0L
@@ -118,6 +122,19 @@ object LlamaAndroid {
     }
 
     // ------------------ 推理 ------------------
+
+    /**
+     * 用模型 GGUF 自带的 Jinja chat 模板，把 system / user 渲染成最终 prompt。
+     * enableThinking=false 时按模型模板关闭思考（如 Qwen3 注入空 <think></think>）。
+     *
+     * @return 渲染好的 prompt；若模型无模板或渲染失败返回空串（调用方应回退到自带兜底模板）。
+     * @throws IllegalStateException 模型未加载时抛出
+     */
+    @Synchronized
+    fun formatChat(system: String, user: String, enableThinking: Boolean): String {
+        check(isLoaded) { "Model not loaded. Call load() first." }
+        return nativeFormatChat(modelHandle, system, user, enableThinking)
+    }
 
     /**
      * 同步推理。会一直阻塞直到模型输出 EOS / 达到 maxTokens / 被 stop() 取消。

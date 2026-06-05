@@ -40,15 +40,17 @@ import java.io.File
  *     complete() 在下一个 token 边界处返回。
  *   - release() 卸载模型，归还 ~1.5GB RAM；用户切换到其它翻译方式时立即生效。
  *
- * Prompt 模板（MVP）：硬编码 Qwen2.5 chat template；systemPrompt / userPrompt 的内容
- * 走 SharedPreferences（与 OpenAITranslation 一致），用户可配置。后续若要支持
- * Llama-3.2 / Gemma-2 等其它模型族，再加 PromptStyle 枚举切换。
+ * Prompt 模板：优先用模型 GGUF 自带的 Jinja chat 模板渲染（LlamaAndroid.formatChat），
+ * 自动适配 Qwen / Gemma / Llama / Hunyuan-MT 等不同模型族，并按 enableThinking 控制
+ * 思考段；模型无模板或渲染失败时回退到硬编码 ChatML。systemPrompt / userPrompt /
+ * enableThinking / temperature / maxTokens 都由模型列表的齿轮弹窗按模型配置。
  */
 class LlamaCppTranslation(
     context: Context,
     modelFileName: String,
     private val systemPrompt: String,
     private val userPrompt: String,
+    private val enableThinking: Boolean = false,
     private val nCtx: Int = 2048,
     private val nThreads: Int = 4,
     private val maxTokens: Int = 512,
@@ -177,12 +179,14 @@ class LlamaCppTranslation(
     }
 
     /**
-     * 用 Qwen2.5 chat template 包裹用户配置的 system / user 提示词。
+     * 把用户配置的 system / user 提示词渲染成模型最终 prompt。
      *
      * userPrompt 里的三个占位符（与 OpenAITranslation 保持一致）：
      *   usefromlang   → 源语言显示名（如 "Japanese"）
      *   usetolang     → 目标语言显示名（如 "Chinese"）
      *   usesourcetext → 待翻译文本
+     *
+     * 渲染优先用模型 GGUF 自带的 Jinja 模板（formatChat）；失败再回退到通用 ChatML。
      */
     private fun buildPrompt(text: String, src: String, dst: String): String {
         val fromLang = CustomLocale.getInstance(src).getDisplayName()
@@ -192,13 +196,20 @@ class LlamaCppTranslation(
             .replace("usetolang", toLang)
             .replace("usesourcetext", text)
 
-        // Qwen 系 ChatML 模板；assistant 段末尾的换行很重要，模型从这里开始生成。
-        //
-        // 关闭思考(thinking)：预设的 Qwen3.5 等 Qwen3 系模型默认开启思考，会先吐一大段
-        // <think>…</think> 推理再给译文，对翻译既慢又浪费 token。这里在 assistant 段开头
-        // 预填一个【空的 think 块】，等价于官方 chat template 的 enable_thinking=false，
-        // 模型看到思考块已闭合就直接输出译文。预填内容属于 prompt（输入），不会出现在
-        // nativeCompletion 的返回结果里。对不带思考的模型（如 Hunyuan-MT）也无副作用。
+        // 首选：模型自带 Jinja chat 模板。不同模型族各自走正确模板，并按 enableThinking
+        // 控制思考段（如 Qwen3 在 enableThinking=false 时注入空 <think></think>）。
+        val viaTemplate = runCatching {
+            LlamaAndroid.formatChat(systemPrompt, renderedUser, enableThinking)
+        }.getOrNull()
+        if (!viaTemplate.isNullOrBlank()) {
+            return viaTemplate
+        }
+
+        // 回退：模型没带 chat_template 或模板解析失败时，用通用 ChatML 兜底。
+        // enableThinking=false 时在 assistant 段开头预填一个空 <think> 块，等价于官方
+        // enable_thinking=false，让 Qwen3 这类模型跳过推理直接输出译文。预填内容属于
+        // prompt（输入），不会出现在 nativeCompletion 的返回结果里。
+        Log.w(TAG, "Built-in chat template unavailable, falling back to hardcoded ChatML")
         return buildString {
             append("<|im_start|>system\n")
             append(systemPrompt)
@@ -207,7 +218,9 @@ class LlamaCppTranslation(
             append(renderedUser)
             append("<|im_end|>\n")
             append("<|im_start|>assistant\n")
-            append("<think>\n\n</think>\n\n")
+            if (!enableThinking) {
+                append("<think>\n\n</think>\n\n")
+            }
         }
     }
 

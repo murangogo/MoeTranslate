@@ -38,6 +38,9 @@ import com.moe.moetranslator.databinding.DialogLlamaAddModelBinding
 import com.moe.moetranslator.databinding.DialogLlamaEditPromptsBinding
 import com.moe.moetranslator.databinding.DialogLlamaPresetPickerBinding
 import com.moe.moetranslator.databinding.FragmentLlamaModelManagerBinding
+import com.moe.moetranslator.utils.Constants.defaultLlamaEnableThinking
+import com.moe.moetranslator.utils.Constants.defaultLlamaMaxTokens
+import com.moe.moetranslator.utils.Constants.defaultLlamaTemperature
 import com.moe.moetranslator.utils.Constants.defaultSystemPrompt
 import com.moe.moetranslator.utils.Constants.defaultUserPrompt
 import com.moe.moetranslator.utils.CustomPreference
@@ -134,14 +137,15 @@ class LlamaModelManagerFragment : Fragment() {
     // -------------------- 编辑提示词 --------------------
 
     /**
-     * 弹一个对话框让用户编辑当前模型的 system / user 提示词覆写。
+     * 弹一个对话框让用户编辑当前模型的提示词覆写 + 推理参数（思考开关 / 温度 / 最大 token）。
      *
      * UX：
      *   - 已有 override → 直接预填该 override，让用户在自己的基础上改；
      *   - 无 override → 预填当前的全局默认提示词（来自 SharedPreferences 或硬编码默认），
      *     让用户看到 "起点" 是什么，避免对着空白框猜该写什么；
-     *   - 用户清空到全空 / 点 Reset → 保存时归一为 null，运行时回退到全局默认；
-     *   - 保存按钮：把内容写回 DAO；若该模型是 active，repo.updatePrompts 会顺手同步 prefs 镜像。
+     *   - 用户清空到全空 / 点 Reset → 保存时提示词归一为 null，运行时回退到全局默认；
+     *   - 温度 / 最大 token 留空或非法 → 回退到默认值并夹紧到合理范围；
+     *   - 保存按钮：把内容写回 DAO；若该模型是 active，repo.updateConfig 会顺手同步 prefs 镜像。
      */
     private fun showEditPromptsDialog(entity: LlamaModelEntity) {
         val dialogBinding = DialogLlamaEditPromptsBinding.inflate(layoutInflater)
@@ -149,6 +153,9 @@ class LlamaModelManagerFragment : Fragment() {
         dialogBinding.textTitle.text = getString(R.string.llama_edit_prompts_title, entity.displayName)
         dialogBinding.editSystemPrompt.setText(entity.systemPromptOverride ?: defaultSystemPrompt)
         dialogBinding.editUserPrompt.setText(entity.userPromptOverride ?: defaultUserPrompt)
+        dialogBinding.switchThinking.isChecked = entity.enableThinking
+        dialogBinding.editTemperature.setText(entity.temperature.toString())
+        dialogBinding.editMaxTokens.setText(entity.maxTokens.toString())
 
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogBinding.root)
@@ -158,6 +165,9 @@ class LlamaModelManagerFragment : Fragment() {
         dialogBinding.btnReset.setOnClickListener {
             dialogBinding.editSystemPrompt.setText(defaultSystemPrompt)
             dialogBinding.editUserPrompt.setText(defaultUserPrompt)
+            dialogBinding.switchThinking.isChecked = defaultLlamaEnableThinking
+            dialogBinding.editTemperature.setText(defaultLlamaTemperature.toString())
+            dialogBinding.editMaxTokens.setText(defaultLlamaMaxTokens.toString())
         }
         dialogBinding.btnCancel.setOnClickListener { dialog.dismiss() }
         dialogBinding.btnSave.setOnClickListener {
@@ -166,8 +176,14 @@ class LlamaModelManagerFragment : Fragment() {
             // 与全局默认一致就当作 "无 override"，否则写入数据库
             val sysToStore = sys.ifEmpty { defaultSystemPrompt }
             val userToStore = usr.ifEmpty { defaultUserPrompt }
+            val thinking = dialogBinding.switchThinking.isChecked
+            // 解析数值并夹紧到合理范围；留空或非法时回退默认，避免把 0 / 超大值写进去
+            val temperature = dialogBinding.editTemperature.text?.toString()?.trim()
+                ?.toFloatOrNull()?.coerceIn(0f, 2f) ?: defaultLlamaTemperature
+            val maxTokens = dialogBinding.editMaxTokens.text?.toString()?.trim()
+                ?.toIntOrNull()?.coerceIn(16, 4096) ?: defaultLlamaMaxTokens
             lifecycleScope.launch {
-                repo.updatePrompts(entity.id, sysToStore, userToStore)
+                repo.updateConfig(entity.id, sysToStore, userToStore, thinking, temperature, maxTokens)
                 toast(getString(R.string.llama_prompt_saved, entity.displayName))
                 dialog.dismiss()
             }

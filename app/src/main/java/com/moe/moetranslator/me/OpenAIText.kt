@@ -24,15 +24,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.textfield.TextInputEditText
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FragmentOpenaiApiBinding
+import com.moe.moetranslator.utils.Constants.defaultOpenAITemperature
 import com.moe.moetranslator.utils.Constants.defaultSystemPrompt
 import com.moe.moetranslator.utils.Constants.defaultUserPrompt
 import com.moe.moetranslator.utils.CustomPreference
 import kotlinx.coroutines.launch
+import translationapi.openaitranslation.OpenAITranslation
 
 class OpenAIText :Fragment() {
     private lateinit var binding: FragmentOpenaiApiBinding
@@ -86,7 +90,34 @@ class OpenAIText :Fragment() {
 
     private fun setupButtons() {
         binding.introduce.setOnClickListener{ showIntroduce() }
+        binding.btnAddExtraParam.setOnClickListener { addExtraParamRow() }
         binding.btnSave.setOnClickListener { saveConfiguration() }
+    }
+
+    /** 在「自定义请求参数」区域新增一行键值对（复用通用的 item_key_value_pair 布局）。 */
+    private fun addExtraParamRow(key: String = "", value: String = "") {
+        val row = layoutInflater.inflate(R.layout.item_key_value_pair, binding.containerExtraParams, false)
+        row.findViewById<TextInputEditText>(R.id.editKey).setText(key)
+        row.findViewById<TextInputEditText>(R.id.editValue).setText(value)
+        row.findViewById<ImageButton>(R.id.btnRemove).setOnClickListener {
+            binding.containerExtraParams.removeView(row)
+        }
+        binding.containerExtraParams.addView(row)
+    }
+
+    /** 收集当前所有非空键的自定义参数行。 */
+    private fun collectExtraParams(): List<Pair<String, String>> {
+        val container = binding.containerExtraParams
+        val list = mutableListOf<Pair<String, String>>()
+        for (i in 0 until container.childCount) {
+            val view = container.getChildAt(i)
+            val key = view.findViewById<TextInputEditText>(R.id.editKey).text.toString().trim()
+            val value = view.findViewById<TextInputEditText>(R.id.editValue).text.toString().trim()
+            if (key.isNotBlank()) {
+                list.add(key to value)
+            }
+        }
+        return list
     }
 
     private fun saveConfiguration() {
@@ -115,6 +146,12 @@ class OpenAIText :Fragment() {
                 } else {
                     prefs.setString("OpenAI_User_Prompt", binding.editUserPrompt.text.toString())
                 }
+                // 温度留空（或非法）即存空串，表示请求时不发送 temperature
+                val tempText = binding.editTemperature.text.toString().trim()
+                prefs.setString("OpenAI_Temperature",
+                    if (tempText.isBlank()) "" else (tempText.toFloatOrNull()?.toString() ?: ""))
+                prefs.setString("OpenAI_Extra_Params",
+                    OpenAITranslation.encodeExtraParams(collectExtraParams()))
                 showToast(getString(R.string.save_successfully))
                 requireActivity().finish()
             }
@@ -130,6 +167,11 @@ class OpenAIText :Fragment() {
             binding.editModelName.setText(prefs.getString("OpenAI_Model_Name", ""))
             binding.editSystemPrompt.setText(prefs.getString("OpenAI_System_Prompt", defaultSystemPrompt))
             binding.editUserPrompt.setText(prefs.getString("OpenAI_User_Prompt", defaultUserPrompt))
+            binding.editTemperature.setText(prefs.getString("OpenAI_Temperature", defaultOpenAITemperature.toString()))
+            binding.containerExtraParams.removeAllViews()
+            OpenAITranslation.decodeExtraParams(prefs.getString("OpenAI_Extra_Params", "")).forEach { (k, v) ->
+                addExtraParamRow(k, v)
+            }
         } catch (e: Exception) {
             showToast("Error loading configuration: ${e.message}")
         }

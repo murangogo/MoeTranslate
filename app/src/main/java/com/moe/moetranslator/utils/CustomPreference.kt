@@ -67,6 +67,8 @@ class CustomPreference private constructor(context: Context) {
     //OpenAI_Model_Name(Str)：存储OpenAI API的模型
     //OpenAI_System_Prompt(Str)：存储OpenAI API的系统提示词
     //OpenAI_User_Prompt(Str)：存储OpenAI API的用户提示词
+    //OpenAI_Temperature(Str)：存储OpenAI API的温度，留空表示请求时不发送 temperature
+    //OpenAI_Extra_Params(Str)：存储OpenAI API的自定义请求参数（[{key,value},...] 的 JSON 字符串）
 
     //Volc_ACCOUNT_EncryptedKey(Str)：KeyStore参数，存储火山引擎API（APPID）
     //Volc_ACCOUNT_IV(Str)：KeyStore参数，存储火山引擎API（APPID）
@@ -124,6 +126,9 @@ class CustomPreference private constructor(context: Context) {
     //Llama_Model_Name：激活的 llama.cpp 模型名称
     //Llama_Active_System_Prompt_Override：记录激活模型的系统提示词
     //Llama_Active_User_Prompt_Override：记录激活模型的用户提示词
+    //Llama_Active_Enable_Thinking(Boolean)：记录激活模型是否开启思考
+    //Llama_Active_Temperature(Float)：记录激活模型的采样温度
+    //Llama_Active_Max_Tokens(Int)：记录激活模型的最大生成 token 数
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
