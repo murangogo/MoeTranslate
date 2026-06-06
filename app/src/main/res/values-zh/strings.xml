@@ -404,7 +404,7 @@
     <string name="openai_use_source_text">在用户提示词中，使用“usefromlang”代表源语言，使用“usetolang”代表目标语言，使用“usesourcetext”代表待翻译的文本</string>
     <string name="openai_temperature">温度（0–2，留空则不发送，例如推理模型）</string>
     <string name="openai_custom_params">自定义请求参数</string>
-    <string name="openai_custom_params_hint">按类型（true/false、数字、JSON）合并进请求体。可用于关闭思考或适配新模型，例如 enable_thinking=false、reasoning_effort=low、max_completion_tokens=2048、top_p=0.9。</string>
+    <string name="openai_custom_params_hint">按类型（true/false、数字、JSON）合并进请求体。可用于<b><u>关闭思考（推荐，可大幅加快翻译速度）</u></b>或适配新模型，例如 enable_thinking=false（阿里千问系列）、reasoning_effort=low（DeepSeek系列/OpenAI系列）、max_completion_tokens=2048、top_p=0.9。</string>
     <string name="openai_add_param">添加参数</string>
     <string name="uniaiapi_name">聚合 AI 翻译</string>
     <string name="uniaiapi_description">支持包括ChatGPT、Qwen、DeepSeek在内的AI接口，只要AI接口兼容OpenAI接口规范，萌译便可接入</string>

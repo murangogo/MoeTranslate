@@ -404,7 +404,7 @@
     <string name="openai_use_source_text">In the user prompt, use \"usefromlang\" to represent the source language, \"usetolang\" to represent the target language, and \"usesourcetext\" to represent the text to be translated</string>
     <string name="openai_temperature">Temperature (0–2, leave blank to omit, e.g. for reasoning models)</string>
     <string name="openai_custom_params">Custom request parameters</string>
-    <string name="openai_custom_params_hint">Merged into the request body by type (true/false, numbers, JSON). Use this to turn off thinking or fit newer models, e.g. enable_thinking=false, reasoning_effort=low, max_completion_tokens=2048, top_p=0.9.</string>
+    <string name="openai_custom_params_hint">Merged into the request body by type (true/false, numbers, JSON). Use this to <b><u>turn off thinking (Recommended, can greatly speed up translation)</u></b> or fit newer models, e.g. enable_thinking=false(Alibaba Qwen Series), reasoning_effort=low(DeepSeek Series / OpenAI Series), max_completion_tokens=2048, top_p=0.9.</string>
     <string name="openai_add_param">Add parameter</string>
     <string name="uniaiapi_name">Uni AI translation</string>
     <string name="uniaiapi_description">Supports AI interfaces including ChatGPT, Qwen, and DeepSeek, and as long as the AI interface is compatible with the OpenAI interface specification, MoeTranslate can be accessed</string>
