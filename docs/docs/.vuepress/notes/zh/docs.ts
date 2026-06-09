@@ -33,6 +33,7 @@ export const docsNotes = defineNoteConfig({
       items: [
         'ML Kit',
         'NLLB',
+        'Llama.cpp引擎'
         '必应翻译',
         '小牛翻译',
         '聚合AI翻译',
