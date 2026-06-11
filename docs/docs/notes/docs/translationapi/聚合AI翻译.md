@@ -44,8 +44,8 @@ badge: 质量最佳
 对于API_KEY，正常填写即可；  
 对于基础URL，阿里旗下的千问模型一般都是`https://dashscope.aliyuncs.com/compatible-mode/v1`；  
 对于model，“千问3.7-Plus”模型对应的代号是qwen3.7-plus；  
-对于系统提示词和用户提示词，保持默认即可；
-对于温度，保持默认即可；
+对于系统提示词和用户提示词，保持默认即可；  
+对于温度，保持默认即可；  
 对于自定义请求参数，**强烈建议添加enable_thinking为false**，意为关闭思考以加快翻译结果返回速度。  
 
 ## 四、在使用该功能之前
