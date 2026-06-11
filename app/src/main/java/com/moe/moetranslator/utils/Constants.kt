@@ -24,7 +24,7 @@ object Constants {
     val defaultUserPrompt = "请将下面的文本从usefromlang翻译为usetolang：\n\nusesourcetext"
 
     // OpenAI 兼容接口默认温度；设置页留空则不发送 temperature（兼容只接受默认温度的推理模型）
-    const val defaultOpenAITemperature = 0.3f
+    const val defaultOpenAITemperature = 0.2f
 
     // 「使用历史翻译记录」默认追加的历史条数（仅 OCR 模式下的 LlamaCpp / 聚合AI 生效）
     const val defaultTranslationHistoryCount = 5
