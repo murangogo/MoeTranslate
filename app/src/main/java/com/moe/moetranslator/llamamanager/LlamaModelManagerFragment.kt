@@ -20,6 +20,7 @@ package com.moe.moetranslator.llamamanager
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -62,12 +63,18 @@ class LlamaModelManagerFragment : Fragment() {
 
     private lateinit var repo: LlamaModelRepository
     private lateinit var adapter: LlamaModelAdapter
+    private lateinit var prefs: CustomPreference
 
     /** SAF: 让用户选一个本地 GGUF 文件 */
     private val openDocumentLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         if (uri != null) handleLocalImport(uri)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        prefs = CustomPreference.getInstance(requireContext())
     }
 
     override fun onCreateView(
@@ -101,6 +108,10 @@ class LlamaModelManagerFragment : Fragment() {
 
         binding.btnAddModel.setOnClickListener { showAddModelSheet() }
 
+        if(!prefs.getBoolean("Read_LlamaCpp_Introduce", false)){
+            showIntroduce()
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             // viewLifecycleOwner.lifecycleScope 在 onDestroyView 之前就被取消，
             // 协程退出后才会清掉 _binding，所以这里直接访问 binding 是安全的。
@@ -128,6 +139,27 @@ class LlamaModelManagerFragment : Fragment() {
                     val ok = repo.delete(requireContext(), entity)
                     if (ok) toast(getString(R.string.delete_download))
                 }
+            }
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+    }
+
+    private fun showIntroduce(){
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.introduce_llamacpp_title)
+            .setMessage(R.string.introduce_llamacpp_content)
+            .setCancelable(false)
+            .setPositiveButton(R.string.user_known, null)
+            .setNegativeButton(R.string.view_tutorial){_,_->
+                val urlt = "https://www.moetranslate.top/docs/translationapi/llamacpp/"
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(urlt)
+                startActivity(intent)
+            }
+            .setNeutralButton(R.string.introduce_not_show_again){
+                    _, _ ->
+                prefs.setBoolean("Read_LlamaCpp_Introduce", true)
             }
             .create()
         dialog.show()

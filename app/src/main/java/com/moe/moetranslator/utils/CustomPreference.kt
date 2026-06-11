@@ -30,6 +30,7 @@ class CustomPreference private constructor(context: Context) {
     //Read_Custom_Text_Introduce(Boolean)：是否阅读自定义文本翻译API的介绍
     //Read_Custom_Pic_Introduce(Boolean)：是否阅读自定义图片翻译API的介绍
     //Read_OpenAI_API_Introduce(Boolean)：是否阅读OpenAI API的介绍
+    //Read_LlamaCpp_Introduce(Boolean)：是否阅读LlamaCpp的介绍
 
     //----应用语言----
     //App_Language(Str)：用户选择的应用语言
