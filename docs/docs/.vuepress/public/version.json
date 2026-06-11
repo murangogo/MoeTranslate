@@ -1,5 +1,5 @@
 {
-    "versionCode": 32,
-    "versionName": "5.3.1",
-    "versionContent": "普通更新：\n\n🐛 问题修复\n- 尝试修复选择源语言和目标语言时，语言列表显示不全的问题。\n"
+    "versionCode": 33,
+    "versionName": "5.4.0",
+    "versionContent": "重要更新：\n\n🚀 新特性\n- 聚合AI翻译支持自定义请求参数，可用于关闭思考，加快翻译速度；\n个性化设置支持将前几次翻译内容作为提示词；\n全面支持Llama.cpp引擎，可导入GGUF模型文件用于推理翻译。\n\n🐛 问题修复\n修复选择源语言和目标语言时，可点击区域过小的问题。\n"
 }
