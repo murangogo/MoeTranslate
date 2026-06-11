@@ -9,7 +9,7 @@
 
 [![Web](https://img.shields.io/badge/%E7%BD%91%E7%AB%99-%E5%AE%98%E7%BD%91-red?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAHIUlEQVRYR8VXCYwTVRh+/3vTLeCy250e2xXEAw+UiKAGMd4az8RIPHCXdgt4REWjKN63eHDEgJKgUVCk211lFQ2aaJQoRglHQKOCEryCsmy7s+20gsuy3c77/d+U1h57aWKcpM3MvPf/7/u//xxg//MF/+R8b4t5NkjZwBk7g0nuZVx6bXnJO+nPkJxtYRY0GzPcm4aqd3AAK3FYnSN1KzKcg4hHDkkxwK8S5JLOGvdydgX0DCQzIIDaN5M3QMaajwx8thKA7QzxZPuWwVsEqt6+R1iNgNeX7iHAMY3zue1BvaU/EP0C8EXMRYB4nxJEZHs1xJkZwS6mw+5HxtYYje5ra5sSdMtYR1Dn/khiLQG9knHxnATrS5BsOSAbrdY54mPRkOeZvkCUA0AEX7O5koRn5AQcABNktRbNJDPtHGR6WEaM3j2rJpUH0OiGwz/Y55HJ9B5FyDBL+P+sgLFCWttyOjiwpdGg+65SEGUAfE3xl4je2xDgDyZlNwD4HVw73mJ4gZTWK0T1IiPoeUApKgSgnn2R+DJiaDbT+I0Zh9iodffuVG5gnA8nNqvJqHmxkPuJQhBFAOrCybspeBYDYDdKdgEw7TwEayE9byV6CQObojm0M/fWV2/uC4C/KXk+MrmeIWxCLp0E5lSO/B4L5WYu8FMidzhyCBoBvTkHIg/gqJVJ1wFh/U4WjxQAATtwWnG4L51cR+jPyglIhDs0p2N7F1TuGN5jJtT7LqfuG9mTHJcRciK3YGleOeL6mMd9ucoEf3M8hBJWIbA2o0Ify6ZBOhvMhy5/c2IeWf0YHbY+FvJcmKfpFXT4R6QWk2V39BfJfb2XyF7oPEK/j3jM5NYpsDcoY0DA7bHp+kt/A6BDfIeZcfJRlQq4tqC+vVCpL5J8HFA+ReuvSw4JiupzJbAT1X5bCUCSUnIX/b7gEjxk5Q0c8NFo0PNsoR5iYTKxsIUEfqXMGZsH4I/8cTli5kMKvG+MoD6p1CJfOLEGgF3NOV4TDXjeza2XBqF6730zdS3PWG8TqNZYUM/WhoKrNmL+Qnl9jOZwTtxbX/mt7YLasPkqVZObJRcPdgZcC8sAROJfqYAqZacvAIevSk6yuPyaFG+JNbqnlOrKuRqBP2EEa+bZAHzh+NeEeBLn7LJowP1xmVDE3K3KsMOJo9umefYOxIBrTfeRzgMHdpM7fjYaPceVGdOSnAqWfI/Y/ojYviILIJLYo6qW0NiY9ga3KiZFF+X3fmKgkqFe2RGCroEA1LSa1RU9mFJxQS7QS3Ud8UZqbFpYP1Ot2RFr1E+2Afgj8QMqR0s3/5fPqtARA65DDByy8L88sUQ3uXS/EfJU5QD8SBQfV2GJY/fMdP1S7gIzpUqpq0pW7brKu38gF5ywtnNkah/fR4ymjJBeU6rL23rwWN7T9ROV9F1U0sdlXRCOf06UnCekY2r7jKq1pUK51CmNkb6yYLAgrGuOXy0lrAGGn8UaPRcdYiDbeqnALKC2+VBZFoQTW6i4TJZOPqlzWs03AzGQS0PqHRuNRj1fwnMy/nDyeQQ5lwPMjwb1h20AatTiFn5p1+mAPoYqld3n8wdFzBYqHg1SE9d1NrjeGQiAvykxjYRXk4+byMehImMQOa3HiG1vxqFNTtRXb832ArUQSUTV5INCXGJMd60rFKyLxB+hJvQMbV4pAeLZUgzjVFzY4hTRROlOLvFzi4Of4M8EFA/EQq5FRYaEzSup4L1PKfobpehRai3fjIiFB4mF+WT8V7Gg5/RCQUL9JFlV1McHSxhk/HGjsebp/D6KSmrX2yn4xpPBd3WEPHbX/BtAK1aKg8ndtMFNb+s7gu7V2XZsvlw4HUmBd2rC+S2MwB+sVC9Nw4wJl8Ob3g/jgfVMKG7H7PWYR5+t2nFtOHUjjRQrSH/U0N1H54bVooHE32LORguXEZ1djLML6eCLbeoRt0nGDxI7ZwuHuLS93vWJOrg0C7wticu4xT4iYzfQyD7CHkgYnwOa3Cp7aSABGMa5FooGqptyzJSNZN5wYgnNb3NI2GQgM/ZEjCOOEZCeYrFMi5qAYyHdnobLRrKmxDuk8Br6XZ92Vuxw9KS/VwMt41Cp4gU5f9II1DxV6L4+h1J/xHyNfD4rt1FIfmq7dO30i2QbfXzoFSBOaAtU/1QIwN+SGI8W20EHdca63aNGVXedlOntyacsMfpiR8A9pzR2hjSWq6jllrypV9NO49JakJuaisdycxOBPoNS+V7k7Huag1bQDDHKDrQ+MqJfFxSljfow6bUWqLzNpit8R9omZPcgDZYQsO/oO0FRn70HGjLwlOx21saRzaW5oLW/rBnSp5nXmbhZZPi9FMFjBks/+2DEH8EhFnbsczWxW6B3IJnBAeSkKbTrWv88h6XTIQIysejjlHGDBpColGyz5hDN0QZX/oNkMMBDBzCYpn+5/hfKVJpOIq6p8QAAAABJRU5ErkJggg==)](https://www.moetranslate.top)
 [![Github](https://img.shields.io/badge/Github-Release-blue?logo=Github)](https://github.com/murangogo/MoeTranslate/releases)
-[![Download](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-Ver5.3.1-green?logo=Android&logoColor=green)](https://www.moetranslate.top/download/downloadlink/)
+[![Download](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-Ver5.4.0-green?logo=Android&logoColor=green)](https://www.moetranslate.top/download/downloadlink/)
 
 </div>
 
@@ -52,6 +52,10 @@
 > **NLLB翻译：** 属于本地AI翻译。除了第一次使用需下载模型（约1GB）外，其余时间可离线使用。搭配本地OCR识别，可实现全程离线翻译。该模型相较于前者，翻译质量有所提升，支持的目标语言也更多，但受限于手机端算力，翻译质量相较于在线API差距仍然很大。  
 > [启用教程](https://www.moetranslate.top/docs/translationapi/nllb/)  
 > 翻译质量：★★（2星）
+
+> **LlamaCpp引擎：** 属于本地AI翻译。可任意导入LlamaCpp引擎支持的模型（GGUF格式），导入后可离线使用。搭配本地OCR识别，可实现全程离线翻译。翻译质量取决于选择的模型。  
+> [启用教程](https://www.moetranslate.top/docs/translationapi/nllb/)  
+> 翻译质量：★★★★（4星）
 
 > **必应翻译：** 属于在线翻译API。这是唯一一个不需要提前配置API Key即可使用的在线翻译方式。其实现原理是通过模拟浏览器访问网页的行为来实现翻译，依赖于网页结构和token提取，这是非常不规范的行为，稳定性较差。也正因为如此，萌译无法保证它随时可用。该方法翻译质量尚可，不过由于它实现方式的特殊性，还是适合特殊情况下使用。  
 > [启用教程](https://www.moetranslate.top/docs/translationapi/bing/)  
