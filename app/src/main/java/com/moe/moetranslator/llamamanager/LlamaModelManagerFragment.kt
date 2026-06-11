@@ -88,10 +88,7 @@ class LlamaModelManagerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         repo = LlamaModelRepository.getInstance(requireContext())
 
-        binding.textStorageHint.text = getString(
-            R.string.llama_storage_path_hint,
-            LlamaModelStorage.modelsDir(requireContext()).absolutePath
-        )
+        binding.introduce.setOnClickListener { showIntroduce() }
 
         adapter = LlamaModelAdapter(
             onSetActive = { entity ->

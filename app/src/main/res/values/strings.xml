@@ -468,7 +468,6 @@
     <string name="llama_active_set">\"%s\" is now active</string>
     <string name="llama_no_active_model">No active LlamaCpp model. Open \"Manage LlamaCpp Models\" and pick one first.</string>
     <string name="llama_size_speed">%1$s / %2$s  ·  %3$s/s</string>
-    <string name="llama_storage_path_hint">Storage path: %s</string>
     <string name="llama_edit_prompts">Model settings</string>
     <string name="llama_edit_prompts_title">Settings for \"%s\"</string>
     <string name="llama_system_prompt_label">System prompt</string>

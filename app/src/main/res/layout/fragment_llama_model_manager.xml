@@ -5,18 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_storage_hint"
+    <!-- 查看提示 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/introduce"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="12dp"
-        android:textColor="#888"
-        android:textSize="11sp"
+        app:cardBackgroundColor="@color/card_background"
+        app:cardElevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="文件存储位置：/data/data/com.moe.moetranslator/files/llamacppmodels" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dont_know_custom"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_models"
@@ -28,7 +44,7 @@
         app:layout_constraintBottom_toTopOf="@id/btn_add_model"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_storage_hint" />
+        app:layout_constraintTop_toBottomOf="@id/introduce" />
 
     <TextView
         android:id="@+id/text_empty"
