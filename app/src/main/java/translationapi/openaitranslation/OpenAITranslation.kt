@@ -19,6 +19,7 @@ package translationapi.openaitranslation
 
 import android.util.Log
 import com.moe.moetranslator.translate.CustomLocale
+import com.moe.moetranslator.translate.TranslationHistory
 import com.moe.moetranslator.translate.TranslationResult
 import com.moe.moetranslator.translate.TranslationTextAPI
 import kotlinx.coroutines.*
@@ -47,7 +48,11 @@ class OpenAITranslation(
     private val systemPrompt: String,
     private val userPrompt: String,
     private val temperature: Float? = null,
-    private val extraParams: List<Pair<String, String>> = emptyList()
+    private val extraParams: List<Pair<String, String>> = emptyList(),
+    // 历史翻译记录：开启后把最近 historyCount 条 (原文,译文) 以 historyPrompt 为前缀追加到用户提示词后
+    private val historyEnabled: Boolean = false,
+    private val historyPrompt: String = "",
+    private val historyCount: Int = 5
 ) : TranslationTextAPI {
 
     companion object {
@@ -114,6 +119,8 @@ class OpenAITranslation(
         currentJob = coroutineScope.launch {
             try {
                 val result = translate(text, sourceLanguage, targetLanguage)
+                // 记录成功的翻译，供后续翻译作为历史上下文参考（是否实际追加由 historyEnabled 决定）
+                TranslationHistory.record(text, result)
                 withContext(Dispatchers.Main) {
                     callback(TranslationResult.Success(result))
                 }
@@ -174,10 +181,15 @@ class OpenAITranslation(
         val fromLang = CustomLocale.getInstance(from).getDisplayName()
         val toLang = CustomLocale.getInstance(to).getDisplayName()
 
-        val fullUserPrompt = userPrompt
+        var fullUserPrompt = userPrompt
             .replace("usefromlang", fromLang)
             .replace("usetolang", toLang)
             .replace("usesourcetext", text)
+
+        // 开启历史记录时，把最近若干条 (原文,译文) 追加到用户提示词之后供模型参考
+        if (historyEnabled) {
+            fullUserPrompt = TranslationHistory.appendHistory(fullUserPrompt, historyPrompt, historyCount)
+        }
 
         Log.d(TAG, "fullUserPrompt: $fullUserPrompt")
 

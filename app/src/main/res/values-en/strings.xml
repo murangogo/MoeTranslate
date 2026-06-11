@@ -270,6 +270,15 @@
     <string name="other_setting">Other</string>
     <string name="adjust_not_tip">Do not display the adjustment completion prompt</string>
     <string name="adjust_not_tip_summary">When turned on, when the box selects the area to complete the translation or adjusts the position of the completed translation result, the prompt text will not pop up</string>
+    <string name="translation_history_title">Use translation history</string>
+    <string name="translation_history_status_on">Current status: using the past %1$d translation records</string>
+    <string name="translation_history_status_off">Current status: off</string>
+    <string name="translation_history_summary_explain">(Only effective for the LlamaCpp engine and Aggregate AI translation in OCR mode) Each time the model is invoked for translation, the specified number of past translation records (including source text and translation) are appended after the user prompt for the model\'s reference.</string>
+    <string name="translation_history_switch_label">Master switch</string>
+    <string name="translation_history_prompt_label">Additional prompt</string>
+    <string name="translation_history_count_label">Number of history records</string>
+    <string name="translation_history_prompt_default">The following are translation records for reference:</string>
+    <string name="translation_history_count_invalid">Please enter a valid number of records (≥ 1)</string>
     <string name="init_error">Initialization Failed：%s</string>
     <string name="madoka_newyear">Madoka（New Year）</string>
     <string name="loading">Loading...</string>

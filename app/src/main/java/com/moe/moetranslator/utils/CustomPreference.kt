@@ -116,6 +116,9 @@ class CustomPreference private constructor(context: Context) {
     //Custom_Long_Press_Delay(Long)：长按判定时间
     //Custom_Floating_Pic(Str)：用户自定义的悬浮球图片
     //Custom_Adjust_Not_Text(Boolean)：是否显示提示文本
+    //Use_Translation_History(Boolean)：是否开启「使用历史翻译记录」（仅 OCR 模式下的 LlamaCpp / 聚合AI 生效），默认关闭
+    //Translation_History_Prompt(Str)：历史翻译记录追加到用户提示词前的引导语，默认「以下是供参考的翻译记录：」
+    //Translation_History_Count(Int)：每次追加的历史翻译记录条数，默认 5
 
     //----自动翻译选项----
     //Auto_Translate_Interval(Long)：自动翻译时间间隔

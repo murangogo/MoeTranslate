@@ -26,6 +26,9 @@ object Constants {
     // OpenAI 兼容接口默认温度；设置页留空则不发送 temperature（兼容只接受默认温度的推理模型）
     const val defaultOpenAITemperature = 0.3f
 
+    // 「使用历史翻译记录」默认追加的历史条数（仅 OCR 模式下的 LlamaCpp / 聚合AI 生效）
+    const val defaultTranslationHistoryCount = 5
+
     // llama.cpp 本地推理的每模型默认参数（新建/导入模型时的初值，也是 active 镜像缺失时的回退值）
     // 思考默认关闭：翻译场景追求速度，Qwen3 等模型默认开思考会显著拖慢
     const val defaultLlamaEnableThinking = false

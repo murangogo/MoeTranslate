@@ -27,6 +27,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.SwitchCompat
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -36,6 +37,7 @@ import com.moe.moetranslator.R
 import com.moe.moetranslator.translate.CustomLocale
 import com.moe.moetranslator.translate.DecimalDigitsInputFilter
 import com.moe.moetranslator.translate.Dialogs
+import com.moe.moetranslator.utils.Constants
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.LanguageManager
 import java.io.File
@@ -57,6 +59,7 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
     private lateinit var autoStrLength: Preference
     private lateinit var autoStrSimilarity: Preference
     private lateinit var showSource: ListPreference
+    private lateinit var translationHistory: Preference
 
     private lateinit var languagePreference: ListPreference
 
@@ -73,6 +76,7 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
         autoStrLength = findPreference<Preference>("auto_translate_str_length")!!
         autoStrSimilarity = findPreference<Preference>("auto_translate_str_similarity")!!
         showSource = findPreference<ListPreference>("show_source_text")!!
+        translationHistory = findPreference<Preference>("use_translation_history")!!
         languagePreference = findPreference<ListPreference>("app_language")!!
 
         // 悬浮球图片
@@ -158,6 +162,12 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
             true
         }
 
+        // 使用历史翻译记录
+        translationHistory.setOnPreferenceClickListener {
+            showTranslationHistoryDialog()
+            true
+        }
+
         ballIcon.refreshPreview()
         updateIconSummary()
         updatePressSummary()
@@ -166,6 +176,7 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
         updateStrSimilaritySummary()
         updateFontSummary()
         updateFontSizeSummary()
+        updateTranslationHistorySummary()
         setupLanguagePreference()
     }
 
@@ -261,6 +272,54 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
 
     private fun updateFontSizeSummary() {
         resultFontSize.summary = getString(R.string.font_size_summary, prefs.getFloat("Custom_Result_Font_Size", 16f).toString())
+    }
+
+    private fun updateTranslationHistorySummary() {
+        val status = if (prefs.getBoolean("Use_Translation_History", false)) {
+            getString(R.string.translation_history_status_on,
+                prefs.getInt("Translation_History_Count", Constants.defaultTranslationHistoryCount))
+        } else {
+            getString(R.string.translation_history_status_off)
+        }
+        translationHistory.summary = status + "\n" + getString(R.string.translation_history_summary_explain)
+    }
+
+    private fun showTranslationHistoryDialog() {
+        val view = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_translation_history, null)
+        val switchHistory = view.findViewById<SwitchCompat>(R.id.switch_history)
+        val editPrompt = view.findViewById<EditText>(R.id.edit_history_prompt)
+        val editCount = view.findViewById<EditText>(R.id.edit_history_count)
+
+        switchHistory.isChecked = prefs.getBoolean("Use_Translation_History", false)
+        editPrompt.setText(prefs.getString("Translation_History_Prompt",
+            getString(R.string.translation_history_prompt_default)))
+        editCount.setText(prefs.getInt("Translation_History_Count",
+            Constants.defaultTranslationHistoryCount).toString())
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.translation_history_title)
+            .setView(view)
+            .setPositiveButton(R.string.save) { _, _ ->
+                // 条数非法（空 / 非数字 / 小于 1）时不保存，提示后关闭，与其它设置弹窗一致
+                val count = editCount.text.toString().trim().toIntOrNull()
+                if (count == null || count < 1) {
+                    showToast(getString(R.string.translation_history_count_invalid))
+                    return@setPositiveButton
+                }
+                // 附加提示词留空则回退到默认，避免历史块以空行开头
+                val promptText = editPrompt.text.toString().trim()
+                val promptToStore = promptText.ifEmpty { getString(R.string.translation_history_prompt_default) }
+
+                prefs.setBoolean("Use_Translation_History", switchHistory.isChecked)
+                prefs.setString("Translation_History_Prompt", promptToStore)
+                prefs.setInt("Translation_History_Count", count)
+                updateTranslationHistorySummary()
+            }
+            .setNegativeButton(R.string.user_cancel, null)
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
     private fun showBallOptionsDialog(){

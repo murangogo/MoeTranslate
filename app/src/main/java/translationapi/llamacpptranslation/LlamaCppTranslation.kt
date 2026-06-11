@@ -25,6 +25,7 @@ import android.widget.Toast
 import com.moe.moetranslator.R
 import com.moe.moetranslator.llama.LlamaAndroid
 import com.moe.moetranslator.translate.CustomLocale
+import com.moe.moetranslator.translate.TranslationHistory
 import com.moe.moetranslator.translate.TranslationResult
 import com.moe.moetranslator.translate.TranslationTextAPI
 import java.io.File
@@ -57,6 +58,10 @@ class LlamaCppTranslation(
     private val temperature: Float = 0.2f,
     private val topP: Float = 0.9f,
     private val repeatPenalty: Float = 1.1f,
+    // 历史翻译记录：开启后把最近 historyCount 条 (原文,译文) 以 historyPrompt 为前缀追加到用户提示词后
+    private val historyEnabled: Boolean = false,
+    private val historyPrompt: String = "",
+    private val historyCount: Int = 5,
 ) : TranslationTextAPI {
 
     companion object {
@@ -147,6 +152,8 @@ class LlamaCppTranslation(
                 if (result.isEmpty()) {
                     callback(TranslationResult.Error(Exception("Empty completion (possibly cancelled or prompt too long)")))
                 } else {
+                    // 记录成功的翻译，供后续翻译作为历史上下文参考（是否实际追加由 historyEnabled 决定）
+                    TranslationHistory.record(text, result)
                     callback(TranslationResult.Success(result))
                 }
             } catch (e: Exception) {
@@ -191,10 +198,16 @@ class LlamaCppTranslation(
     private fun buildPrompt(text: String, src: String, dst: String): String {
         val fromLang = CustomLocale.getInstance(src).getDisplayName()
         val toLang = CustomLocale.getInstance(dst).getDisplayName()
-        val renderedUser = userPrompt
+        var renderedUser = userPrompt
             .replace("usefromlang", fromLang)
             .replace("usetolang", toLang)
             .replace("usesourcetext", text)
+
+        // 开启历史记录时，把最近若干条 (原文,译文) 追加到用户提示词之后供模型参考；
+        // 在套用 chat 模板前追加，使历史成为 user 段内容的一部分
+        if (historyEnabled) {
+            renderedUser = TranslationHistory.appendHistory(renderedUser, historyPrompt, historyCount)
+        }
 
         // 首选：模型自带 Jinja chat 模板。不同模型族各自走正确模板，并按 enableThinking
         // 控制思考段（如 Qwen3 在 enableThinking=false 时注入空 <think></think>）。

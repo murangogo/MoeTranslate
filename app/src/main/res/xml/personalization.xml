@@ -131,6 +131,11 @@
             android:summary="@string/adjust_not_tip_summary"
             android:defaultValue="false"/>
 
+        <Preference
+            android:key="use_translation_history"
+            app:iconSpaceReserved="false"
+            android:title="@string/translation_history_title" />
+
         <ListPreference
             android:key="app_language"
             app:iconSpaceReserved="false"
