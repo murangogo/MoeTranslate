@@ -138,9 +138,13 @@ class TranslateFragment : Fragment() {
                     ) {
                         checkRAM()
                     }
+                    // 清除翻译历史
+                    TranslationHistory.clear()
                     launchFloatingBallService()
                 }
             } else {
+                // 清除翻译历史
+                TranslationHistory.clear()
                 stopFloatingBallService()
             }
         }

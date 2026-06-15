@@ -120,7 +120,9 @@ class OpenAITranslation(
             try {
                 val result = translate(text, sourceLanguage, targetLanguage)
                 // 记录成功的翻译，供后续翻译作为历史上下文参考（是否实际追加由 historyEnabled 决定）
-                TranslationHistory.record(text, result)
+                if (historyEnabled) {
+                    TranslationHistory.record(text, result)
+                }
                 withContext(Dispatchers.Main) {
                     callback(TranslationResult.Success(result))
                 }

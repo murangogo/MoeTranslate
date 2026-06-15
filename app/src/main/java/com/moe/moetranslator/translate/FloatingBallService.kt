@@ -774,6 +774,9 @@ class FloatingBallService : LifecycleService() {
 
     private fun stopServiceAndRemoveViews() {
         try {
+            // 清除翻译历史
+            TranslationHistory.clear()
+
             // 停止自动翻译
             if (isAutoTranslating) {
                 stopAutoTranslate()

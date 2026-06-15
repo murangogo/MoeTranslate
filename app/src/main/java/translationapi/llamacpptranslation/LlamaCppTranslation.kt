@@ -153,7 +153,9 @@ class LlamaCppTranslation(
                     callback(TranslationResult.Error(Exception("Empty completion (possibly cancelled or prompt too long)")))
                 } else {
                     // 记录成功的翻译，供后续翻译作为历史上下文参考（是否实际追加由 historyEnabled 决定）
-                    TranslationHistory.record(text, result)
+                    if (historyEnabled) {
+                        TranslationHistory.record(text, result)
+                    }
                     callback(TranslationResult.Success(result))
                 }
             } catch (e: Exception) {
