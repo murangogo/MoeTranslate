@@ -65,7 +65,7 @@ object TranslationHistory {
     }
 
     /**
-     * 构建追加到用户提示词前的历史参考文本；无历史时返回空串。
+     * 构建追加到系统提示词后的历史参考文本；无历史时返回空串。
      *
      * 格式：
      * ```
@@ -95,10 +95,10 @@ object TranslationHistory {
     }
 
     /**
-     * 把历史参考文本追加到 [userPrompt] 之前（中间空一行）。无历史时原样返回 [userPrompt]。
+     * 把历史参考文本追加到 [systemPrompt] 之后（中间空一行）。无历史时原样返回 [systemPrompt]。
      */
-    fun appendHistory(userPrompt: String, prefix: String, count: Int): String {
+    fun appendHistory(systemPrompt: String, prefix: String, count: Int): String {
         val block = buildHistoryBlock(prefix, count)
-        return if (block.isEmpty()) userPrompt else "$block\n\n$userPrompt"
+        return if (block.isEmpty()) systemPrompt else "$systemPrompt\n\n$block"
     }
 }

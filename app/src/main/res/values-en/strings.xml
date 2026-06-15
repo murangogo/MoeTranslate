@@ -273,7 +273,7 @@
     <string name="translation_history_title">Use translation history</string>
     <string name="translation_history_status_on">Current status: using the past %1$d translation records</string>
     <string name="translation_history_status_off">Current status: off</string>
-    <string name="translation_history_summary_explain">(Only effective for the LlamaCpp engine and Aggregate AI translation in OCR mode) Each time the model is invoked for translation, the specified number of past translation records (including source text and translation) are appended after the user prompt for the model\'s reference.</string>
+    <string name="translation_history_summary_explain">(Only effective for the LlamaCpp engine and Aggregate AI translation in OCR mode) Each time the model is invoked for translation, the specified number of past translation records (including source text and translation) are appended after the system prompt for the model\'s reference.</string>
     <string name="translation_history_switch_label">Master switch</string>
     <string name="translation_history_prompt_label">Additional prompt</string>
     <string name="translation_history_count_label">Number of history records</string>

@@ -273,7 +273,7 @@
     <string name="translation_history_title">使用历史翻译记录</string>
     <string name="translation_history_status_on">当前状态：使用过去的%1$d条翻译历史</string>
     <string name="translation_history_status_off">当前状态：已关闭</string>
-    <string name="translation_history_summary_explain">（仅对OCR模式下的「LlamaCpp引擎」和「聚合AI翻译」生效）每次调取模型翻译时，会在用户提示词后面加入指定条数的历史翻译记录（包括原文和译文）来供模型参考。</string>
+    <string name="translation_history_summary_explain">（仅对OCR模式下的「LlamaCpp引擎」和「聚合AI翻译」生效）每次调取模型翻译时，会在系统提示词后面加入指定条数的历史翻译记录（包括原文和译文）来供模型参考。</string>
     <string name="translation_history_switch_label">总开关</string>
     <string name="translation_history_prompt_label">附加提示词</string>
     <string name="translation_history_count_label">历史翻译记录条数</string>

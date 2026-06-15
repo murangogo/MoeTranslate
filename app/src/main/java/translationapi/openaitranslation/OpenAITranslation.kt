@@ -49,7 +49,7 @@ class OpenAITranslation(
     private val userPrompt: String,
     private val temperature: Float? = null,
     private val extraParams: List<Pair<String, String>> = emptyList(),
-    // 历史翻译记录：开启后把最近 historyCount 条 (原文,译文) 以 historyPrompt 为前缀追加到用户提示词后
+    // 历史翻译记录：开启后把最近 historyCount 条 (原文,译文) 以 historyPrompt 为前缀追加到系统提示词后
     private val historyEnabled: Boolean = false,
     private val historyPrompt: String = "",
     private val historyCount: Int = 5
@@ -176,22 +176,26 @@ class OpenAITranslation(
     }
 
     private fun buildSystemPrompt(): String {
-        return systemPrompt
+        var fullSystemPrompt = systemPrompt
+
+        // 开启历史记录时，把最近若干条 (原文,译文) 追加到系统提示词之后供模型参考
+        if (historyEnabled) {
+            fullSystemPrompt = TranslationHistory.appendHistory(fullSystemPrompt, historyPrompt, historyCount)
+        }
+
+        Log.d(TAG, "fullSystemPrompt: $fullSystemPrompt")
+
+        return fullSystemPrompt
     }
 
     private fun buildUserPrompt(text: String, from: String, to: String): String {
         val fromLang = CustomLocale.getInstance(from).getDisplayName()
         val toLang = CustomLocale.getInstance(to).getDisplayName()
 
-        var fullUserPrompt = userPrompt
+        val fullUserPrompt = userPrompt
             .replace("usefromlang", fromLang)
             .replace("usetolang", toLang)
             .replace("usesourcetext", text)
-
-        // 开启历史记录时，把最近若干条 (原文,译文) 追加到用户提示词之后供模型参考
-        if (historyEnabled) {
-            fullUserPrompt = TranslationHistory.appendHistory(fullUserPrompt, historyPrompt, historyCount)
-        }
 
         Log.d(TAG, "fullUserPrompt: $fullUserPrompt")
 

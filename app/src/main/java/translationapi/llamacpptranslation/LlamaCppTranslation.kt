@@ -58,7 +58,7 @@ class LlamaCppTranslation(
     private val temperature: Float = 0.2f,
     private val topP: Float = 0.9f,
     private val repeatPenalty: Float = 1.1f,
-    // 历史翻译记录：开启后把最近 historyCount 条 (原文,译文) 以 historyPrompt 为前缀追加到用户提示词后
+    // 历史翻译记录：开启后把最近 historyCount 条 (原文,译文) 以 historyPrompt 为前缀追加到系统提示词后
     private val historyEnabled: Boolean = false,
     private val historyPrompt: String = "",
     private val historyCount: Int = 5,
@@ -200,21 +200,22 @@ class LlamaCppTranslation(
     private fun buildPrompt(text: String, src: String, dst: String): String {
         val fromLang = CustomLocale.getInstance(src).getDisplayName()
         val toLang = CustomLocale.getInstance(dst).getDisplayName()
-        var renderedUser = userPrompt
+        val renderedUser = userPrompt
             .replace("usefromlang", fromLang)
             .replace("usetolang", toLang)
             .replace("usesourcetext", text)
 
-        // 开启历史记录时，把最近若干条 (原文,译文) 追加到用户提示词之后供模型参考；
-        // 在套用 chat 模板前追加，使历史成为 user 段内容的一部分
+        // 开启历史记录时，把最近若干条 (原文,译文) 追加到系统提示词之后供模型参考；
+        // 在套用 chat 模板前追加，使历史成为 system 段内容的一部分
+        var renderedSystem = systemPrompt
         if (historyEnabled) {
-            renderedUser = TranslationHistory.appendHistory(renderedUser, historyPrompt, historyCount)
+            renderedSystem = TranslationHistory.appendHistory(renderedSystem, historyPrompt, historyCount)
         }
 
         // 首选：模型自带 Jinja chat 模板。不同模型族各自走正确模板，并按 enableThinking
         // 控制思考段（如 Qwen3 在 enableThinking=false 时注入空 <think></think>）。
         val viaTemplate = runCatching {
-            LlamaAndroid.formatChat(systemPrompt, renderedUser, enableThinking)
+            LlamaAndroid.formatChat(renderedSystem, renderedUser, enableThinking)
         }.getOrNull()
         if (!viaTemplate.isNullOrBlank()) {
             return viaTemplate
@@ -227,7 +228,7 @@ class LlamaCppTranslation(
         Log.w(TAG, "Built-in chat template unavailable, falling back to hardcoded ChatML")
         return buildString {
             append("<|im_start|>system\n")
-            append(systemPrompt)
+            append(renderedSystem)
             append("<|im_end|>\n")
             append("<|im_start|>user\n")
             append(renderedUser)
