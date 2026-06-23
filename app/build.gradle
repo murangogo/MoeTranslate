@@ -77,6 +77,11 @@ android {
             version '3.22.1'
         }
     }
+
+    // PP-OCRv6 / NLLB 的 onnx 模型不压缩，便于直接读取
+    androidResources {
+        noCompress 'onnx'
+    }
 }
 
 dependencies {
@@ -129,6 +134,9 @@ dependencies {
     // 模型ONNX的运行时库
     implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.19.0'  //latest.release
     implementation 'com.microsoft.onnxruntime:onnxruntime-extensions-android:0.12.4'   //latest.release
+
+    // PP-OCRv6 DBNet unclip 的多边形外扩（Vatti buffer）
+    implementation 'org.locationtech.jts:jts-core:1.19.0'
 
     // XML文件解析
     implementation group: 'xerces', name: 'xercesImpl', version: '2.12.0'
