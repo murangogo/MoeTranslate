@@ -46,7 +46,8 @@
     <string name="internet_error">Network Error, please check and try again</string>
     <string name="get_notification_error">Failed to get notification, maybe the network is not connected</string>
     <string name="translation_mode">Translation Mode</string>
-    <string name="api_configuration">API Configuration</string>
+    <string name="ocr_configuration">OCR Configuration</string>
+    <string name="api_configuration">Translation API Configuration</string>
     <string name="personalization_setting">Personalization</string>
     <string name="article_page">One Day · One Article</string>
     <string name="faq_title">FAQ</string>

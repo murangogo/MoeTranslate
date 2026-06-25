@@ -46,7 +46,8 @@
     <string name="internet_error">网络出现问题，请检查后重试</string>
     <string name="get_notification_error">获取通知失败，可能是网络未连接</string>
     <string name="translation_mode">翻译模式</string>
-    <string name="api_configuration">API配置</string>
+    <string name="ocr_configuration">OCR配置</string>
+    <string name="api_configuration">翻译API配置</string>
     <string name="personalization_setting">个性化设置</string>
     <string name="article_page">壹日 · 壹篇</string>
     <string name="faq_title">常见问题</string>

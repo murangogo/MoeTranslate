@@ -82,6 +82,38 @@
             <RelativeLayout
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
+                android:id="@+id/ocr_config_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/ocrselect"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ocr" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/ocrselect"
+                    android:text="@string/ocr_configuration"
+                    android:textColor="#6A6464"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righticon" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
                 android:id="@+id/api_config_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
