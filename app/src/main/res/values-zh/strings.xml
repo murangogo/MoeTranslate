@@ -47,6 +47,14 @@
     <string name="get_notification_error">获取通知失败，可能是网络未连接</string>
     <string name="translation_mode">翻译模式</string>
     <string name="ocr_configuration">OCR配置</string>
+    <!-- OCR 引擎配置页 -->
+    <string name="ocr_engine_title">OCR 引擎 （仅对OCR模式生效）</string>
+    <string name="ocr_engine_header_summary">选择截图取字所用的 OCR 引擎。切换引擎后，可选的“源语言”也会随之变化。</string>
+    <string name="ocr_engine_category">选择 OCR 引擎</string>
+    <string name="paddleocr_name">PaddleOCR PP-OCRv6</string>
+    <string name="paddleocr_description">百度飞桨开源的离线文字识别引擎，是全球顶尖的OCR识别模型，准确率很高，<b><u>完全离线、无需下载</u></b>。支持中文、英文、日文及法/德/西/意/葡等拉丁系语言，<b><u>但不支持韩语</u></b>。</string>
+    <string name="mlkit_ocr_name">ML Kit OCR</string>
+    <string name="mlkit_ocr_description">谷歌 ML Kit 端侧文字识别，识别准确率稍低，<b><u>完全离线、无需下载</u></b>，支持中文、英文、日文、韩文四种语言。</string>
     <string name="api_configuration">翻译API配置</string>
     <string name="personalization_setting">个性化设置</string>
     <string name="article_page">壹日 · 壹篇</string>
@@ -57,7 +65,7 @@
     <string name="about_page">关于</string>
     <string name="choose_mode">选择您希望使用的翻译模式</string>
     <string name="ocr_mode">本地OCR识别+文本翻译<font color="#E25A5C">（推荐）</font></string>
-    <string name="ocr_mode_description">在本地进行离线OCR来提取图片中的文字，再对文字进行翻译。支持本地AI离线文字翻译，也支持使用预置的云端文字翻译API，还支持使用自定义的云端文字翻译API。需要注意的是离线OCR识别仅支持中文、英文、日文、韩文四种。这种方式花费的数据流量非常少；如果您完全选择本地处理，甚至可以做到完全离线。</string>
+    <string name="ocr_mode_description">在本地进行离线OCR来提取图片中的文字，再对文字进行翻译。支持本地AI离线文字翻译，也支持使用预置的云端文字翻译API，还支持使用自定义的云端文字翻译API。这种方式花费的数据流量非常少；如果您完全选择本地处理，甚至可以做到完全离线。</string>
     <string name="pic_mode">直接上传图片进行翻译</string>
     <string name="pic_mode_description">直接把截图上传到云端API进行翻译。支持使用预置的云端图片翻译API，也支持使用自定义的云端图片翻译API，<font color="#E25A5C">不支持本地翻译</font>。这种方式花费的数据流量相对来说要多一些。</string>
     <string name="mlkit_name">ML Kit</string>
@@ -359,6 +367,8 @@
     <string name="proj_jsoup_content">Java HTML 解析器，提供了使用 DOM、CSS 和类似 jquery 的方法来提取和操作数据的能力。  \nhttps://jsoup.org/</string>
     <string name="proj_xerces_title">Xerces</string>
     <string name="proj_xerces_content">XML 解析器实现库。\nhttps://xerces.apache.org/xerces2-j/</string>
+    <string name="proj_ppocr_title">PaddleOCR</string>
+    <string name="proj_ppocr_content">全球领先的 OCR 工具包与文档 AI 引擎。\nhttps://github.com/PaddlePaddle/PaddleOCR</string>
     <string name="proj_mlkit_title">ML Kit</string>
     <string name="proj_mlkit_content">Google 的机器学习工具包，提供文字识别（OCR）和翻译功能。\nhttps://developers.google.com/ml-kit</string>
     <string name="proj_or_title">ONNX Runtime</string>

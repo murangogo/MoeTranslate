@@ -34,73 +34,83 @@ object TranslateTools {
         val textAi = prefs.getInt("Text_AI", Constants.TextAI.MLKIT.id)
         val picApi = prefs.getInt("Pic_API", Constants.PicApi.BAIDU.id)
 
+        // OCR 源语言（type==1）列表随所选 OCR 引擎而变：
+        // ML Kit 支持中/英/日/韩；PaddleOCR 支持中/英/日 + 拉丁系（法/德/西/意/葡），但不支持韩语。
+        val ocrSrcLangRes = if (prefs.getInt("OCR_Engine", Constants.OcrEngine.PADDLEOCR.id) ==
+            Constants.OcrEngine.PADDLEOCR.id
+        ) {
+            R.raw.ppocr_support_languages
+        } else {
+            R.raw.ocr_support_languages
+        }
+
         // 获取与设置相匹配的语言列表
         val resourceId = when {
             translateMode == Constants.TranslateMode.TEXT.id -> when (textApi) {
                 Constants.TextApi.AI.id -> {
                     if (textAi == Constants.TextAI.MLKIT.id) {
                         when (type){
-                            1 -> R.raw.ocr_support_languages
+                            1 -> ocrSrcLangRes
                             else -> R.raw.mlkit_text_support_languages
                         }
                     } else {
                         when (type){
-                            1 -> R.raw.ocr_support_languages
+                            1 -> ocrSrcLangRes
                             else -> R.raw.nllb_text_support_languages
                         }
                     }
                 }
                 Constants.TextApi.BING.id -> {
                     when (type){
-                        1 -> R.raw.ocr_support_languages
+                        1 -> ocrSrcLangRes
                         else -> R.raw.bing_text_support_languages
                     }
                 }
                 Constants.TextApi.NIUTRANS.id -> {
                     when (type){
-                        1 -> R.raw.ocr_support_languages
+                        1 -> ocrSrcLangRes
                         else -> R.raw.niutrans_text_support_languages
                     }
                 }
                 Constants.TextApi.OPENAI.id -> {
                     when (type){
-                        1 -> R.raw.ocr_support_languages
+                        1 -> ocrSrcLangRes
                         else -> R.raw.niutrans_text_support_languages
                     }
                 }
                 Constants.TextApi.VOLC.id -> {
                     when (type){
-                        1 -> R.raw.ocr_support_languages
+                        1 -> ocrSrcLangRes
                         else -> R.raw.volc_text_support_languages
                     }
                 }
                 Constants.TextApi.AZURE.id -> {
                     when (type){
-                        1 -> R.raw.ocr_support_languages
+                        1 -> ocrSrcLangRes
                         else -> R.raw.azure_text_support_languages
                     }
                 }
                 Constants.TextApi.DEEPL.id -> {
                     when (type){
-                        1 -> R.raw.ocr_support_languages
+                        1 -> ocrSrcLangRes
                         else -> R.raw.deepl_text_tar_support_languages
                     }
                 }
                 Constants.TextApi.BAIDU.id -> {
                     when (type){
-                        1 -> R.raw.ocr_support_languages
+                        1 -> ocrSrcLangRes
                         else -> R.raw.baidu_text_support_languages
                     }
                 }
                 Constants.TextApi.TENCENT.id -> {
                     when (type){
-                        1 -> R.raw.ocr_support_languages
+                        1 -> ocrSrcLangRes
                         else -> R.raw.tencent_text_support_languages
                     }
                 }
                 else -> {
                     when (type){
-                        1 -> R.raw.ocr_support_languages
+                        1 -> ocrSrcLangRes
                         else -> {
                             Log.w("TranslateTools", "Custom OCR API selected")
                             return@runCatching null

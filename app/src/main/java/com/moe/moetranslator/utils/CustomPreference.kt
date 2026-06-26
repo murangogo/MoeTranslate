@@ -50,6 +50,7 @@ class CustomPreference private constructor(context: Context) {
     //----翻译配置----
     //Source_Language(Str)：记录当前的源语言
     //Target_Language(Str)：记录当前的目标语言
+    //OCR_Engine(Int)：截图取字所用的OCR引擎（0=PaddleOCR-V6，1=ML Kit），仅文本翻译模式下生效
 
     //----更新与公告----
     //Ignore_Version(Long)：记录用户忽略的版本号

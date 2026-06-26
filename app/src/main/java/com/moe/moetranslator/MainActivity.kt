@@ -28,10 +28,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.moe.moetranslator.llama.LlamaAndroid
 import java.io.File
 import com.moe.moetranslator.madoka.DialogManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.widget.Toast
-import com.moe.moetranslator.ppocr.PPOcrV6Engine
 
 class MainActivity : BaseActivity() {
 
@@ -51,40 +47,6 @@ class MainActivity : BaseActivity() {
         val navController = navHost.navController
         val bottomNavigation:BottomNavigationView=findViewById(R.id.bottomNavigation)
         bottomNavigation.setupWithNavController(navController)
-
-        // ===== PP-OCRv6 冒烟测试：识别 assets 里的示例日语，结果走 Log + Toast =====
-        // 验证通过后删除本调用与下方 runPPOcrV6SmokeTest()。
-        runPPOcrV6SmokeTest()
-    }
-
-    /** 临时：加载 assets/ppocrv6/AJapanese.png，跑 PP-OCRv6 并用 Log + Toast 输出结果。 */
-    private fun runPPOcrV6SmokeTest() {
-        Thread {
-            try {
-                val t0 = System.currentTimeMillis()
-                PPOcrV6Engine.initialize(this)
-                val opts = BitmapFactory.Options().apply { inPreferredConfig = Bitmap.Config.ARGB_8888 }
-                val bmp = assets.open("ppocrv6/AJapanese.png").use { BitmapFactory.decodeStream(it, null, opts) }
-                    ?: throw IllegalStateException("示例图片解码失败")
-                val lines = PPOcrV6Engine.runOCR(bmp)
-                bmp.recycle()
-                val merged = lines.joinToString("") { it.text }
-                val cost = System.currentTimeMillis() - t0
-                Log.i("PPOcrSmoke", "识别 ${lines.size} 行，耗时 ${cost}ms")
-                lines.forEachIndexed { i, l -> Log.i("PPOcrSmoke", "[$i] (%.2f) %s".format(l.score, l.text)) }
-                Log.i("PPOcrSmoke", "合并: $merged")
-                runOnUiThread {
-                    Toast.makeText(
-                        this, "PP-OCRv6 识别 ${lines.size} 行 (${cost}ms):\n$merged", Toast.LENGTH_LONG
-                    ).show()
-                }
-            } catch (e: Throwable) {
-                Log.e("PPOcrSmoke", "PP-OCRv6 冒烟测试失败", e)
-                runOnUiThread {
-                    Toast.makeText(this, "PP-OCR 失败: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-        }.apply { name = "PPOcr-Smoke"; start() }
     }
 
 }

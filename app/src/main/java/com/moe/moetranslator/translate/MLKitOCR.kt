@@ -33,8 +33,15 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+/**
+ * ML Kit 端侧 OCR 引擎。支持中(zh)/英(en)/日(ja)/韩(ko)四种语言，按语言惰性创建识别器。
+ *
+ * 由原 `OCRTextRecognizer` 单例重构而来：改为实现 [OCRProvider] 的普通类，
+ * 与各翻译 API 一样在 [FloatingBallService] 中按需实例化、用完 [release]。
+ */
+class MLKitOCR : OCRProvider {
 
-object OCRTextRecognizer {
+    // 每种语言一个识别器，按需创建并缓存
     private val recognizers = mutableMapOf<String, TextRecognizer>()
 
     private fun getOrCreateRecognizer(language: String): TextRecognizer {
@@ -49,17 +56,16 @@ object OCRTextRecognizer {
         }
     }
 
-    // 使用suspend函数使其成为协程
-    suspend fun getPicText(language: String, bitmap: Bitmap, mergeMode: Int): String =
+    override suspend fun recognize(bitmap: Bitmap, sourceLanguage: String, mergeMode: Int): String =
         withContext(Dispatchers.Default) {
             suspendCancellableCoroutine { continuation ->
-                val recognizer = getOrCreateRecognizer(language)
+                val recognizer = getOrCreateRecognizer(sourceLanguage)
                 try {
                     val image = InputImage.fromBitmap(bitmap, 0)
                     recognizer.process(image)
                         .addOnSuccessListener { visionText ->
                             val resultText = if (mergeMode != 0) {
-                                mergeText(visionText, language, mergeMode)
+                                mergeText(visionText, sourceLanguage, mergeMode)
                             } else {
                                 visionText.text
                             }
@@ -104,8 +110,7 @@ object OCRTextRecognizer {
         )
     }
 
-    // 添加清理方法
-    fun cleanup() {
+    override fun release() {
         recognizers.values.forEach { it.close() }
         recognizers.clear()
     }

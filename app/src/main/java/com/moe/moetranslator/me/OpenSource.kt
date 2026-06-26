@@ -53,6 +53,7 @@ class OpenSource : Fragment() {
             CustomCard(getText(R.string.proj_okhttp_title), getText(R.string.proj_okhttp_content)),
             CustomCard(getText(R.string.proj_jsoup_title), getText(R.string.proj_jsoup_content)),
             CustomCard(getText(R.string.proj_xerces_title), getText(R.string.proj_xerces_content)),
+            CustomCard(getText(R.string.proj_ppocr_title), getText(R.string.proj_ppocr_content)),
             CustomCard(getText(R.string.proj_mlkit_title), getText(R.string.proj_mlkit_content)),
             CustomCard(getText(R.string.proj_or_title), getText(R.string.proj_or_content)),
             CustomCard(getText(R.string.proj_gga_title), getText(R.string.proj_gga_content)),

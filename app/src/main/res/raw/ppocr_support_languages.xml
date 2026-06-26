@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+   * Copyright (C) 2024 murangogo
+   *
+   * This library is free software; you can redistribute it and/or modify it under
+   * the terms of the GNU Lesser General Public License as published by the Free
+   * Software Foundation; either version 3 of the License, or (at your option)
+   * any later version.
+   *
+   * This library is distributed in the hope that it will be useful, but WITHOUT
+   * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+   *
+   * You should have received a copy of the GNU Lesser General Public License along
+   * with this library; if not, write to the Free Software Foundation, Inc.,
+   * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+   *-->
+
+<!--
+   PaddleOCR PP-OCRv6_small 可识别的源语言。
+   单模型单字典覆盖中/繁/日/英及拉丁系文字，但字典中无韩文（故不含 ko）、无西里尔字母（故不含 ru）。
+   这里仅列出「识别字典支持 且 各翻译引擎也普遍支持」的常用语言，保证 OCR→翻译 全链路可用。
+-->
+<languages>
+    <language>
+        <code>zh</code>
+    </language>
+    <language>
+        <code>en</code>
+    </language>
+    <language>
+        <code>ja</code>
+    </language>
+    <language>
+        <code>fr</code>
+    </language>
+    <language>
+        <code>de</code>
+    </language>
+    <language>
+        <code>es</code>
+    </language>
+    <language>
+        <code>it</code>
+    </language>
+    <language>
+        <code>pt</code>
+    </language>
+</languages>

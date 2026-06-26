@@ -47,6 +47,14 @@
     <string name="get_notification_error">Failed to get notification, maybe the network is not connected</string>
     <string name="translation_mode">Translation Mode</string>
     <string name="ocr_configuration">OCR Configuration</string>
+    <!-- OCR engine configuration page -->
+    <string name="ocr_engine_title">OCR Engine (only available in OCR mode)</string>
+    <string name="ocr_engine_header_summary">Select the OCR engine used for extracting text from screenshots. After switching engines, the available \"Source Language\" options will also change accordingly.</string>
+    <string name="ocr_engine_category">Select OCR Engine</string>
+    <string name="paddleocr_name">PaddleOCR PP-OCRv6</string>
+    <string name="paddleocr_description">An open-source offline text recognition engine by Baidu PaddlePaddle. It is one of the world\'s leading OCR models with high accuracy, and is <b><u>completely offline and requires no downloads</u></b>. It supports Chinese, English, Japanese, and Latin-based languages (French, German, Spanish, Italian, Portuguese, etc.), <b><u>but does not support Korean</u></b>.</string>
+    <string name="mlkit_ocr_name">ML Kit OCR</string>
+    <string name="mlkit_ocr_description">Google ML Kit on-device text recognition. The accuracy is slightly lower, but it is <b><u>completely offline and requires no downloads</u></b>. It supports four languages: Chinese, English, Japanese, and Korean.</string>
     <string name="api_configuration">Translation API Configuration</string>
     <string name="personalization_setting">Personalization</string>
     <string name="article_page">One Day · One Article</string>
@@ -57,7 +65,7 @@
     <string name="about_page">About</string>
     <string name="choose_mode">Select the translation mode you wish to use</string>
     <string name="ocr_mode">Local OCR Recognition + Text Translation<font color="#E25A5C">(Recommended)</font></string>
-    <string name="ocr_mode_description">Perform offline OCR locally to extract text from the image, and then translate the text. Supports local AI offline text translation, as well as the use of preset cloud text translation APIs and custom cloud text translation APIs. Note that offline OCR recognition only supports Chinese,  English, Japanese, and Korean. This method consumes very little data traffic; if you choose to process it completely locally, you can even do it completely offline.</string>
+    <string name="ocr_mode_description">Perform offline OCR locally to extract text from the image, and then translate the text. Supports local AI offline text translation, as well as the use of preset cloud text translation APIs and custom cloud text translation APIs. This method consumes very little data traffic; if you choose to process it completely locally, you can even do it completely offline.</string>
     <string name="pic_mode">Upload Images Directly for Translation</string>
     <string name="pic_mode_description">Upload the screenshot directly to the cloud API for translation. It supports using the preset cloud image translation API, and also supports using the custom cloud image translation API. <font color="#E25A5C">It does not support local translation</font>. This method consumes relatively more data traffic.</string>
     <string name="mlkit_name">ML Kit</string>
@@ -359,6 +367,8 @@
     <string name="proj_jsoup_content">Java HTML parser providing capabilities to extract and manipulate data using DOM, CSS, and jquery-like methods.  \nhttps://jsoup.org/</string>
     <string name="proj_xerces_title">Xerces</string>
     <string name="proj_xerces_content">XML parser implementation library.\nhttps://xerces.apache.org/xerces2-j/</string>
+    <string name="proj_ppocr_title">PaddleOCR</string>
+    <string name="proj_ppocr_content">A world-leading OCR toolkit and document AI engine.\nhttps://github.com/PaddlePaddle/PaddleOCR</string>
     <string name="proj_mlkit_title">ML Kit</string>
     <string name="proj_mlkit_content">Google\'s machine learning toolkit providing text recognition (OCR) and translation capabilities.\nhttps://developers.google.com/ml-kit</string>
     <string name="proj_or_title">ONNX Runtime</string>

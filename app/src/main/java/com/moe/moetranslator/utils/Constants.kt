@@ -66,4 +66,10 @@ object Constants {
         TENCENT(1),
         CUSTOM_PIC(2)
     }
+
+    // OCR 引擎相关常量（仅文本翻译模式下使用，决定截图取字用哪个 OCR）
+    enum class OcrEngine(val id: Int) {
+        PADDLEOCR(0),       // PaddleOCR PP-OCRv6_small：中/英/日/拉丁，离线，不支持韩语
+        MLKIT(1)    // ML Kit：中/英/日/韩，需 Google 端侧模型
+    }
 }

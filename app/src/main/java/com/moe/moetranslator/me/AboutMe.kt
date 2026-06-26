@@ -70,6 +70,15 @@ class AboutMe : Fragment() {
                 startActivity(intent)
             }
         }
+        binding.ocrConfigBtn.setOnClickListener {
+            if (isServiceRunning(FloatingBallService::class.java)){
+                showToast(getString(R.string.still_running))
+            } else {
+                val intent = Intent(requireContext(), SettingPageActivity::class.java)
+                intent.putExtra(SettingPageActivity.EXTRA_FRAGMENT_TYPE, SettingPageActivity.TYPE_FRAGMENT_OCR_CONFIG)
+                startActivity(intent)
+            }
+        }
         binding.apiConfigBtn.setOnClickListener {
             if (isServiceRunning(FloatingBallService::class.java)){
                 showToast(getString(R.string.still_running))

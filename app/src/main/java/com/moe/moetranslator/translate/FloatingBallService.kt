@@ -38,6 +38,7 @@ import com.moe.moetranslator.MainActivity
 import com.moe.moetranslator.R
 import com.moe.moetranslator.me.ConfigurationStorage.loadPicConfig
 import com.moe.moetranslator.me.ConfigurationStorage.loadTextConfig
+import com.moe.moetranslator.ppocr.PaddleOCR
 import com.moe.moetranslator.utils.Constants
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.KeystoreManager
@@ -154,6 +155,9 @@ class FloatingBallService : LifecycleService() {
     private var translatorText: TranslationTextAPI? = null
     private var translatorPic: TranslationPicAPI? = null
 
+    // OCR 引擎（仅文本翻译模式下使用）：按用户所选引擎实例化，统一走 OCRProvider 接口
+    private var ocrProvider: OCRProvider? = null
+
     // 5.1.0版本新增：自动翻译相关属性
     private var isAutoTranslating = false   // 是否开启自动翻译
     private var lastOcrResult = ""  // 上次自动翻译的OCR结果（相似度分析）
@@ -217,6 +221,12 @@ class FloatingBallService : LifecycleService() {
                         }
                     }
                     else -> { showToast("Unknown Translator.") }
+                }
+
+                // 初始化OCR引擎：截图取字仅在文本翻译模式下进行，按用户所选引擎实例化（统一走 OCRProvider）
+                ocrProvider = when (prefs.getInt("OCR_Engine", Constants.OcrEngine.PADDLEOCR.id)) {
+                    Constants.OcrEngine.PADDLEOCR.id -> PaddleOCR(applicationContext)
+                    else -> MLKitOCR()
                 }
             }else{
                 when (prefs.getInt("Pic_API", Constants.PicApi.BAIDU.id)){
@@ -663,7 +673,8 @@ class FloatingBallService : LifecycleService() {
         try{
             if(prefs.getInt("Translate_Mode", 0) == 0){
                 // OCR后文本翻译
-                val txt = OCRTextRecognizer.getPicText(prefs.getString("Source_Language", "ja"), bitmap, prefs.getInt("Custom_OCR_Merge_Mode", 2))
+                val txt = ocrProvider?.recognize(bitmap, prefs.getString("Source_Language", "ja"), prefs.getInt("Custom_OCR_Merge_Mode", 2)) ?: ""
+                Log.d("SCREENSHOT", "OCR结果：$txt")
                 // 判断是否为自动翻译模式
                 if (isAutoTranslating) {
                     if (shouldTranslateText(txt)) {
@@ -717,6 +728,7 @@ class FloatingBallService : LifecycleService() {
             lifecycleScope.launch(Dispatchers.Main) {
                 when (result) {
                     is TranslationResult.Success -> {
+                        Log.d("FloatingBallService","翻译结果：${result.translatedText}")
                         if(prefs.getInt("Custom_Show_Source_Mode", 0) == 0){
                             floatingTextView.text = result.translatedText
                         }else if(prefs.getInt("Custom_Show_Source_Mode", 0) == 1){
@@ -727,6 +739,7 @@ class FloatingBallService : LifecycleService() {
                     }
                     is TranslationResult.Error -> {
                         floatingTextView.text = getString(R.string.translation_failed, result.error.message)
+                        Log.d("FloatingBallService","翻译失败")
                     }
                 }
                 isTranslating.set(false)
@@ -794,7 +807,7 @@ class FloatingBallService : LifecycleService() {
             }
 
             // 清理资源
-            OCRTextRecognizer.cleanup()
+            ocrProvider?.release()
             translatorText?.release()
             translatorPic?.release()
             handler.removeCallbacks(longPressRunnable)
@@ -846,7 +859,7 @@ class FloatingBallService : LifecycleService() {
         }
 
         // 清理资源
-        OCRTextRecognizer.cleanup()
+        ocrProvider?.release()
         translatorText?.release()
         translatorPic?.release()
         handler.removeCallbacks(longPressRunnable)
