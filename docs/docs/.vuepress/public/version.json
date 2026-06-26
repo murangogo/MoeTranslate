@@ -1,5 +1,5 @@
 {
-    "versionCode": 34,
-    "versionName": "5.4.1",
-    "versionContent": "普通更新：\n\n✨ 优化\n- 修改翻译历史记录添加位置，从用户提示词前修改为系统提示词后，避免小参数模型混乱。\n"
+    "versionCode": 35,
+    "versionName": "5.5.0",
+    "versionContent": "重要更新：\n\n🚀 新特性\n- 新增PaddleOCR作为可选OCR引擎，大幅提高识别准确度，支持更多的源语言识别。\n"
 }
