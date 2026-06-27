@@ -1,0 +1,5 @@
+{
+    "versionCode": 35,
+    "versionName": "5.5.0",
+    "versionContent": "重要更新：\n\n🚀 新特性\n- 新增PaddleOCR作为可选OCR引擎，大幅提高识别准确度，支持更多的源语言识别。\n"
+}
