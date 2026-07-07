@@ -118,5 +118,26 @@ key：target，value：zh
 
 则JSON响应路径应填写：`result`  
 
+<b>举例3（数组嵌套）：</b>  
+假设成功响应的JSON如下：
+
+```md
+{
+    "code": 0,
+    "msg": "success",
+    "data": {
+        "translations": [ 
+            {
+                "text": "你好世界"
+            }
+        ]
+    }
+}
+```
+
+则JSON响应路径应填写：`data.translations[0].text`  
+
+<b>语法说明：</b>使用“.”分隔对象属性，使用“[序号]”访问数组元素（序号从0开始），二者可自由组合，例如：`data.list[0].items[2].text`  
+
 ## 六、在使用该功能之前
 您可以先使用Postman、Reqable等工具测试API响应，待测试成功后再将相关参数填入该功能中。

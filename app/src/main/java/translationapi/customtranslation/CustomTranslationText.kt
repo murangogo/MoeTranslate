@@ -168,18 +168,8 @@ class CustomTranslationText(private val config: CustomTextAPIConfig): Translatio
     private fun parseResponse(responseBody: String): String {
         return try {
             val jsonObject = JSONObject(responseBody)
-            // 使用配置的JSON响应路径解析结果
-            val parts = config.jsonResponsePath.split(".")
-            var current: Any = jsonObject
-
-            for (part in parts) {
-                current = when (current) {
-                    is JSONObject -> current.get(part)
-                    else -> throw Exception("Invalid JSON path at: $part")
-                }
-            }
-
-            current.toString()
+            // 使用配置的JSON响应路径解析结果（支持对象属性与数组下标的嵌套，如 data.list[0].text）
+            JsonPathParser.parse(jsonObject, config.jsonResponsePath)
         } catch (e: Exception) {
             throw Exception("Failed to parse response: ${e.message}")
         }

@@ -228,7 +228,7 @@ class ChatwithGemini : Fragment() {
                 Log.d("GEMINI","aimessageid:${aiMessageId}")
 
                 if (geminiModel == null){
-                    geminiModel = GeminiModelFactory.createGeminiModel("gemini-1.5-flash", geminiApiKey)
+                    geminiModel = GeminiModelFactory.createGeminiModel("gemini-3.5-flash", geminiApiKey)
                 }
 
                 // 创建历史记录实现多轮聊天
