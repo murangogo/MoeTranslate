@@ -19,6 +19,8 @@ package com.moe.moetranslator.translate
 
 import android.content.Context
 import android.graphics.Bitmap
+import com.moe.moetranslator.utils.Constants
+import com.moe.moetranslator.utils.CustomPreference
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -46,9 +48,14 @@ object ImageFileManager {
                 .format(Date())
             val imageFile = File(screenshotsDir, "Screenshot_$timestamp.jpg")
 
+            // 读取用户自定义的截图质量（1–100），默认 100，仅影响缓存占用，不影响 OCR / 图片翻译
+            val quality = CustomPreference.getInstance(context)
+                .getInt("Custom_Screenshot_Quality", Constants.defaultScreenshotQuality)
+                .coerceIn(1, 100)
+
             // 保存图片
             FileOutputStream(imageFile).use { out ->
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, out)
             }
 
             return imageFile.absolutePath

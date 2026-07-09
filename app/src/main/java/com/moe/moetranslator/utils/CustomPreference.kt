@@ -121,6 +121,7 @@ class CustomPreference private constructor(context: Context) {
     //Use_Translation_History(Boolean)：是否开启「使用历史翻译记录」（仅 OCR 模式下的 LlamaCpp / 聚合AI 生效），默认关闭
     //Translation_History_Prompt(Str)：历史翻译记录追加到用户提示词前的引导语，默认「以下是供参考的翻译记录：」
     //Translation_History_Count(Int)：每次追加的历史翻译记录条数，默认 5
+    //Custom_Screenshot_Quality(Int)：截图保存到缓存目录的 JPEG 质量（1–100），默认 100，仅影响缓存占用，不影响 OCR / 图片翻译
 
     //----自动翻译选项----
     //Auto_Translate_Interval(Long)：自动翻译时间间隔

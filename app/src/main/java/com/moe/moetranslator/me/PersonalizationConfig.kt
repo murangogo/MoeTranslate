@@ -60,6 +60,7 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
     private lateinit var autoStrSimilarity: Preference
     private lateinit var showSource: ListPreference
     private lateinit var translationHistory: Preference
+    private lateinit var screenshotQuality: Preference
 
     private lateinit var languagePreference: ListPreference
 
@@ -77,6 +78,7 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
         autoStrSimilarity = findPreference<Preference>("auto_translate_str_similarity")!!
         showSource = findPreference<ListPreference>("show_source_text")!!
         translationHistory = findPreference<Preference>("use_translation_history")!!
+        screenshotQuality = findPreference<Preference>("screenshot_quality")!!
         languagePreference = findPreference<ListPreference>("app_language")!!
 
         // 悬浮球图片
@@ -168,6 +170,12 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
             true
         }
 
+        // 截图质量
+        screenshotQuality.setOnPreferenceClickListener {
+            showScreenshotQualityDialog()
+            true
+        }
+
         ballIcon.refreshPreview()
         updateIconSummary()
         updatePressSummary()
@@ -177,6 +185,7 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
         updateFontSummary()
         updateFontSizeSummary()
         updateTranslationHistorySummary()
+        updateScreenshotQualitySummary()
         setupLanguagePreference()
     }
 
@@ -282,6 +291,11 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
             getString(R.string.translation_history_status_off)
         }
         translationHistory.summary = status + "\n" + getString(R.string.translation_history_summary_explain)
+    }
+
+    private fun updateScreenshotQualitySummary() {
+        screenshotQuality.summary = getString(R.string.screenshot_quality_summary,
+            prefs.getInt("Custom_Screenshot_Quality", Constants.defaultScreenshotQuality).toString())
     }
 
     private fun showTranslationHistoryDialog() {
@@ -466,6 +480,39 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
             .create()
         res.show()
         res.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+    }
+
+    private fun showScreenshotQualityDialog() {
+        val customView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_message_edittext, null)
+        customView.findViewById<TextView>(R.id.dialog_top_message).apply {
+            text = getString(R.string.screenshot_quality_tips)
+        }
+        val input = customView.findViewById<EditText>(R.id.dialog_bottom_edittext).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            hint = getString(R.string.current_screenshot_quality, prefs.getInt("Custom_Screenshot_Quality", Constants.defaultScreenshotQuality).toString())
+        }
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.set_screenshot_quality)
+            .setView(customView)
+            .setPositiveButton(R.string.save) { _, _ ->
+                try {
+                    val value = input.text.toString().toInt()
+                    if (value in 1..100) {
+                        prefs.setInt("Custom_Screenshot_Quality", value)
+                        updateScreenshotQualitySummary()
+                    } else {
+                        showToast(getString(R.string.font_size_invalid))
+                    }
+                } catch (e: Exception) {
+                    showToast(getString(R.string.font_size_invalid), true)
+                }
+            }
+            .setNegativeButton(R.string.user_cancel, null)
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
     private fun showFontOptionsDialog() {

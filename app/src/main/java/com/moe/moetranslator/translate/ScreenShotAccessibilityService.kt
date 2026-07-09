@@ -118,10 +118,10 @@ class ScreenShotAccessibilityService: AccessibilityService() {
 
                     override fun onFailure(errorCode: Int) {
                         val errorText = when (errorCode){
-                            ERROR_TAKE_SCREENSHOT_INTERNAL_ERROR -> "The status of taking screenshot is failure and the reason is internal error."
-                            ERROR_TAKE_SCREENSHOT_NO_ACCESSIBILITY_ACCESS -> "The status of taking screenshot is failure and the reason is no accessibility access."
-                            ERROR_TAKE_SCREENSHOT_INTERVAL_TIME_SHORT -> "The status of taking screenshot is failure and the reason is that too little time has elapsed since the last screenshot."
-                            ERROR_TAKE_SCREENSHOT_INVALID_DISPLAY -> "The status of taking screenshot is failure and the reason is invalid display Id."
+                            ERROR_TAKE_SCREENSHOT_INTERNAL_ERROR -> "Failed: internal error."
+                            ERROR_TAKE_SCREENSHOT_NO_ACCESSIBILITY_ACCESS -> "Failed: no accessibility access."
+                            ERROR_TAKE_SCREENSHOT_INTERVAL_TIME_SHORT -> "Failed: too little time has elapsed since the last screenshot."
+                            ERROR_TAKE_SCREENSHOT_INVALID_DISPLAY -> "Failed: invalid display Id."
                             else -> "Unknown error: $errorCode"
                         }
                         showToast(errorText)

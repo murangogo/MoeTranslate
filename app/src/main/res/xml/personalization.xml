@@ -132,6 +132,11 @@
             android:defaultValue="false"/>
 
         <Preference
+            android:key="screenshot_quality"
+            app:iconSpaceReserved="false"
+            android:title="@string/screenshot_quality_title" />
+
+        <Preference
             android:key="use_translation_history"
             app:iconSpaceReserved="false"
             android:title="@string/translation_history_title" />

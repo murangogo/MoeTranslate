@@ -282,7 +282,7 @@
     <string name="translation_history_title">使用历史翻译记录</string>
     <string name="translation_history_status_on">当前状态：使用过去的%1$d条翻译历史</string>
     <string name="translation_history_status_off">当前状态：已关闭</string>
-    <string name="translation_history_summary_explain">（仅对OCR模式下的「LlamaCpp引擎」和「聚合AI翻译」生效）每次调取模型翻译时，会在系统提示词后面加入指定条数的历史翻译记录（包括原文和译文）来供模型参考。</string>
+    <string name="translation_history_summary_explain">（仅对OCR模式下的「LlamaCpp引擎」和「聚合AI翻译」生效）每次调取模型翻译时，会在系统提示词后面加入指定条数的历史翻译记录（包括原文和译文）来供模型参考</string>
     <string name="translation_history_switch_label">总开关</string>
     <string name="translation_history_prompt_label">附加提示词</string>
     <string name="translation_history_count_label">历史翻译记录条数</string>
@@ -417,6 +417,11 @@
     <string name="str_similarity_tips">两个字符串之间的相似度使用 Levenshtein 距离计算，请输入0至1之间的小数</string>
     <string name="current_str_similarity">当前相似度阈值：%s</string>
     <string name="set_str_similarity">设置相似度阈值</string>
+    <string name="screenshot_quality_title">截图质量</string>
+    <string name="set_screenshot_quality">设置截图质量</string>
+    <string name="current_screenshot_quality">当前截图质量：%s</string>
+    <string name="screenshot_quality_tips">请输入1至100之间的整数，数值越高质量越好，缓存占用越大</string>
+    <string name="screenshot_quality_summary">当前截图质量：%s\n截图保存到缓存目录时使用的JPEG质量（1–100），数值越小缓存占用越小。不影响OCR和图片翻译的效果</string>
     <string name="api_key">API_KEY</string>
     <string name="model">model</string>
     <string name="system_prompt">系统提示词（留空使用默认）</string>

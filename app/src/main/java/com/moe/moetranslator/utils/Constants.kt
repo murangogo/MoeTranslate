@@ -29,6 +29,9 @@ object Constants {
     // 「使用历史翻译记录」默认追加的历史条数（仅 OCR 模式下的 LlamaCpp / 聚合AI 生效）
     const val defaultTranslationHistoryCount = 5
 
+    // 截图保存到缓存目录时的 JPEG 质量（1–100），默认 100。仅影响缓存占用，不影响 OCR / 图片翻译（二者用保存前的 bitmap）
+    const val defaultScreenshotQuality = 100
+
     // llama.cpp 本地推理的每模型默认参数（新建/导入模型时的初值，也是 active 镜像缺失时的回退值）
     // 思考默认关闭：翻译场景追求速度，Qwen3 等模型默认开思考会显著拖慢
     const val defaultLlamaEnableThinking = false
