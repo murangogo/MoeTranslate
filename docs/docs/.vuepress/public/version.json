@@ -1,5 +1,5 @@
 {
-    "versionCode": 35,
-    "versionName": "5.5.0",
-    "versionContent": "重要更新：\n\n🚀 新特性\n- 新增PaddleOCR作为可选OCR引擎，大幅提高识别准确度，支持更多的源语言识别。\n"
+    "versionCode": 36,
+    "versionName": "5.5.1",
+    "versionContent": "普通更新：\n\n✨ 优化\n\n- 文本和图片的自定义API中JSON响应路径解析添加数组支持，具体用法可查看应用内介绍或官方网站示例；\n- 个性化设置新增图片质量选项，该选项可以调整缓存图片的质量，仅影响缓存占用，不影响翻译效果；\n- 聚合AI翻译可保存多个API提供源，旧版本的API提供源会迁移到新版本中。\n\n🐛 问题修复\n\n- 修复Gemini聊天功能，将模型更新为gemini-3.5-flash。\n"
 }

@@ -28,8 +28,8 @@ android {
         applicationId "com.moe.moetranslator"
         minSdk 29
         targetSdk 36
-        versionCode 35
-        versionName "5.5.0"
+        versionCode 36
+        versionName "5.5.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
