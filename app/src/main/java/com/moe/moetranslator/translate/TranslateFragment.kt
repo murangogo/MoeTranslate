@@ -530,7 +530,7 @@ class TranslateFragment : Fragment() {
                                     Intent(requireContext(), ManageActivity::class.java).apply {
                                         putExtra(
                                             ManageActivity.EXTRA_FRAGMENT_TYPE,
-                                            ManageActivity.TYPE_FRAGMENT_MANAGE_OPENAI_API
+                                            ManageActivity.TYPE_FRAGMENT_MANAGE_OPENAI_PRESETS
                                         )
                                     }
                                 startActivity(intent)

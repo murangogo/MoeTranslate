@@ -434,6 +434,17 @@
     <string name="uniaiapi_name">聚合 AI 翻译</string>
     <string name="uniaiapi_description">支持包括ChatGPT、Qwen、DeepSeek在内的AI接口，只要AI接口兼容OpenAI接口规范，萌译便可接入</string>
     <string name="manage_uniai_api">管理聚合 AI 翻译API</string>
+    <string name="openai_add_preset">添加预设</string>
+    <string name="openai_preset_name">预设名称</string>
+    <string name="openai_preset_name_tips">给这套配置起个名字便于区分，例如“GPT-4o 正式”“DeepSeek 备用”；留空则使用模型名</string>
+    <string name="openai_preset_default_name">聚合AI预设</string>
+    <string name="openai_no_presets">还没有任何预设，点击下方“添加预设”创建一套聚合AI翻译配置</string>
+    <string name="openai_preset_active_set">已选中：%s</string>
+    <string name="openai_preset_active_badge">使用中</string>
+    <string name="openai_preset_edit">编辑预设</string>
+    <string name="openai_preset_delete_title">删除预设</string>
+    <string name="openai_preset_delete_message">确定要删除预设“%s”吗？</string>
+    <string name="openai_preset_saved">预设已保存</string>
     <string name="model_tips">请使用通用文本生成模型，如gpt-4o、qwen-plus、deepseek-chat等；不要使用特化模型，如qwen-mt-turbo等</string>
     <string name="introduce_openai_api_title">聚合AI翻译API功能说明</string>
     <string name="introduce_llamacpp_title">LlamaCpp推理引擎功能说明</string>

@@ -30,6 +30,7 @@ class ManageActivity : BaseActivity() {
     companion object {
         const val EXTRA_FRAGMENT_TYPE = "fragment_type"
         const val EXTRA_CUSTOM_CODE = "custom_code"
+        const val EXTRA_OPENAI_PRESET_ID = "openai_preset_id"
         const val TYPE_FRAGMENT_MANAGE_MLKIT = 1
         const val TYPE_FRAGMENT_MANAGE_NLLB = 2
         const val TYPE_FRAGMENT_MANAGE_NIU_API = 3
@@ -42,6 +43,7 @@ class ManageActivity : BaseActivity() {
         const val TYPE_FRAGMENT_MANAGE_OPENAI_API = 10
         const val TYPE_FRAGMENT_MANAGE_DEEPL_API = 11
         const val TYPE_FRAGMENT_MANAGE_LLAMA = 12
+        const val TYPE_FRAGMENT_MANAGE_OPENAI_PRESETS = 13
         const val CODE_CUSTOM_0 = 0
         const val CODE_CUSTOM_1 = 1
         const val CODE_CUSTOM_2 = 2
@@ -77,6 +79,12 @@ class ManageActivity : BaseActivity() {
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()
             }
+            TYPE_FRAGMENT_MANAGE_OPENAI_PRESETS-> {
+                val fragment = com.moe.moetranslator.openaimanager.OpenAIPresetManagerFragment()
+                supportFragmentManager.beginTransaction()
+                    .replace(binding.manageFragmentContainer.id, fragment)
+                    .commit()
+            }
             TYPE_FRAGMENT_MANAGE_NIU_API->{
                 val fragment = OnlineAPI()
                 val args = Bundle().apply {
@@ -89,6 +97,10 @@ class ManageActivity : BaseActivity() {
             }
             TYPE_FRAGMENT_MANAGE_OPENAI_API->{
                 val fragment = OpenAIText()
+                val args = Bundle().apply {
+                    putLong(EXTRA_OPENAI_PRESET_ID, intent.getLongExtra(EXTRA_OPENAI_PRESET_ID, OpenAIText.NEW_PRESET_ID))
+                }
+                fragment.arguments = args
                 supportFragmentManager.beginTransaction()
                     .replace(binding.manageFragmentContainer.id, fragment)
                     .commit()

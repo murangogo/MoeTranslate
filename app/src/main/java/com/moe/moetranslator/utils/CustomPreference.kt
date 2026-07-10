@@ -64,13 +64,14 @@ class CustomPreference private constructor(context: Context) {
     //Niutrans_EncryptedKey(Str)：KeyStore参数，存储小牛翻译API（Key）
     //Niutrans_IV(Str)：KeyStore参数，存储小牛翻译API（Key）
 
-    //OpenAI_Api_Key(Str)：存储OpenAI API
-    //OpenAI_Base_Url(Str)：存储OpenAI API的Base URL
-    //OpenAI_Model_Name(Str)：存储OpenAI API的模型
-    //OpenAI_System_Prompt(Str)：存储OpenAI API的系统提示词
-    //OpenAI_User_Prompt(Str)：存储OpenAI API的用户提示词
-    //OpenAI_Temperature(Str)：存储OpenAI API的温度，留空表示请求时不发送 temperature
-    //OpenAI_Extra_Params(Str)：存储OpenAI API的自定义请求参数（[{key,value},...] 的 JSON 字符串）
+    //OpenAI_Api_Key(Str)：存储OpenAI API（当前激活的聚合AI预设的镜像，真值在 openai_presets.db；见 openaimanager.OpenAIPresetRepository）
+    //OpenAI_Base_Url(Str)：存储OpenAI API的Base URL（激活预设镜像）
+    //OpenAI_Model_Name(Str)：存储OpenAI API的模型（激活预设镜像）
+    //OpenAI_System_Prompt(Str)：存储OpenAI API的系统提示词（激活预设镜像）
+    //OpenAI_User_Prompt(Str)：存储OpenAI API的用户提示词（激活预设镜像）
+    //OpenAI_Temperature(Str)：存储OpenAI API的温度，留空表示请求时不发送 temperature（激活预设镜像）
+    //OpenAI_Extra_Params(Str)：存储OpenAI API的自定义请求参数（[{key,value},...] 的 JSON 字符串）（激活预设镜像）
+    //OpenAI_Presets_Migrated(Boolean)：是否已把旧版本单套 OpenAI_* 配置迁移进 openai_presets.db（一次性守卫）
 
     //Volc_ACCOUNT_EncryptedKey(Str)：KeyStore参数，存储火山引擎API（APPID）
     //Volc_ACCOUNT_IV(Str)：KeyStore参数，存储火山引擎API（APPID）

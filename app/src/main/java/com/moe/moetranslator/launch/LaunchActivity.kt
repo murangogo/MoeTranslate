@@ -31,6 +31,7 @@ import com.moe.moetranslator.madoka.Live2DFileUtil
 import com.moe.moetranslator.madoka.Live2DModel
 import com.moe.moetranslator.madoka.ModelInfoRepository
 import com.moe.moetranslator.madoka.ModelInfoRoomDatabase
+import com.moe.moetranslator.openaimanager.OpenAIPresetRepository
 import com.moe.moetranslator.utils.AppPathManager
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.UtilTools
@@ -81,6 +82,13 @@ class LaunchActivity : BaseActivity() {
         activityScope.launch {
             try {
                 delay(1500)
+
+                // 旧版本把单套聚合AI(OpenAI)配置存在 OpenAI_* 键里；首次进入新版本时迁移成数据库中的一套预设。
+                // 内部以 OpenAI_Presets_Migrated 守卫，只实际迁移一次，之后每次启动都是一次廉价的布尔判断。
+                withContext(Dispatchers.IO) {
+                    OpenAIPresetRepository.getInstance(this@LaunchActivity)
+                        .migrateLegacyIfNeeded(this@LaunchActivity)
+                }
 
                 if (prefs.getBoolean("Is_First_Run", true)) {
                     // 在IO线程中初始化资源

@@ -434,6 +434,17 @@
     <string name="uniaiapi_name">Uni AI translation</string>
     <string name="uniaiapi_description">Supports AI interfaces including ChatGPT, Qwen, and DeepSeek, and as long as the AI interface is compatible with the OpenAI interface specification, MoeTranslate can be accessed</string>
     <string name="manage_uniai_api">Manage Uni AI translation API</string>
+    <string name="openai_add_preset">Add preset</string>
+    <string name="openai_preset_name">Preset name</string>
+    <string name="openai_preset_name_tips">Give this configuration a name to tell presets apart, e.g. \"GPT-4o main\" or \"DeepSeek backup\"; leave blank to use the model name</string>
+    <string name="openai_preset_default_name">Uni AI preset</string>
+    <string name="openai_no_presets">No presets yet. Tap \"Add preset\" below to create a Uni AI translation configuration</string>
+    <string name="openai_preset_active_set">Selected: %s</string>
+    <string name="openai_preset_active_badge">In use</string>
+    <string name="openai_preset_edit">Edit preset</string>
+    <string name="openai_preset_delete_title">Delete preset</string>
+    <string name="openai_preset_delete_message">Are you sure you want to delete the preset \"%s\"?</string>
+    <string name="openai_preset_saved">Preset saved</string>
     <string name="model_tips">Please use a general text generation model, such as gpt-4o、qwen-plus、deepseek-chat, etc.; Do not use specialized models such as qwen-mt-turbo, etc</string>
     <string name="introduce_openai_api_title">Uni AI Translation API Function Description</string>
     <string name="introduce_llamacpp_title">LlamaCpp Inference Engine Feature Guide</string>
