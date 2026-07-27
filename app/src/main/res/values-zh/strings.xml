@@ -224,6 +224,7 @@
     <string name="add_json_field">添加JSON字段</string>
     <string name="query_parameters">查询参数</string>
     <string name="json_response_path">JSON响应路径</string>
+    <string name="json_response_path_tip">使用“.”分隔对象属性，使用“[序号]”访问数组元素（序号从0开始），二者可自由组合，例如：data.list[0].items[2].text</string>
     <string name="save_configuration">保存配置信息</string>
     <string name="add_query_parameter">添加查询参数</string>
     <string name="use_source_text">在Value字段中，使用“usesourcetext”代表待翻译的文本</string>

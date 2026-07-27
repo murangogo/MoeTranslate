@@ -223,6 +223,7 @@
     <string name="add_json_field">Add JSON Field</string>
     <string name="query_parameters">Query Prameters</string>
     <string name="json_response_path">JSON Response Path</string>
+    <string name="json_response_path_tip">Use \".\" to separate object properties, and \"[n]\" to access the nth array element (index starts from 0). They can be freely combined, e.g. \"data.list[0].items[2].text\".</string>
     <string name="save_configuration">Save Configuration</string>
     <string name="add_query_parameter">Add Query Parameter</string>
     <string name="use_source_text">In the Value field, use \"usesourcetext\" to represent the text to be translated</string>
