@@ -81,9 +81,13 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
         private val messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         private val aiAvatar: ImageView = itemView.findViewById(R.id.ai_avatar)
         private val userAvatar: ImageView = itemView.findViewById(R.id.user_avatar)
+        private val reasoningContainer: LinearLayout = itemView.findViewById(R.id.message_reasoning)
+        private val reasoningHeader: LinearLayout = itemView.findViewById(R.id.reasoning_header)
+        private val reasoningPreview: TextView = itemView.findViewById(R.id.reasoning_preview)
+        private val reasoningToggle: TextView = itemView.findViewById(R.id.reasoning_toggle)
         private val reasoningScroll: android.widget.ScrollView =
-            itemView.findViewById(R.id.message_reasoning_scroll)
-        private val reasoningText: TextView = itemView.findViewById(R.id.message_reasoning)
+            itemView.findViewById(R.id.reasoning_scroll)
+        private val reasoningFull: TextView = itemView.findViewById(R.id.reasoning_full)
 
         fun bind(
             message: ChatMessage,
@@ -95,36 +99,33 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
             messageTime.text = formatTime(message.timestamp)
 
             // 思考内容显示逻辑（参考 DeepSeek / Chatbox 交互）：
-            // - 折叠态：容器只有一行高，始终滚到底部 → 显示“最新一行”，随流式输出滚动
-            // - 展开态：容器为完整高度（280dp），内容可滚动；流式更新时仅当用户在
-            //   底部才跟随滚动（用户上翻查看时不打扰）
+            // - 头部行始终显示“最新一行”（随流式输出自动更新），右侧箭头指示状态
+            // - 点击头部行展开/收起；展开后完整内容在滚动区，用户在底部才跟随滚动
             if (message.sender == 1 && message.reasoning.isNotBlank()) {
-                reasoningScroll.visibility = View.VISIBLE
-                reasoningText.text = "💭 " + message.reasoning
-                reasoningText.maxLines = Int.MAX_VALUE
+                reasoningContainer.visibility = View.VISIBLE
+                reasoningPreview.text = "💭 " + message.reasoning.substringAfterLast('\n')
 
-                // 折叠 = 一行高；展开 = 280dp
-                val density = itemView.resources.displayMetrics.density
-                val targetHeight = (if (reasoningExpanded) 280 * density else 34 * density).toInt()
-                val lp = reasoningScroll.layoutParams
-                if (lp.height != targetHeight) {
-                    lp.height = targetHeight
-                    reasoningScroll.layoutParams = lp
-                }
-
-                reasoningScroll.post {
-                    val child = reasoningScroll.getChildAt(0) ?: return@post
-                    // 用户是否停留在底部（允许 24px 误差）
-                    val atBottom =
-                        reasoningScroll.scrollY + reasoningScroll.height >= child.height - 24
-                    if (!reasoningExpanded || forceScrollToEnd || atBottom) {
-                        reasoningScroll.fullScroll(View.FOCUS_DOWN)
+                if (reasoningExpanded) {
+                    reasoningToggle.text = "▴"
+                    reasoningScroll.visibility = View.VISIBLE
+                    reasoningFull.text = message.reasoning
+                    // scroll-follow：用户停留在底部（或刚切换）才跟随滚动，上翻时不打扰
+                    reasoningScroll.post {
+                        val child = reasoningScroll.getChildAt(0) ?: return@post
+                        val atBottom =
+                            reasoningScroll.scrollY + reasoningScroll.height >= child.height - 24
+                        if (forceScrollToEnd || atBottom) {
+                            reasoningScroll.fullScroll(View.FOCUS_DOWN)
+                        }
                     }
+                } else {
+                    reasoningToggle.text = "▾"
+                    reasoningScroll.visibility = View.GONE
                 }
-                reasoningScroll.setOnClickListener { onReasoningClick(message.id) }
+                reasoningHeader.setOnClickListener { onReasoningClick(message.id) }
             } else {
-                reasoningScroll.visibility = View.GONE
-                reasoningScroll.setOnClickListener(null)
+                reasoningContainer.visibility = View.GONE
+                reasoningHeader.setOnClickListener(null)
             }
 
             when (message.sender) {

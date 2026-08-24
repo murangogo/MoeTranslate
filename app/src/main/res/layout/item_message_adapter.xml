@@ -56,25 +56,65 @@
         app:layout_constraintEnd_toStartOf="@id/user_avatar"
         app:layout_constraintHorizontal_bias="0">
 
-        <!-- 思考过程：高度由代码控制（折叠=一行显示最新，展开=完整内容滚动） -->
-        <ScrollView
-            android:id="@+id/message_reasoning_scroll"
+        <!-- 思考过程：头部行（最新一行+展开箭头，点击切换）；展开后滚动区显示完整内容 -->
+        <LinearLayout
+            android:id="@+id/message_reasoning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:background="@drawable/reasoning_bg"
-            android:scrollbars="vertical"
+            android:orientation="vertical"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/message_reasoning"
+            <LinearLayout
+                android:id="@+id/reasoning_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="6dp"
-                android:textColor="#8A8A8A"
-                android:textSize="12sp" />
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="6dp">
 
-        </ScrollView>
+                <TextView
+                    android:id="@+id/reasoning_preview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="middle"
+                    android:maxLines="1"
+                    android:textColor="#8A8A8A"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/reasoning_toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="6dp"
+                    android:text="▾"
+                    android:textColor="#8A8A8A"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <ScrollView
+                android:id="@+id/reasoning_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="280dp"
+                android:scrollbars="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/reasoning_full"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:textColor="#8A8A8A"
+                    android:textSize="12sp" />
+
+            </ScrollView>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/message_text"
