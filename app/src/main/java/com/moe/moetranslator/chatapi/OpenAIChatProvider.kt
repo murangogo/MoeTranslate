@@ -99,7 +99,7 @@ class OpenAIChatProvider(
         history: List<ChatTurn>,
         userInput: String,
         onChunk: (String) -> Unit,
-    ): String {
+    ): ChatReply {
         val body = buildChatBody(history, userInput)
         // 服务端 5xx 时自动重试一次（很多自建服务偶发 500/503）
         var attempt = 0
@@ -117,7 +117,7 @@ class OpenAIChatProvider(
     private suspend fun executeChatRequest(
         body: String,
         onChunk: (String) -> Unit,
-    ): String = suspendCancellableCoroutine { cont ->
+    ): ChatReply = suspendCancellableCoroutine { cont ->
         val request = Request.Builder()
             .url(baseUrl.trimEnd('/') + "/chat/completions")
             .post(body.toRequestBody(JSON))
@@ -147,10 +147,10 @@ class OpenAIChatProvider(
                         throw IOException(error ?: "HTTP ${response.code} ${response.message}")
                     }
 
-                    val content = parseResponse(responseBody)
+                    val reply = parseResponse(responseBody)
                     if (cont.isActive) {
-                        onChunk(content)
-                        cont.resume(content)
+                        onChunk(reply.content)
+                        cont.resume(reply)
                     }
                 } catch (e: Exception) {
                     if (cont.isActive) cont.resumeWithException(e)
@@ -161,9 +161,101 @@ class OpenAIChatProvider(
         })
     }
 
+    /**
+     * 两步连通性测试（参考主流客户端做法）：
+     * 1. GET /models —— 验证网络、认证与平台可达（不需要分配推理 worker，最可靠）
+     * 2. 最小 chat 请求 —— 验证该模型是否有可用推理资源（自建服务常见「无可用 worker」）
+     */
     override suspend fun testConnection(): String {
-        // 用最小 chat 请求测试连通性（所有 OpenAI 兼容服务都支持该端点）。
-        // max_tokens 给足 512：部分推理模型会把小输出预算全花在思考上导致正文为空。
+        val report = StringBuilder()
+
+        // 第一步：模型列表端点
+        report.append("✅ ").append(testModelsEndpoint())
+
+        // 第二步：推理资源探测
+        try {
+            val chatResult = testChatEndpoint()
+            report.append("\n✅ 推理可用：").append(chatResult)
+        } catch (e: Exception) {
+            val msg = e.message ?: e.toString()
+            if (msg.contains("candidate worker", ignoreCase = true) ||
+                msg.contains("No candidate", ignoreCase = true)
+            ) {
+                report.append("\n⚠️ 连接与认证正常，但平台暂时没有该模型的可用推理资源")
+                    .append("（No candidate worker）。\n模型可能未对您的账号开放、或平台正忙。")
+                    .append("\n建议：稍后重试，或更换模型（如 hepai/deepseek-v4-flash）。")
+            } else {
+                report.append("\n⚠️ 推理测试未通过：").append(msg)
+            }
+        }
+        return report.toString()
+    }
+
+    /** GET /models：验证网络与认证。5xx 自动重试。 */
+    private suspend fun testModelsEndpoint(): String {
+        var attempt = 0
+        while (true) {
+            attempt++
+            try {
+                return executeModelsRequest()
+            } catch (e: ServerErrorException) {
+                if (attempt >= 3) throw e
+                delay(1500L)
+            }
+        }
+    }
+
+    private suspend fun executeModelsRequest(): String = suspendCancellableCoroutine { cont ->
+        val request = Request.Builder()
+            .url(baseUrl.trimEnd('/') + "/models")
+            .get()
+            .addHeader("Authorization", "Bearer $apiKey")
+            .build()
+
+        val call = client.newCall(request)
+        cont.invokeOnCancellation { call.cancel() }
+
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                if (cont.isActive) {
+                    cont.resumeWithException(IOException("网络不可达：${e.message ?: "连接失败"}"))
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                try {
+                    val responseBody = response.body?.string().orEmpty()
+                    if (response.isSuccessful) {
+                        val count = runCatching {
+                            JSONObject(responseBody).getJSONArray("data").length()
+                        }.getOrDefault(-1)
+                        if (cont.isActive) {
+                            cont.resume(
+                                if (count >= 0) "连接成功，服务端返回 $count 个模型" else "连接成功"
+                            )
+                        }
+                    } else {
+                        val error = extractErrorMessage(responseBody)
+                        val message = error ?: "HTTP ${response.code} ${response.message}"
+                        if (cont.isActive) {
+                            if (response.code in 500..599) {
+                                cont.resumeWithException(ServerErrorException(message))
+                            } else {
+                                cont.resumeWithException(IOException(message))
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    if (cont.isActive) cont.resumeWithException(e)
+                } finally {
+                    response.close()
+                }
+            }
+        })
+    }
+
+    /** 最小 chat 请求：验证推理资源。 */
+    private suspend fun testChatEndpoint(): String {
         val messages = JSONArray().apply {
             put(JSONObject().apply {
                 put("role", ChatTurn.ROLE_USER)
@@ -182,7 +274,6 @@ class OpenAIChatProvider(
             try {
                 return executeTestRequest(body)
             } catch (e: ServerErrorException) {
-                // 自建服务偶发「无可用 worker」类 5xx，多试几次
                 if (attempt >= 3) throw e
                 delay(1500L)
             }
@@ -305,7 +396,7 @@ class OpenAIChatProvider(
         return fromJson ?: trimmed.take(200)
     }
 
-    private fun parseResponse(responseBody: String): String {
+    private fun parseResponse(responseBody: String): ChatReply {
         try {
             val jsonObject = JSONObject(responseBody)
             val choices = jsonObject.getJSONArray("choices")
@@ -317,17 +408,33 @@ class OpenAIChatProvider(
             val message = firstChoice.optJSONObject("message")
                 ?: throw IOException("Malformed response: missing message")
 
-            // 思考模型：忽略 reasoning_content 与 <think>…</think>，只取最终回答
-            val content = stripThinking(message.optString("content", "")).trim()
-            if (content.isEmpty()) {
+            val rawContent = message.optString("content", "")
+
+            // 思考内容：优先 reasoning_content 字段（DeepSeek 等），其次 <think>…</think> 标签
+            val reasoningField = message.optString("reasoning_content", "")
+            val reasoning = if (reasoningField.isNotBlank()) {
+                reasoningField.trim()
+            } else {
+                extractThinkContent(rawContent)
+            }
+
+            // 正文：剥离 <think> 标签
+            val content = stripThinking(rawContent).trim()
+            if (content.isEmpty() && reasoning.isEmpty()) {
                 throw IOException("Empty content in response")
             }
-            return content
+            return ChatReply(content = content, reasoning = reasoning)
         } catch (e: IOException) {
             throw e
         } catch (e: Exception) {
             throw IOException("Failed to parse response: ${e.message}")
         }
+    }
+
+    /** 提取 <think>…</think> 之间的思考内容；没有则返回空串。 */
+    private fun extractThinkContent(content: String): String {
+        val match = Regex("(?s)<think>(.*?)</think>").find(content) ?: return ""
+        return match.groupValues[1].trim()
     }
 
     /** 去除回答里夹带的思考：成对的 <think>…</think>，以及开头的孤立 </think>。 */

@@ -35,6 +35,9 @@ import java.util.Locale
 
 class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder>(MessageDiffCallback()) {
 
+    // 已展开思考内容的会话消息 id
+    private val expandedReasoningIds = mutableSetOf<Long>()
+
     sealed class MessageViewType {
         object AI : MessageViewType()
         object User : MessageViewType()
@@ -54,7 +57,18 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val message = getItem(position)
+        holder.bind(
+            message = message,
+            reasoningExpanded = expandedReasoningIds.contains(message.id),
+            onReasoningClick = { id ->
+                // 切换展开/收起
+                if (!expandedReasoningIds.add(id)) {
+                    expandedReasoningIds.remove(id)
+                }
+                notifyItemChanged(holder.adapterPosition)
+            },
+        )
     }
 
     class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -63,10 +77,26 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
         private val messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         private val aiAvatar: ImageView = itemView.findViewById(R.id.ai_avatar)
         private val userAvatar: ImageView = itemView.findViewById(R.id.user_avatar)
+        private val reasoningText: TextView = itemView.findViewById(R.id.message_reasoning)
 
-        fun bind(message: ChatMessage) {
+        fun bind(
+            message: ChatMessage,
+            reasoningExpanded: Boolean,
+            onReasoningClick: (Long) -> Unit,
+        ) {
             messageText.text = message.content
             messageTime.text = formatTime(message.timestamp)
+
+            // 思考内容：折叠显示一行（AI 消息且思考非空时）
+            if (message.sender == 1 && message.reasoning.isNotBlank()) {
+                reasoningText.visibility = View.VISIBLE
+                reasoningText.text = "💭 " + message.reasoning
+                reasoningText.maxLines = if (reasoningExpanded) Int.MAX_VALUE else 1
+                reasoningText.setOnClickListener { onReasoningClick(message.id) }
+            } else {
+                reasoningText.visibility = View.GONE
+                reasoningText.setOnClickListener(null)
+            }
 
             when (message.sender) {
                 1 -> { // AI消息

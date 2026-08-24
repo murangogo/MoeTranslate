@@ -37,7 +37,7 @@ class GeminiChatProvider(
         history: List<ChatTurn>,
         userInput: String,
         onChunk: (String) -> Unit,
-    ): String {
+    ): ChatReply {
         if (model == null) {
             // 系统提示词（可选）：留空则不设置
             val instruction = systemInstruction
@@ -62,7 +62,7 @@ class GeminiChatProvider(
                 onChunk(it)
             }
         }
-        return sb.toString().trim()
+        return ChatReply(content = sb.toString().trim())
     }
 
     override suspend fun testConnection(): String {

@@ -24,7 +24,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [ChatMessage::class], version = 2, exportSchema = false)
+@Database(entities = [ChatMessage::class], version = 3, exportSchema = false)
 abstract class ChatMessageRoomDatabase : RoomDatabase() {
 
     abstract fun chatMessageDao(): ChatMessageDao
@@ -42,13 +42,22 @@ abstract class ChatMessageRoomDatabase : RoomDatabase() {
             }
         }
 
+        // v2 -> v3：消息表新增 reasoning 列（推理模型的思考过程，默认空串）
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE chat_messages_table ADD COLUMN reasoning TEXT NOT NULL DEFAULT ''"
+                )
+            }
+        }
+
         fun getDatabase(context: Context): ChatMessageRoomDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ChatMessageRoomDatabase::class.java,
                     "chat_message_database"
-                ).addMigrations(MIGRATION_1_2)
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                 INSTANCE = instance
                 instance

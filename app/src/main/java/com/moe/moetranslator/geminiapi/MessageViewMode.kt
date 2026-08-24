@@ -105,6 +105,12 @@ class MessageViewModel(application: Application) : ViewModel() {
         repository.updateMessageContent(messageId, content)
     }
 
+    /** AI 回复完成：一次性写入正文与思考内容。 */
+    fun updateMessageWithReasoning(messageId: Long, content: String, reasoning: String) =
+        viewModelScope.launch {
+            repository.updateMessageWithReasoning(messageId, content, reasoning)
+        }
+
     fun appendContentById(messageId: Long, additionalContent: String) = viewModelScope.launch {
         repository.appendContentById(messageId, additionalContent)
     }

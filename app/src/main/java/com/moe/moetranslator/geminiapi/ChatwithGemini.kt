@@ -617,7 +617,8 @@ class ChatwithGemini : Fragment() {
                     }
                     messageViewModel.appendContentById(aiMessageId, chunk)
                 }
-                messageViewModel.updateMessageContent(aiMessageId, reply)
+                // 正文与思考内容一并写入（思考内容在气泡上方折叠显示）
+                messageViewModel.updateMessageWithReasoning(aiMessageId, reply.content, reply.reasoning)
             } catch (e: CancellationException) {
                 // 用户点了“停止”
                 if (aiMessageId != 0L) {

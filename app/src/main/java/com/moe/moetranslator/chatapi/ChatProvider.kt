@@ -24,29 +24,35 @@ package com.moe.moetranslator.chatapi
 interface ChatProvider {
 
     /**
-     * 携带历史多轮消息请求 AI 回复。流式提供商会通过 [onChunk] 逐段回调增量内容；
-     * 非流式提供商会一次性回调完整回答。协程被取消时实现应尽快中止网络请求
+     * 携带历史多轮消息请求 AI 回复。流式提供商会通过 [onChunk] 逐段回调正文增量内容；
+     * 非流式提供商会一次性回调完整正文。协程被取消时实现应尽快中止网络请求
      * （OkHttp 调用会被 cancel、流式 Flow 会停止收集）。
      *
      * @param history   本次输入之前的完整对话历史（时间正序）
      * @param userInput 用户本次输入的内容
-     * @param onChunk   增量内容回调（可能被多次调用；线程由实现保证为主线程或任意线程均可，
+     * @param onChunk   正文增量回调（可能被多次调用；线程由实现保证为主线程或任意线程均可，
      *                  调用方需自行保证线程安全）
-     * @return AI 回复完整文本
+     * @return AI 回复：正文 + 思考内容（推理模型在正文之前的思考过程，无则空串）
      */
-    suspend fun chat(history: List<ChatTurn>, userInput: String, onChunk: (String) -> Unit): String
+    suspend fun chat(history: List<ChatTurn>, userInput: String, onChunk: (String) -> Unit): ChatReply
 
     /**
-     * 测试当前配置的连通性：向服务端发送一个最小请求。
+     * 测试当前配置的连通性：先验证网络与认证（模型列表端点），再探测推理资源可用性。
      *
-     * @return 人类可读的成功信息（如模型数量）
-     * @throws Exception 连接失败/鉴权失败/超时等，异常信息应可直接展示给用户
+     * @return 人类可读的测试报告（可多行）
+     * @throws Exception 网络不可达/认证失败等，异常信息应可直接展示给用户
      */
     suspend fun testConnection(): String
 
     /** 释放资源。默认空实现，各提供商按需覆写。 */
     fun release() {}
 }
+
+/** 一轮 AI 回复：正文 + 思考内容。 */
+data class ChatReply(
+    val content: String,
+    val reasoning: String = "",
+)
 
 /** 一轮对话消息。 */
 data class ChatTurn(val role: String, val content: String) {

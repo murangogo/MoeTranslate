@@ -79,6 +79,10 @@ class MessageRepository(private val chatMessageDao: ChatMessageDao) {
         chatMessageDao.updateMessageContent(messageId, content)
     }
 
+    suspend fun updateMessageWithReasoning(messageId: Long, content: String, reasoning: String) {
+        chatMessageDao.updateMessageWithReasoning(messageId, content, reasoning)
+    }
+
     suspend fun appendContentById(messageId: Long, additionalContent: String) {
         chatMessageDao.appendContentById(messageId, additionalContent)
     }
