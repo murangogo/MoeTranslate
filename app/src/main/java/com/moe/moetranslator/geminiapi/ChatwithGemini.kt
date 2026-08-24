@@ -413,7 +413,7 @@ class ChatwithGemini : Fragment() {
                 systemPromptEdit.setText(prefs.getString("Chat_OpenAI_System_Prompt", ""))
                 extraParamsEdit.setText(prefs.getString("Chat_OpenAI_Extra_Params", ""))
                 maxTokensEdit.setText(prefs.getString("Chat_OpenAI_Max_Tokens", DEFAULT_OPENAI_MAX_TOKENS))
-                apiKeyEdit.hint = if (KeystoreManager.retrieveKey(ctx.applicationContext, KEY_ALIAS_CHAT_OPENAI) != null) {
+                apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI) != null) {
                     getString(R.string.api_saved)
                 } else {
                     getString(R.string.chat_api_key)
@@ -422,7 +422,7 @@ class ChatwithGemini : Fragment() {
             } else {
                 modelEdit.setText(prefs.getString("Chat_Gemini_Model", DEFAULT_GEMINI_MODEL))
                 systemPromptEdit.setText(prefs.getString("Chat_Gemini_System_Prompt", ""))
-                apiKeyEdit.hint = if (KeystoreManager.retrieveKey(ctx.applicationContext, KEY_ALIAS_GEMINI) != null) {
+                apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI) != null) {
                     getString(R.string.api_saved)
                 } else {
                     getString(R.string.chat_api_key)
