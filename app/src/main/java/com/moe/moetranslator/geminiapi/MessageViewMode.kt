@@ -111,6 +111,12 @@ class MessageViewModel(application: Application) : ViewModel() {
             repository.updateMessageWithReasoning(messageId, content, reasoning)
         }
 
+    /** 流式追加思考内容。 */
+    fun appendReasoningById(messageId: Long, additionalReasoning: String) =
+        viewModelScope.launch {
+            repository.appendReasoningById(messageId, additionalReasoning)
+        }
+
     fun appendContentById(messageId: Long, additionalContent: String) = viewModelScope.launch {
         repository.appendContentById(messageId, additionalContent)
     }

@@ -24,17 +24,23 @@ package com.moe.moetranslator.chatapi
 interface ChatProvider {
 
     /**
-     * 携带历史多轮消息请求 AI 回复。流式提供商会通过 [onChunk] 逐段回调正文增量内容；
+     * 携带历史多轮消息请求 AI 回复。流式提供商会逐段回调思考内容与正文增量；
      * 非流式提供商会一次性回调完整正文。协程被取消时实现应尽快中止网络请求
      * （OkHttp 调用会被 cancel、流式 Flow 会停止收集）。
      *
-     * @param history   本次输入之前的完整对话历史（时间正序）
-     * @param userInput 用户本次输入的内容
-     * @param onChunk   正文增量回调（可能被多次调用；线程由实现保证为主线程或任意线程均可，
-     *                  调用方需自行保证线程安全）
-     * @return AI 回复：正文 + 思考内容（推理模型在正文之前的思考过程，无则空串）
+     * @param history     本次输入之前的完整对话历史（时间正序）
+     * @param userInput   用户本次输入的内容
+     * @param onReasoning 思考内容增量回调（推理模型，可能被多次调用或从不调用）
+     * @param onContent   正文增量回调（可能被多次调用；线程由实现保证为主线程或任意线程均可，
+     *                    调用方需自行保证线程安全）
+     * @return AI 回复：正文 + 思考内容（完整文本）
      */
-    suspend fun chat(history: List<ChatTurn>, userInput: String, onChunk: (String) -> Unit): ChatReply
+    suspend fun chat(
+        history: List<ChatTurn>,
+        userInput: String,
+        onReasoning: (String) -> Unit,
+        onContent: (String) -> Unit,
+    ): ChatReply
 
     /**
      * 测试当前配置的连通性：先验证网络与认证（模型列表端点），再探测推理资源可用性。

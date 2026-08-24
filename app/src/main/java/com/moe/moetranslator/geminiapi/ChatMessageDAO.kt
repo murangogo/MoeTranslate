@@ -75,6 +75,10 @@ interface ChatMessageDao {
     @Query("UPDATE chat_messages_table SET content = :content, reasoning = :reasoning WHERE id = :messageId")
     suspend fun updateMessageWithReasoning(messageId: Long, content: String, reasoning: String)
 
+    // 流式追加思考内容
+    @Query("UPDATE chat_messages_table SET reasoning = reasoning || :additionalReasoning WHERE id = :messageId")
+    suspend fun appendReasoningById(messageId: Long, additionalReasoning: String)
+
     // 根据id追加消息内容
     @Query("UPDATE chat_messages_table SET content = content || :additionalContent WHERE id = :messageId")
     suspend fun appendContentById(messageId: Long, additionalContent: String)

@@ -17,7 +17,10 @@
 
 package com.moe.moetranslator.chatapi
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
@@ -98,7 +101,8 @@ class OpenAIChatProvider(
     override suspend fun chat(
         history: List<ChatTurn>,
         userInput: String,
-        onChunk: (String) -> Unit,
+        onReasoning: (String) -> Unit,
+        onContent: (String) -> Unit,
     ): ChatReply {
         val body = buildChatBody(history, userInput)
         // 服务端 5xx 时自动重试一次（很多自建服务偶发 500/503）
@@ -106,7 +110,7 @@ class OpenAIChatProvider(
         while (true) {
             attempt++
             try {
-                return executeChatRequest(body, onChunk)
+                return executeChatRequest(body, onReasoning, onContent)
             } catch (e: ServerErrorException) {
                 if (attempt >= 2) throw e
                 delay(1000L)
@@ -116,7 +120,8 @@ class OpenAIChatProvider(
 
     private suspend fun executeChatRequest(
         body: String,
-        onChunk: (String) -> Unit,
+        onReasoning: (String) -> Unit,
+        onContent: (String) -> Unit,
     ): ChatReply = suspendCancellableCoroutine { cont ->
         val request = Request.Builder()
             .url(baseUrl.trimEnd('/') + "/chat/completions")
@@ -129,36 +134,93 @@ class OpenAIChatProvider(
         // 协程被取消（用户点“停止”）时中断底层网络请求
         cont.invokeOnCancellation { call.cancel() }
 
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                if (cont.isActive) cont.resumeWithException(e)
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                try {
-                    val responseBody = response.body?.string()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                call.execute().use { response ->
+                    val responseBody = response.body
                         ?: throw IOException("Empty response body")
 
                     if (!response.isSuccessful) {
-                        val error = extractErrorMessage(responseBody)
+                        val errorText = responseBody.string()
+                        val error = extractErrorMessage(errorText)
                         if (response.code in 500..599) {
                             throw ServerErrorException(error ?: "HTTP ${response.code} ${response.message}")
                         }
                         throw IOException(error ?: "HTTP ${response.code} ${response.message}")
                     }
 
-                    val reply = parseResponse(responseBody)
-                    if (cont.isActive) {
-                        onChunk(reply.content)
-                        cont.resume(reply)
-                    }
-                } catch (e: Exception) {
-                    if (cont.isActive) cont.resumeWithException(e)
-                } finally {
-                    response.close()
+                    val reply = readChatStream(responseBody, onReasoning, onContent)
+                    if (cont.isActive) cont.resume(reply)
                 }
+            } catch (e: Exception) {
+                if (cont.isActive) cont.resumeWithException(e)
             }
-        })
+        }
+    }
+
+    /**
+     * 读取响应：优先按 SSE 流式解析（data: 行），逐段回调思考/正文增量；
+     * 若服务端忽略 stream 参数返回一次性 JSON，则回退为非流式解析。
+     */
+    private fun readChatStream(
+        responseBody: okhttp3.ResponseBody,
+        onReasoning: (String) -> Unit,
+        onContent: (String) -> Unit,
+    ): ChatReply {
+        val source = responseBody.source()
+
+        // 跳过开头的空行/注释行
+        var line = source.readUtf8Line()?.trim().orEmpty()
+        while (line.isEmpty()) {
+            line = source.readUtf8Line()?.trim() ?: break
+        }
+
+        if (line.startsWith("data:")) {
+            // SSE 流式
+            val sbReasoning = StringBuilder()
+            val sbContent = StringBuilder()
+            var current = line
+            while (true) {
+                val data = current.removePrefix("data:").trim()
+                if (data == "[DONE]") break
+                if (data.isNotEmpty()) {
+                    val delta = parseDelta(data)
+                    if (delta.first.isNotEmpty()) {
+                        sbReasoning.append(delta.first)
+                        onReasoning(delta.first)
+                    }
+                    if (delta.second.isNotEmpty()) {
+                        sbContent.append(delta.second)
+                        onContent(delta.second)
+                    }
+                }
+                current = source.readUtf8Line()?.trim() ?: break
+            }
+            return ChatReply(
+                content = sbContent.toString().trim(),
+                reasoning = sbReasoning.toString().trim(),
+            )
+        }
+
+        // 非流式 JSON：拼接完整响应体后按一次性格式解析
+        val rest = source.readByteString().utf8()
+        val full = if (line.isEmpty()) rest else line + "\n" + rest
+        val parsed = parseResponse(full)
+        if (parsed.reasoning.isNotEmpty()) onReasoning(parsed.reasoning)
+        if (parsed.content.isNotEmpty()) onContent(parsed.content)
+        return parsed
+    }
+
+    /** 解析 SSE 单条 data 行：返回 (思考增量, 正文增量)。 */
+    private fun parseDelta(data: String): Pair<String, String> {
+        return try {
+            val o = JSONObject(data)
+            val delta = o.getJSONArray("choices").getJSONObject(0).optJSONObject("delta")
+                ?: return "" to ""
+            delta.optString("reasoning_content", "") to delta.optString("content", "")
+        } catch (e: Exception) {
+            "" to ""
+        }
     }
 
     /**
@@ -360,7 +422,7 @@ class OpenAIChatProvider(
         return JSONObject().apply {
             put("model", model)
             put("messages", messages)
-            put("stream", false)
+            put("stream", true)
             // 合并自定义请求参数（与翻译的聚合 AI 相同的类型推断规则）
             extraParams.forEach { (key, raw) ->
                 val k = key.trim()

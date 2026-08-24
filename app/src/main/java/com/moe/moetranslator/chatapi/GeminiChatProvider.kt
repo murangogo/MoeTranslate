@@ -36,7 +36,8 @@ class GeminiChatProvider(
     override suspend fun chat(
         history: List<ChatTurn>,
         userInput: String,
-        onChunk: (String) -> Unit,
+        onReasoning: (String) -> Unit,
+        onContent: (String) -> Unit,
     ): ChatReply {
         if (model == null) {
             // 系统提示词（可选）：留空则不设置
@@ -59,7 +60,7 @@ class GeminiChatProvider(
         chat.sendMessageStream(userInput).collect { chunk ->
             chunk.text?.let {
                 sb.append(it)
-                onChunk(it)
+                onContent(it)
             }
         }
         return ChatReply(content = sb.toString().trim())

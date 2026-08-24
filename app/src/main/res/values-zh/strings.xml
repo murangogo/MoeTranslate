@@ -5,7 +5,7 @@
     <string name="accessibility_service_label">萌译翻译服务</string>
     <string name="accessibility_service_description">【功能描述】\n启用无障碍权限以获取屏幕截图，从而进行翻译。\n在给予权限时，会弹出警告，请放心，萌译不会收集您的任何信息。</string>
     <string name="translate_page">翻译</string>
-    <string name="gemini_page">Gemini</string>
+    <string name="gemini_page">AI对话</string>
     <string name="madoka_page">Madoka</string>
     <string name="me_page">设置</string>
     <string name="api_name">API：%s</string>

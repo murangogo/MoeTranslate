@@ -572,7 +572,8 @@ class ChatwithGemini : Fragment() {
             val userMessageId = messageViewModel.insert(userMessage)
 
             var aiMessageId = 0L
-            var receivedChunk = false
+            // 是否已收到首个流式增量（用于占位清理与停止标记）
+            var streamStarted = false
 
             try {
                 // 构建当前选择的提供商
@@ -608,21 +609,32 @@ class ChatwithGemini : Fragment() {
                         )
                     }
 
-                // 调用AI API：流式增量实时写入占位消息
-                val reply = provider.chat(history, userContent) { chunk ->
-                    if (!receivedChunk) {
-                        // 第一个chunk到达时清空“思考中”占位
+                // 调用AI API：思考与正文均流式增量实时写入
+                fun ensureStreamStarted() {
+                    if (!streamStarted) {
+                        // 第一个增量到达时清空“思考中”占位
                         messageViewModel.clearMessageById(aiMessageId)
-                        receivedChunk = true
+                        streamStarted = true
                     }
-                    messageViewModel.appendContentById(aiMessageId, chunk)
                 }
-                // 正文与思考内容一并写入（思考内容在气泡上方折叠显示）
+                val reply = provider.chat(
+                    history,
+                    userContent,
+                    onReasoning = { chunk ->
+                        ensureStreamStarted()
+                        messageViewModel.appendReasoningById(aiMessageId, chunk)
+                    },
+                    onContent = { chunk ->
+                        ensureStreamStarted()
+                        messageViewModel.appendContentById(aiMessageId, chunk)
+                    },
+                )
+                // 以完整文本为准最终写入（trim 首尾空白）
                 messageViewModel.updateMessageWithReasoning(aiMessageId, reply.content, reply.reasoning)
             } catch (e: CancellationException) {
                 // 用户点了“停止”
                 if (aiMessageId != 0L) {
-                    if (receivedChunk) {
+                    if (streamStarted) {
                         // 已有部分内容：追加停止标记
                         messageViewModel.appendContentById(aiMessageId, getString(R.string.chat_stopped_suffix))
                     } else {

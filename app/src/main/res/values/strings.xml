@@ -5,7 +5,7 @@
     <string name="accessibility_service_label">MoeTranslator Translate Service</string>
     <string name="accessibility_service_description">[Function Description] \nEnable accessibility permissions to take screenshots for translation.\nWhen granting permissions, a warning will pop up. Please rest assured that MoeTranslate will not collect any of your information.</string>
     <string name="translate_page">Translate</string>
-    <string name="gemini_page">Gemini</string>
+    <string name="gemini_page">AI Chat</string>
     <string name="madoka_page">Madoka</string>
     <string name="me_page">Settings</string>
     <string name="api_name">API：%s</string>
