@@ -677,13 +677,22 @@ class FloatingBallService : LifecycleService() {
         }
     }
 
+    // 悬浮球转圈指示的阶段：空闲 / OCR（蓝色）/ 翻译（白色）
+    companion object {
+        private const val PHASE_IDLE = 0
+        private const val PHASE_OCR = 1
+        private const val PHASE_TRANSLATING = 2
+    }
+
     /**
-     * 同步悬浮球上的旋转指示圈：翻译中显示，空闲隐藏。
-     * 必须在主线程调用（isTranslating 的 set 均发生在主线程协程/回调中）。
+     * 同步悬浮球上的旋转指示圈：OCR 阶段显示蓝色圈，翻译阶段显示白色圈，
+     * 空闲全部隐藏。必须在主线程调用。
      */
-    private fun updateTranslatingIndicator() {
-        val loading = floatingBallView.findViewById<ProgressBar>(R.id.floating_ball_loading)
-        loading.visibility = if (isTranslating.get()) View.VISIBLE else View.GONE
+    private fun updatePhase(phase: Int) {
+        val ocrLoading = floatingBallView.findViewById<ProgressBar>(R.id.floating_ball_loading_ocr)
+        val translateLoading = floatingBallView.findViewById<ProgressBar>(R.id.floating_ball_loading_translate)
+        ocrLoading.visibility = if (phase == PHASE_OCR) View.VISIBLE else View.GONE
+        translateLoading.visibility = if (phase == PHASE_TRANSLATING) View.VISIBLE else View.GONE
     }
 
     private fun setupScreenshotCollector() {
@@ -692,7 +701,9 @@ class FloatingBallService : LifecycleService() {
                 try {
                     Log.d("SCREENSHOT", "getScreenShot")
                     isTranslating.set(true)
-                    updateTranslatingIndicator()
+                    updatePhase(
+                        if (prefs.getInt("Translate_Mode", 0) == 0) PHASE_OCR else PHASE_TRANSLATING
+                    )
                     processScreenshot(bitmap)
                 } catch (e: Exception) {
                     showToast("OCR Failed：$e")
@@ -732,7 +743,7 @@ class FloatingBallService : LifecycleService() {
                         translateByText(txt)
                     } else {
                         isTranslating.set(false)
-                        updateTranslatingIndicator()
+                        updatePhase(PHASE_IDLE)
                     }
                 } else {
                     translateByText(txt)
@@ -744,7 +755,7 @@ class FloatingBallService : LifecycleService() {
             }
         }catch (e: Exception){
             isTranslating.set(false)
-                        updateTranslatingIndicator()
+            updatePhase(PHASE_IDLE)
             e.printStackTrace()
             showToast(getString(R.string.translation_failed, e.message))
         }finally {
@@ -775,6 +786,8 @@ class FloatingBallService : LifecycleService() {
 
     // 文本翻译
     private fun translateByText(str: String){
+        // OCR 完成，进入翻译阶段（白色转圈）
+        updatePhase(PHASE_TRANSLATING)
         translatorText?.getTranslation(str, prefs.getString("Source_Language", "ja"), prefs.getString("Target_Language", "zh")){
             result->
             lifecycleScope.launch(Dispatchers.Main) {
@@ -795,12 +808,14 @@ class FloatingBallService : LifecycleService() {
                     }
                 }
                 isTranslating.set(false)
-                        updateTranslatingIndicator()
+                updatePhase(PHASE_IDLE)
             }
         }
     }
 
     private fun translateByPic(bitmap: Bitmap){
+        // 图片直翻没有 OCR 阶段，直接进入翻译阶段（白色转圈）
+        updatePhase(PHASE_TRANSLATING)
         translatorPic?.getTranslation(bitmap, prefs.getString("Source_Language", "ja"), prefs.getString("Target_Language", "zh")){
                 result->
             lifecycleScope.launch(Dispatchers.Main) {
@@ -813,7 +828,7 @@ class FloatingBallService : LifecycleService() {
                     }
                 }
                 isTranslating.set(false)
-                        updateTranslatingIndicator()
+                updatePhase(PHASE_IDLE)
             }
         }
     }

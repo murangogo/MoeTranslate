@@ -29,14 +29,25 @@
             android:src="@drawable/floating_ball_icon">
         </ImageView>
 
-        <!-- 翻译中的旋转指示圈：叠在悬浮球上，翻译结束后隐藏 -->
+        <!-- OCR 识别中的旋转指示圈（蓝色） -->
         <ProgressBar
-            android:id="@+id/floating_ball_loading"
+            android:id="@+id/floating_ball_loading_ocr"
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:layout_gravity="center"
             android:indeterminate="true"
             android:indeterminateTint="#FF7BA7F0"
+            android:padding="6dp"
+            android:visibility="gone" />
+
+        <!-- 翻译中的旋转指示圈（白色） -->
+        <ProgressBar
+            android:id="@+id/floating_ball_loading_translate"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="#FFFFFFFF"
             android:padding="6dp"
             android:visibility="gone" />
 
