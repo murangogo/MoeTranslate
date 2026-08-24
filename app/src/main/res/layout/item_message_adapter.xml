@@ -72,7 +72,6 @@
                 android:layout_height="wrap_content"
                 android:padding="6dp"
                 android:textColor="#8A8A8A"
-                android:textIsSelectable="true"
                 android:textSize="12sp" />
 
         </ScrollView>
