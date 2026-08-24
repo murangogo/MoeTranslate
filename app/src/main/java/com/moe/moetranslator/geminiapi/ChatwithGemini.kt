@@ -67,6 +67,7 @@ class ChatwithGemini : Fragment() {
         const val DEFAULT_GEMINI_MODEL = "gemini-3.5-flash"
         const val DEFAULT_OPENAI_BASE_URL = "https://api.openai.com/v1"
         const val DEFAULT_OPENAI_MODEL = "gpt-4o-mini"
+        const val DEFAULT_OPENAI_MAX_TOKENS = "2048"
 
         // Keystore 别名：Gemini 沿用既有别名，OpenAI 聊天独立存储
         const val KEY_ALIAS_GEMINI = "Gemini"
@@ -158,10 +159,30 @@ class ChatwithGemini : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 messageViewModel.allMessages.collect { messages ->
                     adapter.submitList(messages)
-                    // 滚动到最新消息
+                    // 滚动到最新消息：内容流式增长（思考条/长正文）时保持底部跟随
                     if (messages.isNotEmpty()) {
-                        binding.messageList.scrollToPosition(messages.size - 1)
+                        scrollToLatest()
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * 把列表滚动到最后一条消息的底部：先定位到最后一条，若其高度超过列表可见区
+     * （思考条展开或长正文持续增长），再向下偏移到该消息底部，保证最新内容始终可见。
+     */
+    private fun scrollToLatest() {
+        val list = binding.messageList
+        val lastIndex = adapter.itemCount - 1
+        if (lastIndex < 0) return
+        list.post {
+            val lm = list.layoutManager as? LinearLayoutManager ?: return@post
+            lm.scrollToPositionWithOffset(lastIndex, 0)
+            list.post {
+                val lastView = lm.findViewByPosition(lastIndex) ?: return@post
+                if (lastView.height > list.height) {
+                    list.scrollBy(0, lastView.height - list.height)
                 }
             }
         }
@@ -196,6 +217,8 @@ class ChatwithGemini : Fragment() {
                             model = preset.modelName.ifBlank { DEFAULT_OPENAI_MODEL },
                             systemPrompt = chatSystemPrompt,
                             extraParams = OpenAITranslation.decodeExtraParams(preset.extraParams),
+                            maxTokens = prefs.getString("Chat_OpenAI_Max_Tokens", DEFAULT_OPENAI_MAX_TOKENS)
+                                .trim().toIntOrNull(),
                         )
                     } else {
                         // 翻译侧没有激活预设：回退到聊天自己的手动配置
@@ -213,6 +236,8 @@ class ChatwithGemini : Fragment() {
                             extraParams = OpenAIChatProvider.parseExtraParams(
                                 prefs.getString("Chat_OpenAI_Extra_Params", "")
                             ),
+                            maxTokens = prefs.getString("Chat_OpenAI_Max_Tokens", DEFAULT_OPENAI_MAX_TOKENS)
+                                .trim().toIntOrNull(),
                         )
                     }
                 } else {
@@ -229,6 +254,8 @@ class ChatwithGemini : Fragment() {
                         extraParams = OpenAIChatProvider.parseExtraParams(
                             prefs.getString("Chat_OpenAI_Extra_Params", "")
                         ),
+                        maxTokens = prefs.getString("Chat_OpenAI_Max_Tokens", DEFAULT_OPENAI_MAX_TOKENS)
+                            .trim().toIntOrNull(),
                     )
                 }
             }
@@ -257,6 +284,7 @@ class ChatwithGemini : Fragment() {
         val apiKeyEdit = customView.findViewById<EditText>(R.id.chat_api_key)
         val systemPromptEdit = customView.findViewById<EditText>(R.id.chat_system_prompt)
         val extraParamsEdit = customView.findViewById<EditText>(R.id.chat_extra_params)
+        val maxTokensEdit = customView.findViewById<EditText>(R.id.chat_max_tokens)
         val useUniAICheck = customView.findViewById<CheckBox>(R.id.chat_use_uniai)
         val uniAIStatus = customView.findViewById<TextView>(R.id.chat_uniai_status)
         val testButton = customView.findViewById<Button>(R.id.chat_test_button)
@@ -276,6 +304,7 @@ class ChatwithGemini : Fragment() {
                             model = preset.modelName.ifBlank { DEFAULT_OPENAI_MODEL },
                             systemPrompt = systemPromptEdit.text.toString().trim().takeIf { it.isNotBlank() },
                             extraParams = OpenAITranslation.decodeExtraParams(preset.extraParams),
+                            maxTokens = maxTokensEdit.text.toString().trim().toIntOrNull(),
                         )
                     } else null
                 } else {
@@ -289,6 +318,7 @@ class ChatwithGemini : Fragment() {
                         model = modelEdit.text.toString().trim(),
                         systemPrompt = systemPromptEdit.text.toString().trim().takeIf { it.isNotBlank() },
                         extraParams = OpenAIChatProvider.parseExtraParams(extraParamsEdit.text.toString()),
+                        maxTokens = maxTokensEdit.text.toString().trim().toIntOrNull(),
                     )
                 }
             } else {
@@ -354,6 +384,8 @@ class ChatwithGemini : Fragment() {
             modelEdit.visibility = if (!isOpenAI || !useUniAI) View.VISIBLE else View.GONE
             apiKeyEdit.visibility = if (!isOpenAI || !useUniAI) View.VISIBLE else View.GONE
             extraParamsEdit.visibility = if (isOpenAI && !useUniAI) View.VISIBLE else View.GONE
+            // 最大输出 token 数：OpenAI 兼容模式下始终可配（聊天独立于翻译预设）
+            maxTokensEdit.visibility = if (isOpenAI) View.VISIBLE else View.GONE
             if (isOpenAI && useUniAI) refreshUniAIStatus()
         }
 
@@ -366,6 +398,7 @@ class ChatwithGemini : Fragment() {
                 modelEdit.setText(prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL))
                 systemPromptEdit.setText(prefs.getString("Chat_OpenAI_System_Prompt", ""))
                 extraParamsEdit.setText(prefs.getString("Chat_OpenAI_Extra_Params", ""))
+                maxTokensEdit.setText(prefs.getString("Chat_OpenAI_Max_Tokens", DEFAULT_OPENAI_MAX_TOKENS))
                 apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI) != null) {
                     getString(R.string.api_saved)
                 } else {
@@ -391,6 +424,7 @@ class ChatwithGemini : Fragment() {
                 prefs.setString("Chat_OpenAI_Model", modelEdit.text.toString().trim())
                 prefs.setString("Chat_OpenAI_System_Prompt", systemPromptEdit.text.toString().trim())
                 prefs.setString("Chat_OpenAI_Extra_Params", extraParamsEdit.text.toString().trim())
+                prefs.setString("Chat_OpenAI_Max_Tokens", maxTokensEdit.text.toString().trim())
                 prefs.setBoolean("Chat_OpenAI_Use_UniAI_Preset", useUniAICheck.isChecked)
             } else {
                 prefs.setString("Chat_Gemini_Model", modelEdit.text.toString().trim())
@@ -444,6 +478,7 @@ class ChatwithGemini : Fragment() {
                     prefs.setString("Chat_OpenAI_Model", modelEdit.text.toString().trim())
                     prefs.setString("Chat_OpenAI_System_Prompt", systemPromptEdit.text.toString().trim())
                     prefs.setString("Chat_OpenAI_Extra_Params", extraParamsEdit.text.toString().trim())
+                    prefs.setString("Chat_OpenAI_Max_Tokens", maxTokensEdit.text.toString().trim())
                     prefs.setBoolean("Chat_OpenAI_Use_UniAI_Preset", useUniAI)
                 } else {
                     prefs.setString("Chat_Gemini_Model", modelEdit.text.toString().trim())

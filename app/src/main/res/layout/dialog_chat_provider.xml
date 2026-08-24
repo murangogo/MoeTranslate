@@ -109,6 +109,22 @@
         android:paddingBottom="12dp" />
 
     <EditText
+        android:id="@+id/chat_max_tokens"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/edittext_api"
+        android:ems="15"
+        android:hint="@string/chat_max_tokens_hint"
+        android:inputType="number"
+        android:paddingStart="10dp"
+        android:paddingEnd="3dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp" />
+
+    <EditText
         android:id="@+id/chat_api_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

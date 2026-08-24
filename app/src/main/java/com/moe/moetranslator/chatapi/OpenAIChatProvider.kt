@@ -52,6 +52,7 @@ class OpenAIChatProvider(
     private val model: String,
     private val systemPrompt: String? = null,
     private val extraParams: List<Pair<String, String>> = emptyList(),
+    private val maxTokens: Int? = null,
 ) : ChatProvider {
 
     companion object {
@@ -327,7 +328,8 @@ class OpenAIChatProvider(
         val body = JSONObject().apply {
             put("model", model)
             put("messages", messages)
-            put("max_tokens", 512)
+            // 测试默认给 512 输出预算（推理模型思考会占预算）；用户自定义则优先
+            put("max_tokens", maxTokens ?: 512)
         }.toString()
 
         var attempt = 0
@@ -423,6 +425,8 @@ class OpenAIChatProvider(
             put("model", model)
             put("messages", messages)
             put("stream", true)
+            // 最大输出 token 数：留空则不发送（使用服务端默认）
+            maxTokens?.let { put("max_tokens", it) }
             // 合并自定义请求参数（与翻译的聚合 AI 相同的类型推断规则）
             extraParams.forEach { (key, raw) ->
                 val k = key.trim()
