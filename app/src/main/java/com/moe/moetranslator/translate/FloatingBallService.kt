@@ -44,6 +44,7 @@ import com.moe.moetranslator.utils.Constants
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.KeystoreManager
 import com.moe.moetranslator.utils.UtilTools
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -64,6 +65,7 @@ import translationapi.tencentcloud.TencentTranslationText
 import translationapi.volctranslation.VolcTranslation
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.abs
 
 // 发送服务停止广播
@@ -118,6 +120,10 @@ class FloatingBallService : LifecycleService() {
 
     // 是否正在翻译，默认false
     private val isTranslating = AtomicBoolean(false)
+
+    // 翻译任务代次：每次发起新截图翻译时自增；旧任务的结果（代次不匹配）被丢弃，
+    // 保证快速连续点击悬浮球时「立即开始下一次」，且旧结果不会覆盖新结果
+    private val translateGeneration = AtomicInteger(0)
 
     // 配置
     private var floatingBallConfig = FloatingBallConfig()
@@ -260,6 +266,10 @@ class FloatingBallService : LifecycleService() {
             floatingTextViewConfig.floatingTextViewInitialX = it.x
             floatingTextViewConfig.floatingTextViewInitialY = it.y
         }
+
+        // 恢复上次记忆的裁剪框：服务重启后点击悬浮球/自动翻译可直接使用，
+        // 无需先手动框选一次
+        mRectF = PositionMemory.loadCropRect(prefs, currentOrientation)
 
         // 创建悬浮窗参数
         floatingBallParams = WindowManager.LayoutParams().apply {
@@ -588,6 +598,15 @@ class FloatingBallService : LifecycleService() {
             return
         }
 
+        startNewScreenshot()
+    }
+
+    /** 发起新一轮截图翻译：代次自增（旧任务结果作废），并立即显示对应阶段的转圈。 */
+    private fun startNewScreenshot() {
+        translateGeneration.incrementAndGet()
+        updatePhase(
+            if (prefs.getInt("Translate_Mode", 0) == 0) PHASE_OCR else PHASE_TRANSLATING
+        )
         AccessibilityServiceManager.takeScreenshot(mRectF, cropView.absolutePointOffset)
     }
 
@@ -647,11 +666,8 @@ class FloatingBallService : LifecycleService() {
                         setFloatingTextViewTouchable(false)
                     }
                     if (orientation == this.resources.configuration.orientation){
-                        if(isTranslating.get()){
-                            showToast(getString(R.string.is_translating), true)
-                        }else{
-                            AccessibilityServiceManager.takeScreenshot(mRectF, cropView.absolutePointOffset)
-                        }
+                        // 立即开始新一轮截图翻译：旧任务结果由代次机制丢弃，不再提示「正在翻译中」
+                        startNewScreenshot()
                     }else{
                         showToast(getString(R.string.orientation_changed))
                     }
@@ -700,11 +716,12 @@ class FloatingBallService : LifecycleService() {
             ScreenshotManager.screenshotFlow.collect { bitmap ->
                 try {
                     Log.d("SCREENSHOT", "getScreenShot")
-                    isTranslating.set(true)
-                    updatePhase(
-                        if (prefs.getInt("Translate_Mode", 0) == 0) PHASE_OCR else PHASE_TRANSLATING
-                    )
-                    processScreenshot(bitmap)
+                    val gen = translateGeneration.get()
+                    // 并行处理：快速连续点击时，新截图不被旧任务阻塞
+                    lifecycleScope.launch {
+                        isTranslating.set(true)
+                        processScreenshot(bitmap, gen)
+                    }
                 } catch (e: Exception) {
                     showToast("OCR Failed：$e")
                 }
@@ -729,7 +746,7 @@ class FloatingBallService : LifecycleService() {
         startActivity(intent)
     }
 
-    private suspend fun processScreenshot(bitmap: Bitmap) {
+    private suspend fun processScreenshot(bitmap: Bitmap, gen: Int) {
         Log.d("SCREENSHOT", "processScreenShot")
         try{
             if(prefs.getInt("Translate_Mode", 0) == 0){
@@ -740,22 +757,29 @@ class FloatingBallService : LifecycleService() {
                 if (isAutoTranslating) {
                     if (shouldTranslateText(txt)) {
                         lastOcrResult = txt
-                        translateByText(txt)
+                        translateByText(txt, gen)
                     } else {
-                        isTranslating.set(false)
-                        updatePhase(PHASE_IDLE)
+                        if (gen == translateGeneration.get()) {
+                            isTranslating.set(false)
+                            updatePhase(PHASE_IDLE)
+                        }
                     }
                 } else {
-                    translateByText(txt)
+                    translateByText(txt, gen)
                 }
             }else{
                 // 上传图片翻译，注意要创建bitmap副本并交给图片翻译API处理
                 val bitmapCopy = bitmap.copy(bitmap.config!!, true)
-                translateByPic(bitmapCopy)  // 副本的生命周期由翻译API管理
+                translateByPic(bitmapCopy, gen)  // 副本的生命周期由翻译API管理
             }
+        }catch (e: CancellationException){
+            // 协程被取消（新任务到来或服务停止）：不处理，保持取消语义
+            throw e
         }catch (e: Exception){
-            isTranslating.set(false)
-            updatePhase(PHASE_IDLE)
+            if (gen == translateGeneration.get()) {
+                isTranslating.set(false)
+                updatePhase(PHASE_IDLE)
+            }
             e.printStackTrace()
             showToast(getString(R.string.translation_failed, e.message))
         }finally {
@@ -785,12 +809,16 @@ class FloatingBallService : LifecycleService() {
     }
 
     // 文本翻译
-    private fun translateByText(str: String){
-        // OCR 完成，进入翻译阶段（白色转圈）
-        updatePhase(PHASE_TRANSLATING)
+    private fun translateByText(str: String, gen: Int){
+        // OCR 完成，进入翻译阶段（白色转圈）；仅当仍是当前代次时更新指示
+        if (gen == translateGeneration.get()) {
+            updatePhase(PHASE_TRANSLATING)
+        }
         translatorText?.getTranslation(str, prefs.getString("Source_Language", "ja"), prefs.getString("Target_Language", "zh")){
             result->
             lifecycleScope.launch(Dispatchers.Main) {
+                // 代次不匹配：已有更新的翻译任务，丢弃本次结果
+                if (gen != translateGeneration.get()) return@launch
                 when (result) {
                     is TranslationResult.Success -> {
                         Log.d("FloatingBallService","翻译结果：${result.translatedText}")
@@ -813,12 +841,16 @@ class FloatingBallService : LifecycleService() {
         }
     }
 
-    private fun translateByPic(bitmap: Bitmap){
+    private fun translateByPic(bitmap: Bitmap, gen: Int){
         // 图片直翻没有 OCR 阶段，直接进入翻译阶段（白色转圈）
-        updatePhase(PHASE_TRANSLATING)
+        if (gen == translateGeneration.get()) {
+            updatePhase(PHASE_TRANSLATING)
+        }
         translatorPic?.getTranslation(bitmap, prefs.getString("Source_Language", "ja"), prefs.getString("Target_Language", "zh")){
                 result->
             lifecycleScope.launch(Dispatchers.Main) {
+                // 代次不匹配：已有更新的翻译任务，丢弃本次结果
+                if (gen != translateGeneration.get()) return@launch
                 when (result) {
                     is TranslationResult.Success -> {
                         floatingTextView.text = result.translatedText
