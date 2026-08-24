@@ -29,6 +29,7 @@ import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LifecycleService
@@ -676,12 +677,22 @@ class FloatingBallService : LifecycleService() {
         }
     }
 
+    /**
+     * 同步悬浮球上的旋转指示圈：翻译中显示，空闲隐藏。
+     * 必须在主线程调用（isTranslating 的 set 均发生在主线程协程/回调中）。
+     */
+    private fun updateTranslatingIndicator() {
+        val loading = floatingBallView.findViewById<ProgressBar>(R.id.floating_ball_loading)
+        loading.visibility = if (isTranslating.get()) View.VISIBLE else View.GONE
+    }
+
     private fun setupScreenshotCollector() {
         lifecycleScope.launch {
             ScreenshotManager.screenshotFlow.collect { bitmap ->
                 try {
                     Log.d("SCREENSHOT", "getScreenShot")
                     isTranslating.set(true)
+                    updateTranslatingIndicator()
                     processScreenshot(bitmap)
                 } catch (e: Exception) {
                     showToast("OCR Failed：$e")
@@ -721,6 +732,7 @@ class FloatingBallService : LifecycleService() {
                         translateByText(txt)
                     } else {
                         isTranslating.set(false)
+                        updateTranslatingIndicator()
                     }
                 } else {
                     translateByText(txt)
@@ -732,6 +744,7 @@ class FloatingBallService : LifecycleService() {
             }
         }catch (e: Exception){
             isTranslating.set(false)
+                        updateTranslatingIndicator()
             e.printStackTrace()
             showToast(getString(R.string.translation_failed, e.message))
         }finally {
@@ -782,6 +795,7 @@ class FloatingBallService : LifecycleService() {
                     }
                 }
                 isTranslating.set(false)
+                        updateTranslatingIndicator()
             }
         }
     }
@@ -799,6 +813,7 @@ class FloatingBallService : LifecycleService() {
                     }
                 }
                 isTranslating.set(false)
+                        updateTranslatingIndicator()
             }
         }
     }

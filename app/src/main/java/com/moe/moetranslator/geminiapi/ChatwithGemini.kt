@@ -105,6 +105,11 @@ class ChatwithGemini : Fragment() {
         setupClickListeners()
         observeMessages()
         refreshProviderName()
+
+        // 恢复进行中的输出状态：切页后输出在后台继续，回到页面时按钮显示「停止」
+        if (currentChatJob?.isActive == true) {
+            binding.buttonSend.text = getString(R.string.chat_stop)
+        }
     }
 
     private fun setupRecyclerView() {
@@ -655,7 +660,9 @@ class ChatwithGemini : Fragment() {
     }
 
     private fun sendMessage(userContent: String) {
-        val job = viewLifecycleOwner.lifecycleScope.launch {
+        // 挂在 Fragment 级 lifecycleScope：切页（视图销毁）不中断输出，
+        // 生成在后台继续写入数据库，回到页面即可看到完整回复
+        val job = lifecycleScope.launch {
 
             // 提前捕获应用级字符串资源：协程运行中 Fragment 可能被分离（切页），
             // 之后任何 requireContext()/getString 都会抛 IllegalStateException
