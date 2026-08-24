@@ -56,20 +56,29 @@
         app:layout_constraintEnd_toStartOf="@id/user_avatar"
         app:layout_constraintHorizontal_bias="0">
 
-        <!-- 思考过程：默认折叠为一行，点击展开 -->
-        <TextView
-            android:id="@+id/message_reasoning"
+        <!-- 思考过程：默认折叠一行；展开后容器内滚动并自动跟随最新内容 -->
+        <ScrollView
+            android:id="@+id/message_reasoning_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:background="@drawable/reasoning_bg"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:padding="6dp"
-            android:textColor="#8A8A8A"
-            android:textIsSelectable="true"
-            android:textSize="12sp"
-            android:visibility="gone" />
+            android:maxHeight="280dp"
+            android:scrollbars="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/message_reasoning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:padding="6dp"
+                android:textColor="#8A8A8A"
+                android:textIsSelectable="true"
+                android:textSize="12sp" />
+
+        </ScrollView>
 
         <TextView
             android:id="@+id/message_text"

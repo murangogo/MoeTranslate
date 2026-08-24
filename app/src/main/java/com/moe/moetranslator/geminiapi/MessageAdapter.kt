@@ -77,6 +77,8 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
         private val messageContainer: LinearLayout = itemView.findViewById(R.id.message_container)
         private val aiAvatar: ImageView = itemView.findViewById(R.id.ai_avatar)
         private val userAvatar: ImageView = itemView.findViewById(R.id.user_avatar)
+        private val reasoningScroll: android.widget.ScrollView =
+            itemView.findViewById(R.id.message_reasoning_scroll)
         private val reasoningText: TextView = itemView.findViewById(R.id.message_reasoning)
 
         fun bind(
@@ -87,15 +89,21 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
             messageText.text = message.content
             messageTime.text = formatTime(message.timestamp)
 
-            // 思考内容：折叠显示一行（AI 消息且思考非空时）
+            // 思考内容：默认折叠一行；展开后容器内滚动并自动滚到底部看最新
             if (message.sender == 1 && message.reasoning.isNotBlank()) {
-                reasoningText.visibility = View.VISIBLE
+                reasoningScroll.visibility = View.VISIBLE
                 reasoningText.text = "💭 " + message.reasoning
-                reasoningText.maxLines = if (reasoningExpanded) Int.MAX_VALUE else 1
-                reasoningText.setOnClickListener { onReasoningClick(message.id) }
+                if (reasoningExpanded) {
+                    reasoningText.maxLines = Int.MAX_VALUE
+                    // 展开：自动滚动到最新内容底部
+                    reasoningScroll.post { reasoningScroll.fullScroll(View.FOCUS_DOWN) }
+                } else {
+                    reasoningText.maxLines = 1
+                }
+                reasoningScroll.setOnClickListener { onReasoningClick(message.id) }
             } else {
-                reasoningText.visibility = View.GONE
-                reasoningText.setOnClickListener(null)
+                reasoningScroll.visibility = View.GONE
+                reasoningScroll.setOnClickListener(null)
             }
 
             when (message.sender) {

@@ -534,6 +534,9 @@
     <string name="chat_session_empty">No chats yet. Tap \"New chat\" to start.</string>
     <string name="chat_session_delete_title">Delete chat</string>
     <string name="chat_session_delete_message">Delete the chat \"%s\" and all its messages?</string>
+    <string name="chat_session_select_all">Select all</string>
+    <string name="chat_session_delete_selected">Delete selected</string>
+    <string name="chat_session_batch_delete_message">Delete the %d selected chats and all their messages?</string>
     <string name="chat_test">Test connection</string>
     <string name="chat_testing">Testing…</string>
     <string name="chat_test_success">✅ %s</string>

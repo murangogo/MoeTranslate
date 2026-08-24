@@ -520,44 +520,94 @@ class ChatwithGemini : Fragment() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
-    /** 会话列表对话框：点击切换、长按删除。 */
+    /** 会话列表对话框：勾选多选批量删除、点击切换、长按删除单条。 */
     private fun showSessionListDialog() {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_session_list, null)
         val listView = dialogView.findViewById<ListView>(R.id.session_list)
         val emptyView = dialogView.findViewById<TextView>(R.id.session_empty)
+        val checkAll = dialogView.findViewById<CheckBox>(R.id.session_check_all)
+        val deleteSelected = dialogView.findViewById<Button>(R.id.session_delete_selected)
 
         var sessionDialog: AlertDialog? = null
+        val checkedIds = mutableSetOf<Long>()
 
-        lifecycleScope.launch {
-            val sessions = messageViewModel.getSessions()
-            if (sessions.isEmpty()) {
-                emptyView.visibility = View.VISIBLE
-                listView.visibility = View.GONE
-            } else {
-                emptyView.visibility = View.GONE
-                listView.visibility = View.VISIBLE
-                val dateFormat = SimpleDateFormat("MM-dd HH:mm", Locale.getDefault())
-                val labels = sessions.map { s ->
-                    val time = dateFormat.format(Date(s.lastTimestamp))
-                    val marker = if (s.sessionId == messageViewModel.activeSessionId.value) "● " else ""
-                    "$marker${s.title}   ($time)"
-                }
-                listView.adapter = ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_list_item_1,
-                    labels
-                )
-                listView.setOnItemClickListener { _, _, position, _ ->
-                    messageViewModel.switchSession(sessions[position].sessionId)
-                    sessionDialog?.dismiss()
-                }
-                listView.setOnItemLongClickListener { _, _, position, _ ->
-                    confirmDeleteSession(sessions[position])
-                    true
+        // 加载/刷新会话列表（删除后调用刷新，解决“删除后仍显示”的问题）
+        fun loadSessions() {
+            lifecycleScope.launch {
+                val sessions = messageViewModel.getSessions()
+                // 清理已不存在的勾选
+                checkedIds.retainAll(sessions.map { it.sessionId }.toSet())
+                checkAll.isChecked = sessions.isNotEmpty() && checkedIds.size == sessions.size
+                deleteSelected.isEnabled = checkedIds.isNotEmpty()
+
+                if (sessions.isEmpty()) {
+                    emptyView.visibility = View.VISIBLE
+                    listView.visibility = View.GONE
+                    checkAll.isEnabled = false
+                    listView.adapter = null
+                } else {
+                    emptyView.visibility = View.GONE
+                    listView.visibility = View.VISIBLE
+                    checkAll.isEnabled = true
+                    listView.adapter = ChatSessionAdapter(
+                        sessions = sessions,
+                        checkedIds = checkedIds,
+                        activeSessionId = messageViewModel.activeSessionId.value,
+                        onOpenSession = { id ->
+                            messageViewModel.switchSession(id)
+                            sessionDialog?.dismiss()
+                        },
+                        onToggleCheck = { _, _ ->
+                            checkAll.isChecked =
+                                sessions.isNotEmpty() && checkedIds.size == sessions.size
+                            deleteSelected.isEnabled = checkedIds.isNotEmpty()
+                        },
+                    )
+                    // 长按：单会话快捷删除
+                    listView.setOnItemLongClickListener { _, _, position, _ ->
+                        val item = listView.adapter.getItem(position) as ChatSessionInfo
+                        confirmDeleteSession(item) { loadSessions() }
+                        true
+                    }
                 }
             }
         }
+
+        // 全选/全不选
+        checkAll.setOnCheckedChangeListener { _, isChecked ->
+            val sessions = (listView.adapter as? ChatSessionAdapter)?.sessions
+                ?: return@setOnCheckedChangeListener
+            if (isChecked) {
+                checkedIds.addAll(sessions.map { it.sessionId })
+            } else {
+                checkedIds.clear()
+            }
+            (listView.adapter as? ChatSessionAdapter)?.notifyDataSetChanged()
+            deleteSelected.isEnabled = checkedIds.isNotEmpty()
+        }
+
+        // 批量删除选中
+        deleteSelected.setOnClickListener {
+            if (checkedIds.isEmpty()) return@setOnClickListener
+            val ids = checkedIds.toList()
+            val dialog = AlertDialog.Builder(requireContext())
+                .setTitle(R.string.chat_session_delete_title)
+                .setMessage(getString(R.string.chat_session_batch_delete_message, ids.size))
+                .setCancelable(false)
+                .setPositiveButton(R.string.confirm) { _, _ ->
+                    messageViewModel.deleteSessions(ids)
+                    checkedIds.clear()
+                    showToast(getString(R.string.delete_finish))
+                    loadSessions() // 删除后立即刷新列表
+                }
+                .setNegativeButton(R.string.user_cancel, null)
+                .create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+        }
+
+        loadSessions()
 
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.chat_sessions_title)
@@ -573,8 +623,8 @@ class ChatwithGemini : Fragment() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
-    /** 长按会话：确认删除。 */
-    private fun confirmDeleteSession(session: ChatSessionInfo) {
+    /** 长按会话：确认删除。删除成功后回调 [onDeleted]。 */
+    private fun confirmDeleteSession(session: ChatSessionInfo, onDeleted: () -> Unit = {}) {
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.chat_session_delete_title)
             .setMessage(getString(R.string.chat_session_delete_message, session.title))
@@ -582,6 +632,7 @@ class ChatwithGemini : Fragment() {
             .setPositiveButton(R.string.confirm) { _, _ ->
                 messageViewModel.deleteSession(session.sessionId)
                 showToast(getString(R.string.delete_finish))
+                onDeleted()
             }
             .setNegativeButton(R.string.user_cancel, null)
             .create()

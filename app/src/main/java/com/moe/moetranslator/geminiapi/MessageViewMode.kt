@@ -97,6 +97,14 @@ class MessageViewModel(application: Application) : ViewModel() {
         }
     }
 
+    /** 批量删除会话；若包含当前会话则回到默认会话 0。 */
+    fun deleteSessions(sessionIds: List<Long>) = viewModelScope.launch {
+        sessionIds.forEach { repository.deleteSession(it) }
+        if (sessionIds.contains(_activeSessionId.value)) {
+            switchSession(0L)
+        }
+    }
+
     suspend fun getMessageById(messageId: Long): ChatMessage? {
         return repository.getMessageById(messageId)
     }

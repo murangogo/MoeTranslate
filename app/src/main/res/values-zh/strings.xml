@@ -534,6 +534,9 @@
     <string name="chat_session_empty">还没有对话，点击「新对话」开始吧</string>
     <string name="chat_session_delete_title">删除对话</string>
     <string name="chat_session_delete_message">确定删除对话“%s”及其全部消息吗？</string>
+    <string name="chat_session_select_all">全选</string>
+    <string name="chat_session_delete_selected">删除选中</string>
+    <string name="chat_session_batch_delete_message">确定删除选中的 %d 个对话及其全部消息吗？</string>
     <string name="chat_test">测试连通性</string>
     <string name="chat_testing">测试中…</string>
     <string name="chat_test_success">✅ %s</string>
