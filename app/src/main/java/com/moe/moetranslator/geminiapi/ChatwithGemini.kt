@@ -660,9 +660,10 @@ class ChatwithGemini : Fragment() {
     }
 
     private fun sendMessage(userContent: String) {
-        // 挂在 Fragment 级 lifecycleScope：切页（视图销毁）不中断输出，
-        // 生成在后台继续写入数据库，回到页面即可看到完整回复
-        val job = lifecycleScope.launch {
+        // 挂在 Activity 级 lifecycleScope：切页时 Fragment 会被销毁（lifecycleScope
+        // 随之取消），而 Activity 存活——输出在后台继续写入数据库，回到页面即可
+        // 看到完整回复。仅当整个界面退出时才中断。
+        val job = requireActivity().lifecycleScope.launch {
 
             // 提前捕获应用级字符串资源：协程运行中 Fragment 可能被分离（切页），
             // 之后任何 requireContext()/getString 都会抛 IllegalStateException
