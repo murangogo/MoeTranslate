@@ -519,4 +519,8 @@
     <string name="chat_api_not_set">The AI provider has not been configured yet. Click the gear button in the upper left corner to set it up.</string>
     <string name="chat_system_prompt_hint">System prompt (optional, leave blank to not send)</string>
     <string name="chat_extra_params_hint">Custom request params (OpenAI-compatible only). One key=value per line, e.g. enable_thinking=false or reasoning_effort=low</string>
+    <string name="chat_use_uniai">Use the Uni AI translation preset (Base URL / Key / model / custom params)</string>
+    <string name="chat_uniai_status_loading">Reading active preset…</string>
+    <string name="chat_uniai_status_active">Active preset: %s</string>
+    <string name="chat_uniai_status_none">No active Uni AI translation preset yet. Configure one in Settings → Uni AI Translation first.</string>
 </resources>

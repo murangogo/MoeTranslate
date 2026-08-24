@@ -55,6 +55,26 @@
 
     </RadioGroup>
 
+    <CheckBox
+        android:id="@+id/chat_use_uniai"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/chat_use_uniai"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/chat_uniai_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:textColor="#8EA4CA"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
     <EditText
         android:id="@+id/chat_base_url"
         android:layout_width="match_parent"

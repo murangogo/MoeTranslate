@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -40,9 +41,11 @@ import com.moe.moetranslator.chatapi.ChatTurn
 import com.moe.moetranslator.chatapi.GeminiChatProvider
 import com.moe.moetranslator.chatapi.OpenAIChatProvider
 import com.moe.moetranslator.databinding.FragmentChatwithgeminiBinding
+import com.moe.moetranslator.openaimanager.OpenAIPresetRepository
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.KeystoreManager
 import kotlinx.coroutines.launch
+import translationapi.openaitranslation.OpenAITranslation
 
 
 class ChatwithGemini : Fragment() {
@@ -145,23 +148,42 @@ class ChatwithGemini : Fragment() {
     private fun currentProviderType(): Int = prefs.getInt("Chat_Provider", PROVIDER_GEMINI)
 
     /** 根据当前设置构建聊天提供商；未配置 Key 时提示并返回 null。 */
-    private fun buildChatProvider(): ChatProvider? {
+    private suspend fun buildChatProvider(): ChatProvider? {
         return when (currentProviderType()) {
             PROVIDER_OPENAI -> {
-                val key = KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI)
-                if (key.isNullOrEmpty()) {
-                    showToast(getString(R.string.chat_api_not_set))
-                    return null
+                val chatSystemPrompt = prefs.getString("Chat_OpenAI_System_Prompt", "")
+                    .takeIf { it.isNotBlank() }
+
+                // 引用翻译侧聚合 AI 的激活预设：Base URL / Key / 模型 / 自定义参数都取自预设
+                if (prefs.getBoolean("Chat_OpenAI_Use_UniAI_Preset", false)) {
+                    val preset = OpenAIPresetRepository.getInstance(requireContext()).getActive()
+                    if (preset == null || preset.apiKey.isBlank()) {
+                        showToast(getString(R.string.chat_uniai_status_none))
+                        return null
+                    }
+                    OpenAIChatProvider(
+                        apiKey = preset.apiKey,
+                        baseUrl = preset.baseUrl.ifBlank { DEFAULT_OPENAI_BASE_URL },
+                        model = preset.modelName.ifBlank { DEFAULT_OPENAI_MODEL },
+                        systemPrompt = chatSystemPrompt,
+                        extraParams = OpenAITranslation.decodeExtraParams(preset.extraParams),
+                    )
+                } else {
+                    val key = KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI)
+                    if (key.isNullOrEmpty()) {
+                        showToast(getString(R.string.chat_api_not_set))
+                        return null
+                    }
+                    OpenAIChatProvider(
+                        apiKey = key,
+                        baseUrl = prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL),
+                        model = prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL),
+                        systemPrompt = chatSystemPrompt,
+                        extraParams = OpenAIChatProvider.parseExtraParams(
+                            prefs.getString("Chat_OpenAI_Extra_Params", "")
+                        ),
+                    )
                 }
-                OpenAIChatProvider(
-                    apiKey = key,
-                    baseUrl = prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL),
-                    model = prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL),
-                    systemPrompt = prefs.getString("Chat_OpenAI_System_Prompt", "").takeIf { it.isNotBlank() },
-                    extraParams = OpenAIChatProvider.parseExtraParams(
-                        prefs.getString("Chat_OpenAI_Extra_Params", "")
-                    ),
-                )
             }
             else -> {
                 val key = KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI)
@@ -188,62 +210,53 @@ class ChatwithGemini : Fragment() {
         val apiKeyEdit = customView.findViewById<EditText>(R.id.chat_api_key)
         val systemPromptEdit = customView.findViewById<EditText>(R.id.chat_system_prompt)
         val extraParamsEdit = customView.findViewById<EditText>(R.id.chat_extra_params)
+        val useUniAICheck = customView.findViewById<CheckBox>(R.id.chat_use_uniai)
+        val uniAIStatus = customView.findViewById<TextView>(R.id.chat_uniai_status)
 
         introView.text = getText(R.string.chat_provider_intro)
 
         val isOpenAICurrent = currentProviderType() == PROVIDER_OPENAI
-        if (isOpenAICurrent) {
-            providerGroup.check(R.id.chat_provider_openai)
-            baseUrlEdit.visibility = View.VISIBLE
-            baseUrlEdit.setText(prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL))
-            modelEdit.setText(prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL))
-            systemPromptEdit.setText(prefs.getString("Chat_OpenAI_System_Prompt", ""))
-            extraParamsEdit.visibility = View.VISIBLE
-            extraParamsEdit.setText(prefs.getString("Chat_OpenAI_Extra_Params", ""))
-            apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI) != null) {
-                getString(R.string.api_saved)
-            } else {
-                getString(R.string.chat_api_key)
-            }
-        } else {
-            providerGroup.check(R.id.chat_provider_gemini)
-            baseUrlEdit.visibility = View.GONE
-            extraParamsEdit.visibility = View.GONE
-            modelEdit.setText(prefs.getString("Chat_Gemini_Model", DEFAULT_GEMINI_MODEL))
-            systemPromptEdit.setText(prefs.getString("Chat_Gemini_System_Prompt", ""))
-            apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI) != null) {
-                getString(R.string.api_saved)
-            } else {
-                getString(R.string.chat_api_key)
+
+        // 读取翻译侧激活预设名并展示状态
+        fun refreshUniAIStatus() {
+            uniAIStatus.text = getString(R.string.chat_uniai_status_loading)
+            viewLifecycleOwner.lifecycleScope.launch {
+                val preset = OpenAIPresetRepository.getInstance(requireContext()).getActive()
+                uniAIStatus.text = if (preset == null) {
+                    getString(R.string.chat_uniai_status_none)
+                } else {
+                    getString(R.string.chat_uniai_status_active, preset.displayName.ifBlank { preset.modelName })
+                }
             }
         }
 
-        // 切换提供商：先把当前编辑框内容按旧提供商存回，再加载新提供商的配置
-        providerGroup.setOnCheckedChangeListener { _, checkedId ->
-            val nowOpenAI = checkedId == R.id.chat_provider_openai
-            if (nowOpenAI) {
-                // 旧的是 Gemini：保存 Gemini 模型名与系统提示词
-                prefs.setString("Chat_Gemini_Model", modelEdit.text.toString().trim())
-                prefs.setString("Chat_Gemini_System_Prompt", systemPromptEdit.text.toString().trim())
-                baseUrlEdit.visibility = View.VISIBLE
+        // 按当前选择刷新各字段可见性
+        fun applyFieldVisibility(isOpenAI: Boolean, useUniAI: Boolean) {
+            useUniAICheck.visibility = if (isOpenAI) View.VISIBLE else View.GONE
+            uniAIStatus.visibility = if (isOpenAI && useUniAI) View.VISIBLE else View.GONE
+            baseUrlEdit.visibility = if (isOpenAI && !useUniAI) View.VISIBLE else View.GONE
+            modelEdit.visibility = if (!isOpenAI || !useUniAI) View.VISIBLE else View.GONE
+            apiKeyEdit.visibility = if (!isOpenAI || !useUniAI) View.VISIBLE else View.GONE
+            extraParamsEdit.visibility = if (isOpenAI && !useUniAI) View.VISIBLE else View.GONE
+            if (isOpenAI && useUniAI) refreshUniAIStatus()
+        }
+
+        // 加载某提供商的配置到编辑框
+        fun loadFields(isOpenAI: Boolean) {
+            val useUniAI = prefs.getBoolean("Chat_OpenAI_Use_UniAI_Preset", false)
+            if (isOpenAI) {
+                useUniAICheck.isChecked = useUniAI
                 baseUrlEdit.setText(prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL))
                 modelEdit.setText(prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL))
                 systemPromptEdit.setText(prefs.getString("Chat_OpenAI_System_Prompt", ""))
-                extraParamsEdit.visibility = View.VISIBLE
                 extraParamsEdit.setText(prefs.getString("Chat_OpenAI_Extra_Params", ""))
                 apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI) != null) {
                     getString(R.string.api_saved)
                 } else {
                     getString(R.string.chat_api_key)
                 }
+                applyFieldVisibility(true, useUniAI)
             } else {
-                // 旧的是 OpenAI：保存 Base URL、模型名、系统提示词与自定义参数
-                prefs.setString("Chat_OpenAI_Base_Url", baseUrlEdit.text.toString().trim())
-                prefs.setString("Chat_OpenAI_Model", modelEdit.text.toString().trim())
-                prefs.setString("Chat_OpenAI_System_Prompt", systemPromptEdit.text.toString().trim())
-                prefs.setString("Chat_OpenAI_Extra_Params", extraParamsEdit.text.toString().trim())
-                baseUrlEdit.visibility = View.GONE
-                extraParamsEdit.visibility = View.GONE
                 modelEdit.setText(prefs.getString("Chat_Gemini_Model", DEFAULT_GEMINI_MODEL))
                 systemPromptEdit.setText(prefs.getString("Chat_Gemini_System_Prompt", ""))
                 apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI) != null) {
@@ -251,7 +264,38 @@ class ChatwithGemini : Fragment() {
                 } else {
                     getString(R.string.chat_api_key)
                 }
+                applyFieldVisibility(false, false)
             }
+        }
+
+        // 把编辑框内容按某提供商存回
+        fun stashFields(isOpenAI: Boolean) {
+            if (isOpenAI) {
+                prefs.setString("Chat_OpenAI_Base_Url", baseUrlEdit.text.toString().trim())
+                prefs.setString("Chat_OpenAI_Model", modelEdit.text.toString().trim())
+                prefs.setString("Chat_OpenAI_System_Prompt", systemPromptEdit.text.toString().trim())
+                prefs.setString("Chat_OpenAI_Extra_Params", extraParamsEdit.text.toString().trim())
+                prefs.setBoolean("Chat_OpenAI_Use_UniAI_Preset", useUniAICheck.isChecked)
+            } else {
+                prefs.setString("Chat_Gemini_Model", modelEdit.text.toString().trim())
+                prefs.setString("Chat_Gemini_System_Prompt", systemPromptEdit.text.toString().trim())
+            }
+        }
+
+        // 初始化
+        providerGroup.check(if (isOpenAICurrent) R.id.chat_provider_openai else R.id.chat_provider_gemini)
+        loadFields(isOpenAICurrent)
+
+        // 切换提供商：先把当前编辑框内容按旧提供商存回，再加载新提供商的配置
+        providerGroup.setOnCheckedChangeListener { _, checkedId ->
+            val nowOpenAI = checkedId == R.id.chat_provider_openai
+            stashFields(!nowOpenAI)
+            loadFields(nowOpenAI)
+        }
+
+        // 勾选/取消“使用聚合AI预设”时切换字段可见性
+        useUniAICheck.setOnCheckedChangeListener { _, checked ->
+            applyFieldVisibility(true, checked)
         }
 
         val dialog = AlertDialog.Builder(requireContext())
@@ -260,18 +304,23 @@ class ChatwithGemini : Fragment() {
             .setCancelable(false)
             .setPositiveButton(R.string.save) { _, _ ->
                 val isOpenAI = providerGroup.checkedRadioButtonId == R.id.chat_provider_openai
+                val useUniAI = useUniAICheck.isChecked
                 val alias = if (isOpenAI) KEY_ALIAS_CHAT_OPENAI else KEY_ALIAS_GEMINI
-                val keyText = apiKeyEdit.text.toString().trim()
 
-                if (keyText.isEmpty() && KeystoreManager.retrieveKey(requireContext(), alias) == null) {
-                    showToast(getString(R.string.fill_blank))
-                    return@setPositiveButton
-                }
+                // 引用聚合AI翻译预设时不需要自己的 Key
+                if (!(isOpenAI && useUniAI)) {
+                    val keyText = apiKeyEdit.text.toString().trim()
 
-                // Key 非空时重新加密保存；Keystore 不允许重复生成同名密钥，先删后存保证幂等
-                if (keyText.isNotEmpty()) {
-                    KeystoreManager.removeKey(requireContext(), alias)
-                    KeystoreManager.storeKey(requireContext(), keyText, alias)
+                    if (keyText.isEmpty() && KeystoreManager.retrieveKey(requireContext(), alias) == null) {
+                        showToast(getString(R.string.fill_blank))
+                        return@setPositiveButton
+                    }
+
+                    // Key 非空时重新加密保存；Keystore 不允许重复生成同名密钥，先删后存保证幂等
+                    if (keyText.isNotEmpty()) {
+                        KeystoreManager.removeKey(requireContext(), alias)
+                        KeystoreManager.storeKey(requireContext(), keyText, alias)
+                    }
                 }
 
                 if (isOpenAI) {
@@ -279,6 +328,7 @@ class ChatwithGemini : Fragment() {
                     prefs.setString("Chat_OpenAI_Model", modelEdit.text.toString().trim())
                     prefs.setString("Chat_OpenAI_System_Prompt", systemPromptEdit.text.toString().trim())
                     prefs.setString("Chat_OpenAI_Extra_Params", extraParamsEdit.text.toString().trim())
+                    prefs.setBoolean("Chat_OpenAI_Use_UniAI_Preset", useUniAI)
                 } else {
                     prefs.setString("Chat_Gemini_Model", modelEdit.text.toString().trim())
                     prefs.setString("Chat_Gemini_System_Prompt", systemPromptEdit.text.toString().trim())
