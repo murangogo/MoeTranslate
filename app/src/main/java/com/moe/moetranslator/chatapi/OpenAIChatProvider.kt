@@ -17,16 +17,20 @@
 
 package com.moe.moetranslator.chatapi
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * OpenAI 兼容聊天提供商。
@@ -87,59 +91,150 @@ class OpenAIChatProvider(
             pairs.joinToString("\n") { (k, v) -> if (v.isEmpty()) k else "$k=$v" }
     }
 
-    override suspend fun chat(history: List<ChatTurn>, userInput: String): String =
-        withContext(Dispatchers.IO) {
-            val messages = JSONArray()
-            // 系统提示词（可选）：留空则不发送
-            if (!systemPrompt.isNullOrBlank()) {
-                messages.put(JSONObject().apply {
-                    put("role", "system")
-                    put("content", systemPrompt)
-                })
+    override suspend fun chat(
+        history: List<ChatTurn>,
+        userInput: String,
+        onChunk: (String) -> Unit,
+    ): String = suspendCancellableCoroutine { cont ->
+        val body = buildChatBody(history, userInput)
+        val request = Request.Builder()
+            .url(baseUrl.trimEnd('/') + "/chat/completions")
+            .post(body.toRequestBody(JSON))
+            .addHeader("Authorization", "Bearer $apiKey")
+            .addHeader("Content-Type", "application/json")
+            .build()
+
+        val call = client.newCall(request)
+        // 协程被取消（用户点“停止”）时中断底层网络请求
+        cont.invokeOnCancellation { call.cancel() }
+
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                if (cont.isActive) cont.resumeWithException(e)
             }
-            history.forEach { turn ->
-                messages.put(JSONObject().apply {
-                    put("role", turn.role)
-                    put("content", turn.content)
-                })
+
+            override fun onResponse(call: Call, response: Response) {
+                try {
+                    val responseBody = response.body?.string()
+                        ?: throw IOException("Empty response body")
+
+                    if (!response.isSuccessful) {
+                        val error = extractErrorMessage(responseBody)
+                        throw IOException(error ?: "HTTP ${response.code} ${response.message}")
+                    }
+
+                    val content = parseResponse(responseBody)
+                    if (cont.isActive) {
+                        onChunk(content)
+                        cont.resume(content)
+                    }
+                } catch (e: Exception) {
+                    if (cont.isActive) cont.resumeWithException(e)
+                } finally {
+                    response.close()
+                }
             }
-            messages.put(JSONObject().apply {
+        })
+    }
+
+    override suspend fun testConnection(): String = suspendCancellableCoroutine { cont ->
+        // 用最小 chat 请求测试连通性（所有 OpenAI 兼容服务都支持该端点）
+        val messages = JSONArray().apply {
+            put(JSONObject().apply {
                 put("role", ChatTurn.ROLE_USER)
-                put("content", userInput)
+                put("content", "ping")
             })
-
-            val body = JSONObject().apply {
-                put("model", model)
-                put("messages", messages)
-                put("stream", false)
-                // 合并自定义请求参数（与翻译的聚合 AI 相同的类型推断规则）
-                extraParams.forEach { (key, raw) ->
-                    val k = key.trim()
-                    if (k.isEmpty() || k == "messages") return@forEach
-                    put(k, inferJsonValue(raw))
-                }
-            }.toString()
-
-            val url = baseUrl.trimEnd('/') + "/chat/completions"
-            val request = Request.Builder()
-                .url(url)
-                .post(body.toRequestBody(JSON))
-                .addHeader("Authorization", "Bearer $apiKey")
-                .addHeader("Content-Type", "application/json")
-                .build()
-
-            client.newCall(request).execute().use { response ->
-                val responseBody = response.body?.string()
-                    ?: throw IOException("Empty response body")
-
-                if (!response.isSuccessful) {
-                    val error = extractErrorMessage(responseBody)
-                    throw IOException(error ?: "HTTP ${response.code} ${response.message}")
-                }
-
-                parseResponse(responseBody)
-            }
         }
+        val body = JSONObject().apply {
+            put("model", model)
+            put("messages", messages)
+            put("max_tokens", 5)
+        }.toString()
+
+        val request = Request.Builder()
+            .url(baseUrl.trimEnd('/') + "/chat/completions")
+            .post(body.toRequestBody(JSON))
+            .addHeader("Authorization", "Bearer $apiKey")
+            .addHeader("Content-Type", "application/json")
+            .build()
+
+        val call = client.newCall(request)
+        cont.invokeOnCancellation { call.cancel() }
+
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                if (cont.isActive) {
+                    cont.resumeWithException(IOException("连接失败：${e.message ?: "网络错误"}"))
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                try {
+                    val responseBody = response.body?.string().orEmpty()
+                    if (response.isSuccessful) {
+                        val content = runCatching {
+                            val o = JSONObject(responseBody)
+                            val msg = o.getJSONArray("choices").getJSONObject(0).getJSONObject("message")
+                            msg.optString("content", "")
+                        }.getOrDefault("")
+                        if (cont.isActive) {
+                            cont.resume(
+                                if (content.isNotBlank()) {
+                                    "连接成功，模型回复：${content.take(30)}"
+                                } else {
+                                    "连接成功"
+                                }
+                            )
+                        }
+                    } else {
+                        val error = extractErrorMessage(responseBody)
+                        if (cont.isActive) {
+                            cont.resumeWithException(
+                                IOException(error ?: "HTTP ${response.code} ${response.message}")
+                            )
+                        }
+                    }
+                } catch (e: Exception) {
+                    if (cont.isActive) cont.resumeWithException(e)
+                } finally {
+                    response.close()
+                }
+            }
+        })
+    }
+
+    private fun buildChatBody(history: List<ChatTurn>, userInput: String): String {
+        val messages = JSONArray()
+        // 系统提示词（可选）：留空则不发送
+        if (!systemPrompt.isNullOrBlank()) {
+            messages.put(JSONObject().apply {
+                put("role", "system")
+                put("content", systemPrompt)
+            })
+        }
+        history.forEach { turn ->
+            messages.put(JSONObject().apply {
+                put("role", turn.role)
+                put("content", turn.content)
+            })
+        }
+        messages.put(JSONObject().apply {
+            put("role", ChatTurn.ROLE_USER)
+            put("content", userInput)
+        })
+
+        return JSONObject().apply {
+            put("model", model)
+            put("messages", messages)
+            put("stream", false)
+            // 合并自定义请求参数（与翻译的聚合 AI 相同的类型推断规则）
+            extraParams.forEach { (key, raw) ->
+                val k = key.trim()
+                if (k.isEmpty() || k == "messages") return@forEach
+                put(k, inferJsonValue(raw))
+            }
+        }.toString()
+    }
 
     /** 尝试从错误响应中提取 error.message（如 401/404/429 时的服务端提示）。 */
     private fun extractErrorMessage(body: String): String? = try {

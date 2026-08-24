@@ -163,4 +163,21 @@
         android:paddingBottom="12dp"
         android:visibility="gone" />
 
+    <Button
+        android:id="@+id/chat_test_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/chat_test" />
+
+    <TextView
+        android:id="@+id/chat_test_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        android:textIsSelectable="true"
+        android:textSize="13sp" />
+
 </LinearLayout>

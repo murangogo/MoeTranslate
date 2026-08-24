@@ -37,5 +37,8 @@ data class ChatMessage(
     val timestamp: Long,
 
     @ColumnInfo(name = "sender")
-    val sender: Int  // 1表示AI，2表示用户
+    val sender: Int,  // 1表示AI，2表示用户
+
+    @ColumnInfo(name = "sessionId", defaultValue = "0")
+    val sessionId: Long = 0L  // 所属会话；0为默认会话
 )

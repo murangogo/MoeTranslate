@@ -523,4 +523,18 @@
     <string name="chat_uniai_status_loading">正在读取激活预设…</string>
     <string name="chat_uniai_status_active">当前激活预设：%s</string>
     <string name="chat_uniai_status_none">翻译侧还没有激活的聚合AI预设，请先在「设置 → 聚合AI翻译」中配置。</string>
+    <string name="chat_uniai_fallback">没有找到激活的聚合AI预设，已改用聊天的独立配置</string>
+    <string name="chat_new_session">新对话</string>
+    <string name="chat_stop_first">请先停止当前正在生成的回复</string>
+    <string name="chat_stop">停止</string>
+    <string name="chat_stopped">已停止生成</string>
+    <string name="chat_stopped_suffix">…\n（已停止）</string>
+    <string name="chat_sessions_title">对话列表</string>
+    <string name="chat_session_empty">还没有对话，点击「新对话」开始吧</string>
+    <string name="chat_session_delete_title">删除对话</string>
+    <string name="chat_session_delete_message">确定删除对话“%s”及其全部消息吗？</string>
+    <string name="chat_test">测试连通性</string>
+    <string name="chat_testing">测试中…</string>
+    <string name="chat_test_success">✅ %s</string>
+    <string name="chat_test_failed">❌ %s</string>
 </resources>

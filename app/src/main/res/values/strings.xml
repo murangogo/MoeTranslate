@@ -523,4 +523,18 @@
     <string name="chat_uniai_status_loading">Reading active preset…</string>
     <string name="chat_uniai_status_active">Active preset: %s</string>
     <string name="chat_uniai_status_none">No active Uni AI translation preset yet. Configure one in Settings → Uni AI Translation first.</string>
+    <string name="chat_uniai_fallback">No active Uni AI preset found; using the manual chat configuration instead</string>
+    <string name="chat_new_session">New chat</string>
+    <string name="chat_stop_first">Please stop the current generation first</string>
+    <string name="chat_stop">Stop</string>
+    <string name="chat_stopped">Generation stopped</string>
+    <string name="chat_stopped_suffix">…\n(stopped)</string>
+    <string name="chat_sessions_title">Chats</string>
+    <string name="chat_session_empty">No chats yet. Tap \"New chat\" to start.</string>
+    <string name="chat_session_delete_title">Delete chat</string>
+    <string name="chat_session_delete_message">Delete the chat \"%s\" and all its messages?</string>
+    <string name="chat_test">Test connection</string>
+    <string name="chat_testing">Testing…</string>
+    <string name="chat_test_success">✅ %s</string>
+    <string name="chat_test_failed">❌ %s</string>
 </resources>

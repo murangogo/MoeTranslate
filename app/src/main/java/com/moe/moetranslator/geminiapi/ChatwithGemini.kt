@@ -24,8 +24,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ListView
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -44,8 +47,13 @@ import com.moe.moetranslator.databinding.FragmentChatwithgeminiBinding
 import com.moe.moetranslator.openaimanager.OpenAIPresetRepository
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.KeystoreManager
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import translationapi.openaitranslation.OpenAITranslation
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class ChatwithGemini : Fragment() {
@@ -69,6 +77,9 @@ class ChatwithGemini : Fragment() {
     private lateinit var prefs: CustomPreference
     private lateinit var messageViewModel: MessageViewModel
     private lateinit var adapter: MessageAdapter
+
+    // 当前正在进行的聊天任务（用于“停止”按钮）
+    private var currentChatJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,10 +120,31 @@ class ChatwithGemini : Fragment() {
         }
 
         binding.cleanGemini.setOnClickListener {
-            showDeleteConfirmationDialog()
+            showDeleteCurrentSessionDialog()
+        }
+
+        // 点击顶部标题：打开会话列表
+        binding.providerName.setOnClickListener {
+            showSessionListDialog()
+        }
+
+        // 新建会话
+        binding.newSession.setOnClickListener {
+            if (currentChatJob?.isActive == true) {
+                showToast(getString(R.string.chat_stop_first))
+                return@setOnClickListener
+            }
+            messageViewModel.newSession()
+            showToast(getString(R.string.chat_new_session))
         }
 
         binding.buttonSend.setOnClickListener {
+            // 生成中：按钮变成“停止”
+            if (currentChatJob?.isActive == true) {
+                currentChatJob?.cancel()
+                return@setOnClickListener
+            }
+
             val content = binding.inputBox.text.toString().trim()
             if (content.isNotEmpty()) {
                 sendMessage(content)
@@ -157,17 +189,32 @@ class ChatwithGemini : Fragment() {
                 // 引用翻译侧聚合 AI 的激活预设：Base URL / Key / 模型 / 自定义参数都取自预设
                 if (prefs.getBoolean("Chat_OpenAI_Use_UniAI_Preset", false)) {
                     val preset = OpenAIPresetRepository.getInstance(requireContext()).getActive()
-                    if (preset == null || preset.apiKey.isBlank()) {
-                        showToast(getString(R.string.chat_uniai_status_none))
-                        return null
+                    if (preset != null && preset.apiKey.isNotBlank()) {
+                        OpenAIChatProvider(
+                            apiKey = preset.apiKey,
+                            baseUrl = preset.baseUrl.ifBlank { DEFAULT_OPENAI_BASE_URL },
+                            model = preset.modelName.ifBlank { DEFAULT_OPENAI_MODEL },
+                            systemPrompt = chatSystemPrompt,
+                            extraParams = OpenAITranslation.decodeExtraParams(preset.extraParams),
+                        )
+                    } else {
+                        // 翻译侧没有激活预设：回退到聊天自己的手动配置
+                        showToast(getString(R.string.chat_uniai_fallback))
+                        val key = KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI)
+                        if (key.isNullOrEmpty()) {
+                            showToast(getString(R.string.chat_api_not_set))
+                            return null
+                        }
+                        OpenAIChatProvider(
+                            apiKey = key,
+                            baseUrl = prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL),
+                            model = prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL),
+                            systemPrompt = chatSystemPrompt,
+                            extraParams = OpenAIChatProvider.parseExtraParams(
+                                prefs.getString("Chat_OpenAI_Extra_Params", "")
+                            ),
+                        )
                     }
-                    OpenAIChatProvider(
-                        apiKey = preset.apiKey,
-                        baseUrl = preset.baseUrl.ifBlank { DEFAULT_OPENAI_BASE_URL },
-                        model = preset.modelName.ifBlank { DEFAULT_OPENAI_MODEL },
-                        systemPrompt = chatSystemPrompt,
-                        extraParams = OpenAITranslation.decodeExtraParams(preset.extraParams),
-                    )
                 } else {
                     val key = KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI)
                     if (key.isNullOrEmpty()) {
@@ -212,6 +259,75 @@ class ChatwithGemini : Fragment() {
         val extraParamsEdit = customView.findViewById<EditText>(R.id.chat_extra_params)
         val useUniAICheck = customView.findViewById<CheckBox>(R.id.chat_use_uniai)
         val uniAIStatus = customView.findViewById<TextView>(R.id.chat_uniai_status)
+        val testButton = customView.findViewById<Button>(R.id.chat_test_button)
+        val testResult = customView.findViewById<TextView>(R.id.chat_test_result)
+
+        // 用当前编辑框内容构建测试用提供商（不落盘保存）
+        suspend fun buildTestProvider(): ChatProvider? {
+            val isOpenAI = providerGroup.checkedRadioButtonId == R.id.chat_provider_openai
+            val keyText = apiKeyEdit.text.toString().trim()
+            return if (isOpenAI) {
+                if (useUniAICheck.isChecked) {
+                    val preset = OpenAIPresetRepository.getInstance(requireContext()).getActive()
+                    if (preset != null && preset.apiKey.isNotBlank()) {
+                        OpenAIChatProvider(
+                            apiKey = preset.apiKey,
+                            baseUrl = preset.baseUrl.ifBlank { DEFAULT_OPENAI_BASE_URL },
+                            model = preset.modelName.ifBlank { DEFAULT_OPENAI_MODEL },
+                            systemPrompt = systemPromptEdit.text.toString().trim().takeIf { it.isNotBlank() },
+                            extraParams = OpenAITranslation.decodeExtraParams(preset.extraParams),
+                        )
+                    } else null
+                } else {
+                    val key = keyText.ifEmpty {
+                        KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI)
+                    }
+                    if (key.isNullOrEmpty()) return null
+                    OpenAIChatProvider(
+                        apiKey = key,
+                        baseUrl = baseUrlEdit.text.toString().trim().ifBlank { DEFAULT_OPENAI_BASE_URL },
+                        model = modelEdit.text.toString().trim(),
+                        systemPrompt = systemPromptEdit.text.toString().trim().takeIf { it.isNotBlank() },
+                        extraParams = OpenAIChatProvider.parseExtraParams(extraParamsEdit.text.toString()),
+                    )
+                }
+            } else {
+                val key = keyText.ifEmpty {
+                    KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI)
+                }
+                if (key.isNullOrEmpty()) return null
+                GeminiChatProvider(
+                    modelName = modelEdit.text.toString().trim(),
+                    apiKey = key,
+                    systemInstruction = systemPromptEdit.text.toString().trim().takeIf { it.isNotBlank() },
+                )
+            }
+        }
+
+        // 测试连通性：向当前配置发送最小请求
+        testButton.setOnClickListener {
+            testButton.isEnabled = false
+            testButton.text = getString(R.string.chat_testing)
+            testResult.text = ""
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    val provider = buildTestProvider()
+                    if (provider == null) {
+                        testResult.text = getString(R.string.chat_api_not_set)
+                    } else {
+                        val msg = provider.testConnection()
+                        testResult.text = getString(R.string.chat_test_success, msg)
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    testResult.text = getString(R.string.chat_test_failed, e.message ?: e.toString())
+                } finally {
+                    testButton.isEnabled = true
+                    testButton.text = getString(R.string.chat_test)
+                }
+            }
+        }
 
         introView.text = getText(R.string.chat_provider_intro)
 
@@ -354,13 +470,82 @@ class ChatwithGemini : Fragment() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
-    private fun showDeleteConfirmationDialog() {
+    private fun showDeleteCurrentSessionDialog() {
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.delete_history_title)
             .setMessage(R.string.delete_history_content)
             .setCancelable(false)
             .setPositiveButton(R.string.confirm) { _, _ ->
-                messageViewModel.deleteAll()
+                messageViewModel.deleteCurrentSession()
+                showToast(getString(R.string.delete_finish))
+            }
+            .setNegativeButton(R.string.user_cancel, null)
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+    }
+
+    /** 会话列表对话框：点击切换、长按删除。 */
+    private fun showSessionListDialog() {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_session_list, null)
+        val listView = dialogView.findViewById<ListView>(R.id.session_list)
+        val emptyView = dialogView.findViewById<TextView>(R.id.session_empty)
+
+        var sessionDialog: AlertDialog? = null
+
+        lifecycleScope.launch {
+            val sessions = messageViewModel.getSessions()
+            if (sessions.isEmpty()) {
+                emptyView.visibility = View.VISIBLE
+                listView.visibility = View.GONE
+            } else {
+                emptyView.visibility = View.GONE
+                listView.visibility = View.VISIBLE
+                val dateFormat = SimpleDateFormat("MM-dd HH:mm", Locale.getDefault())
+                val labels = sessions.map { s ->
+                    val time = dateFormat.format(Date(s.lastTimestamp))
+                    val marker = if (s.sessionId == messageViewModel.activeSessionId.value) "● " else ""
+                    "$marker${s.title}   ($time)"
+                }
+                listView.adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_list_item_1,
+                    labels
+                )
+                listView.setOnItemClickListener { _, _, position, _ ->
+                    messageViewModel.switchSession(sessions[position].sessionId)
+                    sessionDialog?.dismiss()
+                }
+                listView.setOnItemLongClickListener { _, _, position, _ ->
+                    confirmDeleteSession(sessions[position])
+                    true
+                }
+            }
+        }
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.chat_sessions_title)
+            .setView(dialogView)
+            .setCancelable(true)
+            .setPositiveButton(R.string.chat_new_session) { _, _ ->
+                messageViewModel.newSession()
+            }
+            .setNegativeButton(R.string.user_cancel, null)
+            .create()
+        sessionDialog = dialog
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+    }
+
+    /** 长按会话：确认删除。 */
+    private fun confirmDeleteSession(session: ChatSessionInfo) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.chat_session_delete_title)
+            .setMessage(getString(R.string.chat_session_delete_message, session.title))
+            .setCancelable(false)
+            .setPositiveButton(R.string.confirm) { _, _ ->
+                messageViewModel.deleteSession(session.sessionId)
                 showToast(getString(R.string.delete_finish))
             }
             .setNegativeButton(R.string.user_cancel, null)
@@ -370,20 +555,24 @@ class ChatwithGemini : Fragment() {
     }
 
     private fun sendMessage(userContent: String) {
-        viewLifecycleOwner.lifecycleScope.launch {
+        val job = viewLifecycleOwner.lifecycleScope.launch {
 
-            binding.buttonSend.isClickable = false
-            binding.buttonSend.text = getString(R.string.please_wait)
+            // 发送中：按钮变成“停止”
+            binding.buttonSend.text = getString(R.string.chat_stop)
+
+            val sessionId = messageViewModel.activeSessionId.value
 
             // 保存用户消息
             val userMessage = ChatMessage(
                 content = userContent,
                 timestamp = System.currentTimeMillis(),
-                sender = 2 // 用户
+                sender = 2, // 用户
+                sessionId = sessionId,
             )
             val userMessageId = messageViewModel.insert(userMessage)
 
             var aiMessageId = 0L
+            var receivedChunk = false
 
             try {
                 // 构建当前选择的提供商
@@ -392,7 +581,8 @@ class ChatwithGemini : Fragment() {
                     val emptyAPIMessage = ChatMessage(
                         content = getString(R.string.chat_api_not_set),
                         timestamp = System.currentTimeMillis(),
-                        sender = 1 // AI
+                        sender = 1, // AI
+                        sessionId = sessionId,
                     )
                     messageViewModel.insert(emptyAPIMessage)
                     return@launch
@@ -402,7 +592,8 @@ class ChatwithGemini : Fragment() {
                 val aiMessage = ChatMessage(
                     content = getString(R.string.gemini_thinking),
                     timestamp = System.currentTimeMillis(),
-                    sender = 1 // AI
+                    sender = 1, // AI
+                    sessionId = sessionId,
                 )
                 aiMessageId = messageViewModel.insert(aiMessage)
 
@@ -417,9 +608,27 @@ class ChatwithGemini : Fragment() {
                         )
                     }
 
-                // 调用AI API
-                val reply = provider.chat(history, userContent)
+                // 调用AI API：流式增量实时写入占位消息
+                val reply = provider.chat(history, userContent) { chunk ->
+                    if (!receivedChunk) {
+                        // 第一个chunk到达时清空“思考中”占位
+                        messageViewModel.clearMessageById(aiMessageId)
+                        receivedChunk = true
+                    }
+                    messageViewModel.appendContentById(aiMessageId, chunk)
+                }
                 messageViewModel.updateMessageContent(aiMessageId, reply)
+            } catch (e: CancellationException) {
+                // 用户点了“停止”
+                if (aiMessageId != 0L) {
+                    if (receivedChunk) {
+                        // 已有部分内容：追加停止标记
+                        messageViewModel.appendContentById(aiMessageId, getString(R.string.chat_stopped_suffix))
+                    } else {
+                        messageViewModel.updateMessageContent(aiMessageId, getString(R.string.chat_stopped))
+                    }
+                }
+                throw e
             } catch (e: Exception) {
                 if (aiMessageId != 0L) {
                     // 占位消息已插入：清空后写入错误信息
@@ -430,15 +639,20 @@ class ChatwithGemini : Fragment() {
                     val errorMessage = ChatMessage(
                         content = getString(R.string.error_occurred, e.toString()),
                         timestamp = System.currentTimeMillis(),
-                        sender = 1 // AI
+                        sender = 1, // AI
+                        sessionId = sessionId,
                     )
                     messageViewModel.insert(errorMessage)
                 }
             } finally {
-                binding.buttonSend.isClickable = true
+                // 只有当前任务仍是自己时才清空引用（避免覆盖新一轮任务）
+                if (currentChatJob == coroutineContext[Job]) {
+                    currentChatJob = null
+                }
                 binding.buttonSend.text = getString(R.string.send)
             }
         }
+        currentChatJob = job
     }
 
     private fun showToast(str: String, isShort: Boolean = false) {

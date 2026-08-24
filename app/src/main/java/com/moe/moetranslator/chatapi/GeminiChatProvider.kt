@@ -33,7 +33,11 @@ class GeminiChatProvider(
 
     private var model: GenerativeModel? = null
 
-    override suspend fun chat(history: List<ChatTurn>, userInput: String): String {
+    override suspend fun chat(
+        history: List<ChatTurn>,
+        userInput: String,
+        onChunk: (String) -> Unit,
+    ): String {
         if (model == null) {
             // 系统提示词（可选）：留空则不设置
             val instruction = systemInstruction
@@ -53,9 +57,26 @@ class GeminiChatProvider(
 
         val sb = StringBuilder()
         chat.sendMessageStream(userInput).collect { chunk ->
-            chunk.text?.let { sb.append(it) }
+            chunk.text?.let {
+                sb.append(it)
+                onChunk(it)
+            }
         }
         return sb.toString().trim()
+    }
+
+    override suspend fun testConnection(): String {
+        val model = model ?: GeminiModelFactory.createGeminiModel(
+            modelName, apiKey,
+            systemInstruction?.takeIf { it.isNotBlank() }?.let { content("system") { text(it) } }
+        )
+        val response = model.generateContent("ping")
+        val text = response.text?.trim().orEmpty()
+        return if (text.isNotEmpty()) {
+            "连接成功，模型回复：${text.take(30)}"
+        } else {
+            "连接成功（模型返回空内容）"
+        }
     }
 
     override fun release() {
