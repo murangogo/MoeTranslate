@@ -517,4 +517,6 @@
     <string name="chat_model">模型</string>
     <string name="chat_api_key">API Key</string>
     <string name="chat_api_not_set">还没有配置AI提供商，点击左上角的齿轮按钮进行配置。</string>
+    <string name="chat_system_prompt_hint">系统提示词（可选，留空则不发送）</string>
+    <string name="chat_extra_params_hint">自定义请求参数（仅OpenAI兼容模式）。每行一个key=value，例如 enable_thinking=false 或 reasoning_effort=low</string>
 </resources>

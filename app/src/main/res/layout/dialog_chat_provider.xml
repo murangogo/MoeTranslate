@@ -107,4 +107,40 @@
         android:paddingTop="12dp"
         android:paddingBottom="12dp" />
 
+    <EditText
+        android:id="@+id/chat_system_prompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/edittext_api"
+        android:ems="15"
+        android:hint="@string/chat_system_prompt_hint"
+        android:inputType="textMultiLine"
+        android:minLines="2"
+        android:paddingStart="10dp"
+        android:paddingEnd="3dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp" />
+
+    <EditText
+        android:id="@+id/chat_extra_params"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/edittext_api"
+        android:ems="15"
+        android:hint="@string/chat_extra_params_hint"
+        android:inputType="textMultiLine"
+        android:minLines="2"
+        android:paddingStart="10dp"
+        android:paddingEnd="3dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:visibility="gone" />
+
 </LinearLayout>

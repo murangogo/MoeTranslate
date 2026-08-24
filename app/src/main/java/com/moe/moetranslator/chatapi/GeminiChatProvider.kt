@@ -28,13 +28,18 @@ import com.moe.moetranslator.geminiapi.GeminiModelFactory
 class GeminiChatProvider(
     private val modelName: String,
     private val apiKey: String,
+    private val systemInstruction: String? = null,
 ) : ChatProvider {
 
     private var model: GenerativeModel? = null
 
     override suspend fun chat(history: List<ChatTurn>, userInput: String): String {
         if (model == null) {
-            model = GeminiModelFactory.createGeminiModel(modelName, apiKey)
+            // 系统提示词（可选）：留空则不设置
+            val instruction = systemInstruction
+                ?.takeIf { it.isNotBlank() }
+                ?.let { content("system") { text(it) } }
+            model = GeminiModelFactory.createGeminiModel(modelName, apiKey, instruction)
         }
 
         // 将历史消息转换为 Gemini API 格式（AI 消息在 Gemini 中对应 model 角色）

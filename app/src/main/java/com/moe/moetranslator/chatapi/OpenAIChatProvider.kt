@@ -42,6 +42,7 @@ class OpenAIChatProvider(
     private val apiKey: String,
     private val baseUrl: String,
     private val model: String,
+    private val systemPrompt: String? = null,
     private val extraParams: List<Pair<String, String>> = emptyList(),
 ) : ChatProvider {
 
@@ -61,11 +62,41 @@ class OpenAIChatProvider(
                 .writeTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .build()
         }
+
+        /**
+         * 解析设置页里的自定义参数文本（每行一个 key=value；不含 '=' 的行视为值为空的开关参数）。
+         */
+        fun parseExtraParams(text: String): List<Pair<String, String>> {
+            if (text.isBlank()) return emptyList()
+            val list = mutableListOf<Pair<String, String>>()
+            text.lines().forEach { raw ->
+                val line = raw.trim()
+                if (line.isEmpty()) return@forEach
+                val idx = line.indexOf('=')
+                if (idx < 0) {
+                    list.add(line to "")
+                } else {
+                    list.add(line.substring(0, idx).trim() to line.substring(idx + 1).trim())
+                }
+            }
+            return list
+        }
+
+        /** 把参数对列表格式化回设置页的每行 key=value 文本。 */
+        fun formatExtraParams(pairs: List<Pair<String, String>>): String =
+            pairs.joinToString("\n") { (k, v) -> if (v.isEmpty()) k else "$k=$v" }
     }
 
     override suspend fun chat(history: List<ChatTurn>, userInput: String): String =
         withContext(Dispatchers.IO) {
             val messages = JSONArray()
+            // 系统提示词（可选）：留空则不发送
+            if (!systemPrompt.isNullOrBlank()) {
+                messages.put(JSONObject().apply {
+                    put("role", "system")
+                    put("content", systemPrompt)
+                })
+            }
             history.forEach { turn ->
                 messages.put(JSONObject().apply {
                     put("role", turn.role)

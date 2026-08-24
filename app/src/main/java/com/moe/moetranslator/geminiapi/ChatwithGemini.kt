@@ -157,6 +157,10 @@ class ChatwithGemini : Fragment() {
                     apiKey = key,
                     baseUrl = prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL),
                     model = prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL),
+                    systemPrompt = prefs.getString("Chat_OpenAI_System_Prompt", "").takeIf { it.isNotBlank() },
+                    extraParams = OpenAIChatProvider.parseExtraParams(
+                        prefs.getString("Chat_OpenAI_Extra_Params", "")
+                    ),
                 )
             }
             else -> {
@@ -168,6 +172,7 @@ class ChatwithGemini : Fragment() {
                 GeminiChatProvider(
                     modelName = prefs.getString("Chat_Gemini_Model", DEFAULT_GEMINI_MODEL),
                     apiKey = key,
+                    systemInstruction = prefs.getString("Chat_Gemini_System_Prompt", "").takeIf { it.isNotBlank() },
                 )
             }
         }
@@ -181,6 +186,8 @@ class ChatwithGemini : Fragment() {
         val baseUrlEdit = customView.findViewById<EditText>(R.id.chat_base_url)
         val modelEdit = customView.findViewById<EditText>(R.id.chat_model)
         val apiKeyEdit = customView.findViewById<EditText>(R.id.chat_api_key)
+        val systemPromptEdit = customView.findViewById<EditText>(R.id.chat_system_prompt)
+        val extraParamsEdit = customView.findViewById<EditText>(R.id.chat_extra_params)
 
         introView.text = getText(R.string.chat_provider_intro)
 
@@ -190,6 +197,9 @@ class ChatwithGemini : Fragment() {
             baseUrlEdit.visibility = View.VISIBLE
             baseUrlEdit.setText(prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL))
             modelEdit.setText(prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL))
+            systemPromptEdit.setText(prefs.getString("Chat_OpenAI_System_Prompt", ""))
+            extraParamsEdit.visibility = View.VISIBLE
+            extraParamsEdit.setText(prefs.getString("Chat_OpenAI_Extra_Params", ""))
             apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI) != null) {
                 getString(R.string.api_saved)
             } else {
@@ -198,7 +208,9 @@ class ChatwithGemini : Fragment() {
         } else {
             providerGroup.check(R.id.chat_provider_gemini)
             baseUrlEdit.visibility = View.GONE
+            extraParamsEdit.visibility = View.GONE
             modelEdit.setText(prefs.getString("Chat_Gemini_Model", DEFAULT_GEMINI_MODEL))
+            systemPromptEdit.setText(prefs.getString("Chat_Gemini_System_Prompt", ""))
             apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI) != null) {
                 getString(R.string.api_saved)
             } else {
@@ -210,22 +222,30 @@ class ChatwithGemini : Fragment() {
         providerGroup.setOnCheckedChangeListener { _, checkedId ->
             val nowOpenAI = checkedId == R.id.chat_provider_openai
             if (nowOpenAI) {
-                // 旧的是 Gemini：保存 Gemini 模型名
+                // 旧的是 Gemini：保存 Gemini 模型名与系统提示词
                 prefs.setString("Chat_Gemini_Model", modelEdit.text.toString().trim())
+                prefs.setString("Chat_Gemini_System_Prompt", systemPromptEdit.text.toString().trim())
                 baseUrlEdit.visibility = View.VISIBLE
                 baseUrlEdit.setText(prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL))
                 modelEdit.setText(prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL))
+                systemPromptEdit.setText(prefs.getString("Chat_OpenAI_System_Prompt", ""))
+                extraParamsEdit.visibility = View.VISIBLE
+                extraParamsEdit.setText(prefs.getString("Chat_OpenAI_Extra_Params", ""))
                 apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI) != null) {
                     getString(R.string.api_saved)
                 } else {
                     getString(R.string.chat_api_key)
                 }
             } else {
-                // 旧的是 OpenAI：保存 Base URL 与模型名
+                // 旧的是 OpenAI：保存 Base URL、模型名、系统提示词与自定义参数
                 prefs.setString("Chat_OpenAI_Base_Url", baseUrlEdit.text.toString().trim())
                 prefs.setString("Chat_OpenAI_Model", modelEdit.text.toString().trim())
+                prefs.setString("Chat_OpenAI_System_Prompt", systemPromptEdit.text.toString().trim())
+                prefs.setString("Chat_OpenAI_Extra_Params", extraParamsEdit.text.toString().trim())
                 baseUrlEdit.visibility = View.GONE
+                extraParamsEdit.visibility = View.GONE
                 modelEdit.setText(prefs.getString("Chat_Gemini_Model", DEFAULT_GEMINI_MODEL))
+                systemPromptEdit.setText(prefs.getString("Chat_Gemini_System_Prompt", ""))
                 apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI) != null) {
                     getString(R.string.api_saved)
                 } else {
@@ -257,8 +277,11 @@ class ChatwithGemini : Fragment() {
                 if (isOpenAI) {
                     prefs.setString("Chat_OpenAI_Base_Url", baseUrlEdit.text.toString().trim())
                     prefs.setString("Chat_OpenAI_Model", modelEdit.text.toString().trim())
+                    prefs.setString("Chat_OpenAI_System_Prompt", systemPromptEdit.text.toString().trim())
+                    prefs.setString("Chat_OpenAI_Extra_Params", extraParamsEdit.text.toString().trim())
                 } else {
                     prefs.setString("Chat_Gemini_Model", modelEdit.text.toString().trim())
+                    prefs.setString("Chat_Gemini_System_Prompt", systemPromptEdit.text.toString().trim())
                 }
                 prefs.setInt("Chat_Provider", if (isOpenAI) PROVIDER_OPENAI else PROVIDER_GEMINI)
 
