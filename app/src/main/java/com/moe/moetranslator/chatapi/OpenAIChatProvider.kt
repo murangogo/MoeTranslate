@@ -218,11 +218,16 @@ class OpenAIChatProvider(
             val o = JSONObject(data)
             val delta = o.getJSONArray("choices").getJSONObject(0).optJSONObject("delta")
                 ?: return "" to ""
-            delta.optString("reasoning_content", "") to delta.optString("content", "")
+            // 注意：JSON null 字段会被 org.json.optString 转成字符串 "null"，必须显式过滤
+            optStringOrEmpty(delta, "reasoning_content") to optStringOrEmpty(delta, "content")
         } catch (e: Exception) {
             "" to ""
         }
     }
+
+    /** 取字符串字段；JSON null 视为空串（避免输出 "null"）。 */
+    private fun optStringOrEmpty(o: JSONObject, key: String): String =
+        if (o.isNull(key)) "" else o.optString(key, "")
 
     /**
      * 两步连通性测试（参考主流客户端做法）：
@@ -369,7 +374,7 @@ class OpenAIChatProvider(
                         val parsed = runCatching {
                             val o = JSONObject(responseBody)
                             val msg = o.getJSONArray("choices").getJSONObject(0).getJSONObject("message")
-                            msg.optString("content", "") to msg.optString("reasoning_content", "")
+                            optStringOrEmpty(msg, "content") to optStringOrEmpty(msg, "reasoning_content")
                         }.getOrDefault("" to "")
                         val (content, reasoning) = parsed
                         if (cont.isActive) {
@@ -474,10 +479,10 @@ class OpenAIChatProvider(
             val message = firstChoice.optJSONObject("message")
                 ?: throw IOException("Malformed response: missing message")
 
-            val rawContent = message.optString("content", "")
+            val rawContent = optStringOrEmpty(message, "content")
 
             // 思考内容：优先 reasoning_content 字段（DeepSeek 等），其次 <think>…</think> 标签
-            val reasoningField = message.optString("reasoning_content", "")
+            val reasoningField = optStringOrEmpty(message, "reasoning_content")
             val reasoning = if (reasoningField.isNotBlank()) {
                 reasoningField.trim()
             } else {
