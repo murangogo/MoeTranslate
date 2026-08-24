@@ -276,16 +276,28 @@ class OpenAIChatProvider(
         }.toString()
     }
 
-    /** 尝试从错误响应中提取 error.message；提取不到时返回响应体摘要，便于定位问题。 */
+    /** 尝试从错误响应中提取可读信息：兼容 {"error":{"message"}}、{"message"}、{"error_code","message"} 等格式。 */
     private fun extractErrorMessage(body: String): String? {
+        val trimmed = body.trim()
+        if (trimmed.isEmpty()) return null
         val fromJson = try {
-            JSONObject(body).optJSONObject("error")?.optString("message")?.takeIf { it.isNotBlank() }
+            val o = JSONObject(trimmed)
+            val nested = o.optJSONObject("error")?.optString("message")
+            val topMessage = o.optString("message")
+            val topCode = o.optString("error_code")
+            when {
+                !nested.isNullOrBlank() -> nested
+                !topMessage.isNullOrBlank() -> {
+                    // 国产/自建平台常用：顶层 message + 可选 error_code
+                    if (topCode.isNotBlank() && topCode != "null") "$topCode: $topMessage" else topMessage
+                }
+                else -> null
+            }
         } catch (e: Exception) {
             null
         }
-        if (fromJson != null) return fromJson
-        // 非标准错误格式：返回 body 前 200 字符摘要
-        return body.trim().takeIf { it.isNotEmpty() }?.let { it.take(200) }
+        // 非 JSON 响应（HTML 错误页等）：返回 body 前 200 字符摘要
+        return fromJson ?: trimmed.take(200)
     }
 
     private fun parseResponse(responseBody: String): String {
