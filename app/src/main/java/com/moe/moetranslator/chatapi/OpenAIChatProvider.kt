@@ -17,6 +17,7 @@
 
 package com.moe.moetranslator.chatapi
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
@@ -52,11 +53,14 @@ class OpenAIChatProvider(
 
     companion object {
         private const val TAG = "OpenAIChatProvider"
-        // 聊天回复可能较长，超时设置比翻译更宽松
-        private const val CONNECT_TIMEOUT = 30L
-        private const val READ_TIMEOUT = 180L
+        // 聊天回复可能较长，但非流式等待过久体验差：连接 15s、读取 90s
+        private const val CONNECT_TIMEOUT = 15L
+        private const val READ_TIMEOUT = 90L
 
         private val JSON = "application/json; charset=utf-8".toMediaType()
+
+        /** 服务端故障（5xx）：可自动重试。 */
+        private class ServerErrorException(message: String) : IOException(message)
 
         /** OkHttpClient 复用：线程安全，避免每次对话都重建连接池。 */
         private val client: OkHttpClient by lazy {
@@ -95,8 +99,25 @@ class OpenAIChatProvider(
         history: List<ChatTurn>,
         userInput: String,
         onChunk: (String) -> Unit,
-    ): String = suspendCancellableCoroutine { cont ->
+    ): String {
         val body = buildChatBody(history, userInput)
+        // 服务端 5xx 时自动重试一次（很多自建服务偶发 500/503）
+        var attempt = 0
+        while (true) {
+            attempt++
+            try {
+                return executeChatRequest(body, onChunk)
+            } catch (e: ServerErrorException) {
+                if (attempt >= 2) throw e
+                delay(1000L)
+            }
+        }
+    }
+
+    private suspend fun executeChatRequest(
+        body: String,
+        onChunk: (String) -> Unit,
+    ): String = suspendCancellableCoroutine { cont ->
         val request = Request.Builder()
             .url(baseUrl.trimEnd('/') + "/chat/completions")
             .post(body.toRequestBody(JSON))
@@ -120,6 +141,9 @@ class OpenAIChatProvider(
 
                     if (!response.isSuccessful) {
                         val error = extractErrorMessage(responseBody)
+                        if (response.code in 500..599) {
+                            throw ServerErrorException(error ?: "HTTP ${response.code} ${response.message}")
+                        }
                         throw IOException(error ?: "HTTP ${response.code} ${response.message}")
                     }
 
@@ -137,7 +161,7 @@ class OpenAIChatProvider(
         })
     }
 
-    override suspend fun testConnection(): String = suspendCancellableCoroutine { cont ->
+    override suspend fun testConnection(): String {
         // 用最小 chat 请求测试连通性（所有 OpenAI 兼容服务都支持该端点）
         val messages = JSONArray().apply {
             put(JSONObject().apply {
@@ -151,6 +175,19 @@ class OpenAIChatProvider(
             put("max_tokens", 5)
         }.toString()
 
+        var attempt = 0
+        while (true) {
+            attempt++
+            try {
+                return executeTestRequest(body)
+            } catch (e: ServerErrorException) {
+                if (attempt >= 2) throw e
+                delay(1000L)
+            }
+        }
+    }
+
+    private suspend fun executeTestRequest(body: String): String = suspendCancellableCoroutine { cont ->
         val request = Request.Builder()
             .url(baseUrl.trimEnd('/') + "/chat/completions")
             .post(body.toRequestBody(JSON))
@@ -188,10 +225,13 @@ class OpenAIChatProvider(
                         }
                     } else {
                         val error = extractErrorMessage(responseBody)
+                        val message = error ?: "HTTP ${response.code} ${response.message}"
                         if (cont.isActive) {
-                            cont.resumeWithException(
-                                IOException(error ?: "HTTP ${response.code} ${response.message}")
-                            )
+                            if (response.code in 500..599) {
+                                cont.resumeWithException(ServerErrorException(message))
+                            } else {
+                                cont.resumeWithException(IOException(message))
+                            }
                         }
                     }
                 } catch (e: Exception) {
@@ -236,11 +276,16 @@ class OpenAIChatProvider(
         }.toString()
     }
 
-    /** 尝试从错误响应中提取 error.message（如 401/404/429 时的服务端提示）。 */
-    private fun extractErrorMessage(body: String): String? = try {
-        JSONObject(body).optJSONObject("error")?.optString("message")?.takeIf { it.isNotBlank() }
-    } catch (e: Exception) {
-        null
+    /** 尝试从错误响应中提取 error.message；提取不到时返回响应体摘要，便于定位问题。 */
+    private fun extractErrorMessage(body: String): String? {
+        val fromJson = try {
+            JSONObject(body).optJSONObject("error")?.optString("message")?.takeIf { it.isNotBlank() }
+        } catch (e: Exception) {
+            null
+        }
+        if (fromJson != null) return fromJson
+        // 非标准错误格式：返回 body 前 200 字符摘要
+        return body.trim().takeIf { it.isNotEmpty() }?.let { it.take(200) }
     }
 
     private fun parseResponse(responseBody: String): String {
