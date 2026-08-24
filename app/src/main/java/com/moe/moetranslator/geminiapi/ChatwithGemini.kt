@@ -112,6 +112,8 @@ class ChatwithGemini : Fragment() {
         binding.messageList.apply {
             this.adapter = this@ChatwithGemini.adapter
             layoutManager = LinearLayoutManager(requireContext())
+            // 关闭条目变化动画：流式输出每秒多次更新，动画会导致列表闪烁/抽动
+            itemAnimator = null
         }
     }
 
@@ -169,8 +171,8 @@ class ChatwithGemini : Fragment() {
     }
 
     /**
-     * 把列表滚动到最后一条消息的底部：先定位到最后一条，若其高度超过列表可见区
-     * （思考条展开或长正文持续增长），再向下偏移到该消息底部，保证最新内容始终可见。
+     * 平滑跟随最后一条消息的底部：只做单步偏移补偿，不做「先定位顶部再滚到底部」
+     * 的两步跳变（那会导致流式输出时列表抽动）。最后一条不在屏幕上时才先定位。
      */
     private fun scrollToLatest() {
         val list = binding.messageList
@@ -178,11 +180,20 @@ class ChatwithGemini : Fragment() {
         if (lastIndex < 0) return
         list.post {
             val lm = list.layoutManager as? LinearLayoutManager ?: return@post
-            lm.scrollToPositionWithOffset(lastIndex, 0)
-            list.post {
-                val lastView = lm.findViewByPosition(lastIndex) ?: return@post
-                if (lastView.height > list.height) {
-                    list.scrollBy(0, lastView.height - list.height)
+            val lastView = lm.findViewByPosition(lastIndex)
+            if (lastView == null) {
+                // 最后一条不在屏幕上（初次进入/切换会话）：定位到其顶部后下一帧补到底部
+                lm.scrollToPositionWithOffset(lastIndex, 0)
+                list.post {
+                    val v = lm.findViewByPosition(lastIndex) ?: return@post
+                    val overflow = v.top + v.height - list.height
+                    if (overflow > 0) list.scrollBy(0, overflow)
+                }
+            } else {
+                // 单步平滑：仅当内容超出底部时补偿差值
+                val overflow = lastView.top + lastView.height - list.height
+                if (overflow > 0) {
+                    list.scrollBy(0, overflow)
                 }
             }
         }

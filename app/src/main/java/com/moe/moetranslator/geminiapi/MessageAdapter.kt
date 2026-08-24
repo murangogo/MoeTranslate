@@ -35,10 +35,17 @@ import java.util.Locale
 
 class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder>(MessageDiffCallback()) {
 
+    init {
+        // 稳定 id：DiffUtil 只按 id 比对，流式高频更新时更高效
+        setHasStableIds(true)
+    }
+
     // 已展开思考内容的会话消息 id
     private val expandedReasoningIds = mutableSetOf<Long>()
     // 用户点击切换展开状态的消息 id：这些消息在下一次绑定时强制滚动到底部（保证展开位置连贯）
     private val forceScrollIds = mutableSetOf<Long>()
+
+    override fun getItemId(position: Int): Long = getItem(position).id
 
     sealed class MessageViewType {
         object AI : MessageViewType()
