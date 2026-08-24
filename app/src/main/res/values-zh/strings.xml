@@ -243,8 +243,8 @@
     <string name="gemini_key">您的Gemini API 密钥</string>
     <string name="gemini_title">配置Gemini API</string>
     <string name="set_floating_ball_press">设置长按判定时间</string>
-    <string name="delete_history_content">确定要删除全部聊天记录吗？这也会清除Gemini的记忆。</string>
-    <string name="delete_history_title">删除聊天记录</string>
+    <string name="delete_history_content">确定删除当前对话及其全部消息吗？此操作不可撤销。</string>
+    <string name="delete_history_title">删除对话</string>
     <string name="confirm">确定</string>
     <string name="delete_finish">聊天记录已清除</string>
     <string name="gemini_api_empty">还未设置Gemini的API</string>

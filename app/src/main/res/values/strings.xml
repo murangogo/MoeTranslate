@@ -243,8 +243,8 @@
     <string name="gemini_key">Your Gemini API Key</string>
     <string name="gemini_title">Configure Gemini API</string>
     <string name="set_floating_ball_press">Set long press judgment time</string>
-    <string name="delete_history_content">Are you sure you want to delete all your chats? This will also erase Gemini\'s memory.</string>
-    <string name="delete_history_title">Delete chat history</string>
+    <string name="delete_history_content">Delete the current chat and all its messages? This cannot be undone.</string>
+    <string name="delete_history_title">Delete chat</string>
     <string name="confirm">Yes</string>
     <string name="delete_finish">The chat history has been cleared</string>
     <string name="gemini_api_empty">Gemini API has not been set up yet</string>
