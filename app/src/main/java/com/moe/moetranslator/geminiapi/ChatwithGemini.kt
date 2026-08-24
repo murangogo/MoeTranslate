@@ -213,6 +213,8 @@ class ChatwithGemini : Fragment() {
 
     /** 根据当前设置构建聊天提供商；未配置 Key 时提示并返回 null。 */
     private suspend fun buildChatProvider(): ChatProvider? {
+        // Fragment 分离（切页）后 context 为 null：直接放弃，避免 requireContext 崩溃
+        val ctx = context ?: return null
         return when (currentProviderType()) {
             PROVIDER_OPENAI -> {
                 val chatSystemPrompt = prefs.getString("Chat_OpenAI_System_Prompt", "")
@@ -220,7 +222,7 @@ class ChatwithGemini : Fragment() {
 
                 // 引用翻译侧聚合 AI 的激活预设：Base URL / Key / 模型 / 自定义参数都取自预设
                 if (prefs.getBoolean("Chat_OpenAI_Use_UniAI_Preset", false)) {
-                    val preset = OpenAIPresetRepository.getInstance(requireContext()).getActive()
+                    val preset = OpenAIPresetRepository.getInstance(ctx.applicationContext).getActive()
                     if (preset != null && preset.apiKey.isNotBlank()) {
                         OpenAIChatProvider(
                             apiKey = preset.apiKey,
@@ -233,10 +235,10 @@ class ChatwithGemini : Fragment() {
                         )
                     } else {
                         // 翻译侧没有激活预设：回退到聊天自己的手动配置
-                        showToast(getString(R.string.chat_uniai_fallback))
-                        val key = KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI)
+                        showToast(ctx.getString(R.string.chat_uniai_fallback))
+                        val key = KeystoreManager.retrieveKey(ctx.applicationContext, KEY_ALIAS_CHAT_OPENAI)
                         if (key.isNullOrEmpty()) {
-                            showToast(getString(R.string.chat_api_not_set))
+                            showToast(ctx.getString(R.string.chat_api_not_set))
                             return null
                         }
                         OpenAIChatProvider(
@@ -252,9 +254,9 @@ class ChatwithGemini : Fragment() {
                         )
                     }
                 } else {
-                    val key = KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI)
+                    val key = KeystoreManager.retrieveKey(ctx.applicationContext, KEY_ALIAS_CHAT_OPENAI)
                     if (key.isNullOrEmpty()) {
-                        showToast(getString(R.string.chat_api_not_set))
+                        showToast(ctx.getString(R.string.chat_api_not_set))
                         return null
                     }
                     OpenAIChatProvider(
@@ -271,9 +273,9 @@ class ChatwithGemini : Fragment() {
                 }
             }
             else -> {
-                val key = KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI)
+                val key = KeystoreManager.retrieveKey(ctx.applicationContext, KEY_ALIAS_GEMINI)
                 if (key.isNullOrEmpty()) {
-                    showToast(getString(R.string.chat_api_not_set))
+                    showToast(ctx.getString(R.string.chat_api_not_set))
                     return null
                 }
                 GeminiChatProvider(
@@ -303,11 +305,12 @@ class ChatwithGemini : Fragment() {
 
         // 用当前编辑框内容构建测试用提供商（不落盘保存）
         suspend fun buildTestProvider(): ChatProvider? {
+            val ctx = context ?: return null
             val isOpenAI = providerGroup.checkedRadioButtonId == R.id.chat_provider_openai
             val keyText = apiKeyEdit.text.toString().trim()
             return if (isOpenAI) {
                 if (useUniAICheck.isChecked) {
-                    val preset = OpenAIPresetRepository.getInstance(requireContext()).getActive()
+                    val preset = context?.let { OpenAIPresetRepository.getInstance(it.applicationContext).getActive() }
                     if (preset != null && preset.apiKey.isNotBlank()) {
                         OpenAIChatProvider(
                             apiKey = preset.apiKey,
@@ -320,7 +323,7 @@ class ChatwithGemini : Fragment() {
                     } else null
                 } else {
                     val key = keyText.ifEmpty {
-                        KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI)
+                        KeystoreManager.retrieveKey(ctx.applicationContext, KEY_ALIAS_CHAT_OPENAI)
                     }
                     if (key.isNullOrEmpty()) return null
                     OpenAIChatProvider(
@@ -334,7 +337,7 @@ class ChatwithGemini : Fragment() {
                 }
             } else {
                 val key = keyText.ifEmpty {
-                    KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI)
+                    KeystoreManager.retrieveKey(ctx.applicationContext, KEY_ALIAS_GEMINI)
                 }
                 if (key.isNullOrEmpty()) return null
                 GeminiChatProvider(
@@ -378,7 +381,7 @@ class ChatwithGemini : Fragment() {
         fun refreshUniAIStatus() {
             uniAIStatus.text = getString(R.string.chat_uniai_status_loading)
             viewLifecycleOwner.lifecycleScope.launch {
-                val preset = OpenAIPresetRepository.getInstance(requireContext()).getActive()
+                val preset = context?.let { OpenAIPresetRepository.getInstance(it.applicationContext).getActive() }
                 uniAIStatus.text = if (preset == null) {
                     getString(R.string.chat_uniai_status_none)
                 } else {
@@ -410,7 +413,7 @@ class ChatwithGemini : Fragment() {
                 systemPromptEdit.setText(prefs.getString("Chat_OpenAI_System_Prompt", ""))
                 extraParamsEdit.setText(prefs.getString("Chat_OpenAI_Extra_Params", ""))
                 maxTokensEdit.setText(prefs.getString("Chat_OpenAI_Max_Tokens", DEFAULT_OPENAI_MAX_TOKENS))
-                apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI) != null) {
+                apiKeyEdit.hint = if (KeystoreManager.retrieveKey(ctx.applicationContext, KEY_ALIAS_CHAT_OPENAI) != null) {
                     getString(R.string.api_saved)
                 } else {
                     getString(R.string.chat_api_key)
@@ -419,7 +422,7 @@ class ChatwithGemini : Fragment() {
             } else {
                 modelEdit.setText(prefs.getString("Chat_Gemini_Model", DEFAULT_GEMINI_MODEL))
                 systemPromptEdit.setText(prefs.getString("Chat_Gemini_System_Prompt", ""))
-                apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI) != null) {
+                apiKeyEdit.hint = if (KeystoreManager.retrieveKey(ctx.applicationContext, KEY_ALIAS_GEMINI) != null) {
                     getString(R.string.api_saved)
                 } else {
                     getString(R.string.chat_api_key)
@@ -654,8 +657,18 @@ class ChatwithGemini : Fragment() {
     private fun sendMessage(userContent: String) {
         val job = viewLifecycleOwner.lifecycleScope.launch {
 
+            // 提前捕获应用级字符串资源：协程运行中 Fragment 可能被分离（切页），
+            // 之后任何 requireContext()/getString 都会抛 IllegalStateException
+            val appCtx = requireContext().applicationContext
+            val strStop = appCtx.getString(R.string.chat_stop)
+            val strApiNotSet = appCtx.getString(R.string.chat_api_not_set)
+            val strThinking = appCtx.getString(R.string.gemini_thinking)
+            val strStoppedSuffix = appCtx.getString(R.string.chat_stopped_suffix)
+            val strStopped = appCtx.getString(R.string.chat_stopped)
+            val strSend = appCtx.getString(R.string.send)
+
             // 发送中：按钮变成“停止”
-            binding.buttonSend.text = getString(R.string.chat_stop)
+            binding.buttonSend.text = strStop
 
             val sessionId = messageViewModel.activeSessionId.value
 
@@ -677,7 +690,7 @@ class ChatwithGemini : Fragment() {
                 val provider = buildChatProvider()
                 if (provider == null) {
                     val emptyAPIMessage = ChatMessage(
-                        content = getString(R.string.chat_api_not_set),
+                        content = strApiNotSet,
                         timestamp = System.currentTimeMillis(),
                         sender = 1, // AI
                         sessionId = sessionId,
@@ -688,7 +701,7 @@ class ChatwithGemini : Fragment() {
 
                 // 创建AI回复消息
                 val aiMessage = ChatMessage(
-                    content = getString(R.string.gemini_thinking),
+                    content = strThinking,
                     timestamp = System.currentTimeMillis(),
                     sender = 1, // AI
                     sessionId = sessionId,
@@ -733,21 +746,22 @@ class ChatwithGemini : Fragment() {
                 if (aiMessageId != 0L) {
                     if (streamStarted) {
                         // 已有部分内容：追加停止标记
-                        messageViewModel.appendContentById(aiMessageId, getString(R.string.chat_stopped_suffix))
+                        messageViewModel.appendContentById(aiMessageId, strStoppedSuffix)
                     } else {
-                        messageViewModel.updateMessageContent(aiMessageId, getString(R.string.chat_stopped))
+                        messageViewModel.updateMessageContent(aiMessageId, strStopped)
                     }
                 }
                 throw e
             } catch (e: Exception) {
+                val errorText = appCtx.getString(R.string.error_occurred, e.toString())
                 if (aiMessageId != 0L) {
                     // 占位消息已插入：清空后写入错误信息
                     messageViewModel.clearMessageById(aiMessageId)
-                    messageViewModel.appendContentById(aiMessageId, getString(R.string.error_occurred, e.toString()))
+                    messageViewModel.appendContentById(aiMessageId, errorText)
                 } else {
                     // 占位消息还没插入：直接插入错误消息
                     val errorMessage = ChatMessage(
-                        content = getString(R.string.error_occurred, e.toString()),
+                        content = errorText,
                         timestamp = System.currentTimeMillis(),
                         sender = 1, // AI
                         sessionId = sessionId,
@@ -759,17 +773,19 @@ class ChatwithGemini : Fragment() {
                 if (currentChatJob == coroutineContext[Job]) {
                     currentChatJob = null
                 }
-                binding.buttonSend.text = getString(R.string.send)
+                binding.buttonSend.text = strSend
             }
         }
         currentChatJob = job
     }
 
     private fun showToast(str: String, isShort: Boolean = false) {
+        // Fragment 分离后 context 为 null：静默跳过，避免切页瞬间崩溃
+        val ctx = context?.applicationContext ?: return
         if (isShort) {
-            Toast.makeText(requireContext(), str, Toast.LENGTH_SHORT).show()
+            Toast.makeText(ctx, str, Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(requireContext(), str, Toast.LENGTH_LONG).show()
+            Toast.makeText(ctx, str, Toast.LENGTH_LONG).show()
         }
     }
 }
