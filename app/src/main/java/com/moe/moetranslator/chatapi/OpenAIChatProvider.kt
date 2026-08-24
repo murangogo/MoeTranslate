@@ -162,17 +162,18 @@ class OpenAIChatProvider(
     }
 
     override suspend fun testConnection(): String {
-        // 用最小 chat 请求测试连通性（所有 OpenAI 兼容服务都支持该端点）
+        // 用最小 chat 请求测试连通性（所有 OpenAI 兼容服务都支持该端点）。
+        // max_tokens 给足 512：部分推理模型会把小输出预算全花在思考上导致正文为空。
         val messages = JSONArray().apply {
             put(JSONObject().apply {
                 put("role", ChatTurn.ROLE_USER)
-                put("content", "ping")
+                put("content", "hi")
             })
         }
         val body = JSONObject().apply {
             put("model", model)
             put("messages", messages)
-            put("max_tokens", 5)
+            put("max_tokens", 512)
         }.toString()
 
         var attempt = 0
@@ -181,8 +182,9 @@ class OpenAIChatProvider(
             try {
                 return executeTestRequest(body)
             } catch (e: ServerErrorException) {
-                if (attempt >= 2) throw e
-                delay(1000L)
+                // 自建服务偶发「无可用 worker」类 5xx，多试几次
+                if (attempt >= 3) throw e
+                delay(1500L)
             }
         }
     }
@@ -209,17 +211,18 @@ class OpenAIChatProvider(
                 try {
                     val responseBody = response.body?.string().orEmpty()
                     if (response.isSuccessful) {
-                        val content = runCatching {
+                        val parsed = runCatching {
                             val o = JSONObject(responseBody)
                             val msg = o.getJSONArray("choices").getJSONObject(0).getJSONObject("message")
-                            msg.optString("content", "")
-                        }.getOrDefault("")
+                            msg.optString("content", "") to msg.optString("reasoning_content", "")
+                        }.getOrDefault("" to "")
+                        val (content, reasoning) = parsed
                         if (cont.isActive) {
                             cont.resume(
-                                if (content.isNotBlank()) {
-                                    "连接成功，模型回复：${content.take(30)}"
-                                } else {
-                                    "连接成功"
+                                when {
+                                    content.isNotBlank() -> "连接成功，模型回复：${content.take(30)}"
+                                    reasoning.isNotBlank() -> "连接成功（模型已在思考，正文尚未生成）"
+                                    else -> "连接成功"
                                 }
                             )
                         }
@@ -276,17 +279,19 @@ class OpenAIChatProvider(
         }.toString()
     }
 
-    /** 尝试从错误响应中提取可读信息：兼容 {"error":{"message"}}、{"message"}、{"error_code","message"} 等格式。 */
+    /** 尝试从错误响应中提取可读信息：兼容 {"error":{"message"}}、{"detail":{"message"}}、{"message"} 等格式。 */
     private fun extractErrorMessage(body: String): String? {
         val trimmed = body.trim()
         if (trimmed.isEmpty()) return null
         val fromJson = try {
             val o = JSONObject(trimmed)
-            val nested = o.optJSONObject("error")?.optString("message")
+            val nestedError = o.optJSONObject("error")?.optString("message")
+            val nestedDetail = o.optJSONObject("detail")?.optString("message")
             val topMessage = o.optString("message")
             val topCode = o.optString("error_code")
             when {
-                !nested.isNullOrBlank() -> nested
+                !nestedError.isNullOrBlank() -> nestedError
+                !nestedDetail.isNullOrBlank() -> nestedDetail
                 !topMessage.isNullOrBlank() -> {
                     // 国产/自建平台常用：顶层 message + 可选 error_code
                     if (topCode.isNotBlank() && topCode != "null") "$topCode: $topMessage" else topMessage
