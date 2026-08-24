@@ -37,6 +37,8 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
 
     // 已展开思考内容的会话消息 id
     private val expandedReasoningIds = mutableSetOf<Long>()
+    // 用户点击切换展开状态的消息 id：这些消息在下一次绑定时强制滚动到底部（保证展开位置连贯）
+    private val forceScrollIds = mutableSetOf<Long>()
 
     sealed class MessageViewType {
         object AI : MessageViewType()
@@ -61,11 +63,13 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
         holder.bind(
             message = message,
             reasoningExpanded = expandedReasoningIds.contains(message.id),
+            forceScrollToEnd = forceScrollIds.remove(message.id),
             onReasoningClick = { id ->
                 // 切换展开/收起
                 if (!expandedReasoningIds.add(id)) {
                     expandedReasoningIds.remove(id)
                 }
+                forceScrollIds.add(id)
                 notifyItemChanged(holder.adapterPosition)
             },
         )
@@ -84,21 +88,38 @@ class MessageAdapter : ListAdapter<ChatMessage, MessageAdapter.MessageViewHolder
         fun bind(
             message: ChatMessage,
             reasoningExpanded: Boolean,
+            forceScrollToEnd: Boolean,
             onReasoningClick: (Long) -> Unit,
         ) {
             messageText.text = message.content
             messageTime.text = formatTime(message.timestamp)
 
-            // 思考内容：默认折叠一行；展开后容器内滚动并自动滚到底部看最新
+            // 思考内容显示逻辑（参考 DeepSeek / Chatbox 交互）：
+            // - 折叠态：容器只有一行高，始终滚到底部 → 显示“最新一行”，随流式输出滚动
+            // - 展开态：容器为完整高度（280dp），内容可滚动；流式更新时仅当用户在
+            //   底部才跟随滚动（用户上翻查看时不打扰）
             if (message.sender == 1 && message.reasoning.isNotBlank()) {
                 reasoningScroll.visibility = View.VISIBLE
                 reasoningText.text = "💭 " + message.reasoning
-                if (reasoningExpanded) {
-                    reasoningText.maxLines = Int.MAX_VALUE
-                    // 展开：自动滚动到最新内容底部
-                    reasoningScroll.post { reasoningScroll.fullScroll(View.FOCUS_DOWN) }
-                } else {
-                    reasoningText.maxLines = 1
+                reasoningText.maxLines = Int.MAX_VALUE
+
+                // 折叠 = 一行高；展开 = 280dp
+                val density = itemView.resources.displayMetrics.density
+                val targetHeight = (if (reasoningExpanded) 280 * density else 34 * density).toInt()
+                val lp = reasoningScroll.layoutParams
+                if (lp.height != targetHeight) {
+                    lp.height = targetHeight
+                    reasoningScroll.layoutParams = lp
+                }
+
+                reasoningScroll.post {
+                    val child = reasoningScroll.getChildAt(0) ?: return@post
+                    // 用户是否停留在底部（允许 24px 误差）
+                    val atBottom =
+                        reasoningScroll.scrollY + reasoningScroll.height >= child.height - 24
+                    if (!reasoningExpanded || forceScrollToEnd || atBottom) {
+                        reasoningScroll.fullScroll(View.FOCUS_DOWN)
+                    }
                 }
                 reasoningScroll.setOnClickListener { onReasoningClick(message.id) }
             } else {
