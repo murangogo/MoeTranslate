@@ -509,4 +509,12 @@
     <string name="llama_temperature_label">Temperature (0–2, lower = more stable)</string>
     <string name="llama_max_tokens_label">Max output tokens (16–4096)</string>
     <string name="unknow_model">Unknown</string>
+    <string name="chat_config_title">Configure AI Chat</string>
+    <string name="chat_provider_intro">Choose your AI provider. Gemini uses Google\'s official API. The OpenAI-compatible option works with any service that exposes an OpenAI-style API, such as OpenAI, DeepSeek, Qwen, Moonshot, or a self-hosted Ollama / llama.cpp server.</string>
+    <string name="chat_provider_gemini">Gemini</string>
+    <string name="chat_provider_openai">OpenAI compatible</string>
+    <string name="chat_base_url">Base URL</string>
+    <string name="chat_model">Model</string>
+    <string name="chat_api_key">API Key</string>
+    <string name="chat_api_not_set">The AI provider has not been configured yet. Click the gear button in the upper left corner to set it up.</string>
 </resources>

@@ -72,16 +72,16 @@ object BroadcastAction {
 
 // 悬浮球配置
 data class FloatingBallConfig(
-    val floatingBallInitialX: Int = 80,
-    val floatingBallInitialY: Int = 200,
+    var floatingBallInitialX: Int = 80,
+    var floatingBallInitialY: Int = 200,
     val CLICK_SLOP:Float = 5f,           // 点击判定的最大移动距离
     val LONG_PRESS_SLOP:Float = 10f,     // 长按判定的最大移动距离
     var LONG_PRESS_DELAY:Long = 500L   // 长按触发时间（毫秒）
 )
 
 data class FloatingTextViewConfig(
-    val floatingTextViewInitialX: Int = 0,
-    val floatingTextViewInitialY: Int = 0
+    var floatingTextViewInitialX: Int = 0,
+    var floatingTextViewInitialY: Int = 0
 )
 
 data class CropViewConfig(
@@ -249,6 +249,17 @@ class FloatingBallService : LifecycleService() {
 
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
+        // 恢复上一次的悬浮球 / 译文窗口位置（按当前屏幕方向读取）
+        val currentOrientation = this.resources.configuration.orientation
+        PositionMemory.loadBallPosition(prefs, currentOrientation)?.let {
+            floatingBallConfig.floatingBallInitialX = it.x
+            floatingBallConfig.floatingBallInitialY = it.y
+        }
+        PositionMemory.loadTextPosition(prefs, currentOrientation)?.let {
+            floatingTextViewConfig.floatingTextViewInitialX = it.x
+            floatingTextViewConfig.floatingTextViewInitialY = it.y
+        }
+
         // 创建悬浮窗参数
         floatingBallParams = WindowManager.LayoutParams().apply {
             type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
@@ -367,6 +378,17 @@ class FloatingBallService : LifecycleService() {
                     // 移除长按检测
                     handler.removeCallbacks(longPressRunnable)
 
+                    // 拖动结束后记忆悬浮球位置
+                    if (currentGesture == GestureType.Drag) {
+                        floatingBallParams?.let {
+                            PositionMemory.saveBallPosition(
+                                prefs,
+                                resources.configuration.orientation,
+                                it.x, it.y
+                            )
+                        }
+                    }
+
                     // 处理点击事件
                     if (currentGesture == null) {
                         val totalMoveX = abs(event.rawX - floatingBallInitialTouchX)
@@ -397,6 +419,14 @@ class FloatingBallService : LifecycleService() {
                     }
                 }
                 MotionEvent.ACTION_UP -> {
+                    // 拖动结束后记忆译文窗口位置
+                    floatingTextViewParams?.let {
+                        PositionMemory.saveTextPosition(
+                            prefs,
+                            resources.configuration.orientation,
+                            it.x, it.y
+                        )
+                    }
                     view.isClickable
                 }
                 MotionEvent.ACTION_MOVE -> {
@@ -565,7 +595,14 @@ class FloatingBallService : LifecycleService() {
         if ((orientation == this.resources.configuration.orientation) && (mRectF != null)){
             cropView.setRect(mRectF!!)
         }else{
-            cropView.setRect(RectF(5f, 5f, 350f, 350f))
+            // 服务重启后内存为空：尝试恢复上一次记忆的裁剪框（同屏幕方向）
+            val savedRect = PositionMemory.loadCropRect(prefs, resources.configuration.orientation)
+            if (savedRect != null){
+                mRectF = savedRect
+                cropView.setRect(savedRect)
+            }else{
+                cropView.setRect(RectF(5f, 5f, 350f, 350f))
+            }
         }
 
         windowManager.addView(cropView, cropViewParams)
@@ -621,6 +658,8 @@ class FloatingBallService : LifecycleService() {
             }
             is BallStatus.Crop -> {
                 mRectF = cropView.mRect
+                // 记忆裁剪框区域，下次框选时恢复
+                PositionMemory.saveCropRect(prefs, resources.configuration.orientation, mRectF!!)
                 windowManager.removeView(cropView)
                 if (!(prefs.getBoolean("Custom_Adjust_Not_Text", false))){
                     showToast(getString(R.string.finish_crop), true)

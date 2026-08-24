@@ -50,9 +50,10 @@
                 app:layout_constraintVertical_bias="0.5" />
 
             <TextView
+                android:id="@+id/provider_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gemini"
+                android:text="@string/chat_provider_gemini"
                 android:textColor="#8EA4CA"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"

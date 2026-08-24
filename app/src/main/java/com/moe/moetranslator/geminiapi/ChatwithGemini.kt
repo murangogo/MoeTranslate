@@ -21,11 +21,11 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -34,29 +34,38 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.ai.client.generativeai.Chat
-import com.google.ai.client.generativeai.GenerativeModel
-import com.google.ai.client.generativeai.type.Content
-import com.google.ai.client.generativeai.type.content
 import com.moe.moetranslator.R
+import com.moe.moetranslator.chatapi.ChatProvider
+import com.moe.moetranslator.chatapi.ChatTurn
+import com.moe.moetranslator.chatapi.GeminiChatProvider
+import com.moe.moetranslator.chatapi.OpenAIChatProvider
 import com.moe.moetranslator.databinding.FragmentChatwithgeminiBinding
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.KeystoreManager
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class ChatwithGemini : Fragment() {
+
+    companion object {
+        // 聊天提供商类型
+        const val PROVIDER_GEMINI = 0
+        const val PROVIDER_OPENAI = 1
+
+        // 默认配置
+        const val DEFAULT_GEMINI_MODEL = "gemini-3.5-flash"
+        const val DEFAULT_OPENAI_BASE_URL = "https://api.openai.com/v1"
+        const val DEFAULT_OPENAI_MODEL = "gpt-4o-mini"
+
+        // Keystore 别名：Gemini 沿用既有别名，OpenAI 聊天独立存储
+        const val KEY_ALIAS_GEMINI = "Gemini"
+        const val KEY_ALIAS_CHAT_OPENAI = "Chat_OpenAI"
+    }
 
     private lateinit var binding: FragmentChatwithgeminiBinding
     private lateinit var prefs: CustomPreference
     private lateinit var messageViewModel: MessageViewModel
     private lateinit var adapter: MessageAdapter
-
-    private var geminiApiKey = ""
-    private var geminiModel: GenerativeModel? = null
-    private var geminiChat: Chat? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +79,7 @@ class ChatwithGemini : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentChatwithgeminiBinding.inflate(inflater,container,false)
+        binding = FragmentChatwithgeminiBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -80,6 +89,7 @@ class ChatwithGemini : Fragment() {
         setupRecyclerView()
         setupClickListeners()
         observeMessages()
+        refreshProviderName()
     }
 
     private fun setupRecyclerView() {
@@ -90,9 +100,9 @@ class ChatwithGemini : Fragment() {
         }
     }
 
-    private fun setupClickListeners(){
+    private fun setupClickListeners() {
         binding.settingGemini.setOnClickListener {
-            showGeminiAPIDialog()
+            showChatConfigDialog()
         }
 
         binding.cleanGemini.setOnClickListener {
@@ -122,39 +132,145 @@ class ChatwithGemini : Fragment() {
         }
     }
 
-    private fun showGeminiAPIDialog(){
+    /** 顶部标题跟随当前提供商切换。 */
+    private fun refreshProviderName() {
+        binding.providerName.text =
+            if (prefs.getInt("Chat_Provider", PROVIDER_GEMINI) == PROVIDER_OPENAI) {
+                getString(R.string.chat_provider_openai)
+            } else {
+                getString(R.string.chat_provider_gemini)
+            }
+    }
+
+    private fun currentProviderType(): Int = prefs.getInt("Chat_Provider", PROVIDER_GEMINI)
+
+    /** 根据当前设置构建聊天提供商；未配置 Key 时提示并返回 null。 */
+    private fun buildChatProvider(): ChatProvider? {
+        return when (currentProviderType()) {
+            PROVIDER_OPENAI -> {
+                val key = KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI)
+                if (key.isNullOrEmpty()) {
+                    showToast(getString(R.string.chat_api_not_set))
+                    return null
+                }
+                OpenAIChatProvider(
+                    apiKey = key,
+                    baseUrl = prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL),
+                    model = prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL),
+                )
+            }
+            else -> {
+                val key = KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI)
+                if (key.isNullOrEmpty()) {
+                    showToast(getString(R.string.chat_api_not_set))
+                    return null
+                }
+                GeminiChatProvider(
+                    modelName = prefs.getString("Chat_Gemini_Model", DEFAULT_GEMINI_MODEL),
+                    apiKey = key,
+                )
+            }
+        }
+    }
+
+    private fun showChatConfigDialog() {
         val customView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.dialog_message_edittext, null)
-        val textView = customView.findViewById<TextView>(R.id.dialog_top_message)
-        val apiEdit = customView.findViewById<EditText>(R.id.dialog_bottom_edittext)
+            .inflate(R.layout.dialog_chat_provider, null)
+        val introView = customView.findViewById<TextView>(R.id.chat_provider_intro)
+        val providerGroup = customView.findViewById<RadioGroup>(R.id.chat_provider_group)
+        val baseUrlEdit = customView.findViewById<EditText>(R.id.chat_base_url)
+        val modelEdit = customView.findViewById<EditText>(R.id.chat_model)
+        val apiKeyEdit = customView.findViewById<EditText>(R.id.chat_api_key)
 
-        // 使用getText保证HTML标签有效
-        textView.text = getText(R.string.gemini_intro)
+        introView.text = getText(R.string.chat_provider_intro)
 
-        apiEdit.hint = if(prefs.getString("Gemini_EncryptedKey", "") != ""){
-            getString(R.string.api_saved)
-        }else{
-            getString(R.string.gemini_key)
+        val isOpenAICurrent = currentProviderType() == PROVIDER_OPENAI
+        if (isOpenAICurrent) {
+            providerGroup.check(R.id.chat_provider_openai)
+            baseUrlEdit.visibility = View.VISIBLE
+            baseUrlEdit.setText(prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL))
+            modelEdit.setText(prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL))
+            apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI) != null) {
+                getString(R.string.api_saved)
+            } else {
+                getString(R.string.chat_api_key)
+            }
+        } else {
+            providerGroup.check(R.id.chat_provider_gemini)
+            baseUrlEdit.visibility = View.GONE
+            modelEdit.setText(prefs.getString("Chat_Gemini_Model", DEFAULT_GEMINI_MODEL))
+            apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI) != null) {
+                getString(R.string.api_saved)
+            } else {
+                getString(R.string.chat_api_key)
+            }
+        }
+
+        // 切换提供商：先把当前编辑框内容按旧提供商存回，再加载新提供商的配置
+        providerGroup.setOnCheckedChangeListener { _, checkedId ->
+            val nowOpenAI = checkedId == R.id.chat_provider_openai
+            if (nowOpenAI) {
+                // 旧的是 Gemini：保存 Gemini 模型名
+                prefs.setString("Chat_Gemini_Model", modelEdit.text.toString().trim())
+                baseUrlEdit.visibility = View.VISIBLE
+                baseUrlEdit.setText(prefs.getString("Chat_OpenAI_Base_Url", DEFAULT_OPENAI_BASE_URL))
+                modelEdit.setText(prefs.getString("Chat_OpenAI_Model", DEFAULT_OPENAI_MODEL))
+                apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_CHAT_OPENAI) != null) {
+                    getString(R.string.api_saved)
+                } else {
+                    getString(R.string.chat_api_key)
+                }
+            } else {
+                // 旧的是 OpenAI：保存 Base URL 与模型名
+                prefs.setString("Chat_OpenAI_Base_Url", baseUrlEdit.text.toString().trim())
+                prefs.setString("Chat_OpenAI_Model", modelEdit.text.toString().trim())
+                baseUrlEdit.visibility = View.GONE
+                modelEdit.setText(prefs.getString("Chat_Gemini_Model", DEFAULT_GEMINI_MODEL))
+                apiKeyEdit.hint = if (KeystoreManager.retrieveKey(requireContext(), KEY_ALIAS_GEMINI) != null) {
+                    getString(R.string.api_saved)
+                } else {
+                    getString(R.string.chat_api_key)
+                }
+            }
         }
 
         val dialog = AlertDialog.Builder(requireContext())
-            .setTitle(R.string.gemini_title)
+            .setTitle(R.string.chat_config_title)
             .setView(customView)
             .setCancelable(false)
-            .setPositiveButton(R.string.save) {_,_->
-                if(apiEdit.text.isBlank()){
+            .setPositiveButton(R.string.save) { _, _ ->
+                val isOpenAI = providerGroup.checkedRadioButtonId == R.id.chat_provider_openai
+                val alias = if (isOpenAI) KEY_ALIAS_CHAT_OPENAI else KEY_ALIAS_GEMINI
+                val keyText = apiKeyEdit.text.toString().trim()
+
+                if (keyText.isEmpty() && KeystoreManager.retrieveKey(requireContext(), alias) == null) {
                     showToast(getString(R.string.fill_blank))
-                } else {
-                    KeystoreManager.storeKey(
-                        requireContext(),
-                        apiEdit.text.toString().trim(),
-                        "Gemini"
-                    )
-                    showToast(getString(R.string.save_successfully))
+                    return@setPositiveButton
                 }
+
+                // Key 非空时重新加密保存；Keystore 不允许重复生成同名密钥，先删后存保证幂等
+                if (keyText.isNotEmpty()) {
+                    KeystoreManager.removeKey(requireContext(), alias)
+                    KeystoreManager.storeKey(requireContext(), keyText, alias)
+                }
+
+                if (isOpenAI) {
+                    prefs.setString("Chat_OpenAI_Base_Url", baseUrlEdit.text.toString().trim())
+                    prefs.setString("Chat_OpenAI_Model", modelEdit.text.toString().trim())
+                } else {
+                    prefs.setString("Chat_Gemini_Model", modelEdit.text.toString().trim())
+                }
+                prefs.setInt("Chat_Provider", if (isOpenAI) PROVIDER_OPENAI else PROVIDER_GEMINI)
+
+                refreshProviderName()
+                showToast(getString(R.string.save_successfully))
             }
-            .setNeutralButton(R.string.view_tutorial){_,_->
-                val url = "https://www.moetranslate.top/docs/gemini/apiapplication/"
+            .setNeutralButton(R.string.view_tutorial) { _, _ ->
+                val url = if (providerGroup.checkedRadioButtonId == R.id.chat_provider_openai) {
+                    "https://www.moetranslate.top/docs/translationapi/uniaitrans/"
+                } else {
+                    "https://www.moetranslate.top/docs/gemini/apiapplication/"
+                }
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse(url)
                 startActivity(intent)
@@ -165,12 +281,12 @@ class ChatwithGemini : Fragment() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
-    private fun showDeleteConfirmationDialog(){
+    private fun showDeleteConfirmationDialog() {
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.delete_history_title)
             .setMessage(R.string.delete_history_content)
             .setCancelable(false)
-            .setPositiveButton(R.string.confirm){ _,_ ->
+            .setPositiveButton(R.string.confirm) { _, _ ->
                 messageViewModel.deleteAll()
                 showToast(getString(R.string.delete_finish))
             }
@@ -180,13 +296,11 @@ class ChatwithGemini : Fragment() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
-    private fun sendMessage(userContent: String){
+    private fun sendMessage(userContent: String) {
         viewLifecycleOwner.lifecycleScope.launch {
 
-            withContext(Dispatchers.Main){
-                binding.buttonSend.isClickable = false
-                binding.buttonSend.text = getString(R.string.please_wait)
-            }
+            binding.buttonSend.isClickable = false
+            binding.buttonSend.text = getString(R.string.please_wait)
 
             // 保存用户消息
             val userMessage = ChatMessage(
@@ -194,28 +308,21 @@ class ChatwithGemini : Fragment() {
                 timestamp = System.currentTimeMillis(),
                 sender = 2 // 用户
             )
-            messageViewModel.insert(userMessage)
+            val userMessageId = messageViewModel.insert(userMessage)
 
             var aiMessageId = 0L
 
-            // 调用Gemini API
             try {
-                // 没有Key或者Key已更新，则重新获取
-                if ((geminiApiKey.isEmpty()) || (geminiApiKey != KeystoreManager.retrieveKey(requireContext(), "Gemini")!!)) {
-                    geminiModel = null
-                    if (prefs.getString("Gemini_EncryptedKey", "") == "") {
-                        showToast(getString(R.string.gemini_api_empty))
-                        val emptyAPIMessage = ChatMessage(
-                            content = getString(R.string.gemini_set_api),
-                            timestamp = System.currentTimeMillis(),
-                            sender = 1 // AI
-                        )
-                        messageViewModel.insert(emptyAPIMessage)
-                        return@launch
-                    } else {
-                        geminiApiKey = KeystoreManager.retrieveKey(requireContext(), "Gemini")!!
-                        Log.d("GEMINI",geminiApiKey)
-                    }
+                // 构建当前选择的提供商
+                val provider = buildChatProvider()
+                if (provider == null) {
+                    val emptyAPIMessage = ChatMessage(
+                        content = getString(R.string.chat_api_not_set),
+                        timestamp = System.currentTimeMillis(),
+                        sender = 1 // AI
+                    )
+                    messageViewModel.insert(emptyAPIMessage)
+                    return@launch
                 }
 
                 // 创建AI回复消息
@@ -225,60 +332,43 @@ class ChatwithGemini : Fragment() {
                     sender = 1 // AI
                 )
                 aiMessageId = messageViewModel.insert(aiMessage)
-                Log.d("GEMINI","aimessageid:${aiMessageId}")
 
-                if (geminiModel == null){
-                    geminiModel = GeminiModelFactory.createGeminiModel("gemini-3.5-flash", geminiApiKey)
-                }
-
-                // 创建历史记录实现多轮聊天
-                val messages = messageViewModel.getAllMessagesList()
-                val chatHistory = mutableListOf<Content>()
-
-                // 将历史消息转换为Gemini API格式
-                messages.forEach { message ->
-                    val role = if (message.sender == 1) "model" else "user"
-                    chatHistory.add( content( role ){ text( message.content ) } )
-                }
-
-                geminiChat = geminiModel!!.startChat(history = chatHistory)
-
-                var isFirstChunk = true
-                geminiChat!!.sendMessageStream(userContent).collect { chunk ->
-                    withContext(Dispatchers.IO) {
-                        if (isFirstChunk) {
-                            // 第一个chunk到达时，清空"思考中"的提示
-                            messageViewModel.clearMessageById(aiMessageId)
-                            isFirstChunk = false
-                        }
-                        // 追加新的内容
-                        messageViewModel.appendContentById(aiMessageId, chunk.text!!)
+                // 历史消息：排除刚插入的用户消息与“思考中”占位（用户输入单独传递）
+                val allMessages = messageViewModel.getAllMessagesList()
+                val history = allMessages
+                    .filter { it.id != userMessageId && it.id != aiMessageId }
+                    .map { msg ->
+                        ChatTurn(
+                            role = if (msg.sender == 1) ChatTurn.ROLE_ASSISTANT else ChatTurn.ROLE_USER,
+                            content = msg.content
+                        )
                     }
-                }
 
-                // 处理消息，去除前后换行
-                messageViewModel.getMessageById(aiMessageId)?.let { message ->
-                    val trimmedContent = message.content.trim() // 去除前后的空白和换行
-                    if (trimmedContent != message.content) {
-                        // 只有当内容确实发生变化时才更新
-                        messageViewModel.updateMessageContent(aiMessageId, trimmedContent)
-                    }
-                }
-
+                // 调用AI API
+                val reply = provider.chat(history, userContent)
+                messageViewModel.updateMessageContent(aiMessageId, reply)
             } catch (e: Exception) {
-                // 创建错误消息提醒
-                messageViewModel.clearMessageById(aiMessageId)
-                messageViewModel.appendContentById(aiMessageId, getString(R.string.error_occurred, e.toString()))
-            } finally {
-                withContext(Dispatchers.Main) {
-                    binding.buttonSend.isClickable = true
-                    binding.buttonSend.text = getString(R.string.send)
+                if (aiMessageId != 0L) {
+                    // 占位消息已插入：清空后写入错误信息
+                    messageViewModel.clearMessageById(aiMessageId)
+                    messageViewModel.appendContentById(aiMessageId, getString(R.string.error_occurred, e.toString()))
+                } else {
+                    // 占位消息还没插入：直接插入错误消息
+                    val errorMessage = ChatMessage(
+                        content = getString(R.string.error_occurred, e.toString()),
+                        timestamp = System.currentTimeMillis(),
+                        sender = 1 // AI
+                    )
+                    messageViewModel.insert(errorMessage)
                 }
+            } finally {
+                binding.buttonSend.isClickable = true
+                binding.buttonSend.text = getString(R.string.send)
             }
         }
     }
 
-    private fun showToast(str: String, isShort: Boolean = false){
+    private fun showToast(str: String, isShort: Boolean = false) {
         if (isShort) {
             Toast.makeText(requireContext(), str, Toast.LENGTH_SHORT).show()
         } else {
