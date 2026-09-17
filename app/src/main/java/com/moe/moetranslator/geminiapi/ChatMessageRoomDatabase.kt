@@ -21,8 +21,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [ChatMessage::class], version = 1, exportSchema = false)
+@Database(entities = [ChatMessage::class], version = 3, exportSchema = false)
 abstract class ChatMessageRoomDatabase : RoomDatabase() {
 
     abstract fun chatMessageDao(): ChatMessageDao
@@ -31,13 +33,32 @@ abstract class ChatMessageRoomDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: ChatMessageRoomDatabase? = null
 
+        // v1 -> v2：消息表新增 sessionId 列（默认 0，旧消息归入默认会话）
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE chat_messages_table ADD COLUMN sessionId INTEGER NOT NULL DEFAULT 0"
+                )
+            }
+        }
+
+        // v2 -> v3：消息表新增 reasoning 列（推理模型的思考过程，默认空串）
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE chat_messages_table ADD COLUMN reasoning TEXT NOT NULL DEFAULT ''"
+                )
+            }
+        }
+
         fun getDatabase(context: Context): ChatMessageRoomDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ChatMessageRoomDatabase::class.java,
                     "chat_message_database"
-                ).build()
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .build()
                 INSTANCE = instance
                 instance
             }

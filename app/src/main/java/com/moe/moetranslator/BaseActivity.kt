@@ -24,6 +24,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.moe.moetranslator.utils.AppPathManager
 import com.moe.moetranslator.utils.LanguageManager
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -38,6 +39,10 @@ abstract class BaseActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         super.onCreate(savedInstanceState)
+
+        // 幂等初始化路径管理器：进程被系统回收后直接恢复页面
+        // （不经过启动页）时，避免 Live2D 等模块因未初始化而崩溃
+        AppPathManager.init(this)
 
         window.isNavigationBarContrastEnforced = false
     }
