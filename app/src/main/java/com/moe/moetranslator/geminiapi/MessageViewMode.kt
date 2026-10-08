@@ -20,35 +20,43 @@ package com.moe.moetranslator.geminiapi
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moe.moetranslator.utils.CustomPreference
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class MessageViewModel(application: Application) : ViewModel() {
 
-    private val repository: MessageRepository
-    private val _allMessages = MutableStateFlow<List<ChatMessage>>(emptyList())
-    val allMessages = _allMessages.asStateFlow()
+    private lateinit var repository: MessageRepository
+    private val prefs: CustomPreference
+
+    // 当前激活的会话 id（持久化到 prefs，重启后保持）
+    private val _activeSessionId = MutableStateFlow(
+        CustomPreference.getInstance(application).getLong("Chat_Active_Session", 0L)
+    )
+    val activeSessionId = _activeSessionId.asStateFlow()
+
+    // 当前会话的消息流：切换会话时自动切换到新会话的数据
+    val allMessages = _activeSessionId
+        .flatMapLatest { repository.getMessages(it) }
+        .catch { e -> e.printStackTrace() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
         val messagesDao = ChatMessageRoomDatabase.getDatabase(application).chatMessageDao()
         repository = MessageRepository(messagesDao)
-        // 在viewModelScope中收集Flow
-        viewModelScope.launch {
-            repository.allMessages
-                .catch { e ->
-                    e.printStackTrace()
-                }
-                .collect {
-                    _allMessages.value = it
-                }
-        }
+        prefs = CustomPreference.getInstance(application)
     }
 
-    // 获取全部消息的List
+    // 获取当前会话全部消息的List
     suspend fun getAllMessagesList(): List<ChatMessage> {
-        return repository.getAllMessagesList()
+        return repository.getAllMessagesList(_activeSessionId.value)
     }
 
     // 获取特定数量的最近聊天记录
@@ -60,8 +68,41 @@ class MessageViewModel(application: Application) : ViewModel() {
         return repository.insert(chatMessage)
     }
 
-    fun deleteAll() = viewModelScope.launch {
-        repository.deleteAll()
+    /** 删除当前会话全部消息。 */
+    fun deleteCurrentSession() = viewModelScope.launch {
+        repository.deleteSession(_activeSessionId.value)
+    }
+
+    /** 新建会话并切换过去。 */
+    fun newSession() {
+        switchSession(System.currentTimeMillis())
+    }
+
+    /** 切换当前会话。 */
+    fun switchSession(sessionId: Long) {
+        prefs.setLong("Chat_Active_Session", sessionId)
+        _activeSessionId.value = sessionId
+    }
+
+    /** 所有会话摘要。 */
+    suspend fun getSessions(): List<ChatSessionInfo> {
+        return repository.getSessions()
+    }
+
+    /** 删除指定会话；若删除的是当前会话则回到默认会话 0。 */
+    fun deleteSession(sessionId: Long) = viewModelScope.launch {
+        repository.deleteSession(sessionId)
+        if (_activeSessionId.value == sessionId) {
+            switchSession(0L)
+        }
+    }
+
+    /** 批量删除会话；若包含当前会话则回到默认会话 0。 */
+    fun deleteSessions(sessionIds: List<Long>) = viewModelScope.launch {
+        sessionIds.forEach { repository.deleteSession(it) }
+        if (sessionIds.contains(_activeSessionId.value)) {
+            switchSession(0L)
+        }
     }
 
     suspend fun getMessageById(messageId: Long): ChatMessage? {
@@ -71,6 +112,18 @@ class MessageViewModel(application: Application) : ViewModel() {
     fun updateMessageContent(messageId: Long, content: String) = viewModelScope.launch {
         repository.updateMessageContent(messageId, content)
     }
+
+    /** AI 回复完成：一次性写入正文与思考内容。 */
+    fun updateMessageWithReasoning(messageId: Long, content: String, reasoning: String) =
+        viewModelScope.launch {
+            repository.updateMessageWithReasoning(messageId, content, reasoning)
+        }
+
+    /** 流式追加思考内容。 */
+    fun appendReasoningById(messageId: Long, additionalReasoning: String) =
+        viewModelScope.launch {
+            repository.appendReasoningById(messageId, additionalReasoning)
+        }
 
     fun appendContentById(messageId: Long, additionalContent: String) = viewModelScope.launch {
         repository.appendContentById(messageId, additionalContent)

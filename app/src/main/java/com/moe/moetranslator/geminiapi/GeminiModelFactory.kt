@@ -19,11 +19,16 @@ package com.moe.moetranslator.geminiapi
 
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.BlockThreshold
+import com.google.ai.client.generativeai.type.Content
 import com.google.ai.client.generativeai.type.HarmCategory
 import com.google.ai.client.generativeai.type.SafetySetting
 
 object GeminiModelFactory {
-    fun createGeminiModel(modelName: String, apiKey: String): GenerativeModel {
+    fun createGeminiModel(
+        modelName: String,
+        apiKey: String,
+        systemInstruction: Content? = null
+    ): GenerativeModel {
         val safetySettings: List<SafetySetting> = listOf(
             SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.NONE),
             SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.NONE),
@@ -35,8 +40,8 @@ object GeminiModelFactory {
             modelName = modelName,
             // Access your API key as a Build Configuration variable (see "Set up your API key" above)
             apiKey = apiKey,
-            null,
-            safetySettings
+            safetySettings = safetySettings,
+            systemInstruction = systemInstruction
         )
     }
 }

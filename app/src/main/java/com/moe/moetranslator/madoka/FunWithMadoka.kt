@@ -45,6 +45,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.moe.moetranslator.R
 import com.moe.moetranslator.databinding.FragmentMadokaBinding
+import com.moe.moetranslator.utils.AppPathManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import live2dsdk.madoka.GLRenderer
@@ -86,6 +87,9 @@ class FunWithMadoka : Fragment() {
         setupDrawers()
         setupClickListeners()
         observeData()
+
+        // 双保险：确保路径管理器已初始化（进程恢复等场景可能未经过启动页）
+        AppPathManager.init(requireContext())
 
         viewModel.setCurrentModel("model_1")
         modelAdapter.setSelectedModel("model_1")

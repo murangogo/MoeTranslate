@@ -50,16 +50,33 @@
                 app:layout_constraintVertical_bias="0.5" />
 
             <TextView
+                android:id="@+id/provider_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gemini"
+                android:text="@string/chat_provider_gemini"
                 android:textColor="#8EA4CA"
                 android:textSize="20sp"
+                android:clickable="true"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+            <ImageView
+                android:id="@+id/new_session"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icon_new_chat"
+                android:clickable="true"
+                android:contentDescription="@string/chat_new_session"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_bias="0.86"
+                app:layout_constraintVertical_bias="0.5" />
 
             <ImageView
                 android:id="@+id/clean_gemini"

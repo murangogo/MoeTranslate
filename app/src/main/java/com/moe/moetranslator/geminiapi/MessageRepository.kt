@@ -21,13 +21,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 
+/** 会话摘要：用于会话切换列表。 */
+data class ChatSessionInfo(
+    val sessionId: Long,
+    val title: String,       // 首条消息前若干字
+    val lastTimestamp: Long,
+)
+
 class MessageRepository(private val chatMessageDao: ChatMessageDao) {
 
-    val allMessages: Flow<List<ChatMessage>> = chatMessageDao.getMessages()
+    /** 指定会话的消息流。 */
+    fun getMessages(sessionId: Long): Flow<List<ChatMessage>> =
+        chatMessageDao.getMessages(sessionId).flowOn(Dispatchers.IO)
 
-    // 获取全部消息的List
-    suspend fun getAllMessagesList(): List<ChatMessage> {
-        return chatMessageDao.getAllMessagesList()
+    // 获取指定会话全部消息的List
+    suspend fun getAllMessagesList(sessionId: Long): List<ChatMessage> {
+        return chatMessageDao.getAllMessagesList(sessionId)
     }
 
     // 获取最近的消息
@@ -43,6 +52,24 @@ class MessageRepository(private val chatMessageDao: ChatMessageDao) {
         chatMessageDao.deleteAll()
     }
 
+    /** 删除指定会话的全部消息。 */
+    suspend fun deleteSession(sessionId: Long) {
+        chatMessageDao.deleteSession(sessionId)
+    }
+
+    /** 所有会话摘要（按最近消息倒序）。 */
+    suspend fun getSessions(): List<ChatSessionInfo> {
+        val ids = chatMessageDao.getAllSessionIds()
+        return ids.mapNotNull { id ->
+            val first = chatMessageDao.getFirstMessage(id) ?: return@mapNotNull null
+            val last = chatMessageDao.getLastMessage(id) ?: first
+            ChatSessionInfo(
+                sessionId = id,
+                title = first.content.replace("\n", " ").take(20).ifBlank { "..." },
+                lastTimestamp = last.timestamp,
+            )
+        }
+    }
 
     suspend fun getMessageById(messageId: Long): ChatMessage? {
         return chatMessageDao.getMessageById(messageId)
@@ -50,6 +77,14 @@ class MessageRepository(private val chatMessageDao: ChatMessageDao) {
 
     suspend fun updateMessageContent(messageId: Long, content: String) {
         chatMessageDao.updateMessageContent(messageId, content)
+    }
+
+    suspend fun updateMessageWithReasoning(messageId: Long, content: String, reasoning: String) {
+        chatMessageDao.updateMessageWithReasoning(messageId, content, reasoning)
+    }
+
+    suspend fun appendReasoningById(messageId: Long, additionalReasoning: String) {
+        chatMessageDao.appendReasoningById(messageId, additionalReasoning)
     }
 
     suspend fun appendContentById(messageId: Long, additionalContent: String) {

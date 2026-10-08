@@ -29,13 +29,13 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChatMessageDao {
-    // 全部消息的Flow，按时间和id正序
-    @Query("SELECT * FROM chat_messages_table ORDER BY timestamp ASC, id ASC")
-    fun getMessages(): Flow<List<ChatMessage>>
+    // 指定会话的消息Flow，按时间和id正序
+    @Query("SELECT * FROM chat_messages_table WHERE sessionId = :sessionId ORDER BY timestamp ASC, id ASC")
+    fun getMessages(sessionId: Long): Flow<List<ChatMessage>>
 
-    // 全部消息的List，按时间和id正序
-    @Query("SELECT * FROM chat_messages_table ORDER BY timestamp ASC, id ASC")
-    suspend fun getAllMessagesList(): List<ChatMessage>
+    // 指定会话的消息List，按时间和id正序
+    @Query("SELECT * FROM chat_messages_table WHERE sessionId = :sessionId ORDER BY timestamp ASC, id ASC")
+    suspend fun getAllMessagesList(sessionId: Long): List<ChatMessage>
 
     // 获取最近的n条消息，按时间和id倒序
     @Query("SELECT * FROM chat_messages_table ORDER BY timestamp DESC, id DESC LIMIT :limit")
@@ -47,6 +47,22 @@ interface ChatMessageDao {
     @Query("DELETE FROM chat_messages_table")
     suspend fun deleteAll()
 
+    // 删除指定会话的全部消息
+    @Query("DELETE FROM chat_messages_table WHERE sessionId = :sessionId")
+    suspend fun deleteSession(sessionId: Long)
+
+    // 获取所有会话 id（按最新消息倒序）
+    @Query("SELECT sessionId FROM chat_messages_table GROUP BY sessionId ORDER BY MAX(timestamp) DESC")
+    suspend fun getAllSessionIds(): List<Long>
+
+    // 指定会话的第一条消息（用作会话标题）
+    @Query("SELECT * FROM chat_messages_table WHERE sessionId = :sessionId ORDER BY timestamp ASC, id ASC LIMIT 1")
+    suspend fun getFirstMessage(sessionId: Long): ChatMessage?
+
+    // 指定会话的最新一条消息
+    @Query("SELECT * FROM chat_messages_table WHERE sessionId = :sessionId ORDER BY timestamp DESC, id DESC LIMIT 1")
+    suspend fun getLastMessage(sessionId: Long): ChatMessage?
+
     // 根据id获取消息
     @Query("SELECT * FROM chat_messages_table WHERE id = :messageId")
     suspend fun getMessageById(messageId: Long): ChatMessage?
@@ -54,6 +70,14 @@ interface ChatMessageDao {
     // 更新整条消息
     @Query("UPDATE chat_messages_table SET content = :content WHERE id = :messageId")
     suspend fun updateMessageContent(messageId: Long, content: String)
+
+    // 更新消息的正文与思考内容（AI 回复完成时一次性写入）
+    @Query("UPDATE chat_messages_table SET content = :content, reasoning = :reasoning WHERE id = :messageId")
+    suspend fun updateMessageWithReasoning(messageId: Long, content: String, reasoning: String)
+
+    // 流式追加思考内容
+    @Query("UPDATE chat_messages_table SET reasoning = reasoning || :additionalReasoning WHERE id = :messageId")
+    suspend fun appendReasoningById(messageId: Long, additionalReasoning: String)
 
     // 根据id追加消息内容
     @Query("UPDATE chat_messages_table SET content = content || :additionalContent WHERE id = :messageId")
