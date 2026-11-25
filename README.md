@@ -131,6 +131,9 @@ Google的Gemini正处于全民公测阶段，而且实际上Gemini模型的实�
 - [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)  
   全球领先的 OCR 工具包与文档 AI 引擎。萌译中的OCR步骤使用了 PaddlePaddle/PP-OCRv6_small_rec_onnx 的模型。
 
+- [LlamaCpp](https://github.com/ggml-org/llama.cpp)
+  基于纯 C/C++ 编写的高性能开源推理引擎，专为在本地消费级硬件上以极低依赖高效运行大语言模型而设计。
+
 - [Live 2D SDK](https://www.live2d.com/)  
   用于展示和操作 Live2D 模型的框架。萌译的 Live 2D 功能使用到了 Live 2D SDK。
 

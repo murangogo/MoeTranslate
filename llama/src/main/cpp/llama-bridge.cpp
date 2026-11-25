@@ -17,6 +17,7 @@
 
 #include <jni.h>
 #include <android/log.h>
+#include <algorithm>
 #include <atomic>
 #include <string>
 #include <vector>
@@ -193,9 +194,11 @@ Java_com_moe_moetranslator_llama_LlamaAndroid_nativeFormatChat(
         inputs.enable_thinking       = (enableThinking == JNI_TRUE);
 
         common_chat_params params = common_chat_templates_apply(tmpls.get(), inputs);
-        LOGI("nativeFormatChat: %zu chars, thinking=%d", params.prompt.size(),
+        // v1.0.0 将模板和用户文本分段保存；Kotlin 接口仍接收完整的 prompt。
+        const std::string prompt = params.prompt.str();
+        LOGI("nativeFormatChat: %zu bytes, thinking=%d", prompt.size(),
              inputs.enable_thinking ? 1 : 0);
-        return env->NewStringUTF(params.prompt.c_str());
+        return env->NewStringUTF(prompt.c_str());
     } catch (const std::exception &e) {
         LOGE("nativeFormatChat: exception: %s", e.what());
         return env->NewStringUTF("");
@@ -259,11 +262,35 @@ Java_com_moe_moetranslator_llama_LlamaAndroid_nativeCompletion(
     }
     LOGI("nativeCompletion: prompt has %zu tokens, will generate up to %d", tokens.size(), maxTokens);
 
-    const int n_ctx_used = (int) llama_n_ctx(ctx);
-    if ((int) tokens.size() >= n_ctx_used) {
-        LOGE("nativeCompletion: prompt (%zu tokens) >= n_ctx (%d). Increase n_ctx or shorten prompt.",
+    const uint32_t n_ctx_used = llama_n_ctx(ctx);
+    if (tokens.size() >= n_ctx_used) {
+        LOGE("nativeCompletion: prompt (%zu tokens) >= n_ctx (%u). Increase n_ctx or shorten prompt.",
              tokens.size(), n_ctx_used);
         return env->NewStringUTF("");
+    }
+
+    // n_ctx 限制整段上下文，n_batch 限制单次 llama_decode 的输入。
+    // 历史记录可能让 prompt 跨越多个 batch；按实际批上限切片即可，无需复制 token。
+    const size_t batch_size = llama_n_batch(ctx);
+    if (batch_size == 0) {
+        LOGE("nativeCompletion: context has zero batch capacity");
+        return env->NewStringUTF("");
+    }
+
+    // 每次翻译只在首批前清空 KV。llama_batch_get_one 使用同一序列，
+    // 位置会从上一批末尾接续；全部输入成功后才用最后一批的 logits 采样。
+    llama_memory_clear(llama_get_memory(ctx), true);
+    for (size_t offset = 0; offset < tokens.size(); ) {
+        if (g_should_stop.load(std::memory_order_acquire)) {
+            return env->NewStringUTF("");
+        }
+        const size_t count = std::min(batch_size, tokens.size() - offset);
+        llama_batch batch = llama_batch_get_one(tokens.data() + offset, static_cast<int32_t>(count));
+        if (llama_decode(ctx, batch) != 0) {
+            LOGE("nativeCompletion: prompt decode failed at offset %zu (batch size %zu)", offset, count);
+            return env->NewStringUTF("");
+        }
+        offset += count;
     }
 
     // ---- sampler ----
@@ -276,17 +303,6 @@ Java_com_moe_moetranslator_llama_LlamaAndroid_nativeCompletion(
     common_sampler *smpl = common_sampler_init(model, sparams);
     if (!smpl) {
         LOGE("nativeCompletion: sampler init failed");
-        return env->NewStringUTF("");
-    }
-
-    // ---- 清空 KV cache（保证每次推理彼此独立） ----
-    llama_memory_clear(llama_get_memory(ctx), true);
-
-    // ---- decode prompt ----
-    llama_batch batch = llama_batch_get_one(tokens.data(), (int32_t) tokens.size());
-    if (llama_decode(ctx, batch) != 0) {
-        LOGE("nativeCompletion: prompt decode failed");
-        common_sampler_free(smpl);
         return env->NewStringUTF("");
     }
 

@@ -204,6 +204,12 @@
     <string name="niu_noneed">No need to fill in</string>
     <string name="floating_ball">Floating ball</string>
     <string name="floating_ball_pic_summary">Current image：%s\nChoose a floating ball icon you like, and the image aspect ratio is 1:1 to work better</string>
+    <string name="ball_appearance_title">Floating Ball Size and Opacity</string>
+    <string name="ball_appearance_summary">Current size: %1$d × %2$d dp, opacity: %3$d%%\nAdjust the width, height and opacity of the floating ball.</string>
+    <string name="ball_appearance_help">Drag to adjust the icon. Size is measured in dp. Higher values make the ball larger. At 100% opacity it is fully visible. Lower values make it fade.</string>
+    <string name="ball_appearance_width">Width: %1$d dp</string>
+    <string name="ball_appearance_height">Height: %1$d dp</string>
+    <string name="ball_appearance_opacity">Opacity: %1$d%%</string>
     <string name="floating_ball_pic_title">Floating Ball Icon</string>
     <string name="floating_ball_press_title">Long press determine time</string>
     <string name="floating_ball_press_summary">Current judgment time：%s ms\nPress and hold the floating ball, and the judgment time of the menu will pop up, in milliseconds</string>
@@ -509,4 +515,6 @@
     <string name="llama_temperature_label">Temperature (0–2, lower = more stable)</string>
     <string name="llama_max_tokens_label">Max output tokens (16–4096)</string>
     <string name="unknow_model">Unknown</string>
+    <string name="proj_llama_title">LlamaCpp Engine</string>
+    <string name="proj_llama_content">A high-performance, open-source inference engine written in pure C/C++, designed to run large language models efficiently on local consumer-grade hardware with minimal dependencies.\nhttps://github.com/ggml-org/llama.cpp</string>
 </resources>

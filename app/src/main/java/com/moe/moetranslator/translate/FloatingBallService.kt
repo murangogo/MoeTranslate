@@ -18,6 +18,7 @@
 package com.moe.moetranslator.translate
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -31,6 +32,7 @@ import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -42,6 +44,7 @@ import com.moe.moetranslator.ppocr.PaddleOCR
 import com.moe.moetranslator.utils.Constants
 import com.moe.moetranslator.utils.CustomPreference
 import com.moe.moetranslator.utils.KeystoreManager
+import com.moe.moetranslator.utils.LanguageManager
 import com.moe.moetranslator.utils.UtilTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -63,6 +66,7 @@ import translationapi.tencentcloud.TencentTranslationText
 import translationapi.volctranslation.VolcTranslation
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.roundToInt
 import kotlin.math.abs
 
 // 发送服务停止广播
@@ -104,6 +108,11 @@ sealed class BallStatus {
 }
 
 class FloatingBallService : LifecycleService() {
+    override fun attachBaseContext(newBase: Context) {
+        // 悬浮菜单由服务创建，与 Activity 共用同一套应用语言设置。
+        super.attachBaseContext(LanguageManager.applyLanguage(newBase))
+    }
+
     private lateinit var windowManager: WindowManager
     private lateinit var floatingBallView: View
     private lateinit var floatingTextView: TextView
@@ -170,6 +179,19 @@ class FloatingBallService : LifecycleService() {
                 autoTranslateHandler.postDelayed(this, prefs.getLong("Auto_Translate_Interval", 3000L))
             }
         }
+    }
+
+    private fun applyBallAppearance() {
+        val appearance = FloatingBallAppearance.load(PreferenceManager.getDefaultSharedPreferences(this))
+        val icon = floatingBallView.findViewById<ImageView>(R.id.floating_ball_icon)
+        val density = resources.displayMetrics.density
+        icon.layoutParams = icon.layoutParams.apply {
+            width = (appearance.widthDp * density).roundToInt()
+            height = (appearance.heightDp * density).roundToInt()
+        }
+        // 默认方形继续沿用原图缩放方式；手动设置不同宽高时按所选外形绘制。
+        if (appearance.widthDp != appearance.heightDp) icon.scaleType = ImageView.ScaleType.FIT_XY
+        icon.alpha = appearance.opacity / 100f
     }
 
     override fun onCreate() {
@@ -287,6 +309,8 @@ class FloatingBallService : LifecycleService() {
 
         // 创建悬浮球视图
         floatingBallView = LayoutInflater.from(this).inflate(R.layout.floatball_layout, null)
+
+        applyBallAppearance()
 
         // 创建翻译结果视图
         floatingTextView = FloatingTextView.translateTextView(this)
@@ -427,7 +451,7 @@ class FloatingBallService : LifecycleService() {
     }
 
     private fun showLongPressMenu() {
-        val (dialog, listView) = Dialogs.menuDialog(applicationContext, isAutoTranslating)
+        val (dialog, listView) = Dialogs.menuDialog(this, isAutoTranslating)
         listView.onItemClickListener = object : AdapterView.OnItemClickListener {
             override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 when (p2) {

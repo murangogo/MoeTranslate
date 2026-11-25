@@ -30,6 +30,11 @@
             android:title="@string/floating_ball_pic_title" />
 
         <Preference
+            android:key="floating_ball_appearance"
+            app:iconSpaceReserved="false"
+            android:title="@string/ball_appearance_title" />
+
+        <Preference
             android:key="floating_ball_press"
             app:iconSpaceReserved="false"
             android:title="@string/floating_ball_press_title" />

@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.text.InputType
 import android.view.LayoutInflater
+import android.widget.SeekBar
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -36,6 +37,7 @@ import com.jaredrummler.android.colorpicker.ColorPreferenceCompat
 import com.moe.moetranslator.R
 import com.moe.moetranslator.translate.CustomLocale
 import com.moe.moetranslator.translate.DecimalDigitsInputFilter
+import com.moe.moetranslator.translate.FloatingBallAppearance
 import com.moe.moetranslator.translate.Dialogs
 import com.moe.moetranslator.utils.Constants
 import com.moe.moetranslator.utils.CustomPreference
@@ -84,6 +86,14 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
         // 悬浮球图片
         ballIcon.setOnPreferenceClickListener {
             showBallOptionsDialog()
+            true
+        }
+
+        val appearancePref = findPreference<Preference>("floating_ball_appearance")!!
+        val store = preferenceManager.sharedPreferences!!
+        updateAppearanceSummary(appearancePref, FloatingBallAppearance.load(store))
+        appearancePref.setOnPreferenceClickListener {
+            showBallAppearanceDialog(it)
             true
         }
 
@@ -253,6 +263,54 @@ class PersonalizationConfig : PreferenceFragmentCompat() {
         } else {
             ballIcon.summary = getString(R.string.floating_ball_pic_summary, prefs.getString("Custom_Floating_Pic", ""))
         }
+    }
+
+    private fun updateAppearanceSummary(preference: Preference, value: FloatingBallAppearance) {
+        preference.summary = preference.context.getString(
+            R.string.ball_appearance_summary, value.widthDp, value.heightDp, value.opacity
+        )
+    }
+
+    private fun showBallAppearanceDialog(preference: Preference) {
+        val store = preferenceManager.sharedPreferences!!
+        var draft = FloatingBallAppearance.load(store)
+        val view = layoutInflater.inflate(R.layout.dialog_ball_appearance, null)
+
+        fun bindSlider(id: Int, labelId: Int, format: Int, range: IntRange, value: Int, change: (Int) -> Unit) {
+            val label = view.findViewById<TextView>(labelId)
+            val slider = view.findViewById<SeekBar>(id)
+            slider.max = range.last
+            slider.min = range.first
+            slider.progress = value
+            label.text = getString(format, value)
+            slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(bar: SeekBar, progress: Int, fromUser: Boolean) {
+                    label.text = getString(format, progress)
+                    change(progress)
+                    updateAppearanceSummary(preference, draft)
+                }
+
+                override fun onStartTrackingTouch(bar: SeekBar) {}
+                override fun onStopTrackingTouch(bar: SeekBar) {}
+            })
+        }
+
+        bindSlider(R.id.ball_width, R.id.ball_width_label, R.string.ball_appearance_width,
+            FloatingBallAppearance.sizeRange, draft.widthDp) { draft = draft.copy(widthDp = it) }
+        bindSlider(R.id.ball_height, R.id.ball_height_label, R.string.ball_appearance_height,
+            FloatingBallAppearance.sizeRange, draft.heightDp) { draft = draft.copy(heightDp = it) }
+        bindSlider(R.id.ball_opacity, R.id.ball_opacity_label, R.string.ball_appearance_opacity,
+            FloatingBallAppearance.opacityRange, draft.opacity) { draft = draft.copy(opacity = it) }
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.ball_appearance_title)
+            .setView(view)
+            .setPositiveButton(R.string.save) { _, _ -> draft.save(store) }
+            .setNegativeButton(R.string.user_cancel, null)
+            // 摘要可以预览草稿；关闭弹窗时统一回到实际保存的值。
+            .setOnDismissListener { updateAppearanceSummary(preference, FloatingBallAppearance.load(store)) }
+            .show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
     }
 
     private fun updatePressSummary() {

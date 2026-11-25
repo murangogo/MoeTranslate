@@ -17,7 +17,6 @@
 
 package com.moe.moetranslator.translate
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -41,9 +40,8 @@ class MenuDialogAdapter(ctx: Context, private var str: Array<String>, private va
         return position.toLong()
     }
 
-    @SuppressLint("ViewHolder", "MissingInflatedId", "InflateParams")
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        val newView = lf.inflate(R.layout.dialog_listview,null)
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val newView = convertView ?: lf.inflate(R.layout.dialog_listview, parent, false)
         val txt: TextView = newView.findViewById(R.id.Introduce)
         val im:ImageView = newView.findViewById(R.id.smallIcon)
         txt.text = str[position]
